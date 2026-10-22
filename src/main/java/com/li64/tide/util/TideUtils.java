@@ -146,6 +146,10 @@ public class TideUtils {
     }
 
     /** A length in cm as inches ("8.5 in"), or feet and inches from a foot up ("2 ft 3 in"). */
+    public static boolean useImperial() {
+        return Tide.CLIENT_CONFIG == null || Tide.CLIENT_CONFIG.journal.useImperial;
+    }
+
     public static String imperialLength(double cm) {
         double inches = cm / 2.54;
         if (inches < 12.0) return new DecimalFormat("#.#").format(inches) + " in";

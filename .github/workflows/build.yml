@@ -87,6 +87,9 @@ jobs:
           xdotool mousemove 340 140; sleep 0.5; xdotool click 1; sleep 2; import -window root shots/4b-angler.png
           xdotool key Escape; sleep 1
           xdotool key Escape; sleep 2; import -window root shots/5-after.png
+          # inventory, hovering the graded bass in hotbar slot 3 (tooltip: quality, length, weight)
+          xdotool key e; sleep 2; xdotool mousemove 568 494; sleep 1.5; import -window root shots/6-tooltip.png
+          xdotool key Escape; sleep 1
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null; true
 
       # The full build output is hard to read from outside GitHub, so the errors (and the tail

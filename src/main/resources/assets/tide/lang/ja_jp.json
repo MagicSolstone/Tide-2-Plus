@@ -809,5 +809,8 @@
   "text.tide.rod_tooltip.gold_bonus": "運: +1",
   "text.tide.rod_tooltip.midas_bonus": "追加で金のアイテムが釣れる",
   "text.tide.rod_tooltip.netherite_bonus": "溶岩で釣りができる",
-  "item.tide.fish_satchel.fullness": "%s/%s"
+  "item.tide.fish_satchel.fullness": "%s/%s",
+  "item.tide.quality_name": "%s %s",
+  "journal.info.stats.best_quality": "Best: %s",
+  "journal.info.stats.heaviest": "Heaviest: %s"
 }

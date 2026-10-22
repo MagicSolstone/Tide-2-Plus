@@ -573,6 +573,9 @@ public class TideFishingHook extends Projectile {
         this.retrieve(false);
     }
 
+    /** How cleanly the fish was hooked in the minigame (sets catch quality odds). */
+    public com.li64.tide.data.angler.Angler.Hook hookResult = com.li64.tide.data.angler.Angler.Hook.GOOD;
+
     public void retrieve(boolean perfectCatch) {
         if (getRodItem() == null) discard();
         this.wasPerfectCatch = perfectCatch;
@@ -602,6 +605,8 @@ public class TideFishingHook extends Projectile {
 
                     for (ItemStack stack : hookedItems) {
                         if (stack.isEmpty()) continue;
+                        if (catchType == CatchType.FISH)
+                            com.li64.tide.data.angler.CatchQuality.apply(serverPlayer, stack, this.hookResult);
 
                         Entity entity;
                         if (medium == FishingMedium.LAVA) {

@@ -145,14 +145,16 @@ public class TidePlayerData {
         FishPlayerData playerData = fishPlayerData.get(fish);
         FishStats stats = playerData == null ? new FishStats() : playerData.stats.orElse(new FishStats());
 
+        int quality = TideItemData.FISH_QUALITY.getOrDefault(stack, -1);
+        double grams = TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0);
         if (data.size().isPresent()) {
             double fishLength = 0;
             if (TideItemData.FISH_LENGTH.isPresent(stack))
                 fishLength = TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0);
             else if (Tide.SERVER_CONFIG.items.fishItemSizes == TideServerConfig.Items.SizeMode.IN_JOURNAL)
                 fishLength = data.getRandomLength(level.getRandom());
-            stats.logCatch(CatchTimestamp.now(level), fishLength);
-        }
+            stats.logCatch(CatchTimestamp.now(level), fishLength, quality, grams);
+        } else if (quality >= 0) stats.logCatch(CatchTimestamp.now(level), 0.0, quality, grams);
 
         if (playerData == null) fishPlayerData.put(stack.typeHolder(), new FishPlayerData(stats));
         else fishPlayerData.get(fish).stats = Optional.of(stats);

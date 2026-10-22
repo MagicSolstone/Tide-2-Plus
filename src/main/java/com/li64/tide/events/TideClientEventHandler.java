@@ -28,8 +28,13 @@ public class TideClientEventHandler {
                 && Tide.SERVER_CONFIG.items.bucketableFishItems == TideServerConfig.Items.BucketableMode.WHEN_LIVING)
             lines.add(Component.translatable("text.tide.fish.alive").withStyle(ChatFormatting.GRAY));
 
+        if (TideItemData.FISH_QUALITY.isPresent(stack))
+            lines.add(com.li64.tide.data.angler.CatchQuality.byId(TideItemData.FISH_QUALITY.getOrDefault(stack, 1)).describe());
         if (TideItemData.FISH_LENGTH.isPresent(stack)) {
-            lines.add(TideUtils.getFormattedLength(stack).withStyle(ChatFormatting.BLUE));
+            net.minecraft.network.chat.MutableComponent size = TideUtils.getFormattedLength(stack);
+            if (TideItemData.FISH_WEIGHT.isPresent(stack))
+                size.append(" · " + com.li64.tide.data.angler.FishWeight.format(TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0)));
+            lines.add(size.withStyle(ChatFormatting.BLUE));
         }
         else if (stack.has(DataComponents.BUCKET_ENTITY_DATA)) {
             CustomData data = stack.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);

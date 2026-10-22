@@ -31,6 +31,8 @@ public final class TideServerConfig {
         /** The level that fishes exactly like original Tide, and what "fair play" contests use. */
         public int baselineLevel = 40;
         public boolean announceLevelUps = true;
+        /** Poor to Mythic quality, sizes and weights on caught fish (works with levels off too). */
+        public boolean catchQuality = true;
     }
 
     public static void writeToPacket(FriendlyByteBuf buf, Gson gson) {

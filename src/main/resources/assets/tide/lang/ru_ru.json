@@ -834,5 +834,8 @@
   "text.tide.rod_tooltip.gold_bonus": "+1 к удаче",
   "text.tide.rod_tooltip.midas_bonus": "Ловите дополнительные золотые предметы",
   "text.tide.rod_tooltip.netherite_bonus": "Можно рыбачить в лаве",
-  "item.tide.fish_satchel.fullness": "%s/%s"
+  "item.tide.fish_satchel.fullness": "%s/%s",
+  "item.tide.quality_name": "%s %s",
+  "journal.info.stats.best_quality": "Best: %s",
+  "journal.info.stats.heaviest": "Heaviest: %s"
 }

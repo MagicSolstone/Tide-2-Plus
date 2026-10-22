@@ -6,6 +6,8 @@ import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import com.li64.tide.data.player.CatchTimestamp;
 import com.li64.tide.data.player.FishStats;
+import com.li64.tide.data.angler.CatchQuality;
+import com.li64.tide.data.angler.FishWeight;
 import com.li64.tide.util.TideUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -45,15 +47,44 @@ public class StatsComponent extends ProfileComponent {
                 builder.add(Component.translatable("journal.info.stats.first", formatted));
             }
 
-            // add largest/smallest catch
+            // best quality, heaviest, longest/shortest
+            if (stats.getBestQuality() >= 0)
+                builder.add(Component.translatable("journal.info.stats.best_quality",
+                        CatchQuality.byId(stats.getBestQuality()).describe()));
+            if (stats.getHeaviestCatch() > 0.0)
+                builder.add(Component.translatable("journal.info.stats.heaviest",
+                        FishWeight.format(stats.getHeaviestCatch())));
             if (stats.getLargestCatch() > 0.0) {
                 builder.add(Component.translatable("journal.info.stats.largest",
                         TideUtils.getFormattedLength(stats.getLargestCatch())));
                 builder.add(Component.translatable("journal.info.stats.smallest",
                         TideUtils.getFormattedLength(stats.getSmallestCatch())));
             }
+
+            // how many of each quality, three to a line
+            List<Component> counts = new java.util.ArrayList<>();
+            for (CatchQuality q : CatchQuality.values()) {
+                int n = stats.getQualityCount(q);
+                if (n > 0) counts.add(Component.literal(n + " " + q.label)
+                        .withStyle(st -> st.withColor(net.minecraft.network.chat.TextColor.fromRgb(darken(q.color)))));
+            }
+            for (int i = 0; i < counts.size(); i += 3) {
+                net.minecraft.network.chat.MutableComponent line = Component.empty();
+                for (int j = i; j < Math.min(i + 3, counts.size()); j++) {
+                    if (j > i) line.append(Component.literal(" · "));
+                    line.append(counts.get(j));
+                }
+                builder.add(line);
+            }
         }
         this.lines = builder.build();
+    }
+
+    /** The quality colours are made for dark tooltips; deepen them for the paper page. */
+    private static int darken(int rgb) {
+        int r = (rgb >> 16) & 0xFF, g = (rgb >> 8) & 0xFF, b = rgb & 0xFF;
+        if (r > 200 && g > 200 && b > 200) return 0x8A6A52; // "Average" in journal ink
+        return ((int) (r * 0.7) << 16) | ((int) (g * 0.7) << 8) | (int) (b * 0.7);
     }
 
     @Override

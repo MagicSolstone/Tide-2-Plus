@@ -109,7 +109,7 @@ public final class Angler {
     // ------------------------------------------------------------------ stats
 
     /** Level 1 -> v1, the baseline -> 1.0, level 99 -> v99, straight lines between. */
-    private static double curve(int level, double v1, double v99) {
+    static double curve(int level, double v1, double v99) {
         int base = baseline();
         if (level <= base) return v1 + (1.0 - v1) * (level - 1) / Math.max(1.0, base - 1);
         return 1.0 + (v99 - 1.0) * (level - base) / Math.max(1.0, MAX_LEVEL - base);
@@ -224,6 +224,8 @@ public final class Angler {
             }
         }
         if (perfect) xp *= 1.25;
+        Integer q = com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(stack, null);
+        if (q != null) xp += CatchQuality.byId(q).bonusXp();
         addXp(player, Math.round(xp), extra);
     }
 

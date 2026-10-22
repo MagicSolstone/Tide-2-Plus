@@ -805,5 +805,8 @@
   "text.tide.rod_tooltip.sunflower_bonus": "日光下幸运值 +1",
   "text.tide.rod_tooltip.village_bonus": "可以钓到额外的战利品",
   "trinkets.slot.hand.informational": "信息类",
-  "item.tide.fish_satchel.fullness": "%s/%s"
+  "item.tide.fish_satchel.fullness": "%s/%s",
+  "item.tide.quality_name": "%s %s",
+  "journal.info.stats.best_quality": "Best: %s",
+  "journal.info.stats.heaviest": "Heaviest: %s"
 }

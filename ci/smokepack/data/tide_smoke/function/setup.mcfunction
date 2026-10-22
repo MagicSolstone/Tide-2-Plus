@@ -22,7 +22,7 @@ summon tide:pike ~0 ~-3 ~4 {NoAI:1b,Rotation:[90f,0f]}
 clear @s
 item replace entity @s hotbar.0 with tide:diamond_fishing_rod
 item replace entity @s hotbar.1 with tide:fishing_journal
-item replace entity @s hotbar.2 with tide:largemouth_bass
+item replace entity @s hotbar.2 with tide:largemouth_bass[tide:fish_quality=5,tide:fish_length=89.0,tide:fish_weight=10800.0,item_name={"translate":"item.tide.quality_name","with":["Mythic",{"translate":"item.tide.largemouth_bass"}],"color":"#FFB020","italic":false}]
 item replace entity @s hotbar.3 with tide:wooden_crate
 item replace entity @s hotbar.4 with tide:starlight_bow
 item replace entity @s hotbar.5 with tide:fish_satchel

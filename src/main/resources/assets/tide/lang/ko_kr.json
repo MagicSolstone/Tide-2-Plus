@@ -801,5 +801,8 @@
   "text.tide.rod_tooltip.sunflower_bonus": "햇볕 아래 있을 때 운 +1",
   "text.tide.rod_tooltip.village_bonus": "추가적인 아이템 획득",
   "trinkets.slot.hand.informational": "정보",
-  "item.tide.fish_satchel.fullness": "%s/%s"
+  "item.tide.fish_satchel.fullness": "%s/%s",
+  "item.tide.quality_name": "%s %s",
+  "journal.info.stats.best_quality": "Best: %s",
+  "journal.info.stats.heaviest": "Heaviest: %s"
 }

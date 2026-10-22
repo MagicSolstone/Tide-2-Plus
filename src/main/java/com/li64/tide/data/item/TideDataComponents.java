@@ -21,6 +21,17 @@ public class TideDataComponents {
                     .persistent(Codec.DOUBLE)
                     .networkSynchronized(ByteBufCodecs.DOUBLE).build());
 
+    public static final DataComponentType<Integer> FISH_QUALITY = register(
+            "fish_quality", DataComponentType.<Integer>builder()
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT).build());
+
+    /** Grams. */
+    public static final DataComponentType<Double> FISH_WEIGHT = register(
+            "fish_weight", DataComponentType.<Double>builder()
+                    .persistent(Codec.DOUBLE)
+                    .networkSynchronized(ByteBufCodecs.DOUBLE).build());
+
     public static final DataComponentType<Boolean> IS_BUCKETABLE = register(
             "is_bucketable", DataComponentType.<Boolean>builder()
                     .persistent(Codec.BOOL)

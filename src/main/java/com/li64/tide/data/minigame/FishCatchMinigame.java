@@ -150,6 +150,7 @@ public class FishCatchMinigame {
         if (!landed && hook != Angler.Hook.TERRIBLE)
             player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("The fish shook the hook loose!")
                     .withStyle(net.minecraft.ChatFormatting.RED));
+        this.hook.hookResult = hook;
         if (landed) onWin(hook == Angler.Hook.PERFECT);
         else onFail();
     }
@@ -160,7 +161,10 @@ public class FishCatchMinigame {
             case 0 -> onTimeout();
             case 1 -> onFail();
             case 2 -> onWin(false);
-            case 3 -> onWin(true);
+            case 3 -> {
+                if (hook != null) hook.hookResult = Angler.Hook.PERFECT;
+                onWin(true);
+            }
         }
     }
 }

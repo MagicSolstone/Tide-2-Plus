@@ -21,8 +21,8 @@ public abstract class ItemStackMixin {
         @Shadow public abstract int getDamageValue();
         @Shadow public abstract int getMaxDamage();
         @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;setDamageValue(I)V", shift = At.Shift.AFTER),
-                method = "hurtAndBreak(ILnet/minecraft/server/level/ServerLevel;Lnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V")
-        public void hurtAndBreak(int damage, ServerLevel level, ServerPlayer player, Consumer<Item> onBreak, CallbackInfo ci) {
-            if (getDamageValue() >= getMaxDamage() && getItem() instanceof TideFishingRodItem rod) rod.onItemBroken((ItemStack)(Object)this, player);
+                method = "applyDamage(ILnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V")
+        public void hurtAndBreak(int newDamage, ServerPlayer player, Consumer<ItemStack> onBreak, CallbackInfo ci) {
+            if (player != null && getDamageValue() >= getMaxDamage() && getItem() instanceof TideFishingRodItem rod) rod.onItemBroken((ItemStack)(Object)this, player);
         }
 }

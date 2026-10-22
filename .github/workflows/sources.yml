@@ -30,6 +30,7 @@ jobs:
           echo "::notice::decompiled $(find src -name '*.java' | wc -l) files"
           mkdir -p cp && cp $GITHUB_WORKSPACE/build/cp/*.jar cp/ ; du -sh cp; ls cp | head -200 > cp.txt
           find cp -size +95M -delete
+          tar -C "$JAVA_HOME" -czf - . | split -b 90m - jdk25.tgz.part-
           ls -la
           git config --global user.name ci; git config --global user.email ci@users.noreply.github.com
           git add -A && git commit -qm "26.3 sources" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" mc-sources

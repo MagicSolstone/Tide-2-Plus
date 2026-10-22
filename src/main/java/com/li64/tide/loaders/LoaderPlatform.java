@@ -14,7 +14,7 @@ public interface LoaderPlatform {
     String getPlatformName();
 
     default String getMCVersion() {
-        return "1.21.1";
+        return net.minecraft.SharedConstants.getCurrentVersion().name();
     }
 
     boolean isModLoaded(String modId);

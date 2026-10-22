@@ -39,6 +39,7 @@ jobs:
           set +e
           mkdir -p run
           echo "eula=true" > run/eula.txt
+          mkdir -p run/config && echo '{"server":{"general":{"logDataErrors":true}}}' > run/config/tide.json
           printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\n' > run/server.properties
           ./gradlew runServer --no-daemon > server.log 2>&1 &
           pid=$!

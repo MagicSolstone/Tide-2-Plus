@@ -3,9 +3,7 @@
   "category": "food",
   "cookingtime": 600,
   "experience": 0.35,
-  "ingredient": {
-    "tag": "tide:cookable/grilled_tuna"
-  },
+  "ingredient": "#tide:cookable/grilled_tuna",
   "result": {
     "id": "tide:grilled_tuna"
   }

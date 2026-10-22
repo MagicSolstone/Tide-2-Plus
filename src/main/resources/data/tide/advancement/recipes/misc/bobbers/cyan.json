@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/cyan"
+        "recipes": "tide:bobbers/cyan"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

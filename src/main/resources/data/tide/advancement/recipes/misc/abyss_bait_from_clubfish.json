@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:abyss_bait_from_clubfish"
+        "recipes": "tide:abyss_bait_from_clubfish"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

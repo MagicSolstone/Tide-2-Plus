@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:iron_from_tetra"
+        "recipes": "tide:iron_from_tetra"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

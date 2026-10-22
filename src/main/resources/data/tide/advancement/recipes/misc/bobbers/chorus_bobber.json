@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/chorus_bobber"
+        "recipes": "tide:bobbers/chorus_bobber"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

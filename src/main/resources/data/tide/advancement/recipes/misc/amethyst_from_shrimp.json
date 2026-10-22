@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:amethyst_from_shrimp"
+        "recipes": "tide:amethyst_from_shrimp"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -11,23 +11,19 @@
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "tide:randomize_fish_length"
-            }
-          ],
           "name": "tide:ocean_perch",
-          "weight": 25
+          "weight": 25,
+          "modifier": {
+            "type": "tide:randomize_fish_length"
+          }
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "tide:randomize_fish_length"
-            }
-          ],
           "name": "tide:red_snapper",
-          "weight": 25
+          "weight": 25,
+          "modifier": {
+            "type": "tide:randomize_fish_length"
+          }
         },
         {
           "type": "minecraft:item",
@@ -59,52 +55,44 @@
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "add": false,
-              "damage": {
-                "type": "minecraft:uniform",
-                "max": 1.0,
-                "min": 0.5
-              },
-              "function": "minecraft:set_damage"
-            }
-          ],
           "name": "minecraft:fishing_rod",
           "quality": 2,
-          "weight": 4
+          "weight": 4,
+          "modifier": {
+            "add": false,
+            "damage": {
+              "type": "minecraft:uniform",
+              "max": 1.0,
+              "min": 0.5
+            },
+            "type": "minecraft:set_damage"
+          }
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": 30.0,
-              "options": "#minecraft:on_random_loot"
-            }
-          ],
           "name": "minecraft:book",
           "quality": 2,
-          "weight": 5
-        }
-      ],
-      "functions": [
-        {
-          "conditions": [
-            {
-              "chance": 0.3,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "function": "minecraft:enchant_with_levels",
-          "levels": 15.0,
-          "options": "#minecraft:on_random_loot"
+          "weight": 5,
+          "modifier": {
+            "levels": 30,
+            "options": "#minecraft:on_random_loot",
+            "type": "minecraft:enchant_with_levels"
+          }
         }
       ],
       "rolls": {
         "type": "minecraft:uniform",
-        "max": 10.0,
-        "min": 7.0
+        "max": 10,
+        "min": 7
+      },
+      "modifier": {
+        "levels": 15,
+        "options": "#minecraft:on_random_loot",
+        "type": "minecraft:enchant_with_levels",
+        "condition": {
+          "chance": 0.3,
+          "type": "minecraft:random_chance"
+        }
       }
     },
     {
@@ -112,23 +100,19 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.85,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            }
-          ],
-          "name": "tide:fishy_note"
+          "name": "tide:fishy_note",
+          "modifier": {
+            "add": false,
+            "count": 1,
+            "type": "minecraft:set_count"
+          },
+          "condition": {
+            "chance": 0.85,
+            "type": "minecraft:random_chance"
+          }
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ]
 }

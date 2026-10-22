@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:stone_fishing_rod"
+        "recipes": "tide:stone_fishing_rod"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

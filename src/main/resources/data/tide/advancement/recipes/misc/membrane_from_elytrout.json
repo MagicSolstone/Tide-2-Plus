@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:membrane_from_elytrout"
+        "recipes": "tide:membrane_from_elytrout"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

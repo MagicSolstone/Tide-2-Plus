@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:incandescent_bait_from_larva"
+        "recipes": "tide:incandescent_bait_from_larva"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

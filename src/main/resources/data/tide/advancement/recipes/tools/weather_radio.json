@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:weather_radio"
+        "recipes": "tide:weather_radio"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

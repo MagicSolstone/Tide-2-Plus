@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:depth_meter"
+        "recipes": "tide:depth_meter"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

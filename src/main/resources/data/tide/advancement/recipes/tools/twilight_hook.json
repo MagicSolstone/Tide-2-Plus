@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:twilight_hook"
+        "recipes": "tide:twilight_hook"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

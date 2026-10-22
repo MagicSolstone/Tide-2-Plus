@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/light_blue"
+        "recipes": "tide:bobbers/light_blue"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

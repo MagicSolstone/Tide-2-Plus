@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tide:sun_emblem"
-    }
+    "tide:sun_emblem"
   ],
   "result": {
     "count": 8,

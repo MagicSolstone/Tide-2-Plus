@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:lucky_bait"
+        "recipes": "tide:lucky_bait"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

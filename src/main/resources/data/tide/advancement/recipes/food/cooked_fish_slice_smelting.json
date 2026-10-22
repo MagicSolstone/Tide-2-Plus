@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:cooked_fish_slice_smelting"
+        "recipes": "tide:cooked_fish_slice_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

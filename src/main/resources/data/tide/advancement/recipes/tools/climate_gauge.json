@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:climate_gauge"
+        "recipes": "tide:climate_gauge"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

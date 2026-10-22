@@ -43,7 +43,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bait"
+        "recipes": "tide:bait"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

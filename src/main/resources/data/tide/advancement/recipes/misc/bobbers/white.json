@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/white"
+        "recipes": "tide:bobbers/white"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

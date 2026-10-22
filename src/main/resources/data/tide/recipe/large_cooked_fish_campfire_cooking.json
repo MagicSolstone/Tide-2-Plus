@@ -3,9 +3,7 @@
   "category": "food",
   "cookingtime": 600,
   "experience": 0.35,
-  "ingredient": {
-    "tag": "tide:cookable/large_cooked_fish"
-  },
+  "ingredient": "#tide:cookable/large_cooked_fish",
   "result": {
     "id": "tide:large_cooked_fish"
   }

@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/enchanted_golden_apple_bobber"
+        "recipes": "tide:bobbers/enchanted_golden_apple_bobber"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:lapis_from_lanternfish"
+        "recipes": "tide:lapis_from_lanternfish"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

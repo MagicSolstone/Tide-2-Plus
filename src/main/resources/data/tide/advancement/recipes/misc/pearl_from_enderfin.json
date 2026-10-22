@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:pearl_from_enderfin"
+        "recipes": "tide:pearl_from_enderfin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

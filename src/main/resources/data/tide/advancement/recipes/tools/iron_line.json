@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:iron_line"
+        "recipes": "tide:iron_line"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

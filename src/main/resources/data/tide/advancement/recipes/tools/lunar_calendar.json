@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:lunar_calendar"
+        "recipes": "tide:lunar_calendar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

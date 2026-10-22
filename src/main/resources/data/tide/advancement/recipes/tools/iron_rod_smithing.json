@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:iron_rod_smithing"
+        "recipes": "tide:iron_rod_smithing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

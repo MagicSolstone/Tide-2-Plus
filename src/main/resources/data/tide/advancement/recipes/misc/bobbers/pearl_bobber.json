@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/pearl_bobber"
+        "recipes": "tide:bobbers/pearl_bobber"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

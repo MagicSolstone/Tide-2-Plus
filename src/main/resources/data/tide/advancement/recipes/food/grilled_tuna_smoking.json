@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:grilled_tuna_smoking"
+        "recipes": "tide:grilled_tuna_smoking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

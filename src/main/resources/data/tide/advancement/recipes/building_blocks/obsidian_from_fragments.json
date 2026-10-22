@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:obsidian_from_fragments"
+        "recipes": "minecraft:obsidian_from_fragments"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

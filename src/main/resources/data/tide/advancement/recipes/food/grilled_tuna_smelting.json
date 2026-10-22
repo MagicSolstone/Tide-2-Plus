@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:grilled_tuna_smelting"
+        "recipes": "tide:grilled_tuna_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

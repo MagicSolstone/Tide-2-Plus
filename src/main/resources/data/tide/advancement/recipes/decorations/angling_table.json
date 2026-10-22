@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:angling_table"
+        "recipes": "tide:angling_table"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:gold_from_minnow"
+        "recipes": "tide:gold_from_minnow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

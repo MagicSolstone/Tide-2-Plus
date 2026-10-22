@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:pocket_watch"
+        "recipes": "tide:pocket_watch"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

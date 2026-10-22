@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:cooked_fish_campfire_cooking"
+        "recipes": "tide:cooked_fish_campfire_cooking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

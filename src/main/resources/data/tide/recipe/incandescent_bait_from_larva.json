@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tide:incandescent_larva"
-    }
+    "tide:incandescent_larva"
   ],
   "result": {
     "count": 4,

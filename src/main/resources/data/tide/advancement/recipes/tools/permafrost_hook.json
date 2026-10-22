@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:permafrost_hook"
+        "recipes": "tide:permafrost_hook"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

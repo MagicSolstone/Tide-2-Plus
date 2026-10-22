@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:fish_satchel"
+        "recipes": "tide:fish_satchel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:cooked_fish_smoking"
+        "recipes": "tide:cooked_fish_smoking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

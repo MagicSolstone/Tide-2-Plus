@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bone_meal_from_fish_bone"
+        "recipes": "tide:bone_meal_from_fish_bone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

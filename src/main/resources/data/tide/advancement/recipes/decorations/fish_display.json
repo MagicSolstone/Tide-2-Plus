@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:fish_display"
+        "recipes": "tide:fish_display"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

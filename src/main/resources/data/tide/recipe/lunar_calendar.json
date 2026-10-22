@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
-    {
-      "item": "minecraft:paper"
-    },
-    {
-      "item": "minecraft:ink_sac"
-    },
-    {
-      "item": "minecraft:spyglass"
-    }
+    "minecraft:paper",
+    "minecraft:ink_sac",
+    "minecraft:spyglass"
   ],
   "result": {
     "count": 1,

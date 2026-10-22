@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
-    {
-      "item": "minecraft:bow"
-    },
-    {
-      "item": "tide:shooting_starfish"
-    }
+    "minecraft:bow",
+    "tide:shooting_starfish"
   ],
   "result": {
     "count": 1,

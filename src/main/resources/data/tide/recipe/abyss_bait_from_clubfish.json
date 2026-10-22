@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "tide:pale_clubfish"
-    }
+    "tide:pale_clubfish"
   ],
   "result": {
     "count": 4,

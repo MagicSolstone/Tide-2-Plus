@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:enchanted_pocket_watch"
+        "recipes": "tide:enchanted_pocket_watch"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

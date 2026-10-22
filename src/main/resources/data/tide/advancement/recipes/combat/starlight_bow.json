@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:starlight_bow"
+        "recipes": "tide:starlight_bow"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

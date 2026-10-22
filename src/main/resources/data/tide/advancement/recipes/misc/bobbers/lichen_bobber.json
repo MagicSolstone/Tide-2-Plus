@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/lichen_bobber"
+        "recipes": "tide:bobbers/lichen_bobber"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

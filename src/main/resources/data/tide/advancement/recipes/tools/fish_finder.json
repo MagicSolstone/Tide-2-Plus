@@ -43,7 +43,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:fish_finder"
+        "recipes": "tide:fish_finder"
       },
       "trigger": "minecraft:recipe_unlocked"
     },

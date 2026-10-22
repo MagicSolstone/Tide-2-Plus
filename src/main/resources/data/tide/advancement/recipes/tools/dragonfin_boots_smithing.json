@@ -33,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:dragonfin_boots_smithing"
+        "recipes": "tide:dragonfin_boots_smithing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

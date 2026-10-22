@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "equipment",
   "key": {
-    "#": {
-      "tag": "c:ingots/iron"
-    },
-    "R": {
-      "tag": "c:dusts/redstone"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "#": "#c:ingots/iron",
+    "R": "#c:dusts/redstone",
+    "S": "minecraft:stick"
   },
   "pattern": [
     " # ",

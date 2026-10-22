@@ -3,9 +3,7 @@
   "category": "food",
   "cookingtime": 100,
   "experience": 0.1,
-  "ingredient": {
-    "tag": "tide:cookable/small_cooked_fish"
-  },
+  "ingredient": "#tide:cookable/small_cooked_fish",
   "result": {
     "id": "tide:small_cooked_fish"
   }

@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/orange"
+        "recipes": "tide:bobbers/orange"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:bobbers/magenta"
+        "recipes": "tide:bobbers/magenta"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

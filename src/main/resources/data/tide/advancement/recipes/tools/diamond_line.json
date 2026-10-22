@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:diamond_line"
+        "recipes": "tide:diamond_line"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

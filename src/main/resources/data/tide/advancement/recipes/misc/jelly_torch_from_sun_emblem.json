@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:jelly_torch_from_sun_emblem"
+        "recipes": "tide:jelly_torch_from_sun_emblem"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

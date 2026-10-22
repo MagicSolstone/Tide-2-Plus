@@ -23,7 +23,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:lavaproof_hook"
+        "recipes": "tide:lavaproof_hook"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

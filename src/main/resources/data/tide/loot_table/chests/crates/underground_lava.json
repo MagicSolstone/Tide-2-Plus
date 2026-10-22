@@ -48,22 +48,20 @@
         },
         {
           "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "minecraft:enchant_with_levels",
-              "levels": 30.0,
-              "options": "#minecraft:on_random_loot"
-            }
-          ],
           "name": "minecraft:book",
           "quality": 2,
-          "weight": 5
+          "weight": 5,
+          "modifier": {
+            "levels": 30,
+            "options": "#minecraft:on_random_loot",
+            "type": "minecraft:enchant_with_levels"
+          }
         }
       ],
       "rolls": {
         "type": "minecraft:uniform",
-        "max": 9.0,
-        "min": 6.0
+        "max": 9,
+        "min": 6
       }
     },
     {
@@ -71,23 +69,19 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "chance": 0.85,
-              "condition": "minecraft:random_chance"
-            }
-          ],
-          "functions": [
-            {
-              "add": false,
-              "count": 1.0,
-              "function": "minecraft:set_count"
-            }
-          ],
-          "name": "tide:fishy_note"
+          "name": "tide:fishy_note",
+          "modifier": {
+            "add": false,
+            "count": 1,
+            "type": "minecraft:set_count"
+          },
+          "condition": {
+            "chance": 0.85,
+            "type": "minecraft:random_chance"
+          }
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ]
 }

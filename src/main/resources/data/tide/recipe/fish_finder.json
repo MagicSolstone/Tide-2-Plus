@@ -2,21 +2,11 @@
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
-    {
-      "item": "tide:pocket_watch"
-    },
-    {
-      "item": "tide:lunar_calendar"
-    },
-    {
-      "item": "tide:depth_meter"
-    },
-    {
-      "item": "tide:climate_gauge"
-    },
-    {
-      "item": "tide:weather_radio"
-    }
+    "tide:pocket_watch",
+    "tide:lunar_calendar",
+    "tide:depth_meter",
+    "tide:climate_gauge",
+    "tide:weather_radio"
   ],
   "result": {
     "count": 1,

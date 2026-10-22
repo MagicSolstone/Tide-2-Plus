@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:jelly_torch_from_jellyfish"
+        "recipes": "tide:jelly_torch_from_jellyfish"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

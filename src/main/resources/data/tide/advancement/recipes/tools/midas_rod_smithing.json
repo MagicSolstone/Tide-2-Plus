@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "tide:midas_rod_smithing"
+        "recipes": "tide:midas_rod_smithing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

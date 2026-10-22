@@ -55,3 +55,6 @@ loom {
         }
     }
 }
+
+// the CI workflow runs its own virtual screen so it can take screenshots of it
+tasks.matching { it.name == 'runSmokeClient' }.configureEach { useXvfb = false }

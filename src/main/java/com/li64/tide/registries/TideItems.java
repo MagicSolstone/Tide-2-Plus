@@ -101,10 +101,10 @@ public class TideItems {
             .stacksTo(1));
 
     public static final Item POCKET_WATCH = register("pocket_watch", PocketWatchItem::new);
-    public static final Item LUNAR_CALENDAR = register("lunar_calendar", LunarCalendarItem::new);
+    public static final Item LUNAR_CALENDAR = register("lunar_calendar", properties -> new LunarCalendarItem(properties.useBlockDescriptionPrefix()));
     public static final Item CLIMATE_GAUGE = register("climate_gauge", ClimateGaugeItem::new);
     public static final Item DEPTH_METER = register("depth_meter", DepthMeterItem::new);
-    public static final Item WEATHER_RADIO = register("weather_radio", WeatherRadioItem::new);
+    public static final Item WEATHER_RADIO = register("weather_radio", properties -> new WeatherRadioItem(properties.useBlockDescriptionPrefix()));
     public static final Item FISH_FINDER = register("fish_finder", FishFinderItem::new, new Item.Properties().rarity(Rarity.RARE));
 
     public static final Item ENCHANTED_POCKET_WATCH = register("enchanted_pocket_watch", EnchantedPocketWatchItem::new, new Item.Properties()
@@ -126,7 +126,7 @@ public class TideItems {
     public static final Item FISH_BONE = register("fish_bone", Item::new, new Item.Properties());
     public static final Item OBSIDIAN_FRAGMENT = register("obsidian_fragment", Item::new, new Item.Properties().fireResistant());
 
-    public static final Item JELLY_TORCH = register("jelly_torch",  properties -> new JellyTorchBlockItem(TideBlocks.JELLY_TORCH, TideBlocks.JELLY_WALL_TORCH, Direction.DOWN, properties), new Item.Properties());
+    public static final Item JELLY_TORCH = register("jelly_torch",  properties -> new JellyTorchBlockItem(TideBlocks.JELLY_TORCH, TideBlocks.JELLY_WALL_TORCH, Direction.DOWN, properties.useBlockDescriptionPrefix()), new Item.Properties());
 
     public static final Item COOKED_FISH = register("cooked_fish", Item::new, new Item.Properties().food(TideFoods.COOKED_FISH.toProperties(), TideFoods.COOKED_FISH.toConsumable()));
     public static final Item SMALL_COOKED_FISH = register("small_cooked_fish", Item::new, new Item.Properties().food(TideFoods.TINY_COOKED_FISH.toProperties(), TideFoods.TINY_COOKED_FISH.toConsumable()));

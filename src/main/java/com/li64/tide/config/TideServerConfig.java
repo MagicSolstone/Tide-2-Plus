@@ -26,8 +26,9 @@ public final class TideServerConfig {
     /** The fishing level system (this fork). Off = everyone fishes at the baseline level. */
     public static class Leveling {
         public boolean enabled = true;
-        /** RuneScape's XP table is divided by this (bigger = faster levels). */
-        public double xpScale = 20.0;
+        /** XP to level up = xpPerLevel + xpGrowth x level^2 (defaults: ~2 fish at level 1, ~15 at level 28). */
+        public double xpPerLevel = 20.0;
+        public double xpGrowth = 0.2;
         /** The level that fishes exactly like original Tide, and what "fair play" contests use. */
         public int baselineLevel = 40;
         public boolean announceLevelUps = true;

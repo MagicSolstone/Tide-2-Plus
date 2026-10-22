@@ -46,16 +46,6 @@ public final class Angler {
     public static final String OBJ_LEVEL = "tide_level";
     public static final String OBJ_XP = "tide_xp";
 
-    /** RuneScape's total XP to reach each level (index = level), before scaling. */
-    private static final long[] RS_XP = new long[MAX_LEVEL + 2];
-    static {
-        double points = 0;
-        for (int lvl = 1; lvl <= MAX_LEVEL + 1; lvl++) {
-            RS_XP[lvl] = (long) Math.floor(points / 4);
-            points += Math.floor(lvl + 300.0 * Math.pow(2.0, lvl / 7.0));
-        }
-    }
-
     // ------------------------------------------------------------------ settings
 
     public static boolean enabled() {
@@ -66,16 +56,26 @@ public final class Angler {
         return Tide.SERVER_CONFIG == null ? 40 : Math.max(1, Math.min(MAX_LEVEL, Tide.SERVER_CONFIG.leveling.baselineLevel));
     }
 
-    private static double xpScale() {
-        return Tide.SERVER_CONFIG == null ? 20.0 : Math.max(0.01, Tide.SERVER_CONFIG.leveling.xpScale);
+    private static double xpBase() {
+        return Tide.SERVER_CONFIG == null ? 20.0 : Math.max(1.0, Tide.SERVER_CONFIG.leveling.xpPerLevel);
+    }
+
+    private static double xpGrowth() {
+        return Tide.SERVER_CONFIG == null ? 0.2 : Math.max(0.0, Tide.SERVER_CONFIG.leveling.xpGrowth);
     }
 
     // ------------------------------------------------------------------ the curve
 
-    /** Total XP needed to reach a level. */
+    /** XP to go from {@code level} to the next: base + growth x level squared (20 + 0.2L^2 by default). */
+    public static long xpToNext(int level) {
+        return Math.round(xpBase() + xpGrowth() * level * level);
+    }
+
+    /** Total XP needed to reach a level (level 1 = 0). Defaults: 2 = 20, 30 = ~2,300, 50 = ~8,000, 99 = ~66,000. */
     public static long xpForLevel(int level) {
         level = Math.max(1, Math.min(MAX_LEVEL, level));
-        return Math.round(RS_XP[level] / xpScale());
+        long n = level - 1;
+        return Math.round(xpBase() * n + xpGrowth() * n * (n + 1) * (2 * n + 1) / 6.0);
     }
 
     public static int levelForXp(long xp) {
@@ -210,23 +210,66 @@ public final class Angler {
         FishRarity rarity = data.profile().rarity();
         double xp = rarityXp(rarity);
         String extra = "";
+        java.util.List<String> parts = new java.util.ArrayList<>();
+        parts.add(net.minecraft.network.chat.Component.translatable(stack.getItem().getDescriptionId()).getString() + " " + Math.round(xp));
 
         TidePlayerData journal = TidePlayerData.getOrCreate(player);
         FishStats before = journal.getDataFor(stack.getItem()).flatMap(f -> f.stats).orElse(null);
         if (before == null || before.getAmountCaught() == 0) {
-            xp += 50;
+            xp += NEW_SPECIES_XP;
+            parts.add("new species +" + NEW_SPECIES_XP);
             extra = " · new species!";
         } else {
             double length = com.li64.tide.data.item.TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0);
             if (length > 0 && length > before.getLargestCatch()) {
-                xp += 10;
+                xp += RECORD_XP;
+                parts.add("new record +" + RECORD_XP);
                 extra = " · new record!";
             }
         }
-        if (perfect) xp *= 1.25;
         Integer q = com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(stack, null);
-        if (q != null) xp += CatchQuality.byId(q).bonusXp();
-        addXp(player, Math.round(xp), extra);
+        if (q != null && CatchQuality.byId(q).bonusXp() > 0) {
+            xp += CatchQuality.byId(q).bonusXp();
+            parts.add(CatchQuality.byId(q).label + " +" + CatchQuality.byId(q).bonusXp());
+        }
+        if (perfect) {
+            xp *= 1.25;
+            parts.add("perfect hook x1.25");
+        }
+        long total = Math.round(xp);
+        addXp(player, total, extra);
+        player.sendSystemMessage(Component.literal("+" + total + " fishing XP: " + String.join(" · ", parts))
+                .withStyle(ChatFormatting.DARK_GRAY));
+    }
+
+    public static final int XP_VERSION = 2;
+    public static final int NEW_SPECIES_XP = 20;
+    public static final int RECORD_XP = 5;
+
+    /** XP a journal entry is worth: every catch at its rarity, quality bonuses where known, and the first-catch bonus. */
+    static long backfillXp(FishStats stats, FishRarity rarity) {
+        long xp = (long) stats.getAmountCaught() * rarityXp(rarity) + NEW_SPECIES_XP;
+        for (CatchQuality q : CatchQuality.values()) xp += (long) stats.getQualityCount(q) * q.bonusXp();
+        return xp;
+    }
+
+    /** Re-derive a player's XP from their journal (after a curve or XP change). Returns the new XP. */
+    public static long recalculate(ServerPlayer player) {
+        long xp = 0;
+        TidePlayerData journal = TidePlayerData.getOrCreate(player);
+        for (var entry : journal.fishPlayerData.entrySet()) {
+            FishStats stats = entry.getValue().stats.orElse(null);
+            if (stats == null || stats.getAmountCaught() <= 0) continue;
+            FishRarity rarity = FishData.get(entry.getKey().value()).map(f -> f.profile().rarity()).orElse(FishRarity.COMMON);
+            xp += backfillXp(stats, rarity);
+        }
+        Data d = Data.of(player);
+        d.xp = xp;
+        d.backfilled = true;
+        d.version = XP_VERSION;
+        d.save(player);
+        sync(player);
+        return xp;
     }
 
     public static void onCrateCaught(ServerPlayer player) {
@@ -299,6 +342,11 @@ public final class Angler {
     /** On join: count up XP from the journal the first time (players who fished before levels existed). */
     public static void onJoin(ServerPlayer player) {
         Data d = Data.of(player);
+        if (d.backfilled && d.version < XP_VERSION) {
+            // XP rules changed (v2: new curve, smaller first-catch bonus): recount from the journal
+            recalculate(player);
+            return;
+        }
         if (!d.backfilled) {
             long xp = 0;
             TidePlayerData journal = TidePlayerData.getOrCreate(player);
@@ -306,10 +354,11 @@ public final class Angler {
                 FishStats stats = entry.getValue().stats.orElse(null);
                 if (stats == null || stats.getAmountCaught() <= 0) continue;
                 FishRarity rarity = FishData.get(entry.getKey().value()).map(f -> f.profile().rarity()).orElse(FishRarity.COMMON);
-                xp += (long) stats.getAmountCaught() * rarityXp(rarity) + 50;
+                xp += backfillXp(stats, rarity);
             }
             d.xp = Math.max(d.xp, xp);
             d.backfilled = true;
+            d.version = XP_VERSION;
             d.save(player);
         }
         sync(player);
@@ -341,6 +390,8 @@ public final class Angler {
         public long xp;
         public boolean fair;
         public boolean backfilled;
+        /** Bumped when XP rules change, so existing players get recounted from their journal. */
+        public int version;
 
         public static Data of(ServerPlayer player) {
             CompoundTag tag = Tide.PLATFORM.getPlayerData(player).getCompoundOrEmpty(TAG);
@@ -348,6 +399,7 @@ public final class Angler {
             d.xp = tag.getLongOr("xp", 0L);
             d.fair = tag.getBooleanOr("fair", false);
             d.backfilled = tag.getBooleanOr("backfilled", false);
+            d.version = tag.getIntOr("version", 1);
             return d;
         }
 
@@ -356,6 +408,7 @@ public final class Angler {
             tag.putLong("xp", xp);
             tag.putBoolean("fair", fair);
             tag.putBoolean("backfilled", backfilled);
+            tag.putInt("version", version);
             Tide.PLATFORM.getPlayerData(player).put(TAG, tag);
         }
     }

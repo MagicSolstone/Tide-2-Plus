@@ -29,4 +29,4 @@ item replace entity @s hotbar.5 with tide:fish_satchel
 item replace entity @s hotbar.6 with tide:cooked_fish
 item replace entity @s hotbar.7 with tide:pocket_watch
 item replace entity @s hotbar.8 with tide:angling_table
-fishinglevel set @s 55
+fishinglevel set @s 28

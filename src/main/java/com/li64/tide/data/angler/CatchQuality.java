@@ -74,7 +74,8 @@ public enum CatchQuality {
         return Angler.curve(level, 0.7, 1.5) * hookBonus(hook);
     }
 
-    public static CatchQuality roll(RandomSource rng, int level, Angler.Hook hook) {
+    /** Chance of each quality (sums to 1) for a level and hook. */
+    public static double[] odds(int level, Angler.Hook hook) {
         double m = luck(level, hook);
         double[] w = new double[values().length];
         double total = 0;
@@ -89,9 +90,15 @@ public enum CatchQuality {
             w[q.ordinal()] = q.baseWeight * scale;
             total += w[q.ordinal()];
         }
-        double r = rng.nextDouble() * total;
+        for (int i = 0; i < w.length; i++) w[i] /= total;
+        return w;
+    }
+
+    public static CatchQuality roll(RandomSource rng, int level, Angler.Hook hook) {
+        double[] p = odds(level, hook);
+        double r = rng.nextDouble();
         for (CatchQuality q : values()) {
-            r -= w[q.ordinal()];
+            r -= p[q.ordinal()];
             if (r < 0) return q;
         }
         return AVERAGE;

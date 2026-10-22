@@ -119,6 +119,21 @@ jobs:
           spid=$!
           for i in $(seq 1 84); do sleep 5; grep -q "Done (" server-mp.log && break; kill -0 $spid 2>/dev/null || break; done
           echo "server: $(grep -c 'Done (' server-mp.log)"
+          # popular client mods that hook into every entity (they found the hook accessor bug):
+          # LambDynamicLights and whatever it requires, latest for this Minecraft version, from Modrinth
+          mkdir -p run/mods
+          mr() {  # project -> download its newest Fabric jar for this version, then its required dependencies
+            local q='game_versions=%5B%2226.3%22%5D&loaders=%5B%22fabric%22%5D'
+            local v; v=$(curl -sf "https://api.modrinth.com/v2/project/$1/version?$q" | jq -c '.[0] // empty')
+            [ -z "$v" ] && { echo "modrinth: no $1 for 26.3"; return; }
+            local url; url=$(echo "$v" | jq -r '(.files[] | select(.primary) | .url) // .files[0].url' | head -1)
+            local file="run/mods/$(basename "$url")"
+            [ -f "$file" ] && return
+            curl -sfL "$url" -o "$file" && echo "modrinth: $1 -> $(basename "$url")"
+            for dep in $(echo "$v" | jq -r '.dependencies[] | select(.dependency_type=="required") | .project_id'); do mr "$dep"; done
+          }
+          mr lambdynamiclights
+          ls run/mods
           ./gradlew runSmokeMp --no-daemon > client-mp.log 2>&1 &
           cpid=$!
           for i in $(seq 1 60); do sleep 5; grep -q "joined the game" server-mp.log && break; kill -0 $cpid 2>/dev/null || break; done
@@ -135,7 +150,7 @@ jobs:
           sleep 6; import -window root shots/m4-after.png
           echo "--- server"; grep -nE "TIDE-CI|\[Tide catch\]|reached fishing|lost connection|left the game|Exception|ERROR" server-mp.log | tail -20
           echo "--- client"; grep -nE "TIDE-CI|Exception|ERROR|Disconnect|disconnect|lost" client-mp.log | grep -v "OpenGL\|GLX\|flite\|narrator\|OpenAL\|SoundSystem\|Realms\|sessionserver" | tail -20
-          pkill -f 'net.fabricmc' ; sleep 3; kill $spid $cpid 2>/dev/null; true
+          pkill -f 'net.fabricmc' ; sleep 3; kill $spid $cpid 2>/dev/null; rm -rf run/mods; true
 
       # The full build output is hard to read from outside GitHub, so the errors (and the tail
       # of the log) are also written to the ci-results branch: one file per run, plus latest.

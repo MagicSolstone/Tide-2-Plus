@@ -11,16 +11,25 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * A stand-in vanilla hook set as {@code player.fishing} so vanilla and other mods see the player as
+ * fishing. It's never added to the world, so it never gets a real entity id; 26.x throws if anything
+ * asks for one (other mods do, e.g. LambDynamicLights when it's removed), so it gets its own
+ * negative placeholder id, which can't clash with a real entity's.
+ */
 public class HookAccessor extends FishingHook {
+    private static final java.util.concurrent.atomic.AtomicInteger PLACEHOLDER_IDS = new java.util.concurrent.atomic.AtomicInteger(-1000);
     private TideFishingHook hook = null;
 
     public HookAccessor(TideFishingHook hook, Level level) {
         super(TideEntityTypes.HOOK_ACCESSOR, level);
+        this.setId(PLACEHOLDER_IDS.getAndDecrement());
         this.hook = hook;
     }
 
     public HookAccessor(EntityType<? extends FishingHook> entityType, Level level) {
         super(entityType, level);
+        this.setId(PLACEHOLDER_IDS.getAndDecrement());
     }
 
     private boolean checkIsUnlinked() {

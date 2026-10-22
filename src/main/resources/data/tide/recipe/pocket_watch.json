@@ -3,7 +3,7 @@
   "category": "equipment",
   "ingredients": [
     "minecraft:clock",
-    "minecraft:chain"
+    "minecraft:iron_chain"
   ],
   "result": {
     "count": 1,

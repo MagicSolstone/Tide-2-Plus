@@ -90,8 +90,8 @@ final class AnglerCard {
         y += 12;
         for (FishRarity r : FishRarity.values()) {
             double f = Angler.fightSpeed(effective, r);
-            String word = f < 0.93 ? "Easy" : f < 1.07 ? "Normal" : f < 1.3 ? "Tough" : f < 1.7 ? "Hard" : "Very hard";
-            int color = f < 0.93 ? GOOD : f < 1.07 ? OK : BAD;
+            String word = f < 0.92 ? "Easy" : f < 1.1 ? "Normal" : f < 1.35 ? "Tough" : f < 1.7 ? "Hard" : "Very hard";
+            int color = f < 0.92 ? GOOD : f < 1.1 ? OK : BAD;
             y = row(g, font, x, y, " " + rarityName(r), word, color);
         }
         y += 8;

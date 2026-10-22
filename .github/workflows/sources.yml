@@ -25,6 +25,9 @@ jobs:
           find ~/.gradle .gradle -name '*.jar' 2>/dev/null | grep -i -E 'minecraft|sources' | head -30 | while read -r l; do echo "::notice::$l $(stat -c %s "$l")"; done
           mkdir -p /tmp/s && cd /tmp/s && git init -q -b mc-sources
           cp ~/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-merged-deobf/26.3/minecraft-merged-deobf-26.3.jar mc.jar
+          curl -sL -o /tmp/vf.jar https://repo1.maven.org/maven2/org/vineflower/vineflower/1.11.1/vineflower-1.11.1.jar
+          java -Xmx6g -jar /tmp/vf.jar -din=0 -rbr=1 -dgs=1 -log=WARN mc.jar src > /dev/null 2>&1
+          echo "::notice::decompiled $(find src -name '*.java' | wc -l) files"
           ls -la
           git config --global user.name ci; git config --global user.email ci@users.noreply.github.com
           git add -A && git commit -qm "26.3 sources" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" mc-sources

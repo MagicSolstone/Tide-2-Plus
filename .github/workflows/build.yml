@@ -51,6 +51,31 @@ jobs:
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null
           grep -q "Done (" server.log && echo "started=yes" || echo "started=no"
 
+      # Start the real client on a virtual screen, load into the test world (a small data pack builds
+      # a fish tank in front of the player and fills the hotbar with Tide items) and take screenshots.
+      - name: Client smoke test
+        if: steps.build.outcome == 'success'
+        shell: bash
+        run: |
+          set +e
+          sudo apt-get install -y -q xvfb imagemagick libgl1-mesa-dri mesa-vulkan-drivers > /dev/null 2>&1
+          mkdir -p run/saves shots
+          rm -rf run/saves/smoke && cp -r run/world run/saves/smoke
+          mkdir -p run/saves/smoke/datapacks && cp -r ci/smokepack run/saves/smoke/datapacks/tide_smoke
+          printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\ntutorialStep:none\nrenderDistance:4\nsimulationDistance:5\nsoundCategory_master:0.0\npauseOnLostFocus:false\n' > run/options.txt
+          Xvfb :99 -screen 0 1280x720x24 > /dev/null 2>&1 &
+          export DISPLAY=:99
+          ./gradlew runSmokeClient --no-daemon > client.log 2>&1 &
+          pid=$!
+          for i in $(seq 1 60); do
+            sleep 5
+            if grep -qiE "joined|logged in with entity|Started 'Integrated|Preparing spawn area: 100" client.log; then break; fi
+            if ! kill -0 $pid 2>/dev/null; then break; fi
+          done
+          sleep 25; import -window root shots/1-world.png
+          sleep 15; import -window root shots/2-later.png
+          pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null
+
       # The full build output is hard to read from outside GitHub, so the errors (and the tail
       # of the log) are also written to the ci-results branch: one file per run, plus latest.
       - name: Publish results to the ci-results branch
@@ -76,11 +101,16 @@ jobs:
             grep -nE 'ERROR|WARN|Exception|Caused by|Failed|Couldn.t|Unknown|Missing' server.log | grep -v 'Using default\|Ambiguous' | head -3000
             echo; echo "---- tail ----"; tail -150 server.log
           } > /tmp/results/server.txt
+          touch client.log
+          {
+            grep -nE 'ERROR|WARN|Exception|Caused by|Failed|Couldn.t|Unknown|Missing' client.log | head -3000
+            echo; echo "---- tail ----"; tail -150 client.log
+          } > /tmp/results/client.txt
           git config --global user.name "ci"
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt . ; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

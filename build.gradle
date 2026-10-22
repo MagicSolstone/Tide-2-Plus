@@ -44,3 +44,14 @@ tasks.register('dumpClasspath', Copy) {
     from configurations.compileClasspath
     into layout.buildDirectory.dir('cp')
 }
+
+// CI helper: a client that loads straight into the smoke-test world (see .github/workflows/build.yml)
+loom {
+    runs {
+        smokeClient {
+            client()
+            name = "Smoke Client"
+            programArgs "--quickPlaySingleplayer", "smoke"
+        }
+    }
+}

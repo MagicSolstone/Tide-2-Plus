@@ -9,8 +9,17 @@ Planned on top: quality tiers for fish and a fishing level system.
 - **No third-party compat** (Stardew Fishing, Starcatcher, seasons mods, Trinkets/Curios, Fishing Real,
   Hybrid Aquatic). The hooks in `CompatHelper` remain as no-ops.
 - **No Cloth Config / Mod Menu:** settings are plain JSON in `config/tide.json`.
-- **Builds on GitHub Actions** (`.github/workflows/build.yml`). Each push publishes the compiler
-  errors to the `ci-results` branch (`latest.txt`) and, when it builds, a jar to the `dev` release.
+- **Builds and tests on GitHub Actions** (`.github/workflows/build.yml`). Each push builds the jar, boots
+  a dedicated server with it, then the real client on a virtual screen (it loads a test world, casts the
+  rod and opens the journal). Logs and screenshots go to the `ci-results` branch; a jar that builds goes
+  to the [`dev` release](https://github.com/TJusczak/Tide-2-fabric26plus-levels/releases/tag/dev).
+
+**Install:** put the jar in `mods/` on the server and every client, with Fabric Loader 0.19.5+ and
+Fabric API for 26.3. Worlds/players that had Tide data from 1.21.1 aren't a goal of this fork.
+
+What changed for 26.3, roughly: renderers use render states, GUI drawing uses the new extractor API
+(journal silhouettes have their own render pipeline), item models are defined in `assets/tide/items/`,
+armor/swords/food/fuel/trades are components or data, and the data files use 26.3's formats.
 
 Licensed MPL-2.0, like upstream. Original README below.
 

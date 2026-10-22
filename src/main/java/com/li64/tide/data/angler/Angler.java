@@ -203,10 +203,10 @@ public final class Angler {
     }
 
     /** Call before the catch goes into the journal (so first catches and records can be spotted). */
-    public static void onFishCaught(ServerPlayer player, ItemStack stack, boolean perfect) {
-        if (!enabled()) return;
+    public static long onFishCaught(ServerPlayer player, ItemStack stack, boolean perfect) {
+        if (!enabled()) return 0;
         FishData data = FishData.get(stack).orElse(null);
-        if (data == null) return;
+        if (data == null) return 0;
         FishRarity rarity = data.profile().rarity();
         double xp = rarityXp(rarity);
         String extra = "";
@@ -240,6 +240,38 @@ public final class Angler {
         addXp(player, total, extra);
         player.sendSystemMessage(Component.literal("+" + total + " fishing XP: " + String.join(" · ", parts))
                 .withStyle(ChatFormatting.DARK_GRAY));
+        return total;
+    }
+
+    /**
+     * One line per caught fish in the server log, for outside tools (Solstone reads it):
+     * {@code [Tide catch] {"player":"Tyler","fish":"tide:bluegill","quality":2,...}}
+     */
+    public static void logCatch(ServerPlayer player, ItemStack stack, Hook hook, long xp, boolean newSpecies) {
+        com.google.gson.JsonObject o = new com.google.gson.JsonObject();
+        o.addProperty("player", player.getScoreboardName());
+        o.addProperty("uuid", player.getStringUUID());
+        o.addProperty("fish", net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+        FishData.get(stack).ifPresent(d -> o.addProperty("rarity", d.profile().rarity().getSerializedName()));
+        Integer q = com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(stack, null);
+        if (q != null) {
+            o.addProperty("quality", q);
+            o.addProperty("quality_name", CatchQuality.byId(q).label);
+        }
+        double len = com.li64.tide.data.item.TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0);
+        double grams = com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0);
+        if (len > 0) o.addProperty("length_cm", Math.round(len * 10) / 10.0);
+        if (grams > 0) o.addProperty("weight_g", Math.round(grams * 10) / 10.0);
+        o.addProperty("level", effectiveLevel(player));
+        o.addProperty("fair", enabled() && Data.of(player).fair);
+        o.addProperty("hook", hook.name().toLowerCase(java.util.Locale.ROOT));
+        o.addProperty("xp", xp);
+        o.addProperty("new_species", newSpecies);
+        o.addProperty("dim", player.level().dimension().identifier().toString());
+        o.addProperty("x", player.getBlockX());
+        o.addProperty("y", player.getBlockY());
+        o.addProperty("z", player.getBlockZ());
+        Tide.LOG.info("[Tide catch] {}", o);
     }
 
     public static final int XP_VERSION = 2;

@@ -1,5 +1,7 @@
 package com.li64.tide.registries.entities.misc.fishing;
 
+import com.li64.tide.data.player.TidePlayerData;
+
 import com.google.common.collect.ImmutableList;
 import com.li64.tide.Tide;
 import com.li64.tide.compat.CompatHelper;
@@ -653,8 +655,11 @@ public class TideFishingHook extends Projectile {
                             }
 
                             // fishing XP (before the journal, so first catches and records count), then the journal
-                            com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack, this.wasPerfectCatch);
+                            boolean newSpecies = TidePlayerData.getOrCreate(serverPlayer).getDataFor(stack.getItem())
+                                    .flatMap(f -> f.stats).map(st -> st.getAmountCaught() == 0).orElse(true);
+                            long gained = com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack, this.wasPerfectCatch);
                             TideUtils.tryLogCatch(stack, serverPlayer);
+                            com.li64.tide.data.angler.Angler.logCatch(serverPlayer, stack, this.hookResult, gained, newSpecies);
                         }
                     }
                     break;

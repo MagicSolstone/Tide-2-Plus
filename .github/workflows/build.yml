@@ -81,6 +81,8 @@ jobs:
           xdotool click 3; sleep 2
           xdotool key 2; sleep 1; xdotool click 3
           sleep 4; import -window root shots/4-journal.png
+          xdotool mousemove 340 140; sleep 0.5; xdotool click 1; sleep 2; import -window root shots/4b-angler.png
+          xdotool key Escape; sleep 1
           xdotool key Escape; sleep 2; import -window root shots/5-after.png
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null
 

@@ -1,5 +1,7 @@
 package com.li64.tide.data.minigame;
 
+import com.li64.tide.data.angler.Angler;
+import com.li64.tide.data.journal.FishRarity;
 import com.li64.tide.Tide;
 import com.li64.tide.compat.CompatHelper;
 import com.li64.tide.data.fishing.FishData;
@@ -27,6 +29,7 @@ public class FishCatchMinigame {
 
     private final TideFishingHook hook;
     private final ServerPlayer player;
+    private Angler.Zones zones;
 
     public static FishCatchMinigame getInstance(Player player) {
         for (FishCatchMinigame minigame : ACTIVE_MINIGAMES) {
@@ -69,11 +72,18 @@ public class FishCatchMinigame {
         float area = Mth.clamp(1 - fishStrength, 0.05f, 1.0f);
         float speed = Math.max(fishSpeed / 20f * Tide.SERVER_CONFIG.minigame.minigameDifficultyMultiplier, 0.05f);
 
+        // fishing level: how wide the good zones are, and how hard this fish fights for this angler
+        int level = Angler.effectiveLevel(player);
+        FishRarity rarity = data.map(d -> d.profile().rarity()).orElse(FishRarity.COMMON);
+        this.zones = Angler.Zones.of(area, Angler.Stats.of(level).hookZones());
+        speed *= (float) Angler.fightSpeed(level, rarity);
+
         // Start client minigame gui
         int type = 0;
         if (hook.getCurrentMedium() == FishingMedium.LAVA) type = 1;
         if (hook.getCurrentMedium() == FishingMedium.VOID) type = 2;
-        Tide.NETWORK.sendToPlayer(new MinigameClientMsg((byte) 0, (byte) type, (byte) behavior, area, speed), player);
+        Tide.NETWORK.sendToPlayer(new MinigameClientMsg((byte) 0, (byte) type, (byte) behavior, zones.good(), speed,
+                zones.perfect(), zones.great(), zones.bad()), player);
     }
 
     public static boolean delayActive(ServerPlayer player) {
@@ -130,6 +140,18 @@ public class FishCatchMinigame {
             ACTIVE_MINIGAMES.remove(this);
             return true;
         } else return false;
+    }
+
+    /** The player clicked: {@code accuracy} is how far the marker was from the centre (0..1). */
+    public void handleHook(float accuracy) {
+        if (cancelIfNecessary()) return;
+        Angler.Hook hook = Angler.Hook.of(Math.abs(accuracy), zones);
+        boolean landed = hook.landChance >= 1.0 || player.getRandom().nextDouble() < hook.landChance;
+        if (!landed && hook != Angler.Hook.TERRIBLE)
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("The fish shook the hook loose!")
+                    .withStyle(net.minecraft.ChatFormatting.RED));
+        if (landed) onWin(hook == Angler.Hook.PERFECT);
+        else onFail();
     }
 
     public void handleClientEvent(byte event) {

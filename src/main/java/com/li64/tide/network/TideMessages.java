@@ -19,6 +19,7 @@ public class TideMessages {
         network.registerClientBoundPacket(InfoDataMsg.class, InfoDataMsg.ID, InfoDataMsg::encode, InfoDataMsg::new, InfoDataMsg::handle);
         network.registerClientBoundPacket(SyncPlayerDataMsg.class, SyncPlayerDataMsg.ID, SyncPlayerDataMsg::encode, SyncPlayerDataMsg::new, SyncPlayerDataMsg::handle);
         network.registerClientBoundPacket(ShowToastMsg.class, ShowToastMsg.ID, ShowToastMsg::encode, ShowToastMsg::new, ShowToastMsg::handle);
+        network.registerClientBoundPacket(AnglerSyncMsg.class, AnglerSyncMsg.ID, AnglerSyncMsg::encode, AnglerSyncMsg::new, AnglerSyncMsg::handle);
         network.registerClientBoundPacket(SyncDataMsg.class, SyncDataMsg.ID, SyncDataMsg::encode, SyncDataMsg::new, SyncDataMsg::handle);
 
          /*if (Tide.PLATFORM.isModLoaded("starcatcher")) network.registerClientBoundPacket(StarcatcherStartMinigameMsg.class, StarcatcherStartMinigameMsg.ID, StarcatcherStartMinigameMsg::encode, StarcatcherStartMinigameMsg::new, StarcatcherStartMinigameMsg::handle);*/

@@ -19,6 +19,7 @@ public class TideEventHandler {
                 playerData.gotJournal = true;
         }
         playerData.syncTo(player);
+        com.li64.tide.data.angler.Angler.onJoin(player);
     }
 
     public static void serverStarted() {

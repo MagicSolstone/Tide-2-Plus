@@ -504,6 +504,9 @@ public class TideFishingHook extends Projectile {
             this.timeUntilLured = (int) (Mth.nextInt(this.random, 200, 600) * this.medium.biteTimeMultiplier());
             this.timeUntilLured -= (int) (2000.0 / (1.0 + Math.exp(-0.2 * this.lureSpeed)) - 1000.0);
             double globalBiteTimeMultiplier = Tide.PLATFORM.isModLoaded("stardew_fishing") ? CompatHelper.stardewFishingBiteTimeMultiplier() : 1.0;
+            // fishing level: patience (how long until a bite)
+            if (this.getPlayerOwner() instanceof ServerPlayer angler)
+                this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.angler.Angler.stats(angler).biteWait());
             this.timeUntilLured = Math.max((int) (this.timeUntilLured * globalBiteTimeMultiplier), 10);
         }
     }
@@ -635,6 +638,7 @@ public class TideFishingHook extends Projectile {
                                 player.level(), player.getX(), player.getY() + 0.5, player.getZ() + 0.5,
                                 this.random.nextInt(4) + 1));
 
+                        if (catchType == CatchType.ITEM) com.li64.tide.data.angler.Angler.onItemCaught(serverPlayer);
                         if (catchType == CatchType.FISH) {
                             if (!player.isCreative() && BaitUtils.hasBait(rod)) {
                                 // consume used bait
@@ -643,7 +647,8 @@ public class TideFishingHook extends Projectile {
                                 TideItemData.BAIT_CONTENTS.set(rod, contents.toImmutable());
                             }
 
-                            // add catch to journal stats
+                            // fishing XP (before the journal, so first catches and records count), then the journal
+                            com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack, this.wasPerfectCatch);
                             TideUtils.tryLogCatch(stack, serverPlayer);
                         }
                     }
@@ -680,6 +685,7 @@ public class TideFishingHook extends Projectile {
                     if (fluidState.is(TideTags.Fluids.WATER_FISHING) && fluidState.is(Fluids.WATER)) level.setBlockAndUpdate(this.blockPosition(), Blocks.WATER.defaultBlockState());
 
                     TideCriteriaTriggers.PULLED_CRATE.trigger(serverPlayer);
+                    com.li64.tide.data.angler.Angler.onCrateCaught(serverPlayer);
                     break;
 
                 case NOTHING:

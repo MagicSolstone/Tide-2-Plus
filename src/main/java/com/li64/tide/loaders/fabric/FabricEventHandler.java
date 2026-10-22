@@ -33,6 +33,7 @@ public class FabricEventHandler {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
             new JournalCommand(dispatcher, registryAccess);
             new FishingCommand(dispatcher, registryAccess);
+            new com.li64.tide.data.commands.FishingLevelCommand(dispatcher);
         });
 
         ServerPlayerEvents.COPY_FROM.register((oldPlayer, newPlayer, alive) -> {

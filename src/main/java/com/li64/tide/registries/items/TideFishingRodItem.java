@@ -328,6 +328,13 @@ public class TideFishingRodItem extends FishingRodItem {
                     if (CustomRodManager.getHook(rod).getItem().toString().matches("magnetic_hook")) luck += 1;
                 }
 
+                // fishing level: cast distance and angler's luck
+                if (player instanceof ServerPlayer angler) {
+                    com.li64.tide.data.angler.Angler.Stats stats = com.li64.tide.data.angler.Angler.stats(angler);
+                    luck += stats.luck();
+                    charge *= (float) stats.castDistance();
+                }
+
                 level.addFreshEntity(new TideFishingHook(TideEntityTypes.FISHING_BOBBER,
                         player, level, luck, speed, charge, rod));
             }

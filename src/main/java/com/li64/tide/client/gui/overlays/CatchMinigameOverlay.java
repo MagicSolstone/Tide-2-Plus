@@ -42,11 +42,16 @@ public class CatchMinigameOverlay {
     private static byte type;
     private static float area;
     private static float speed;
+    private static float perfectZone, greatZone, badZone;
     private static MinigameBehavior behavior;
     private static long delayTime;
 
-    public static void start(byte type, byte behavior, float area, float speed) {
+    public static void start(byte type, byte behavior, float area, float speed, float perfect, float great, float bad) {
         if (isActive) return;
+        // an older server sends no zones: fall back to original Tide's (perfect 0.1, everything else in the area)
+        CatchMinigameOverlay.perfectZone = perfect > 0 ? perfect : Math.min(0.1f, area);
+        CatchMinigameOverlay.greatZone = great > 0 ? great : area;
+        CatchMinigameOverlay.badZone = bad > 0 ? bad : area;
 
         CatchMinigameOverlay.type = type;
         CatchMinigameOverlay.behavior = MinigameBehavior.values()[behavior];
@@ -69,23 +74,24 @@ public class CatchMinigameOverlay {
         // Calculate accuracy
         float accuracy = Math.abs(getMinigamePosition());
 
-        if (accuracy < area) {
-            if (accuracy < 0.1f) {
-                accuracyText = Component.translatable("minigame.perfect");
-                textColor = ChatFormatting.GOLD;
-                Tide.NETWORK.sendToServer(new MinigameServerMsg((byte) 3));
-            }
-            else {
-                accuracyText = Component.translatable("minigame.catch");
-                textColor = ChatFormatting.GREEN;
-                Tide.NETWORK.sendToServer(new MinigameServerMsg((byte) 2));
-            }
-        }
-        else {
+        // the server decides whether the fish stays on; this is just what the player sees right away
+        if (accuracy < perfectZone) {
+            accuracyText = Component.translatable("minigame.perfect");
+            textColor = ChatFormatting.GOLD;
+        } else if (accuracy < greatZone) {
+            accuracyText = Component.literal("Great!");
+            textColor = ChatFormatting.AQUA;
+        } else if (accuracy < area) {
+            accuracyText = Component.literal("Good");
+            textColor = ChatFormatting.GREEN;
+        } else if (accuracy < badZone) {
+            accuracyText = Component.literal("Bad hook...");
+            textColor = ChatFormatting.YELLOW;
+        } else {
             accuracyText = Component.translatable("minigame.miss");
             textColor = ChatFormatting.RED;
-            Tide.NETWORK.sendToServer(new MinigameServerMsg((byte) 1));
         }
+        Tide.NETWORK.sendToServer(new MinigameServerMsg((byte) 5, accuracy));
 
         close();
     }
@@ -115,7 +121,10 @@ public class CatchMinigameOverlay {
         int texWidth = 60;
         int texHeight = 7;
 
-        int offset = Math.round((texWidth / 2f) * (1 - area));
+        // zone edges in pixels from the centre (the marker travels +-28 px)
+        final float reach = texWidth / 2f - 2;
+        int goodPx = Math.round(area * reach);
+        int offset = texWidth / 2 - goodPx;
 
         int x = (graphics.guiWidth() - texWidth) / 2;
         int y = graphics.guiHeight() / 2 - 18;
@@ -125,7 +134,16 @@ public class CatchMinigameOverlay {
         Identifier fillSprite = type == 1 ? FILL_LAVA : (type == 2 ? FILL_VOID : FILL_WATER);
 
         graphics.blit(RenderPipelines.GUI_TEXTURED, BAR_BG, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight, color);
+        int cx = x + texWidth / 2;
+        // terrible (outer) and bad (red) zones, then the water fill for good, a lighter band for great, gold for perfect
+        graphics.fill(x + 1, y + 1, x + texWidth - 1, y + texHeight - 1, ARGB.color(alpha * 0.55f, 0x4A0E0E));
+        int badPx = Math.round(badZone * reach);
+        graphics.fill(cx - badPx, y + 1, cx + badPx, y + texHeight - 1, ARGB.color(alpha * 0.8f, 0xC0392B));
         graphics.blitSprite(RenderPipelines.GUI_TEXTURED, fillSprite, x + offset, y, texWidth - offset * 2, texHeight, color);
+        int greatPx = Math.round(greatZone * reach);
+        graphics.fill(cx - greatPx, y + 2, cx + greatPx, y + texHeight - 2, ARGB.color(alpha * 0.35f, 0xFFFFFF));
+        int perfectPx = Math.max(1, Math.round(perfectZone * reach));
+        graphics.fill(cx - perfectPx, y + 2, cx + perfectPx, y + texHeight - 2, ARGB.color(alpha * 0.85f, 0xFFD24A));
         graphics.blit(RenderPipelines.GUI_TEXTURED, BAR_OVERLAY, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight, color);
 
         int markerX = Math.round((x + texWidth / 2f - 2) + getMinigamePosition() * (texWidth / 2f - 2));

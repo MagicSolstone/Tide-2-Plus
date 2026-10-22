@@ -13,12 +13,24 @@ public final class TideServerConfig {
     public Items items;
     public Journal journal;
     public Minigame minigame;
+    public Leveling leveling;
 
     public TideServerConfig() {
         this.general = new General();
         this.items = new Items();
         this.journal = new Journal();
         this.minigame = new Minigame();
+        this.leveling = new Leveling();
+    }
+
+    /** The fishing level system (this fork). Off = everyone fishes at the baseline level. */
+    public static class Leveling {
+        public boolean enabled = true;
+        /** RuneScape's XP table is divided by this (bigger = faster levels). */
+        public double xpScale = 20.0;
+        /** The level that fishes exactly like original Tide, and what "fair play" contests use. */
+        public int baselineLevel = 40;
+        public boolean announceLevelUps = true;
     }
 
     public static void writeToPacket(FriendlyByteBuf buf, Gson gson) {

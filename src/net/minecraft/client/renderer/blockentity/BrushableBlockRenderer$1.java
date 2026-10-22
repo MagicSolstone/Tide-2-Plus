@@ -1,0 +1,41 @@
+package net.minecraft.client.renderer.blockentity;
+
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.core.Direction;
+
+// $VF: synthetic class
+@Environment(EnvType.CLIENT)
+class BrushableBlockRenderer$1 {
+   static {
+      try {
+         $SwitchMap$net$minecraft$core$Direction[Direction.EAST.ordinal()] = 1;
+      } catch (NoSuchFieldError var6) {
+      }
+
+      try {
+         $SwitchMap$net$minecraft$core$Direction[Direction.WEST.ordinal()] = 2;
+      } catch (NoSuchFieldError var5) {
+      }
+
+      try {
+         $SwitchMap$net$minecraft$core$Direction[Direction.UP.ordinal()] = 3;
+      } catch (NoSuchFieldError var4) {
+      }
+
+      try {
+         $SwitchMap$net$minecraft$core$Direction[Direction.DOWN.ordinal()] = 4;
+      } catch (NoSuchFieldError var3) {
+      }
+
+      try {
+         $SwitchMap$net$minecraft$core$Direction[Direction.NORTH.ordinal()] = 5;
+      } catch (NoSuchFieldError var2) {
+      }
+
+      try {
+         $SwitchMap$net$minecraft$core$Direction[Direction.SOUTH.ordinal()] = 6;
+      } catch (NoSuchFieldError var1) {
+      }
+   }
+}

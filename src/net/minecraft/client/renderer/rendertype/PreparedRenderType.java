@@ -1,0 +1,58 @@
+package net.minecraft.client.renderer.rendertype;
+
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.systems.ScissorState;
+import com.mojang.renderpearl.api.buffers.GpuBuffer;
+import com.mojang.renderpearl.api.buffers.GpuBufferSlice;
+import com.mojang.renderpearl.api.commands.RenderPass;
+import com.mojang.renderpearl.api.pipeline.RenderPipeline;
+import java.util.List;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.StagedVertexBuffer$ExecuteInfo;
+import net.minecraft.client.renderer.oit.OitPipelineSet;
+import net.minecraft.client.renderer.oit.OitStage;
+import org.jspecify.annotations.Nullable;
+
+@Environment(EnvType.CLIENT)
+public record PreparedRenderType(
+   String name,
+   RenderPipeline pipeline,
+   @Nullable OitPipelineSet oitPipelineSet,
+   GpuBufferSlice dynamicTransforms,
+   ScissorState scissorState,
+   List<PreparedRenderType$Texture> textures
+) {
+   public void drawFromBuffer(final StagedVertexBuffer$ExecuteInfo info, final RenderPass renderPass) {
+      this.draw(info, renderPass, this.pipeline);
+   }
+
+   public void drawFromBufferOit(final StagedVertexBuffer$ExecuteInfo info, final OitStage stage, final RenderPass renderPass) {
+      if (this.oitPipelineSet == null) {
+         throw new IllegalStateException("Render type " + this.name + " does not have OIT pipelines set up.");
+      } else {
+         this.draw(info, renderPass, this.oitPipelineSet.getPipeline(stage));
+      }
+   }
+
+   private void draw(final StagedVertexBuffer$ExecuteInfo info, final RenderPass renderPass, final RenderPipeline renderPipeline) {
+      renderPass.pushDebugGroup(() -> "Render Type " + this.name);
+      GpuBuffer indexBuffer = info.indexBuffer();
+      renderPass.setPipeline(RenderSystem.getCompiledPipeline(renderPipeline));
+      if (this.scissorState.enabled()) {
+         renderPass.enableScissor(this.scissorState.x(), this.scissorState.y(), this.scissorState.width(), this.scissorState.height());
+      }
+
+      RenderSystem.bindDefaultUniforms(renderPass);
+      renderPass.setUniform("DynamicTransforms", this.dynamicTransforms);
+      renderPass.setVertexBuffer(0, info.vertexBuffer().slice());
+
+      for (PreparedRenderType$Texture texture : this.textures) {
+         renderPass.setUniform(texture.name, texture.textureView, texture.sampler);
+      }
+
+      renderPass.setIndexBuffer(indexBuffer, info.indexType());
+      renderPass.drawIndexed(info.indexCount(), 1, info.firstIndex(), info.baseVertex(), 0);
+      renderPass.popDebugGroup();
+   }
+}

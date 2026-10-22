@@ -1,0 +1,35 @@
+package net.minecraft.client.renderer.special;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.object.book.BookModel;
+import net.minecraft.client.model.object.book.BookModel$State;
+
+@Environment(EnvType.CLIENT)
+public record BookSpecialRenderer$Unbaked(float openAngle, float page1, float page2) implements NoDataSpecialModelRenderer$Unbaked {
+   public static final MapCodec<BookSpecialRenderer$Unbaked> MAP_CODEC = RecordCodecBuilder.mapCodec(
+      i -> i.group(
+            Codec.FLOAT.fieldOf("open_angle").forGetter(BookSpecialRenderer$Unbaked::openAngle),
+            Codec.FLOAT.fieldOf("page1").forGetter(BookSpecialRenderer$Unbaked::page1),
+            Codec.FLOAT.fieldOf("page2").forGetter(BookSpecialRenderer$Unbaked::page2)
+         )
+         .apply(i, BookSpecialRenderer$Unbaked::new)
+   );
+
+   @Override
+   public MapCodec<BookSpecialRenderer$Unbaked> type() {
+      return MAP_CODEC;
+   }
+
+   public BookSpecialRenderer bake(final SpecialModelRenderer$BakingContext context) {
+      return new BookSpecialRenderer(
+         context.sprites(),
+         new BookModel(context.entityModelSet().bakeLayer(ModelLayers.BOOK)),
+         new BookModel$State(this.openAngle * (float) (Math.PI / 180.0), this.page1, this.page2)
+      );
+   }
+}

@@ -1,0 +1,60 @@
+package net.minecraft.client.renderer.texture.atlas;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableList.Builder;
+import com.google.gson.JsonElement;
+import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Dynamic;
+import com.mojang.serialization.JsonOps;
+import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.StrictJsonParser;
+import org.slf4j.Logger;
+
+@Environment(EnvType.CLIENT)
+public class SpriteSourceList {
+   private static final Logger LOGGER = LogUtils.getLogger();
+   private static final FileToIdConverter ATLAS_INFO_CONVERTER = new FileToIdConverter("atlases", ".json");
+   private final List<SpriteSource> sources;
+
+   private SpriteSourceList(final List<SpriteSource> sources) {
+      this.sources = sources;
+   }
+
+   public List<SpriteSource$Loader> list(final ResourceManager resourceManager) {
+      Map<Identifier, SpriteSource$DiscardableLoader> sprites = new HashMap<>();
+      SpriteSource$Output output = new SpriteSourceList$1(this, sprites);
+      this.sources.forEach(s -> s.run(resourceManager, output));
+      Builder<SpriteSource$Loader> result = ImmutableList.builder();
+      result.add((SpriteSource$Loader)loader -> MissingTextureAtlasSprite.create());
+      result.addAll(sprites.values());
+      return result.build();
+   }
+
+   public static SpriteSourceList load(final ResourceManager resourceManager, final Identifier atlasId) {
+      Identifier resourceId = ATLAS_INFO_CONVERTER.idToFile(atlasId);
+      List<SpriteSource> loaders = new ArrayList<>();
+
+      for (Resource entry : resourceManager.getResourceStack(resourceId)) {
+         try (BufferedReader reader = entry.openAsReader()) {
+            Dynamic<JsonElement> contents = new Dynamic(JsonOps.INSTANCE, StrictJsonParser.parse(reader));
+            loaders.addAll((Collection<? extends SpriteSource>)SpriteSources.FILE_CODEC.parse(contents).getOrThrow());
+         } catch (Exception var11) {
+            LOGGER.error("Failed to parse atlas definition {} in pack {}", new Object[]{resourceId, entry.sourcePackId(), var11});
+         }
+      }
+
+      return new SpriteSourceList(loaders);
+   }
+}

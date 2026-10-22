@@ -1,0 +1,82 @@
+package net.minecraft.data.tags;
+
+import java.util.concurrent.CompletableFuture;
+import net.minecraft.core.HolderLookup$Provider;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.PackOutput;
+import net.minecraft.tags.StructureTags;
+import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
+import net.minecraft.world.level.levelgen.structure.Structure;
+
+public class StructureTagsProvider extends TagsProvider<Structure> {
+   public StructureTagsProvider(final PackOutput output, final CompletableFuture<HolderLookup$Provider> lookupProvider) {
+      super(output, Registries.STRUCTURE, lookupProvider);
+   }
+
+   @Override
+   protected void addTags(final HolderLookup$Provider registries) {
+      this.tag(StructureTags.VILLAGE)
+         .add(BuiltinStructures.VILLAGE_PLAINS)
+         .add(BuiltinStructures.VILLAGE_DESERT)
+         .add(BuiltinStructures.VILLAGE_SAVANNA)
+         .add(BuiltinStructures.VILLAGE_SNOWY)
+         .add(BuiltinStructures.VILLAGE_TAIGA);
+      this.tag(StructureTags.MINESHAFT).add(BuiltinStructures.MINESHAFT).add(BuiltinStructures.MINESHAFT_MESA);
+      this.tag(StructureTags.OCEAN_RUIN).add(BuiltinStructures.OCEAN_RUIN_COLD).add(BuiltinStructures.OCEAN_RUIN_WARM);
+      this.tag(StructureTags.SHIPWRECK).add(BuiltinStructures.SHIPWRECK).add(BuiltinStructures.SHIPWRECK_BEACHED);
+      this.tag(StructureTags.RUINED_PORTAL)
+         .add(BuiltinStructures.RUINED_PORTAL_DESERT)
+         .add(BuiltinStructures.RUINED_PORTAL_JUNGLE)
+         .add(BuiltinStructures.RUINED_PORTAL_MOUNTAIN)
+         .add(BuiltinStructures.RUINED_PORTAL_NETHER)
+         .add(BuiltinStructures.RUINED_PORTAL_OCEAN)
+         .add(BuiltinStructures.RUINED_PORTAL_STANDARD)
+         .add(BuiltinStructures.RUINED_PORTAL_SWAMP);
+      this.tag(StructureTags.ABANDONED_CAMP)
+         .add(BuiltinStructures.ABANDONED_CAMP_BAMBOO_JUNGLE)
+         .add(BuiltinStructures.ABANDONED_CAMP_BIRCH_FOREST)
+         .add(BuiltinStructures.ABANDONED_CAMP_CHERRY_GROVE)
+         .add(BuiltinStructures.ABANDONED_CAMP_DAPPLED_FOREST)
+         .add(BuiltinStructures.ABANDONED_CAMP_FLOWER_FOREST)
+         .add(BuiltinStructures.ABANDONED_CAMP_FOREST)
+         .add(BuiltinStructures.ABANDONED_CAMP_MEADOW)
+         .add(BuiltinStructures.ABANDONED_CAMP_OLD_GROWTH_BIRCH_FOREST)
+         .add(BuiltinStructures.ABANDONED_CAMP_OLD_GROWTH_PINE_TAIGA)
+         .add(BuiltinStructures.ABANDONED_CAMP_OLD_GROWTH_SPRUCE_TAIGA)
+         .add(BuiltinStructures.ABANDONED_CAMP_PALE_GARDEN)
+         .add(BuiltinStructures.ABANDONED_CAMP_SAVANNA)
+         .add(BuiltinStructures.ABANDONED_CAMP_SNOWY_TAIGA)
+         .add(BuiltinStructures.ABANDONED_CAMP_SPARSE_JUNGLE)
+         .add(BuiltinStructures.ABANDONED_CAMP_SWAMP)
+         .add(BuiltinStructures.ABANDONED_CAMP_TAIGA)
+         .add(BuiltinStructures.ABANDONED_CAMP_WINDSWEPT_FOREST)
+         .add(BuiltinStructures.ABANDONED_CAMP_WOODED_BADLANDS);
+      this.tag(StructureTags.CATS_SPAWN_IN).add(BuiltinStructures.SWAMP_HUT);
+      this.tag(StructureTags.CATS_SPAWN_AS_BLACK).add(BuiltinStructures.SWAMP_HUT);
+      this.tag(StructureTags.EYE_OF_ENDER_LOCATED).add(BuiltinStructures.STRONGHOLD);
+      this.tag(StructureTags.DOLPHIN_LOCATED).addTag(StructureTags.OCEAN_RUIN).addTag(StructureTags.SHIPWRECK);
+      this.tag(StructureTags.ON_WOODLAND_MANSION_MAPS).add(BuiltinStructures.WOODLAND_MANSION);
+      this.tag(StructureTags.ON_OCEAN_MONUMENT_MAPS).add(BuiltinStructures.OCEAN_MONUMENT);
+      this.tag(StructureTags.ON_TREASURE_MAPS).add(BuiltinStructures.BURIED_TREASURE);
+      this.tag(StructureTags.ON_BURIED_TRIAL_CHAMBERS_MAPS).add(BuiltinStructures.TRIAL_CHAMBERS);
+      this.tag(StructureTags.ON_SAVANNA_VILLAGE_MAPS).add(BuiltinStructures.VILLAGE_SAVANNA);
+      this.tag(StructureTags.ON_DESERT_VILLAGE_MAPS).add(BuiltinStructures.VILLAGE_DESERT);
+      this.tag(StructureTags.ON_PLAINS_VILLAGE_MAPS).add(BuiltinStructures.VILLAGE_PLAINS);
+      this.tag(StructureTags.ON_TAIGA_VILLAGE_MAPS).add(BuiltinStructures.VILLAGE_TAIGA);
+      this.tag(StructureTags.ON_SNOWY_VILLAGE_MAPS).add(BuiltinStructures.VILLAGE_SNOWY);
+      this.tag(StructureTags.ON_SWAMP_HUT_MAPS).add(BuiltinStructures.SWAMP_HUT);
+      this.tag(StructureTags.ON_JUNGLE_PYRAMID_MAPS).add(BuiltinStructures.JUNGLE_TEMPLE);
+      this.tag(StructureTags.ON_ABANDONED_CAMP_BAMBOO_JUNGLE_MAPS).add(BuiltinStructures.ABANDONED_CAMP_BAMBOO_JUNGLE);
+      this.tag(StructureTags.ON_ABANDONED_CAMP_CHERRY_GROVE_MAPS).add(BuiltinStructures.ABANDONED_CAMP_CHERRY_GROVE);
+      this.tag(StructureTags.ON_ABANDONED_CAMP_BIRCH_FOREST_MAPS).add(BuiltinStructures.ABANDONED_CAMP_BIRCH_FOREST);
+      this.tag(StructureTags.ON_ABANDONED_CAMP_DAPPLED_FOREST_MAPS).add(BuiltinStructures.ABANDONED_CAMP_DAPPLED_FOREST);
+      this.tag(StructureTags.ON_ABANDONED_CAMP_FLOWER_FOREST_MAPS).add(BuiltinStructures.ABANDONED_CAMP_FLOWER_FOREST);
+      this.tag(StructureTags.ON_ABANDONED_CAMP_PALE_GARDEN_MAPS).add(BuiltinStructures.ABANDONED_CAMP_PALE_GARDEN);
+      this.tag(StructureTags.ON_ABANDONED_CAMP_SWAMP_MAPS).add(BuiltinStructures.ABANDONED_CAMP_SWAMP);
+      this.tag(StructureTags.ON_ABANDONED_CAMP_WINDSWEPT_FOREST_MAPS).add(BuiltinStructures.ABANDONED_CAMP_WINDSWEPT_FOREST);
+      this.tag(StructureTags.ON_ANCIENT_CITY_MAPS).add(BuiltinStructures.ANCIENT_CITY);
+      this.tag(StructureTags.ON_MINESHAFT_MAPS).add(BuiltinStructures.MINESHAFT);
+      this.tag(StructureTags.ON_DESERT_PYRAMID_MAPS).add(BuiltinStructures.DESERT_PYRAMID);
+      this.tag(StructureTags.ON_OCEAN_RUIN_WARM_MAPS).add(BuiltinStructures.OCEAN_RUIN_WARM);
+   }
+}

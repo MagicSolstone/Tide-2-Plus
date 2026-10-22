@@ -1,0 +1,87 @@
+package net.minecraft.data.loot.packs;
+
+import net.minecraft.advancements.predicates.StatePropertiesPredicate$Builder;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.loot.LootTableSubProvider;
+import net.minecraft.data.loot.LootTableSubProvider$Context;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SweetBerryBushBlock;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
+import net.minecraft.world.level.storage.loot.predicates.MatchBlock;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
+
+public class VanillaBlockInteractLoot implements LootTableSubProvider {
+   private final LootTableSubProvider$Context output;
+   private final HolderGetter<Block> blocks;
+
+   public VanillaBlockInteractLoot(final LootTableSubProvider$Context output) {
+      this.output = output;
+      this.blocks = output.lookup(Registries.BLOCK);
+   }
+
+   @Override
+   public void run() {
+      this.output
+         .accept(
+            BuiltInLootTables.HARVEST_BEEHIVE,
+            LootTable.lootTable()
+               .withPool(
+                  LootPool.lootPool()
+                     .setRolls(ContextIntProviders.exactly(1))
+                     .add(LootItem.lootTableItem(Items.HONEYCOMB).apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(3))))
+               )
+         );
+      this.output
+         .accept(
+            BuiltInLootTables.HARVEST_CAVE_VINE,
+            LootTable.lootTable().withPool(LootPool.lootPool().setRolls(ContextIntProviders.exactly(1)).add(LootItem.lootTableItem(Items.GLOW_BERRIES)))
+         );
+      this.output
+         .accept(
+            BuiltInLootTables.HARVEST_SWEET_BERRY_BUSH,
+            LootTable.lootTable()
+               .withPool(
+                  LootPool.lootPool()
+                     .add(
+                        LootItem.lootTableItem(Items.SWEET_BERRIES)
+                           .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(1)))
+                           .when(
+                              MatchBlock.blockMatches(
+                                 this.blocks, Blocks.SWEET_BERRY_BUSH, StatePropertiesPredicate$Builder.properties().hasProperty(SweetBerryBushBlock.AGE, 3)
+                              )
+                           )
+                     )
+               )
+               .withPool(
+                  LootPool.lootPool().add(LootItem.lootTableItem(Items.SWEET_BERRIES).apply(SetItemCountFunction.setCount(ContextIntProviders.between(1, 2))))
+               )
+         );
+      this.output
+         .accept(
+            BuiltInLootTables.CARVE_PUMPKIN,
+            LootTable.lootTable()
+               .withPool(
+                  LootPool.lootPool()
+                     .setRolls(ContextIntProviders.exactly(1))
+                     .add(LootItem.lootTableItem(Items.PUMPKIN_SEEDS).apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(4))))
+               )
+         );
+      this.output
+         .accept(
+            BuiltInLootTables.TILL_ROOTED_DIRT,
+            LootTable.lootTable()
+               .withPool(
+                  LootPool.lootPool()
+                     .setRolls(ContextIntProviders.exactly(1))
+                     .add(LootItem.lootTableItem(Items.HANGING_ROOTS).apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(1))))
+               )
+         );
+   }
+}

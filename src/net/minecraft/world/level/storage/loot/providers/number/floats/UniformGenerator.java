@@ -1,0 +1,23 @@
+package net.minecraft.world.level.storage.loot.providers.number.floats;
+
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.providers.number.RangeProvider;
+
+public record UniformGenerator(Holder<ContextFloatProvider> min, Holder<ContextFloatProvider> max)
+   implements ContextFloatProvider,
+   RangeProvider<ContextFloatProvider> {
+   public static final MapCodec<UniformGenerator> MAP_CODEC = RangeProvider.mapCodec(ContextFloatProviders.CODEC, UniformGenerator::new);
+
+   @Override
+   public MapCodec<UniformGenerator> codec() {
+      return MAP_CODEC;
+   }
+
+   @Override
+   public float getFloatUnsafe(final LootContext context) {
+      return Mth.nextFloat(context.getRandom(), this.min().value().getFloatUnsafe(context), this.max().value().getFloatUnsafe(context));
+   }
+}

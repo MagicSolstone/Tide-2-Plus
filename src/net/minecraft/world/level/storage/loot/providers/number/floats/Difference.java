@@ -1,0 +1,22 @@
+package net.minecraft.world.level.storage.loot.providers.number.floats;
+
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.providers.number.BinaryProvider;
+
+public record Difference(Holder<ContextFloatProvider> left, Holder<ContextFloatProvider> right)
+   implements ContextFloatProvider,
+   BinaryProvider<ContextFloatProvider> {
+   public static final MapCodec<Difference> MAP_CODEC = BinaryProvider.mapCodec(ContextFloatProviders.CODEC, Difference::new);
+
+   @Override
+   public MapCodec<Difference> codec() {
+      return MAP_CODEC;
+   }
+
+   @Override
+   public float getFloatUnsafe(final LootContext context) {
+      return this.left().value().getFloatUnsafe(context) - this.right().value().getFloatUnsafe(context);
+   }
+}

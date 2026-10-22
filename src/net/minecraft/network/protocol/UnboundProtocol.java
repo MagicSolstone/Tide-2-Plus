@@ -1,0 +1,11 @@
+package net.minecraft.network.protocol;
+
+import io.netty.buffer.ByteBuf;
+import java.util.function.Function;
+import net.minecraft.network.PacketListener;
+import net.minecraft.network.ProtocolInfo;
+import net.minecraft.network.ProtocolInfo$DetailsProvider;
+
+public interface UnboundProtocol<T extends PacketListener, B extends ByteBuf, C> extends ProtocolInfo$DetailsProvider {
+   ProtocolInfo<T> bind(Function<ByteBuf, B> contextWrapper, C context);
+}

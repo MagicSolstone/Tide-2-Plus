@@ -1,0 +1,16 @@
+package net.minecraft.client.resources.metadata.animation;
+
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.server.packs.metadata.MetadataSectionType;
+
+@Environment(EnvType.CLIENT)
+public record VillagerMetadataSection(VillagerMetadataSection$Hat hat) {
+   public static final Codec<VillagerMetadataSection> CODEC = RecordCodecBuilder.create(
+      i -> i.group(VillagerMetadataSection$Hat.CODEC.optionalFieldOf("hat", VillagerMetadataSection$Hat.NONE).forGetter(VillagerMetadataSection::hat))
+         .apply(i, VillagerMetadataSection::new)
+   );
+   public static final MetadataSectionType<VillagerMetadataSection> TYPE = new MetadataSectionType<>("villager", CODEC);
+}

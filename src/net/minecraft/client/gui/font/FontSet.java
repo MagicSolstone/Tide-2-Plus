@@ -1,0 +1,154 @@
+package net.minecraft.client.gui.font;
+
+import com.google.common.collect.Sets;
+import com.mojang.blaze3d.font.GlyphInfo;
+import com.mojang.blaze3d.font.GlyphProvider;
+import com.mojang.blaze3d.font.GlyphProvider$Conditional;
+import com.mojang.blaze3d.font.UnbakedGlyph;
+import com.mojang.blaze3d.font.UnbakedGlyph$Stitcher;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.IntFunction;
+import java.util.function.Supplier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.GlyphSource;
+import net.minecraft.client.gui.font.glyphs.BakedGlyph;
+import net.minecraft.client.gui.font.glyphs.EffectGlyph;
+import net.minecraft.client.gui.font.glyphs.SpecialGlyphs;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
+import org.jspecify.annotations.Nullable;
+
+@Environment(EnvType.CLIENT)
+public class FontSet implements AutoCloseable {
+   private static final float LARGE_FORWARD_ADVANCE = 32.0F;
+   private static final BakedGlyph INVISIBLE_MISSING_GLYPH = new FontSet$1();
+   private final GlyphStitcher stitcher;
+   private final UnbakedGlyph$Stitcher wrappedStitcher = new FontSet$2(this);
+   private List<GlyphProvider$Conditional> allProviders = List.of();
+   private List<GlyphProvider> activeProviders = List.of();
+   private final Int2ObjectMap<IntList> glyphsByWidth = new Int2ObjectOpenHashMap();
+   private final CodepointMap<FontSet$SelectedGlyphs> glyphCache = new CodepointMap<>(FontSet$SelectedGlyphs[]::new, FontSet$SelectedGlyphs[][]::new);
+   private final IntFunction<FontSet$SelectedGlyphs> glyphGetter = this::computeGlyphInfo;
+   private BakedGlyph missingGlyph = INVISIBLE_MISSING_GLYPH;
+   private final Supplier<BakedGlyph> missingGlyphGetter = () -> this.missingGlyph;
+   private final FontSet$SelectedGlyphs missingSelectedGlyphs = new FontSet$SelectedGlyphs(this.missingGlyphGetter, this.missingGlyphGetter);
+   @Nullable
+   private EffectGlyph whiteGlyph;
+   private final GlyphSource anyGlyphs = new FontSet$Source(this, false);
+   private final GlyphSource nonFishyGlyphs = new FontSet$Source(this, true);
+
+   public FontSet(final GlyphStitcher stitcher) {
+      this.stitcher = stitcher;
+   }
+
+   public void reload(final List<GlyphProvider$Conditional> providers, final Set<FontOption> options) {
+      this.allProviders = providers;
+      this.reload(options);
+   }
+
+   public void reload(final Set<FontOption> options) {
+      this.activeProviders = List.of();
+      this.resetTextures();
+      this.activeProviders = this.selectProviders(this.allProviders, options);
+   }
+
+   private void resetTextures() {
+      this.stitcher.reset();
+      this.glyphCache.clear();
+      this.glyphsByWidth.clear();
+      this.missingGlyph = Objects.requireNonNull(SpecialGlyphs.MISSING.bake(this.stitcher));
+      this.whiteGlyph = SpecialGlyphs.WHITE.bake(this.stitcher);
+   }
+
+   private List<GlyphProvider> selectProviders(final List<GlyphProvider$Conditional> providers, final Set<FontOption> options) {
+      IntSet supportedGlyphs = new IntOpenHashSet();
+      List<GlyphProvider> selectedProviders = new ArrayList<>();
+
+      for (GlyphProvider$Conditional conditionalProvider : providers) {
+         if (conditionalProvider.filter().apply(options)) {
+            selectedProviders.add(conditionalProvider.provider());
+            supportedGlyphs.addAll(conditionalProvider.provider().getSupportedGlyphs());
+         }
+      }
+
+      Set<GlyphProvider> usedProviders = Sets.newHashSet();
+      supportedGlyphs.forEach(codepoint -> {
+         for (GlyphProvider provider : selectedProviders) {
+            UnbakedGlyph glyph = provider.getGlyph(codepoint);
+            if (glyph != null) {
+               usedProviders.add(provider);
+               if (glyph.info() != SpecialGlyphs.MISSING) {
+                  ((IntList)this.glyphsByWidth.computeIfAbsent(Mth.ceil(glyph.info().getAdvance(false)), w -> new IntArrayList())).add(codepoint);
+               }
+               break;
+            }
+         }
+      });
+      return selectedProviders.stream().filter(usedProviders::contains).toList();
+   }
+
+   @Override
+   public void close() {
+      this.stitcher.close();
+   }
+
+   private static boolean hasFishyAdvance(final GlyphInfo glyph) {
+      float advance = glyph.getAdvance(false);
+      if (!(advance < 0.0F) && !(advance > 32.0F)) {
+         float boldAdvance = glyph.getAdvance(true);
+         return boldAdvance < 0.0F || boldAdvance > 32.0F;
+      } else {
+         return true;
+      }
+   }
+
+   private FontSet$SelectedGlyphs computeGlyphInfo(final int codepoint) {
+      FontSet$DelayedBake firstGlyph = null;
+
+      for (GlyphProvider provider : this.activeProviders) {
+         UnbakedGlyph glyph = provider.getGlyph(codepoint);
+         if (glyph != null) {
+            if (firstGlyph == null) {
+               firstGlyph = new FontSet$DelayedBake(this, glyph);
+            }
+
+            if (!hasFishyAdvance(glyph.info())) {
+               if (firstGlyph.unbaked == glyph) {
+                  return new FontSet$SelectedGlyphs(firstGlyph, firstGlyph);
+               }
+
+               return new FontSet$SelectedGlyphs(firstGlyph, new FontSet$DelayedBake(this, glyph));
+            }
+         }
+      }
+
+      return firstGlyph != null ? new FontSet$SelectedGlyphs(firstGlyph, this.missingGlyphGetter) : this.missingSelectedGlyphs;
+   }
+
+   private FontSet$SelectedGlyphs getGlyph(final int codepoint) {
+      return this.glyphCache.computeIfAbsent(codepoint, this.glyphGetter);
+   }
+
+   public BakedGlyph getRandomGlyph(final RandomSource random, final int width) {
+      IntList chars = (IntList)this.glyphsByWidth.get(width);
+      return chars != null && !chars.isEmpty() ? this.getGlyph(chars.getInt(random.nextInt(chars.size()))).nonFishy().get() : this.missingGlyph;
+   }
+
+   public EffectGlyph whiteGlyph() {
+      return Objects.requireNonNull(this.whiteGlyph);
+   }
+
+   public GlyphSource source(final boolean nonFishyOnly) {
+      return nonFishyOnly ? this.nonFishyGlyphs : this.anyGlyphs;
+   }
+}

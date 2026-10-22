@@ -48,6 +48,7 @@ public class CatchMinigameOverlay {
 
     public static void start(byte type, byte behavior, float area, float speed, float perfect, float great, float bad) {
         if (isActive) return;
+        if (Tide.CI) Tide.LOG.info("TIDE-CI minigame");
         // an older server sends no zones: fall back to original Tide's (perfect 0.1, everything else in the area)
         CatchMinigameOverlay.perfectZone = perfect > 0 ? perfect : Math.min(0.1f, area);
         CatchMinigameOverlay.greatZone = great > 0 ? great : area;

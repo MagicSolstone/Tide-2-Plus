@@ -28,6 +28,8 @@ public class Tide {
     public static final String MOD_ID = "tide";
     public static final String MOD_NAME = "Tide";
     public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
+    /** Set by the CI smoke client (-Dtide.ci=true): prints markers the test script waits for. */
+    public static final boolean CI = Boolean.getBoolean("tide.ci");
 
     public static final LoaderPlatform PLATFORM;
     public static final NetworkPlatform NETWORK;

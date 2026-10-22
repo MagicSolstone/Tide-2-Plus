@@ -78,10 +78,19 @@ jobs:
           sleep 25; import -window root shots/1-world.png
           # cast: hold right click to charge, then let go
           xdotool mousemove 640 360; xdotool mousedown 3; sleep 1.4; xdotool mouseup 3
-          sleep 4; import -window root shots/2-cast.png
-          sleep 20; import -window root shots/3-waiting.png
-          # reel in, then open the journal
-          xdotool click 3; sleep 2
+          sleep 3; import -window root shots/2-cast.png
+          # a real catch: wait for a bite (Lure V rod), click to start the minigame, click to set the hook
+          for i in $(seq 1 90); do grep -q "TIDE-CI bite" client.log && break; sleep 0.5; done
+          echo "bite: $(grep -c 'TIDE-CI bite' client.log)"
+          sleep 0.3; xdotool click 3
+          for i in $(seq 1 20); do grep -q "TIDE-CI minigame" client.log && break; sleep 0.25; done
+          echo "minigame: $(grep -c 'TIDE-CI minigame' client.log)"
+          sleep 0.6; import -window root shots/3-minigame.png
+          xdotool click 3
+          sleep 4; import -window root shots/3b-caught.png
+          grep -n "TIDE-CI\|\[Tide catch\]" client.log | tail -5
+          # then the journal
+          sleep 1
           xdotool key 2; sleep 1; xdotool click 3
           sleep 4; import -window root shots/4-journal.png
           xdotool mousemove 340 140; sleep 0.5; xdotool click 1; sleep 2; import -window root shots/4b-angler.png

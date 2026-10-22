@@ -459,6 +459,7 @@ public class TideFishingHook extends Projectile {
                 // Select a catch
                 this.nibble = Mth.nextInt(this.random, 20, 40);
                 this.getEntityData().set(DATA_BITING, true);
+                if (Tide.CI) Tide.LOG.info("TIDE-CI bite");
                 if (getPlayerOwner() != null) {
                     this.selectCatch(rod);
                     if (rod.is(TideItems.ECHO_FISHING_ROD)) {

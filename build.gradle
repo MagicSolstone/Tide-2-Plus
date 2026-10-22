@@ -52,6 +52,7 @@ loom {
             client()
             name = "Smoke Client"
             programArgs "--quickPlaySingleplayer", "smoke"
+            vmArgs "-Dtide.ci=true"
         }
     }
 }

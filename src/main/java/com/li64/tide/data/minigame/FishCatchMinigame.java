@@ -158,6 +158,7 @@ public class FishCatchMinigame {
 
     /** The player clicked: {@code accuracy} is how far the marker was from the centre (0..1). */
     public void handleHook(float accuracy) {
+        if (Tide.CI) Tide.LOG.info("TIDE-CI hook set, accuracy {}", accuracy);
         if (cancelIfNecessary()) return;
         Angler.Hook hook = Angler.Hook.of(Math.abs(accuracy), zones);
         boolean landed = hook.landChance >= 1.0 || player.getRandom().nextDouble() < hook.landChance;

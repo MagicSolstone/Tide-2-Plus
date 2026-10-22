@@ -20,7 +20,7 @@ summon tide:catfish ~-1 ~-3 ~7 {NoAI:1b,Rotation:[90f,0f]}
 summon tide:angelfish ~1 ~-2 ~7 {NoAI:1b,Rotation:[90f,0f]}
 summon tide:pike ~0 ~-3 ~4 {NoAI:1b,Rotation:[90f,0f]}
 clear @s
-item replace entity @s hotbar.0 with tide:diamond_fishing_rod
+item replace entity @s hotbar.0 with tide:diamond_fishing_rod[enchantments={"minecraft:lure":5}]
 item replace entity @s hotbar.1 with tide:fishing_journal
 item replace entity @s hotbar.2 with tide:largemouth_bass[tide:fish_quality=5,tide:fish_length=89.0,tide:fish_weight=10800.0,item_name={"translate":"item.tide.quality_name","with":["Mythic",{"translate":"item.tide.largemouth_bass"}],"color":"#FFB020","italic":false}]
 item replace entity @s hotbar.3 with tide:wooden_crate

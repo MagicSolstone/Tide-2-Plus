@@ -165,7 +165,6 @@ public enum CatchQuality {
         if (data == null) return;
         RandomSource rng = player.getRandom();
         CatchQuality q = roll(rng, Angler.effectiveLevel(player), hook);
-        TideItemData.FISH_QUALITY.set(stack, q.ordinal());
 
         if (data.size().isPresent()) {
             double length = q.sampleLength(data.size().get(), rng);
@@ -173,12 +172,18 @@ public enum CatchQuality {
             double grams = FishWeight.grams(BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath(), length, q, rng);
             TideItemData.FISH_WEIGHT.set(stack, grams);
         }
+        mark(stack, q);
+        if (q.ordinal() >= TROPHY.ordinal()) announce(player, stack, q);
+    }
+
+    /** Quality onto a fish item: the component, and the name ("Fine Bluegill", coloured; Average keeps the plain name). */
+    public static void mark(ItemStack stack, CatchQuality q) {
+        TideItemData.FISH_QUALITY.set(stack, q.ordinal());
         if (q != AVERAGE) {
             stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tide.quality_name",
                     Component.literal(q.label), Component.translatable(stack.getItem().getDescriptionId()))
                     .withStyle(s -> s.withColor(TextColor.fromRgb(q.color)).withItalic(false)));
         }
-        if (q.ordinal() >= TROPHY.ordinal()) announce(player, stack, q);
     }
 
     private static void announce(ServerPlayer player, ItemStack stack, CatchQuality q) {

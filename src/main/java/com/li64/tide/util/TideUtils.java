@@ -131,42 +131,38 @@ public class TideUtils {
     }
 
     public static MutableComponent getFormattedLength(double length) {
-        if (Tide.CLIENT_CONFIG != null && Tide.CLIENT_CONFIG.journal.useImperial) return Component.literal(imperialLength(length));
-        String formatted;
-        if (length >= 100.0) {
-            // m, two decimal places, no trailing zeros
-            DecimalFormat metersFormat = new DecimalFormat("#.##");
-            formatted = metersFormat.format(length / 100.0) + " m";
-        } else {
-            // cm, one decimal place, no trailing zeros
-            DecimalFormat cmFormat = new DecimalFormat("#.#");
-            formatted = cmFormat.format(length) + " cm";
-        }
-        return Component.literal(formatted);
+        return Component.literal(useImperial() ? imperialLength(length) : metricLength(length));
     }
 
-    /** A length in cm as inches ("8.5 in"), or feet and inches from a foot up ("2 ft 3 in"). */
+    /** US units (inches, pounds, feet, °F); the client's choice, imperial when there's no client. */
     public static boolean useImperial() {
         return Tide.CLIENT_CONFIG == null || Tide.CLIENT_CONFIG.journal.useImperial;
     }
 
+    /** Inches ("4.5 in", "19 in"); feet only for the giants, from 100 in ("16 ft"). */
     public static String imperialLength(double cm) {
         double inches = cm / 2.54;
-        if (inches < 12.0) return new DecimalFormat("#.#").format(inches) + " in";
-        long total = Math.round(inches);
-        long feet = total / 12, rest = total % 12;
-        return rest == 0 ? feet + " ft" : feet + " ft " + rest + " in";
+        if (inches < 10.0) return new DecimalFormat("#.#").format(inches) + " in";
+        if (inches < 100.0) return Math.round(inches) + " in";
+        return Math.round(inches / 12.0) + " ft";
+    }
+
+    /** Centimetres ("4.5 cm", "48 cm"); metres from 100 cm ("4.9 m"). */
+    public static String metricLength(double cm) {
+        if (cm < 10.0) return new DecimalFormat("#.#").format(cm) + " cm";
+        if (cm < 100.0) return Math.round(cm) + " cm";
+        return new DecimalFormat("#.#").format(cm / 100.0) + " m";
     }
 
     /** A depth in metres (blocks) in the player's units. */
     public static String formatDepth(int meters) {
-        if (Tide.CLIENT_CONFIG != null && Tide.CLIENT_CONFIG.journal.useImperial) return Math.round(meters * 3.28084) + " ft";
+        if (useImperial()) return Math.round(meters * 3.28084) + " ft";
         return meters + " m";
     }
 
     public static float mcTempToRealTemp(float mcTemp) {
         float celsius = (float)(11 * Math.pow(mcTemp - 0.23, 3) + 30 * mcTemp + 15);
-        if (Tide.CLIENT_CONFIG.journal.useFahrenheit) return celsius * 1.8f + 32f;
+        if (useImperial()) return celsius * 1.8f + 32f;
         return celsius;
     }
 

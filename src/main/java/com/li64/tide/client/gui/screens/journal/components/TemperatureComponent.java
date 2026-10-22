@@ -39,7 +39,7 @@ public class TemperatureComponent extends BarComponent {
             float temp = Mth.clamp((float) (mouseX - (x + BAR_X)) / BAR_WIDTH, 0f, 1f) * 2f - 1f;
             graphics.setTooltipForNextFrame(font, Component.literal(
                     Math.round(TideUtils.mcTempToRealTemp(temp))
-                            + (Tide.CLIENT_CONFIG.journal.useFahrenheit ? "°F" : "°C")),
+                            + (com.li64.tide.util.TideUtils.useImperial() ? "°F" : "°C")),
                     mouseX, y + BAR_Y
             );
             graphics.blit(RenderPipelines.GUI_TEXTURED, CURSOR, mouseX - 1, y + BAR_Y, 0, 0, 3, 9, 3, 9);

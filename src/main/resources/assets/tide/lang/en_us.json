@@ -786,8 +786,6 @@
   "text.autoconfig.tide.option.client.journal.showUnread.@Tooltip": "Highlight fish icons in yellow until you click on them for the first time",
   "text.autoconfig.tide.option.client.journal.useAmPm": "Use AM/PM",
   "text.autoconfig.tide.option.client.journal.useAmPm.@Tooltip": "Disable to use 24-hour time in the journal and pocket watches (ex. 21:00 vs 9:00 PM)",
-  "text.autoconfig.tide.option.client.journal.useFahrenheit": "Use Fahrenheit",
-  "text.autoconfig.tide.option.client.journal.useFahrenheit.@Tooltip": "Enable to use Fahrenheit instead of Celsius in the journal and climate gauge (ex. 0°C vs 32°F)",
   "text.autoconfig.tide.option.client.journal.useRealDate": "Use Real Date",
   "text.autoconfig.tide.option.client.journal.useRealDate.@Tooltip": "If enabled, the real date is used in the fishing journal as opposed to the local world day",
   "text.autoconfig.tide.option.client.minigame": "Minigame",
@@ -867,5 +865,7 @@
   "item.tide.fish_satchel.fullness": "%s/%s",
   "item.tide.quality_name": "%s %s",
   "journal.info.stats.best_quality": "Best: %s",
-  "journal.info.stats.heaviest": "Heaviest: %s"
+  "journal.info.stats.heaviest": "Heaviest: %s",
+  "text.autoconfig.tide.option.client.journal.useImperial": "Use US units",
+  "text.autoconfig.tide.option.client.journal.useImperial.@Tooltip": "Inches, pounds, feet and °F instead of centimetres, kilograms, metres and °C"
 }

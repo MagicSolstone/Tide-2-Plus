@@ -23,7 +23,7 @@ public class ClimateGaugeItem extends AbstractInformationalItem {
 
     @Override
     public Component parseResult(String result) {
-        return Component.literal(Float.parseFloat(result) + (Tide.CLIENT_CONFIG.journal.useFahrenheit ? "°F" : "°C"));
+        return Component.literal(Float.parseFloat(result) + (com.li64.tide.util.TideUtils.useImperial() ? "°F" : "°C"));
     }
 
     @Override

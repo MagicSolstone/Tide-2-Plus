@@ -64,6 +64,7 @@ public abstract class ItemMixin {
             double length = TideItemData.FISH_LENGTH.getOrDefault(fish, 0.0);
             CustomData.update(DataComponents.BUCKET_ENTITY_DATA, newStack, tag -> {
                 if (TideItemData.FISH_LENGTH.isPresent(fish)) tag.putDouble(FishLengthHolder.tide$LENGTH_KEY, length);
+                FishLengthHolder.copyItemToTag(fish, tag);
             });
             
         }

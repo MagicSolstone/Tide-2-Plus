@@ -48,6 +48,8 @@ public class TideLavaFish extends LavaAnimal implements Bucketable, FishLengthHo
 
     private final Item bucketItem;
     private double length;
+    private int quality = -1;
+    private double weight = 0.0;
 
     public TideLavaFish(EntityType<? extends LavaAnimal> entityType, Level level) {
         super(entityType, level);
@@ -160,6 +162,7 @@ public class TideLavaFish extends LavaAnimal implements Bucketable, FishLengthHo
         super.addAdditionalSaveData(compound);
         compound.putBoolean("FromBucket", this.fromBucket());
         compound.putDouble(tide$LENGTH_KEY, length);
+        this.tide$writeExtras(compound);
     }
 
     @Override
@@ -167,19 +170,24 @@ public class TideLavaFish extends LavaAnimal implements Bucketable, FishLengthHo
         super.readAdditionalSaveData(tag);
         this.setFromBucket(tag.getBooleanOr("FromBucket", false));
         this.length = tag.getDoubleOr(tide$LENGTH_KEY, this.length);
+        this.tide$readExtras(tag);
     }
 
     @Override @SuppressWarnings("deprecation")
     public void saveToBucketTag(@NotNull ItemStack stack) {
         Bucketable.saveDefaultDataToBucketTag(this, stack);
         CustomData.update(DataComponents.BUCKET_ENTITY_DATA, stack,
-                tag -> tag.putDouble(tide$LENGTH_KEY, this.tide$getLength()));
+                tag -> {
+                    tag.putDouble(tide$LENGTH_KEY, this.tide$getLength());
+                    this.tide$writeExtras(tag);
+                });
     }
 
     @Override @SuppressWarnings("deprecation")
     public void loadFromBucketTag(@NotNull CompoundTag tag) {
         Bucketable.loadDefaultDataFromBucketTag(this, tag);
         this.length = tag.getDoubleOr(tide$LENGTH_KEY, this.length);
+        this.tide$readExtras(tag);
     }
 
     @Override
@@ -190,6 +198,26 @@ public class TideLavaFish extends LavaAnimal implements Bucketable, FishLengthHo
     @Override
     public void tide$setLength(double length) {
         this.length = length;
+    }
+
+    @Override
+    public int tide$getQuality() {
+        return this.quality;
+    }
+
+    @Override
+    public void tide$setQuality(int quality) {
+        this.quality = quality;
+    }
+
+    @Override
+    public double tide$getWeight() {
+        return this.weight;
+    }
+
+    @Override
+    public void tide$setWeight(double grams) {
+        this.weight = grams;
     }
 
     static class LavaFishMoveControl extends MoveControl {

@@ -36,8 +36,7 @@ public final class TideClientConfig {
     public static class Journal {
         public boolean showUnread = true;
         public boolean useAmPm = true;
-        public boolean useFahrenheit = true;
-        /** Fish lengths in inches/feet and depths in feet (instead of cm/m). */
+        /** US units everywhere: inches, pounds, feet of depth and °F (off: cm, kg, metres and °C). */
         public boolean useImperial = true;
         public boolean useRealDate = true;
     }

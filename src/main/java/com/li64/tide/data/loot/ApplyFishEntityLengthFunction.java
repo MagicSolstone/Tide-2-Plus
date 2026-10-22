@@ -40,6 +40,7 @@ public class ApplyFishEntityLengthFunction implements LootItemFunction {
         if (entity == null) return stack;
         if (entity instanceof FishLengthHolder lengthHolder) {
             TideItemData.FISH_LENGTH.set(stack, lengthHolder.tide$getLength());
+            lengthHolder.tide$applyExtras(stack);
         }
         return stack;
     }

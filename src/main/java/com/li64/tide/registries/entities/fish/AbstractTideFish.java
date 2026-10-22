@@ -35,6 +35,8 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
 
     private final Item bucketItem;
     private double length;
+    private int quality = -1;
+    private double weight = 0.0;
 
     public AbstractTideFish(EntityType<? extends WaterAnimal> entityType, Level level) {
         super(entityType, level);
@@ -140,6 +142,7 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
         super.addAdditionalSaveData(compound);
         compound.putBoolean("FromBucket", this.fromBucket());
         compound.putDouble(tide$LENGTH_KEY, this.length);
+        this.tide$writeExtras(compound);
     }
 
     @Override
@@ -147,6 +150,7 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
         super.readAdditionalSaveData(tag);
         this.setFromBucket(tag.getBooleanOr("FromBucket", false));
         this.length = tag.getDoubleOr(tide$LENGTH_KEY, this.length);
+        this.tide$readExtras(tag);
     }
 
     @Override @SuppressWarnings("deprecation")
@@ -154,6 +158,7 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
         Bucketable.saveDefaultDataToBucketTag(this, stack);
         CustomData.update(DataComponents.BUCKET_ENTITY_DATA, stack, tag -> {
             tag.putDouble(tide$LENGTH_KEY, this.tide$getLength());
+            this.tide$writeExtras(tag);
         });
     }
 
@@ -161,6 +166,7 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
     public void loadFromBucketTag(@NotNull CompoundTag tag) {
         Bucketable.loadDefaultDataFromBucketTag(this, tag);
         this.length = tag.getDoubleOr(tide$LENGTH_KEY, this.tide$getLength());
+        this.tide$readExtras(tag);
     }
 
     @Override
@@ -171,5 +177,25 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
     @Override
     public void tide$setLength(double length) {
         this.length = length;
+    }
+
+    @Override
+    public int tide$getQuality() {
+        return this.quality;
+    }
+
+    @Override
+    public void tide$setQuality(int quality) {
+        this.quality = quality;
+    }
+
+    @Override
+    public double tide$getWeight() {
+        return this.weight;
+    }
+
+    @Override
+    public void tide$setWeight(double grams) {
+        this.weight = grams;
     }
 }

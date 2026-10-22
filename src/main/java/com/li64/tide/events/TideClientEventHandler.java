@@ -28,20 +28,24 @@ public class TideClientEventHandler {
                 && Tide.SERVER_CONFIG.items.bucketableFishItems == TideServerConfig.Items.BucketableMode.WHEN_LIVING)
             lines.add(Component.translatable("text.tide.fish.alive").withStyle(ChatFormatting.GRAY));
 
-        if (TideItemData.FISH_QUALITY.isPresent(stack))
-            lines.add(com.li64.tide.data.angler.CatchQuality.byId(TideItemData.FISH_QUALITY.getOrDefault(stack, 1)).describe());
-        if (TideItemData.FISH_LENGTH.isPresent(stack)) {
-            net.minecraft.network.chat.MutableComponent size = TideUtils.getFormattedLength(stack);
-            if (TideItemData.FISH_WEIGHT.isPresent(stack))
-                size.append(" · " + com.li64.tide.data.angler.FishWeight.format(TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0)));
-            lines.add(size.withStyle(ChatFormatting.BLUE));
+        if (TideItemData.FISH_LENGTH.isPresent(stack) || TideItemData.FISH_QUALITY.isPresent(stack)) {
+            addFishLines(lines, TideItemData.FISH_QUALITY.getOrDefault(stack, -1),
+                    TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0), TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0));
         }
-        else if (stack.has(DataComponents.BUCKET_ENTITY_DATA)) {
-            CustomData data = stack.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
-            if (data.copyTag().contains("Length")) {
-                double length = data.copyTag().getDoubleOr("Length", 0.0);
-                lines.add(TideUtils.getFormattedLength(length).withStyle(ChatFormatting.BLUE));
-            }
+        else if (stack.has(DataComponents.BUCKET_ENTITY_DATA)) {            // a fish in a bucket
+            net.minecraft.nbt.CompoundTag tag = stack.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY).copyTag();
+            addFishLines(lines, tag.getIntOr(com.li64.tide.data.FishLengthHolder.tide$QUALITY_KEY, -1),
+                    tag.getDoubleOr(com.li64.tide.data.FishLengthHolder.tide$LENGTH_KEY, 0.0),
+                    tag.getDoubleOr(com.li64.tide.data.FishLengthHolder.tide$WEIGHT_KEY, 0.0));
         }
+    }
+
+    /** "◆◆◇◇◇ Fine" and "19 in · 3.4 lb" (either line only when known). */
+    private static void addFishLines(List<Component> lines, int quality, double lengthCm, double grams) {
+        if (quality >= 0) lines.add(com.li64.tide.data.angler.CatchQuality.byId(quality).describe());
+        if (lengthCm <= 0 && grams <= 0) return;
+        net.minecraft.network.chat.MutableComponent size = lengthCm > 0 ? TideUtils.getFormattedLength(lengthCm) : Component.empty();
+        if (grams > 0) size.append((lengthCm > 0 ? " · " : "") + com.li64.tide.data.angler.FishWeight.format(grams));
+        lines.add(size.withStyle(ChatFormatting.BLUE));
     }
 }

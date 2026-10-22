@@ -46,8 +46,9 @@ jobs:
             grep -E -A3 '^\S+\.java:[0-9]+: (error|warning):|^e: |FAILURE:|What went wrong|^\* What went wrong|Could not|Caused by' build.log | sed "s#$GITHUB_WORKSPACE/##" | head -6000
           } > /tmp/results/latest.txt
           tail -400 build.log | sed "s#$GITHUB_WORKSPACE/##" > /tmp/results/latest-tail.txt
-          git config user.name "ci"
-          git config user.email "ci@users.noreply.github.com"
+          git config --global user.name "ci"
+          git config --global user.email "ci@users.noreply.github.com"
+          grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
           cp /tmp/results/latest.txt /tmp/results/latest-tail.txt .
           git add -A

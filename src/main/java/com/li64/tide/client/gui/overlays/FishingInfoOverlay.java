@@ -4,7 +4,7 @@ import com.li64.tide.Tide;
 import com.li64.tide.config.TideClientConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
@@ -16,7 +16,7 @@ public class FishingInfoOverlay {
     private static final int PADDING = 5;
     private static final int LINE_SPACING = 2;
 
-    public static void render(GuiGraphics graphics, float dt) {
+    public static void render(GuiGraphicsExtractor graphics, float dt) {
         Font font = Minecraft.getInstance().font;
         TideClientConfig.General.InfoPlacement placement = Tide.CLIENT_CONFIG.general.infoPlacement;
         if (placement == null) return;

@@ -1,5 +1,6 @@
 package com.li64.tide.registries.items;
 
+import net.minecraft.world.InteractionResult;
 import com.li64.tide.Tide;
 import com.li64.tide.data.fishing.FishData;
 import com.li64.tide.data.item.TideItemData;
@@ -10,7 +11,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -50,7 +50,7 @@ public class FishyNoteItem extends Item {
 
     public static ItemStack getFish(ItemStack note) {
         ResourceKey<Item> key = getFishKey(note);
-        Item item = BuiltInRegistries.ITEM.get(key);
+        Item item = BuiltInRegistries.ITEM.getValue(key);
         return item == null ? ItemStack.EMPTY : new ItemStack(item);
     }
 
@@ -60,7 +60,7 @@ public class FishyNoteItem extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack note = player.getItemInHand(hand);
         if (player instanceof ServerPlayer serverPlayer) {
             finalizeData(note, serverPlayer);
@@ -71,12 +71,12 @@ public class FishyNoteItem extends Item {
             Tide.NETWORK.sendToPlayer(new ViewNoteMsg(getFish(note)), serverPlayer);
 
             TidePlayerData data = TidePlayerData.getOrCreate(serverPlayer);
-            Item fish = BuiltInRegistries.ITEM.get(getFishKey(note));
+            Item fish = BuiltInRegistries.ITEM.getValue(getFishKey(note));
             if (fish != null) {
                 data.markNoteUnlocked(fish);
                 data.syncTo(serverPlayer);
             }
         }
-        return InteractionResultHolder.success(note);
+        return InteractionResult.SUCCESS;
     }
 }

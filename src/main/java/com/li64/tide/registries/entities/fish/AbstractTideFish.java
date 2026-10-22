@@ -17,8 +17,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.navigation.WaterBoundPathNavigation;
-import net.minecraft.world.entity.animal.Bucketable;
-import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.Bucketable;
+import net.minecraft.world.entity.animal.fish.WaterAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -79,7 +79,7 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
                     (this.random.nextFloat() * 2.0 - 1.0) * 0.05)
             );
             this.setOnGround(false);
-            this.hasImpulse = true;
+            this.needsSync = true;
             this.playSound(this.getFlopSound(), this.getSoundVolume(), this.getVoicePitch());
         }
         super.aiStep();
@@ -136,17 +136,17 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
+    protected void addAdditionalSaveData(@NotNull net.minecraft.world.level.storage.ValueOutput compound) {
         super.addAdditionalSaveData(compound);
         compound.putBoolean("FromBucket", this.fromBucket());
         compound.putDouble(tide$LENGTH_KEY, this.length);
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {
+    protected void readAdditionalSaveData(@NotNull net.minecraft.world.level.storage.ValueInput tag) {
         super.readAdditionalSaveData(tag);
-        this.setFromBucket(tag.contains("FromBucket") && tag.getBoolean("FromBucket"));
-        this.length = tag.contains(tide$LENGTH_KEY) ? tag.getDouble(tide$LENGTH_KEY) : this.length;
+        this.setFromBucket(tag.getBooleanOr("FromBucket", false));
+        this.length = tag.getDoubleOr(tide$LENGTH_KEY, this.length);
     }
 
     @Override @SuppressWarnings("deprecation")
@@ -160,7 +160,7 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
     @Override @SuppressWarnings("deprecation")
     public void loadFromBucketTag(@NotNull CompoundTag tag) {
         Bucketable.loadDefaultDataFromBucketTag(this, tag);
-        this.length = tag.contains(tide$LENGTH_KEY) ? tag.getDouble(tide$LENGTH_KEY) : this.tide$getLength();
+        this.length = tag.getDoubleOr(tide$LENGTH_KEY, this.tide$getLength());
     }
 
     @Override

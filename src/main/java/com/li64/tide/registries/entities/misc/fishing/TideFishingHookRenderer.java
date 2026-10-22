@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
@@ -69,7 +69,7 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook> imp
         model.setupAnim(hookEntity, partialTick, 0.0F, -0.1F, 0.0F, 0.0F);
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(hookEntity)));
 
-        model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255, 255, 255, 255));
+        model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, ARGB.ARGB32.color(255, 255, 255, 255));
         bobberLayer.render(poseStack, buffer, packedLight, hookEntity, 0, 0, 0, 0, 0, 0);
 
         poseStack.popPose();
@@ -173,7 +173,7 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook> imp
         int b = (int) (color.getBlue() * colorBrightness);
 
         vertexConsumer.addVertex(pose.pose(), f, f1, f2)
-                .setColor(FastColor.ARGB32.color(255, r, g, b))
+                .setColor(ARGB.ARGB32.color(255, r, g, b))
                 .setNormal(pose, f3, f4, f5);
     }
 

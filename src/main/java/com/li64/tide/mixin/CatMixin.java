@@ -1,7 +1,7 @@
 package com.li64.tide.mixin;
 
 import com.li64.tide.data.TideTags;
-import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.feline.Cat;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

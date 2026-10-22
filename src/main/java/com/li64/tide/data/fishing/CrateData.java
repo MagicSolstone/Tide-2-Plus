@@ -5,7 +5,7 @@ import com.li64.tide.Tide;
 import com.li64.tide.data.ModAssociatedEntry;
 import com.li64.tide.data.commands.TestType;
 import com.li64.tide.data.loot.LootTableRef;
-import com.li64.tide.datagen.fabric.providers.SimpleDataOutput;
+import com.li64.tide.data.SimpleDataOutput;
 import com.li64.tide.data.fishing.conditions.FishingCondition;
 import com.li64.tide.data.fishing.conditions.types.*;
 import com.li64.tide.data.fishing.mediums.FishingMedium;
@@ -38,7 +38,7 @@ public record CrateData(BlockStateProvider blockProvider,
                         double weight, double quality) implements FishingEntry, ModAssociatedEntry {
 
     public static final Codec<CrateData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            BlockStateProvider.CODEC.fieldOf("block").forGetter(CrateData::blockProvider),
+            BlockStateProvider.DIRECT_CODEC.fieldOf("block").forGetter(CrateData::blockProvider),
             ResourceKey.codec(Registries.LOOT_TABLE).optionalFieldOf("loot_table").forGetter(CrateData::lootTable),
             Codec.STRING.listOf().optionalFieldOf("associated_mods", List.of()).forGetter(CrateData::associatedMods),
             FishingCondition.CODEC.listOf().optionalFieldOf("conditions", List.of()).forGetter(CrateData::conditions),
@@ -73,7 +73,7 @@ public record CrateData(BlockStateProvider blockProvider,
     @Override
     public MutableComponent getTestKey() {
         if (lootTable.isEmpty()) return Component.translatable("commands.fishing.entries.crate.unknown");
-        Identifier tableLocation = lootTable.get().location();
+        Identifier tableLocation = lootTable.get().identifier();
         return Component.translatable("commands.fishing.entries.crate").append(" \"")
                 .append(Component.literal(tableLocation.toString())).append("\"");
     }
@@ -95,7 +95,7 @@ public record CrateData(BlockStateProvider blockProvider,
         private Builder() {}
 
         public Builder block(Block block) {
-            this.block = BlockStateProvider.simple(block);
+            this.block = BlockStateProvider.of(block);
             return this;
         }
 
@@ -200,7 +200,7 @@ public record CrateData(BlockStateProvider blockProvider,
         }
 
         public void build(SimpleDataOutput<CrateData> output) {
-            this.build(this.lootKey.location(), output);
+            this.build(this.lootKey.identifier(), output);
         }
 
         public void build(String path, SimpleDataOutput<CrateData> output) {

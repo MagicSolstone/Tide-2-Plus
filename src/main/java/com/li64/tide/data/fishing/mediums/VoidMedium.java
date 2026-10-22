@@ -36,7 +36,7 @@ public class VoidMedium implements FishingMedium {
     }
 
     public boolean isInVoid(BlockPos pos, Level level) {
-        return isInVoid(pos.getCenter(), level);
+        return isInVoid(net.minecraft.world.phys.Vec3.atCenterOf(pos), level);
     }
 
     public boolean isInVoid(Vec3 pos, Level level) {
@@ -45,8 +45,8 @@ public class VoidMedium implements FishingMedium {
 
     public int getVoidSurface(Level level) {
         TideServerConfig.General.VoidHeightEntry entry = CACHE.getOrDefault(level.dimension(), DEFAULT_ENTRY);
-        if (entry.type == TideServerConfig.General.VoidHeightEntry.Type.RELATIVE_TO_BOTTOM) return level.getMinBuildHeight() + entry.height;
-        if (entry.type == TideServerConfig.General.VoidHeightEntry.Type.RELATIVE_TO_TOP) return level.getMaxBuildHeight() + entry.height;
+        if (entry.type == TideServerConfig.General.VoidHeightEntry.Type.RELATIVE_TO_BOTTOM) return level.getMinY() + entry.height;
+        if (entry.type == TideServerConfig.General.VoidHeightEntry.Type.RELATIVE_TO_TOP) return (level.getMaxY() + 1) + entry.height;
         return entry.height;
     }
 

@@ -55,7 +55,7 @@ public class TideUtils {
 
     public static Item itemFromLocation(Identifier location) {
         return BuiltInRegistries.ITEM.getOptional(location).orElse(
-                BuiltInRegistries.ITEM.get(BuiltInRegistries.ITEM.getKey(Items.AIR)));
+                BuiltInRegistries.ITEM.getValue(BuiltInRegistries.ITEM.getKey(Items.AIR)));
     }
 
     public static Optional<FishData> getStrongest(List<ItemStack> hookedItems) {
@@ -118,7 +118,7 @@ public class TideUtils {
     }
 
     public static float getTemperatureAt(BlockPos pos, ServerLevel level) {
-        Climate.Sampler sampler = level.getChunkSource().randomState().sampler();
+        Climate.Sampler sampler = level.getChunkSource().randomState().createClimateSampler(net.minecraft.world.level.levelgen.densityfunction.SamplerContext.EMPTY_UNCACHED);
         int x = QuartPos.fromBlock(pos.getX());
         int y = QuartPos.fromBlock(pos.getY());
         int z = QuartPos.fromBlock(pos.getZ());
@@ -171,11 +171,11 @@ public class TideUtils {
     }
 
     public static Identifier holderId(Holder<Item> holder) {
-        return holder.unwrap().map(ResourceKey::location, BuiltInRegistries.ITEM::getKey);
+        return holder.unwrap().map(ResourceKey::identifier, BuiltInRegistries.ITEM::getKey);
     }
 
     public static long getTimeOfDay(ServerLevel level) {
-        return level.getDayTime() % 24000;
+        return level.getOverworldClockTime() % 24000;
     }
 
     public static LootTable getLootTable(ResourceKey<LootTable> key, MinecraftServer server) {

@@ -11,11 +11,10 @@ import com.li64.tide.registries.entities.TideSpawnConfigs;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
+import net.fabricmc.fabric.api.item.v1.DefaultItemComponentEvents;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
@@ -53,30 +52,21 @@ public class FabricEntrypoint implements ModInitializer {
         TideDataComponents.init();
 
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Tide.resource("tide"),
-                TideItems.getCreativeTab(FabricItemGroup.builder()).build());
+                TideItems.getCreativeTab(FabricCreativeModeTab.builder()).build());
 
         TideEntityAttributes.REGISTRY.forEach(FabricEntrypoint::registerAttributes);
 
-        FuelRegistry.INSTANCE.add(TideItems.WOODEN_CRATE, 300);
-        FuelRegistry.INSTANCE.add(TideItems.ANGLING_TABLE, 300);
-        FuelRegistry.INSTANCE.add(TideItems.FISH_DISPLAY, 300);
-        FuelRegistry.INSTANCE.add(TideItems.FISHY_NOTE, 200);
-        FuelRegistry.INSTANCE.add(TideFish.INFERNO_GUPPY, 3200);
+        // furnace fuel is an item component in 26.x
+        DefaultItemComponentEvents.MODIFY.register(context -> {
+            fuel(context, TideItems.WOODEN_CRATE, 300);
+            fuel(context, TideItems.ANGLING_TABLE, 300);
+            fuel(context, TideItems.FISH_DISPLAY, 300);
+            fuel(context, TideItems.FISHY_NOTE, 200);
+            fuel(context, TideFish.INFERNO_GUPPY, 3200);
+        });
 
-        TideData.onRegisterReloadListeners((id, listener) -> ResourceManagerHelper.get(PackType.SERVER_DATA)
-            .registerReloadListener(new IdentifiableResourceReloadListener() {
-                @Override
-                public Identifier getFabricId() {
-                    return id;
-                }
-
-                @Override
-                public @NotNull CompletableFuture<Void> reload(PreparationBarrier synchronizer, ResourceManager manager,
-                                                               ProfilerFiller prepareProfiler, ProfilerFiller applyProfiler,
-                                                               Executor prepareExecutor, Executor applyExecutor) {
-                    return listener.reload(synchronizer, manager, prepareProfiler, applyProfiler, prepareExecutor, applyExecutor);
-                }
-            }));
+        TideData.onRegisterReloadListeners((id, listener) ->
+                ResourceLoader.get(PackType.SERVER_DATA).registerReloadListener(id, listener));
 
         TideSpawnConfigs.onRegisterSpawnConfigs(config -> {
             BiomeModifications.addSpawn(
@@ -91,6 +81,14 @@ public class FabricEntrypoint implements ModInitializer {
                     config.spawnPredicate()
             );
         });
+    }
+
+    private static void fuel(DefaultItemComponentEvents.ModifyContext context, net.minecraft.world.item.Item item, int ticks) {
+        context.modify(item, builder -> builder.set(net.minecraft.core.component.DataComponents.COOKING_FUEL,
+                new net.minecraft.world.item.component.CookingFuel(
+                        new net.minecraft.world.level.storage.loot.providers.number.ints.ResolvableInt.Constant(ticks),
+                        net.minecraft.world.level.storage.loot.providers.number.floats.ResolvableFloat.fromKey(
+                                net.minecraft.world.level.storage.loot.providers.number.floats.ContextFloatProviders.COOKING_DEFAULT_SPEED_MULTIPLIER))));
     }
 
     public static <T extends LivingEntity> void registerAttributes(TideEntityAttributes.Registration<T> reg) {

@@ -38,7 +38,7 @@ public class FabricPlatform implements LoaderPlatform {
 
     @Override
     public <T> Registry<T> createRegistry(ResourceKey<Registry<T>> registryKey) {
-        return FabricRegistryBuilder.createSimple(registryKey)
+        return FabricRegistryBuilder.create(registryKey)
                 .attribute(RegistryAttribute.SYNCED)
                 .buildAndRegister();
     }
@@ -50,7 +50,7 @@ public class FabricPlatform implements LoaderPlatform {
 
     @Override
     public <T> T register(Registry<? super T> registry, ResourceKey<T> id, T toRegister) {
-        return Registry.register(registry, id.location(), toRegister);
+        return Registry.register(registry, id.identifier(), toRegister);
     }
 
     @Override

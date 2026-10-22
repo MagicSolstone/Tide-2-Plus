@@ -123,7 +123,7 @@ public class TideSpawnConfigs {
         public SpawnConfig(String entity, int weight, int maxGroupSize, int minGroupSize, MobCategory category,
                            SpawnPlacementType placementType,
                            SpawnPlacements.SpawnPredicate<Mob> predicate, TagKey<Biome> biomes) {
-            this((EntityType<Mob>) BuiltInRegistries.ENTITY_TYPE.get(Tide.resource(entity)),
+            this((EntityType<Mob>) BuiltInRegistries.ENTITY_TYPE.getValue(Tide.resource(entity)),
                     weight, maxGroupSize, minGroupSize, category, placementType, predicate, biomes);
         }
     }

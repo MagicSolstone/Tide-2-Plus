@@ -7,7 +7,7 @@ import com.li64.tide.data.player.CatchTimestamp;
 import com.li64.tide.data.player.FishStats;
 import com.li64.tide.util.TideUtils;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -56,7 +56,7 @@ public class StatsComponent extends ProfileComponent {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int center = x + AREA_WIDTH / 2;
         int cursorY = 0;
         for (Component line : lines) {

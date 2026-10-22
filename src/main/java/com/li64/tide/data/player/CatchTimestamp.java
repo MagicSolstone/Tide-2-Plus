@@ -13,6 +13,6 @@ public record CatchTimestamp(Instant date, long ticks) {
     ).apply(instance, CatchTimestamp::new));
 
     public static CatchTimestamp now(Level level) {
-        return new CatchTimestamp(Instant.now(), level.getDayTime());
+        return new CatchTimestamp(Instant.now(), level.getOverworldClockTime());
     }
 }

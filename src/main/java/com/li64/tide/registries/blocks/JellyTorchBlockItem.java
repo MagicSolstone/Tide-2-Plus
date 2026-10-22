@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 
 public class JellyTorchBlockItem extends StandingAndWallBlockItem implements TooltipItem {
     public JellyTorchBlockItem(Block normal, Block wall, Direction direction, Properties properties) {
-        super(normal, wall, properties, direction);
+        super(normal, wall, direction, properties);
     }
 
     @Override

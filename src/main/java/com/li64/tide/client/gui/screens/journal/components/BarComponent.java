@@ -2,7 +2,7 @@ package com.li64.tide.client.gui.screens.journal.components;
 
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.Identifier;
 
@@ -17,7 +17,7 @@ public abstract class BarComponent extends ProfileComponent {
     protected static final int DIV_WIDTH = 3;
     protected static final int DIV_HEIGHT = 11;
 
-    protected void renderFilledBar(Identifier bar, GuiGraphics graphics,
+    protected void renderFilledBar(Identifier bar, GuiGraphicsExtractor graphics,
                                    int x, int y, float min, float max) {
         int minX = Math.max((int)(min * BAR_WIDTH), 0);
         int maxX = Math.min((int)(max * BAR_WIDTH), BAR_WIDTH);

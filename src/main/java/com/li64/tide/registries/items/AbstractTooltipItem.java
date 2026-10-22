@@ -14,8 +14,8 @@ public abstract class AbstractTooltipItem extends Item implements TooltipItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
-        super.appendHoverText(stack, context, lines, flag);
-        this.addTooltip(stack, lines::add);
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, net.minecraft.world.item.component.TooltipDisplay display, java.util.function.Consumer<Component> lines, TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, lines, flag);
+        this.addTooltip(stack, lines);
     }
 }

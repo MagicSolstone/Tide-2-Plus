@@ -29,7 +29,7 @@ public class AnglingTableBlock extends CraftingTableBlock {
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult pHitResult) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
         player.openMenu(state.getMenuProvider(level, pos));
         return InteractionResult.CONSUME;
     }

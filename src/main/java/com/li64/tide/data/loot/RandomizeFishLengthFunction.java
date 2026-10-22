@@ -9,7 +9,6 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.functions.LootItemFunctionType;
 import org.jetbrains.annotations.NotNull;
 
 public class RandomizeFishLengthFunction implements LootItemFunction {
@@ -17,8 +16,9 @@ public class RandomizeFishLengthFunction implements LootItemFunction {
 
     public RandomizeFishLengthFunction() {}
 
-    public @NotNull LootItemFunctionType<RandomizeFishLengthFunction> getType() {
-        return TideLootFunctions.RANDOMIZE_FISH_LENGTH;
+    @Override
+    public @NotNull MapCodec<RandomizeFishLengthFunction> codec() {
+        return CODEC;
     }
 
     @Override

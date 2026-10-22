@@ -2,7 +2,7 @@ package com.li64.tide.data.rods;
 
 import com.li64.tide.util.TideUtils;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -37,7 +37,7 @@ public record ClientFishingRodTooltip(int slots, BaitContents contents) implemen
     }
 
     @Override
-    public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphics graphics) {
+    public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphicsExtractor graphics) {
         int gridWidth = this.gridWidth();
 
         graphics.drawString(font, MESSAGE, x, y, DyeColor.LIGHT_GRAY.getTextColor());
@@ -50,7 +50,7 @@ public record ClientFishingRodTooltip(int slots, BaitContents contents) implemen
         }
     }
 
-    private void renderSlot(int x, int y, int index, GuiGraphics graphics, Font font) {
+    private void renderSlot(int x, int y, int index, GuiGraphicsExtractor graphics, Font font) {
         graphics.blitSprite(SLOT_BACKGROUND_SPRITE, x - 4 + BG_BORDER, y - 4 + BG_BORDER, 24, 24);
 
         if (index >= this.contents.size()) return;

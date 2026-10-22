@@ -27,11 +27,11 @@ public record DisplayData(ResourceKey<EntityType<?>> entityKey, Optional<Compoun
     ).apply(instance, DisplayData::new));
 
     public Holder<EntityType<?>> entityHolder() {
-        return BuiltInRegistries.ENTITY_TYPE.getHolder(entityKey).orElseThrow();
+        return BuiltInRegistries.ENTITY_TYPE.get(entityKey).orElseThrow();
     }
 
     public EntityType<?> entityType() {
-        return BuiltInRegistries.ENTITY_TYPE.get(entityKey);
+        return BuiltInRegistries.ENTITY_TYPE.getValue(entityKey);
     }
 
     public static Builder builder() {

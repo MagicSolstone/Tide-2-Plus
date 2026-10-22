@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 
-/*if >=1.21*/import net.minecraft.util.FastColor;
+/*if >=1.21*/import net.minecraft.util.ARGB;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
@@ -61,7 +61,7 @@ public abstract class FishModel extends EntityModel<Mob> {
 
     @Override
     public void setupAnim(Mob fish, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        float multiplier = (fish.isInWaterOrBubble() || fish.isInLava()) ? 1.0F : 1.5F;
+        float multiplier = (fish.isInWater() || fish.isInLava()) ? 1.0F : 1.5F;
         this.swimConfigs.forEach(config -> config.animate(ageInTicks, multiplier, ageInTicks == 0));
     }
 
@@ -99,7 +99,7 @@ public abstract class FishModel extends EntityModel<Mob> {
 
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
-        this.root().render(poseStack, buffer, packedLight, packedOverlay, FastColor.ARGB32.multiply(color, this.tint()));
+        this.root().render(poseStack, buffer, packedLight, packedOverlay, ARGB.ARGB32.multiply(color, this.tint()));
     }
 
     private record SwimAnimConfig(ModelPart modelPart, float speed, float magnitude, float offset, float origin, SwimAxis axis) {

@@ -4,7 +4,7 @@ import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import com.li64.tide.data.journal.FishRarity;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +18,7 @@ public class RarityComponent extends ProfileComponent {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int center = x + AREA_WIDTH / 2;
         int padding = 2;
         for (int i = 0; i < numStars; i++) {

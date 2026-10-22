@@ -20,7 +20,7 @@ import com.li64.tide.registries.entities.misc.LootCrateEntity;
 import com.li64.tide.registries.items.TideFishingRodItem;
 import com.li64.tide.util.BaitUtils;
 import com.li64.tide.util.TideUtils;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleTypes;
@@ -129,7 +129,7 @@ public class TideFishingHook extends Projectile {
         double d0 = player.getX() - (double)f3 * 0.3D;
         double d1 = player.getEyeY();
         double d2 = player.getZ() - (double)f2 * 0.3D;
-        this.moveTo(d0, d1, d2, f1, f);
+        this.snapTo(d0, d1, d2, f1, f);
 
         Vec3 vec3 = new Vec3(-f3, Mth.clamp(-(f5 / f4), -2.5f, 1.75f), -f2);
         double d3 = vec3.length();
@@ -267,7 +267,7 @@ public class TideFishingHook extends Projectile {
 
         Player player = this.getPlayerOwner();
         if (player == null) this.discard();
-        else if (this.level().isClientSide || this.shouldKeepFishing(player)) {
+        else if (this.level().isClientSide() || this.shouldKeepFishing(player)) {
             if (this.onGround()) {
                 this.life++;
                 if (this.life >= 1200) {
@@ -331,7 +331,7 @@ public class TideFishingHook extends Projectile {
                         if (this.biting) this.setDeltaMovement(this.getDeltaMovement().add(0.0,
                                 -0.1 * (double)this.syncedRandom.nextFloat() * (double)this.syncedRandom.nextFloat(), 0.0));
 
-                        if (!this.level().isClientSide) this.catchingFish(pos);
+                        if (!this.level().isClientSide()) this.catchingFish(pos);
                     }
                     else this.outOfWaterTime = Math.min(20, this.outOfWaterTime + 1);
                 }
@@ -383,7 +383,7 @@ public class TideFishingHook extends Projectile {
     @Override
     protected void onHitEntity(@NotNull EntityHitResult result) {
         super.onHitEntity(result);
-        if (!this.level().isClientSide) {
+        if (!this.level().isClientSide()) {
             if (result.getEntity() == this.getOwner()) this.discard();
             this.setHookedEntity(result.getEntity());
         }
@@ -466,7 +466,7 @@ public class TideFishingHook extends Projectile {
                                 Tide.NETWORK.sendToPlayer(new EchoRodHookedMsg(hookedItems.get(0)), serverPlayer);
                         }
                         else if (catchType == CatchType.CRATE && crateData != null) {
-                            Item crate = crateData.blockProvider().getState(random, pos).getBlock().asItem();
+                            Item crate = crateData.blockProvider().getState(level(), random, pos).getBlock().asItem();
                             Tide.NETWORK.sendToPlayer(new EchoRodHookedMsg(new ItemStack(crate)), serverPlayer);
                         }
                     }
@@ -561,10 +561,10 @@ public class TideFishingHook extends Projectile {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag tag) {}
+    protected void addAdditionalSaveData(@NotNull net.minecraft.world.level.storage.ValueOutput tag) {}
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag tag) {}
+    protected void readAdditionalSaveData(@NotNull net.minecraft.world.level.storage.ValueInput tag) {}
 
     public void retrieve() {
         this.retrieve(false);
@@ -578,7 +578,7 @@ public class TideFishingHook extends Projectile {
 
     public int retrieve(ItemStack rod, ServerLevel level, Player player) {
         if (player == null || player.fishing == null || !(player instanceof ServerPlayer serverPlayer)) return 0;
-        if (this.level().isClientSide || !shouldKeepFishing(player)) return 0;
+        if (this.level().isClientSide() || !shouldKeepFishing(player)) return 0;
         int i = 0;
         if (this.getHookedIn() != null) {
             this.pullEntity(this.getHookedIn());
@@ -651,7 +651,7 @@ public class TideFishingHook extends Projectile {
 
                 case CRATE:
 
-                    BlockState lootCrate = crateData.blockProvider().getState(random, blockPosition());
+                    BlockState lootCrate = crateData.blockProvider().getState(level(), random, blockPosition());
 
                     LootParams.Builder lootParamsBuilder = new LootParams.Builder((ServerLevel) this.level())
                             .withParameter(LootContextParams.ORIGIN, this.position())
@@ -732,7 +732,7 @@ public class TideFishingHook extends Projectile {
     }
 
     public void handleEntityEvent(byte event) {
-        if (event == 31 && this.level().isClientSide && this.hookedIn instanceof Player && ((Player)this.hookedIn).isLocalPlayer()) {
+        if (event == 31 && this.level().isClientSide() && this.hookedIn instanceof Player && ((Player)this.hookedIn).isLocalPlayer()) {
             this.pullEntity(this.hookedIn);
         }
 
@@ -772,7 +772,7 @@ public class TideFishingHook extends Projectile {
                 TideUtils.findClosestNonWaterBiome(level(), blockPosition(), 12, 2).orElse(getBiome()),
                 netherOverride ? Level.NETHER : level().dimension(),
                 Mth.clamp(sampleTemperature() + temperatureAddition, -1.0f, 1.0f),
-                level().getMoonPhase(),
+                com.li64.tide.util.Mc26.moonPhase(level(), position()),
                 SeasonsCompat.getSeason(level())
         );
     }

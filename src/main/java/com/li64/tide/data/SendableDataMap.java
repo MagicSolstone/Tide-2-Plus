@@ -50,7 +50,7 @@ public class SendableDataMap<T> {
 
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(data.size());
-        data.keySet().forEach(buf::writeResourceLocation);
+        data.keySet().forEach(buf::writeIdentifier);
         data.values().forEach(value -> buf.writeJsonWithCodec(codec, value));
     }
 
@@ -60,8 +60,8 @@ public class SendableDataMap<T> {
         ArrayList<Identifier> keys = new ArrayList<>(size);
         ArrayList<T> values = new ArrayList<>(size);
 
-        for (int i = 0; i < size; i++) keys.add(buf.readResourceLocation());
-        for (int i = 0; i < size; i++) values.add(buf.readJsonWithCodec(codec));
+        for (int i = 0; i < size; i++) keys.add(buf.readIdentifier());
+        for (int i = 0; i < size; i++) values.add(buf.readLenientJsonWithCodec(codec));
 
         Map<Identifier, T> map = new HashMap<>();
         for (int i = 0; i < size; i++) map.put(keys.get(i), values.get(i));

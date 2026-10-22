@@ -3,6 +3,8 @@ package com.li64.tide.mixin;
 import com.li64.tide.data.TidePlayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,14 +17,13 @@ public abstract class TidePlayerMixin implements TidePlayer {
     @Unique public String tide$dataKey = "TidePersistentData";
 
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-    private void readAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-        if (!compound.contains(tide$dataKey)) compound.put(tide$dataKey, tide$playerData);
-        else tide$playerData = compound.getCompound(tide$dataKey);
+    private void readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+        input.read(tide$dataKey, CompoundTag.CODEC).ifPresent(tag -> tide$playerData = tag);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-    private void addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
-        compound.put(tide$dataKey, tide$playerData);
+    private void addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+        output.store(tide$dataKey, CompoundTag.CODEC, tide$playerData);
     }
 
     @Override

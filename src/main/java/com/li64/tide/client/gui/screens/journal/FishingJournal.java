@@ -16,7 +16,7 @@ import com.mojang.blaze3d.vertex.*;
 import net.minecraft.client.GameNarrator;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.LightTexture;
@@ -239,7 +239,7 @@ public class FishingJournal extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         float deltaTicks = Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
         super.render(graphics, mouseX, mouseY, partialTick);
 
@@ -369,12 +369,12 @@ public class FishingJournal extends Screen {
         this.didClick = false;
     }
 
-    private void drawOutline(@NotNull GuiGraphics graphics, ItemStack stack, int x, int y) {
+    private void drawOutline(@NotNull GuiGraphicsExtractor graphics, ItemStack stack, int x, int y) {
         final int[][] offs = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
         for (int[] off : offs) renderItemSilhouette(graphics, stack, x + off[0], y + off[1]);
     }
 
-    public static void renderTextureSilhouette(GuiGraphics graphics, Identifier texture, int x, int y, int w, int h) {
+    public static void renderTextureSilhouette(GuiGraphicsExtractor graphics, Identifier texture, int x, int y, int w, int h) {
         RenderSystem.setShaderTexture(0, texture);
         RenderSystem.setShader(TideCoreShaders::fullWhite);
         Matrix4f pose = graphics.pose().last().pose();
@@ -387,7 +387,7 @@ public class FishingJournal extends Screen {
         BufferUploader.drawWithShader(builder.buildOrThrow());
     }
 
-    public static void renderItemSilhouette(GuiGraphics graphics, ItemStack stack, int x, int y) {
+    public static void renderItemSilhouette(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y) {
         Minecraft minecraft = Minecraft.getInstance();
         BakedModel model = minecraft.getItemRenderer().getModel(stack, minecraft.level, minecraft.player, 0);
 

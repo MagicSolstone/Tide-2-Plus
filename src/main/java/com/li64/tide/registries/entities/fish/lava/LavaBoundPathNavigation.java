@@ -22,7 +22,7 @@ public class LavaBoundPathNavigation extends PathNavigation {
     }
 
     protected boolean canUpdatePath() {
-        return this.allowBreaching || this.mob.isInWaterOrBubble() || mob.isInLava();
+        return this.allowBreaching || this.mob.isInWater() || mob.isInLava();
     }
 
     protected @NotNull Vec3 getTempMobPos() {
@@ -38,8 +38,13 @@ public class LavaBoundPathNavigation extends PathNavigation {
     }
 
     public boolean isStableDestination(@NotNull BlockPos pos) {
-        return !this.level.getBlockState(pos).isSolidRender(this.level, pos);
+        return !this.level.getBlockState(pos).isSolidRender();
     }
 
     public void setCanFloat(boolean canSwim) {}
+
+    @Override
+    public boolean canNavigateGround() {
+        return false;
+    }
 }

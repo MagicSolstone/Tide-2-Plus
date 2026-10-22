@@ -41,7 +41,7 @@ public class TideEntityTypes {
                     .updateInterval(20));
 
     public static <T extends Entity> EntityType<T> register(String key, EntityType.Builder<T> builder) {
-        EntityType<T> type = builder.build(key);
+        EntityType<T> type = builder.build(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, Tide.resource(key)));
         ENTITY_TYPES.put(key, type);
         return register(key, type);
     }
@@ -58,7 +58,7 @@ public class TideEntityTypes {
     public static <T extends Mob> void buildFishEntity(String key, TideFish.FishEntityData<T> data) {
         // construct entity type
         EntityType<T> entityType = (EntityType<T>) register(key, ENTITY_TYPES
-                .computeIfAbsent(key, k -> data.createEntityBuilder().build(k)));
+                .computeIfAbsent(key, k -> data.createEntityBuilder().build(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, Tide.resource(k)))));
         if (Tide.PLATFORM.isDevEnvironment()) FISH_ENTITIES.add(entityType);
 
         // build and register attributes

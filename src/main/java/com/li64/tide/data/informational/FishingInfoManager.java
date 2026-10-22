@@ -44,7 +44,7 @@ public class FishingInfoManager {
             int timer = timers.getOrDefault(key, 0);
             if (timer <= 0 || !cache.containsKey(key)) {
                 hasNewData = true;
-                String result = surveyItem.getResult(player.serverLevel(), player);
+                String result = surveyItem.getResult(player.level(), player);
                 results.put(key, result);
                 cache.put(key, result);
                 timers.put(key, surveyItem.updatePeriod());
@@ -57,7 +57,7 @@ public class FishingInfoManager {
 
         // remove stale entries
         Set.copyOf(cache.keySet()).forEach(key -> {
-            Item item = BuiltInRegistries.ITEM.get(key);
+            Item item = BuiltInRegistries.ITEM.getValue(key);
             if (surveyItems.contains(item)) return;
             cache.remove(key);
             timers.remove(key);
@@ -124,7 +124,7 @@ public class FishingInfoManager {
                 center.offset(-radiusXZ, -radiusY, -radiusXZ),
                 center.offset(radiusXZ, radiusY, radiusXZ))) {
 
-            BlockState state = player.serverLevel().getBlockState(pos);
+            BlockState state = player.level().getBlockState(pos);
             if (state.is(TideTags.Blocks.INFORMATIONAL)) found.add(state.getBlock().asItem());
         }
 

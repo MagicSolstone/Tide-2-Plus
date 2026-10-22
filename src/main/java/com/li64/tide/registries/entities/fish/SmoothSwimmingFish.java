@@ -5,7 +5,6 @@ import net.minecraft.world.entity.ai.control.SmoothSwimmingLookControl;
 import net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
 import net.minecraft.world.entity.ai.goal.RandomSwimmingGoal;
-import net.minecraft.world.entity.ai.goal.TryFindWaterGoal;
 import net.minecraft.world.level.Level;
 
 public class SmoothSwimmingFish extends AbstractTideFish {
@@ -18,7 +17,7 @@ public class SmoothSwimmingFish extends AbstractTideFish {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(0, new TryFindWaterGoal(this));
+        this.goalSelector.addGoal(0, new net.minecraft.world.entity.ai.goal.TryFindLiquidGoal(this, net.minecraft.tags.FluidTags.WATER));
         this.goalSelector.addGoal(1, new RandomSwimmingGoal(this, 1.0f, 10));
         this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
     }

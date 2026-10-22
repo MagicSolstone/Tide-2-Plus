@@ -1,16 +1,12 @@
 package com.li64.tide.registries.items;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
 
-public class SwordfishItem extends SwordItem {
-    public SwordfishItem(Tiers tier, int damageMod, float speedMod, Properties properties) {
-        super(tier, properties.attributes(SwordItem.createAttributes(tier, damageMod, speedMod)));
-    }
-
-    @Override
-    public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
-        return false;
+/** A sword (26.x has no SwordItem: a sword is an item with sword properties). Not repairable. */
+public class SwordfishItem extends Item {
+    public SwordfishItem(ToolMaterial material, int damageMod, float speedMod, Properties properties) {
+        super(properties.sword(material, damageMod, speedMod).repairable(net.minecraft.tags.TagKey.create(
+                net.minecraft.core.registries.Registries.ITEM, com.li64.tide.Tide.resource("never_repairs"))));
     }
 }

@@ -3,9 +3,9 @@ package com.li64.tide.data.triggers;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-import net.minecraft.advancements.critereon.EntityPredicate;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,9 +23,9 @@ public class TideSimpleTrigger extends SimpleCriterionTrigger<TideSimpleTrigger.
         this.trigger(player, trigger -> true);
     }
 
-    public record TriggerInstance(Optional<ContextAwarePredicate> player) implements SimpleInstance {
+    public record TriggerInstance(Optional<Holder<LootItemCondition>> player) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create(
-                builder -> builder.group(EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player")
+                builder -> builder.group(LootItemCondition.CODEC.optionalFieldOf("player")
                         .forGetter(TriggerInstance::player)).apply(builder, TriggerInstance::new));
     }
 }

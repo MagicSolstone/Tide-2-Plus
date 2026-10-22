@@ -31,7 +31,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import net.minecraft.world.ItemInteractionResult;
 import com.mojang.serialization.MapCodec;
 
 import java.util.Map;
@@ -107,10 +106,11 @@ public class FishDisplayBlock extends BaseEntityBlock implements SimpleWaterlogg
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState state, Direction dir, BlockState state2, LevelAccessor level, BlockPos pos, BlockPos pos2) {
+    protected @NotNull BlockState updateShape(BlockState state, LevelReader level, net.minecraft.world.level.ScheduledTickAccess ticks,
+                                              BlockPos pos, Direction dir, BlockPos pos2, BlockState state2, net.minecraft.util.RandomSource random) {
         return dir.getOpposite() == state.getValue(FACING) && !state.canSurvive(level, pos)
                 ? Blocks.AIR.defaultBlockState()
-                : super.updateShape(state, dir, state2, level, pos, pos2);
+                : super.updateShape(state, level, ticks, pos, dir, pos2, state2, random);
     }
 
     @Override
@@ -133,23 +133,9 @@ public class FishDisplayBlock extends BaseEntityBlock implements SimpleWaterlogg
         return RenderShape.MODEL;
     }
 
-    @Override
-    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        if (!state.is(newState.getBlock()) && !movedByPiston
-                && level.getBlockEntity(pos) instanceof FishDisplayBlockEntity display
-                && !display.isEmpty())
-            popResource(level, pos, display.getDisplayStack());
-        super.onRemove(state, level, pos, newState, movedByPiston);
-    }
-
 
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
-        return simpleCodec(FishDisplayBlock::new);
-    }
-
-    @Override
-    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state,
+    protected @NotNull InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state,
                                                        @NotNull Level level, @NotNull BlockPos pos,
                                                        @NotNull Player player, @NotNull InteractionHand hand,
                                                        @NotNull BlockHitResult hitResult) {
@@ -158,7 +144,7 @@ public class FishDisplayBlock extends BaseEntityBlock implements SimpleWaterlogg
             if (display.setDisplayStack(displayed)) {
                 if (!player.hasInfiniteMaterials()) stack.shrink(1);
                 level.playSound(null, pos, SoundEvents.COD_FLOP, SoundSource.BLOCKS, 1.0f, 1.0f);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
@@ -171,7 +157,7 @@ public class FishDisplayBlock extends BaseEntityBlock implements SimpleWaterlogg
         if (level.getBlockEntity(pos) instanceof FishDisplayBlockEntity display) {
             if (!display.isEmpty()) {
                 ItemStack stack = display.takeDisplayStack();
-                if (!player.addItem(stack)) player.drop(stack, false);
+                if (!player.addItem(stack)) player.drop(stack, false, net.minecraft.util.Prediction.SERVER_ONLY);
                 level.playSound(null, pos, SoundEvents.COD_FLOP, SoundSource.BLOCKS, 1.0f, 1.0f);
                 return InteractionResult.SUCCESS;
             }
@@ -180,11 +166,11 @@ public class FishDisplayBlock extends BaseEntityBlock implements SimpleWaterlogg
     }
 
     @Override
-    public @NotNull ItemStack getCloneItemStack(@NotNull LevelReader level, @NotNull BlockPos pos, @NotNull BlockState state) {
+    protected @NotNull ItemStack getCloneItemStack(@NotNull LevelReader level, @NotNull BlockPos pos, @NotNull BlockState state, boolean includeData) {
         if (level.getBlockEntity(pos) instanceof FishDisplayBlockEntity display) {
             if (!display.isEmpty()) return display.getDisplayStack().copy();
         }
-        return super.getCloneItemStack(level, pos, state);
+        return super.getCloneItemStack(level, pos, state, includeData);
     }
 
 }

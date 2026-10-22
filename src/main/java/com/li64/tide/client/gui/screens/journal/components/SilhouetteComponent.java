@@ -5,7 +5,7 @@ import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import com.li64.tide.data.fishing.FishData;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ public class SilhouetteComponent extends ProfileComponent {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int centerX = x + AREA_WIDTH / 2;
         int centerY = y + getRequiredHeight() / 2;
 

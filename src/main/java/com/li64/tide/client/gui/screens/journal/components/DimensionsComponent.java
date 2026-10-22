@@ -7,7 +7,7 @@ import com.li64.tide.data.fishing.conditions.types.DimensionsCondition;
 import com.li64.tide.data.fishing.conditions.types.FishingMediumCondition;
 import com.li64.tide.data.fishing.mediums.FishingMedium;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
@@ -35,7 +35,7 @@ public class DimensionsComponent extends ProfileComponent {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int center = x + AREA_WIDTH / 2;
         graphics.drawString(font, TITLE, center - font.width(TITLE) / 2, y, TEXT_COLOR, false);
 
@@ -51,7 +51,7 @@ public class DimensionsComponent extends ProfileComponent {
             graphics.blit(DIMENSIONS, spriteX, spriteY, offset, 0, 10, 10, 30, 10);
 
             if (mouseX >= spriteX && mouseX <= spriteX + 10 && mouseY >= spriteY && mouseY <= spriteY + 10)
-                graphics.renderTooltip(font, Component.translatable("journal.info.dimensions." + dimensions.get(i).location().getPath()), mouseX, mouseY);
+                graphics.renderTooltip(font, Component.translatable("journal.info.dimensions." + dimensions.get(i).identifier().getPath()), mouseX, mouseY);
         }
     }
 

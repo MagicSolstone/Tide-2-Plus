@@ -45,23 +45,23 @@ public class TideBlocks {
                     .strength(0.6f)
                     .sound(SoundType.LANTERN)
                     .noOcclusion()
-                    .pushReaction(PushReaction.DESTROY)
+                    .pushReaction(PushReaction.POPPED)
     );
     public static Block LUNAR_CALENDAR = register("lunar_calendar",
             LunarCalendarBlock::new,
             BlockBehaviour.Properties.of()
                     .mapColor(MapColor.COLOR_BLUE)
                     .forceSolidOn()
-                    .noCollission()
+                    .noCollision()
                     .strength(0.2f)
                     .sound(SoundType.WOOD)
                     .ignitedByLava()
-                    .pushReaction(PushReaction.DESTROY)
+                    .pushReaction(PushReaction.POPPED)
     );
 
     public static Block register(String name, Function<BlockBehaviour.Properties, Block> factory, BlockBehaviour.Properties properties) {
         ResourceKey<Block> key = ResourceKey.create(Registries.BLOCK, Tide.resource(name));
-        Block block = factory.apply(properties);
+        Block block = factory.apply(properties.setId(key));
         BLOCKS.put(key, block);
         return Tide.PLATFORM.register(BuiltInRegistries.BLOCK, key, block);
     }

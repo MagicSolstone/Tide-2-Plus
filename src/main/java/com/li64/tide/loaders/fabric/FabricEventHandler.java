@@ -11,10 +11,10 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.fabricmc.fabric.api.object.builder.v1.trade.TradeOfferHelper;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.npc.villager.VillagerProfession;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.trading.MerchantOffer;
@@ -23,8 +23,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ints.ContextIntProviders;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.world.item.trading.ItemCost;
@@ -55,35 +54,35 @@ public class FabricEventHandler {
             }
 
             if (key == BuiltInLootTables.UNDERWATER_RUIN_BIG || key == BuiltInLootTables.UNDERWATER_RUIN_SMALL) {
-                tableBuilder.pool(new LootPool.Builder().setRolls(UniformGenerator.between(1, 2))
+                tableBuilder.pool(new LootPool.Builder().setRolls(ContextIntProviders.between(1, 2))
                         .add(LootItem.lootTableItem(TideItems.BAIT).setWeight(20)
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(4))))
+                                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(4))))
                         .build()
                 );
             }
 
             if (key == BuiltInLootTables.SHIPWRECK_SUPPLY) {
-                tableBuilder.pool(new LootPool.Builder().setRolls(UniformGenerator.between(1, 2))
+                tableBuilder.pool(new LootPool.Builder().setRolls(ContextIntProviders.between(1, 2))
                         .add(LootItem.lootTableItem(TideItems.BAIT).setWeight(10)
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(4))))
+                                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(4))))
                         .add(LootItem.lootTableItem(TideItems.LUCKY_BAIT).setWeight(10)
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(4))))
+                                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(4))))
                         .build()
                 );
             }
 
             if (key == BuiltInLootTables.BURIED_TREASURE) {
-                tableBuilder.pool(new LootPool.Builder().setRolls(ConstantValue.exactly(2))
+                tableBuilder.pool(new LootPool.Builder().setRolls(ContextIntProviders.exactly(2))
                         .add(LootItem.lootTableItem(TideItems.LUCKY_BAIT).setWeight(5)
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(4))))
+                                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(4))))
                         .add(LootItem.lootTableItem(TideItems.MAGNETIC_BAIT).setWeight(5)
-                                .apply(SetItemCountFunction.setCount(ConstantValue.exactly(6))))
+                                .apply(SetItemCountFunction.setCount(ContextIntProviders.exactly(6))))
                         .build()
                 );
             }
 
             if (key == BuiltInLootTables.ANCIENT_CITY) {
-                tableBuilder.pool(new LootPool.Builder().setRolls(ConstantValue.exactly(1))
+                tableBuilder.pool(new LootPool.Builder().setRolls(ContextIntProviders.exactly(1))
                         .add(LootItem.lootTableItem(TideItems.ECHO_FISHING_ROD))
                                 .when(LootItemRandomChanceCondition.randomChance(0.1f))
                         .build()
@@ -91,15 +90,15 @@ public class FabricEventHandler {
             }
 
             if (key == BuiltInLootTables.NETHER_BRIDGE) {
-                tableBuilder.pool(new LootPool.Builder().setRolls(ConstantValue.exactly(1))
+                tableBuilder.pool(new LootPool.Builder().setRolls(ContextIntProviders.exactly(1))
                         .add(LootItem.lootTableItem(TideItems.BLAZING_FISHING_ROD))
                         .when(LootItemRandomChanceCondition.randomChance(0.3f))
                         .build()
                 );
             }
 
-            if (key == EntityType.ELDER_GUARDIAN.getDefaultLootTable()) {
-                tableBuilder.pool(new LootPool.Builder().setRolls(ConstantValue.exactly(1))
+            if (EntityTypes.ELDER_GUARDIAN.getDefaultLootTable().map(key::equals).orElse(false)) {
+                tableBuilder.pool(new LootPool.Builder().setRolls(ContextIntProviders.exactly(1))
                         .add(LootItem.lootTableItem(TideItems.PRISMARINE_FISHING_ROD))
                         .when(LootItemRandomChanceCondition.randomChance(0.5f))
                         .build()
@@ -107,15 +106,9 @@ public class FabricEventHandler {
             }
         });
 
-        TradeOfferHelper.registerVillagerOffers(VillagerProfession.FISHERMAN, 4, (factories) -> {
-            factories.add((entity, random) -> new MerchantOffer(
-                    new ItemCost(Items.EMERALD, 15),
-                    new ItemStack(TideItems.VILLAGE_FISHING_ROD, 1),
-                    1, 15, 0.05f
-            ));
-        });
+        // (the Village Fishing Rod trade is data now: data/tide/villager_trade/fisherman/)
 
         LootTableEvents.ALL_LOADED.register((resourceManager, registry) ->
-                FishData.VANILLA_FISH_TABLE = registry.get(BuiltInLootTables.FISHING_FISH.location()));
+                FishData.VANILLA_FISH_TABLE = registry.getValue(BuiltInLootTables.FISHING_FISH));
     }
 }

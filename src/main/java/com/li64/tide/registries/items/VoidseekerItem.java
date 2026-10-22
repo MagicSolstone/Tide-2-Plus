@@ -12,7 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import net.minecraft.world.level.portal.DimensionTransition;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -26,17 +25,11 @@ public class VoidseekerItem extends AbstractTooltipItem {
         ItemStack result = super.finishUsingItem(stack, level, entity);
         if (!(entity instanceof ServerPlayer player)) return result;
 
-        player.getCooldowns().addCooldown(this, 20);
+        player.getCooldowns().addCooldown(stack, 20);
         player.resetFallDistance(); // secret tech?!?
-        ResourceKey<Level> dimension = player.getRespawnDimension();
 
-        if (player.getServer() != null && player.getRespawnPosition() != null) {
-            ServerLevel respawnLevel = player.getServer().getLevel(dimension);
-            if (respawnLevel == null) return result;
-
-            Optional<Vec3> respawnPos = Optional.of(player.findRespawnPositionAndUseSpawnBlock(true, DimensionTransition.DO_NOTHING).pos());
-            respawnPos.ifPresent(pos -> player.teleportTo(respawnLevel,
-                    pos.x(), pos.y(), pos.z(), player.getRespawnAngle(), 0f));
+        if (player.getRespawnConfig() != null) {
+            player.teleport(player.findRespawnPositionAndUseSpawnBlock(true, net.minecraft.world.level.portal.TeleportTransition.DO_NOTHING));
         }
         return result;
     }

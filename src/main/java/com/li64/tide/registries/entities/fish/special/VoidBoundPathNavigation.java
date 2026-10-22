@@ -3,7 +3,7 @@ package com.li64.tide.registries.entities.fish.special;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
-import net.minecraft.world.entity.animal.WaterAnimal;
+import net.minecraft.world.entity.animal.fish.WaterAnimal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.PathNavigationRegion;
 import net.minecraft.world.level.pathfinder.Path;
@@ -31,12 +31,12 @@ public class VoidBoundPathNavigation extends PathNavigation {
         if (!this.canUpdatePath()) return null;
         if (this.path != null && !this.path.isDone() && targets.contains(this.targetPos)) return this.path;
         else {
-            this.level.getProfiler().push("pathfind");
+            
             BlockPos blockpos = offsetUpward ? this.mob.blockPosition().above() : this.mob.blockPosition();
             int i = (int)(followRange + (float)regionOffset);
             PathNavigationRegion pathnavigationregion = new PathNavigationRegion(this.level, blockpos.offset(-i, -i, -i), blockpos.offset(i, i, i));
             Path path = this.pathFinder.findPath(pathnavigationregion, this.mob, targets, followRange, accuracy, this.maxVisitedNodesMultiplier);
-            this.level.getProfiler().pop();
+            
             if (path != null) {
                 this.targetPos = path.getTarget();
                 this.reachRange = accuracy;
@@ -48,7 +48,7 @@ public class VoidBoundPathNavigation extends PathNavigation {
     }
 
     protected boolean canUpdatePath() {
-        return this.allowBreaching || this.mob.isInWaterOrBubble() || this.mob.isInLava();
+        return this.allowBreaching || this.mob.isInWater() || this.mob.isInLava();
     }
 
     protected @NotNull Vec3 getTempMobPos() {
@@ -64,8 +64,13 @@ public class VoidBoundPathNavigation extends PathNavigation {
     }
 
     public boolean isStableDestination(@NotNull BlockPos pos) {
-        return !this.level.getBlockState(pos).isSolidRender(this.level, pos);
+        return !this.level.getBlockState(pos).isSolidRender();
     }
 
     public void setCanFloat(boolean canSwim) {}
+
+    @Override
+    public boolean canNavigateGround() {
+        return false;
+    }
 }

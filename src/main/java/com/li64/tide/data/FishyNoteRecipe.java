@@ -11,9 +11,13 @@ import org.jetbrains.annotations.NotNull;
 import net.minecraft.core.HolderLookup;
 
 public class FishyNoteRecipe extends CustomRecipe {
-    public FishyNoteRecipe(CraftingBookCategory category) {
-        super(category);
-    }
+    public static final FishyNoteRecipe INSTANCE = new FishyNoteRecipe();
+    public static final com.mojang.serialization.MapCodec<FishyNoteRecipe> MAP_CODEC = com.mojang.serialization.MapCodec.unit(INSTANCE);
+    public static final net.minecraft.network.codec.StreamCodec<net.minecraft.network.RegistryFriendlyByteBuf, FishyNoteRecipe> STREAM_CODEC =
+            net.minecraft.network.codec.StreamCodec.unit(INSTANCE);
+    public static final RecipeSerializer<FishyNoteRecipe> SERIALIZER = new RecipeSerializer<>(MAP_CODEC, STREAM_CODEC);
+
+    public FishyNoteRecipe() {}
 
     private ItemStack getFishToConvert(CraftingInput input) {
         ItemStack stack1 = null, stack2 = null;
@@ -43,20 +47,14 @@ public class FishyNoteRecipe extends CustomRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(CraftingInput input, HolderLookup.Provider registries
-                                       ) {
+    public @NotNull ItemStack assemble(CraftingInput input) {
         ItemStack fish = getFishToConvert(input);
         if (fish == null || fish.isEmpty()) return ItemStack.EMPTY;
         return FishyNoteItem.create(new ItemStack(fish.getItem()));
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height) {
-        return width * height > 2;
-    }
-
-    @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
-        return TideRecipeSerializers.FISHY_NOTE_RECIPE;
+    public @NotNull RecipeSerializer<FishyNoteRecipe> getSerializer() {
+        return SERIALIZER;
     }
 }

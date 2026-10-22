@@ -4,7 +4,7 @@ import com.li64.tide.registries.TideArmorMaterials;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
@@ -12,15 +12,15 @@ import net.minecraft.world.level.Level;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class DragonfinBootsItem extends ArmorItem implements TooltipItem {
+public class DragonfinBootsItem extends Item implements TooltipItem {
     public DragonfinBootsItem(Properties properties) {
-        super(TideArmorMaterials.DRAGONFIN, ArmorItem.Type.BOOTS, properties);
+        super(properties);
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
-        super.appendHoverText(stack, context, lines, flag);
-        this.addTooltip(stack, lines::add);
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, net.minecraft.world.item.component.TooltipDisplay display, java.util.function.Consumer<Component> lines, TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, lines, flag);
+        this.addTooltip(stack, lines);
     }
 
     @Override

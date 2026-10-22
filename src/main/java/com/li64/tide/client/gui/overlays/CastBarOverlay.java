@@ -2,7 +2,7 @@ package com.li64.tide.client.gui.overlays;
 
 import com.li64.tide.Tide;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
@@ -13,7 +13,7 @@ public class CastBarOverlay {
     private static float rodChargePercent = 0f;
     private static float timer = 20f;
 
-    public static void render(GuiGraphics graphics, float deltaTicks) {
+    public static void render(GuiGraphicsExtractor graphics, float deltaTicks) {
         if (timer >= 20f) return;
         timer += deltaTicks;
 

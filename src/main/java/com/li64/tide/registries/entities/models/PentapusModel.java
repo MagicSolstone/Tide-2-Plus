@@ -4,7 +4,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 
 public class PentapusModel extends FishModel {
     public static final ModelLayerLocation MODEL_LOCATION = createModelLocation("pentapus");
@@ -30,7 +30,7 @@ public class PentapusModel extends FishModel {
 
     @Override
     public int tint() {
-        return FastColor.ARGB32.color(150, 255, 255, 255);
+        return ARGB.ARGB32.color(150, 255, 255, 255);
     }
 
     @Override

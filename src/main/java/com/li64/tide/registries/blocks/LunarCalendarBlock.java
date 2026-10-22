@@ -31,10 +31,6 @@ public class LunarCalendarBlock extends HorizontalDirectionalBlock {
         this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
     }
 
-    public static final MapCodec<LunarCalendarBlock> CODEC = simpleCodec(LunarCalendarBlock::new);
-    @Override protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
-        return CODEC;
-    }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {

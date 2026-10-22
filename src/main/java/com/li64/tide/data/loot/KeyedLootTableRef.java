@@ -13,7 +13,7 @@ public record KeyedLootTableRef(ResourceKey<LootTable> key) implements LootTable
 
     @Override
     public Identifier getId() {
-        return this.key.location();
+        return this.key.identifier();
     }
 
     @Override

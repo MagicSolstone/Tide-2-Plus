@@ -4,6 +4,9 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.component.Consumable;
+import net.minecraft.world.item.component.Consumables;
+import net.minecraft.world.item.consume_effects.ApplyStatusEffectsConsumeEffect;
 
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class TideFoods {
             ));
 
     public static Item.Properties apply(Item.Properties properties, FoodDefinition def) {
-        return properties.food(def.toProperties());
+        return properties.food(def.toProperties(), def.toConsumable());
     }
 
     public record FoodDefinition(int nutrition, float saturation, boolean fast, boolean alwaysEdible, List<FoodEffect> effects) {
@@ -54,14 +57,22 @@ public class TideFoods {
                     .nutrition(nutrition())
                     .saturationModifier(saturation());
 
-            if (fast()) builder.fast();
             if (alwaysEdible()) builder.alwaysEdible();
-
-            for (FoodEffect effect : effects()) {
-                builder.effect(effect.effect(), effect.chance());
-            }
-
             return builder.build();
+        }
+
+        /** How it's eaten (26.x keeps this apart from the food values): quick to eat if fast, and its effects. */
+        public Consumable toConsumable() {
+            return toConsumableBuilder().build();
+        }
+
+        public Consumable.Builder toConsumableBuilder() {
+            Consumable.Builder builder = Consumables.defaultFood();
+            if (fast()) builder.consumeSeconds(0.8f);
+            for (FoodEffect effect : effects()) {
+                builder.onConsume(new ApplyStatusEffectsConsumeEffect(effect.effect(), effect.chance()));
+            }
+            return builder;
         }
     }
     public record FoodEffect(MobEffectInstance effect, float chance) {}

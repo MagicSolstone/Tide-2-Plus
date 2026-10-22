@@ -4,7 +4,7 @@ import com.li64.tide.data.FishLengthHolder;
 import com.li64.tide.data.fishing.FishData;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.fish.AbstractFish;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,7 +24,7 @@ public abstract class AbstractFishMixin implements FishLengthHolder {
         FishData data = FishData.get((Entity)(Object)this).orElse(null);
         if (data == null) return;
 
-        this.tide$length = tag.contains(tide$LENGTH_KEY) ? tag.getDouble(tide$LENGTH_KEY) : this.tide$getLength();
+        this.tide$length = tag.getDoubleOr(tide$LENGTH_KEY, this.tide$getLength());
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
@@ -45,7 +45,7 @@ public abstract class AbstractFishMixin implements FishLengthHolder {
         FishData data = FishData.get((Entity)(Object)this).orElse(null);
         if (data == null) return;
 
-        this.tide$length = tag.contains(tide$LENGTH_KEY) ? tag.getDouble(tide$LENGTH_KEY) : this.tide$getLength();
+        this.tide$length = tag.getDoubleOr(tide$LENGTH_KEY, this.tide$getLength());
     }
 
     @Unique

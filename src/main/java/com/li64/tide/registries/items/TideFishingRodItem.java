@@ -1,5 +1,6 @@
 package com.li64.tide.registries.items;
 
+import net.minecraft.world.InteractionResult;
 import com.google.common.collect.ImmutableList;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.overlays.CastBarOverlay;
@@ -28,7 +29,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -39,7 +39,7 @@ import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
@@ -59,13 +59,13 @@ public class TideFishingRodItem extends FishingRodItem {
         super(properties
                 .durability((int) (baseDurability * (Tide.SERVER_CONFIG == null ? 1.0 : Tide.SERVER_CONFIG.general.rodDurabilityMultiplier)))
                 .component(TideDataComponents.BAIT_CONTENTS, new BaitContents())
+                .repairable(Items.STRING)
         );
         this.baitSlots = baitSlots;
     }
 
-    @Override
-    public void verifyComponentsAfterLoad(ItemStack stack) {
-        super.verifyComponentsAfterLoad(stack);
+    /** Drops bait beyond this rod's slots (1.21.1 did this as items loaded; 26.x has no such hook). */
+    public void trimBait(ItemStack stack) {
         BaitContents contents = TideItemData.BAIT_CONTENTS.get(stack);
         if (contents != null && contents.size() > this.baitSlots) {
             ArrayList<ItemStack> fitted = new ArrayList<>();
@@ -118,7 +118,7 @@ public class TideFishingRodItem extends FishingRodItem {
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        return !stack.has(DataComponents.HIDE_TOOLTIP) && !stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)
+        return !stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, net.minecraft.world.item.component.TooltipDisplay.DEFAULT).hideTooltip()
                 ? Optional.ofNullable(TideItemData.BAIT_CONTENTS.get(stack))
                         .map(contents -> new FishingRodTooltip(this.baitSlots, contents))
                 : Optional.empty();
@@ -180,7 +180,7 @@ public class TideFishingRodItem extends FishingRodItem {
         return CustomRodManager.getHook(stack).is(TideItems.VOID_HOOK);
     }
 
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
         if (isHookActive(player)) {
             TideFishingHook hook = getHook(player);
 
@@ -226,7 +226,7 @@ public class TideFishingRodItem extends FishingRodItem {
                 }
                 else {
                     if (!level.isClientSide() && FishCatchMinigame.delayActive((ServerPlayer) player))
-                        return InteractionResultHolder.consume(player.getItemInHand(hand));
+                        return InteractionResult.CONSUME;
                     retrieveHook(player.getItemInHand(hand), player, level);
                 }
             }
@@ -240,23 +240,23 @@ public class TideFishingRodItem extends FishingRodItem {
                     CatchMinigameOverlay.interact();
                 }
             }
-            return InteractionResultHolder.success(player.getItemInHand(hand));
+            return InteractionResult.SUCCESS;
         }
         else {
             if (!level.isClientSide() && FishCatchMinigame.delayActive((ServerPlayer) player))
-                return InteractionResultHolder.consume(player.getItemInHand(hand));
+                return InteractionResult.CONSUME;
 
             if (Tide.SERVER_CONFIG.general.holdToCast) {
                 // Charge the cast if the hook isn't active
                 level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE,
                         SoundSource.NEUTRAL, 1.5F, 0.3F / (level.getRandom().nextFloat() * 0.4F + 0.7F));
                 player.startUsingItem(hand);
-                return InteractionResultHolder.consume(player.getItemInHand(hand));
+                return InteractionResult.CONSUME;
             }
             else {
                 // Cast the hook normally
                 castHook(player.getItemInHand(hand), player, level, 1f);
-                return InteractionResultHolder.success(player.getItemInHand(hand));
+                return InteractionResult.SUCCESS;
             }
         }
     }
@@ -266,7 +266,7 @@ public class TideFishingRodItem extends FishingRodItem {
     }
 
     @Override
-    public void releaseUsing(@NotNull ItemStack rod, @NotNull Level level, @NotNull LivingEntity user, int charge) {
+    public boolean releaseUsing(@NotNull ItemStack rod, @NotNull Level level, @NotNull LivingEntity user, int charge) {
         if (user instanceof Player player) {
             int chargeDifference = this.getUseDuration(rod, user) - charge;
             int chargeDuration = getChargeDuration(rod, user);
@@ -275,7 +275,9 @@ public class TideFishingRodItem extends FishingRodItem {
             if (chargeDifference > chargeDuration) chargeDifference = chargeDuration;
             float chargeMultiplier = ((float) chargeDifference / (float) chargeDuration) + 0.5f;
             castHook(rod, player, level, chargeMultiplier);
+            return true;
         }
+        return false;
     }
 
     public boolean isHookActive(Player player) {
@@ -315,14 +317,14 @@ public class TideFishingRodItem extends FishingRodItem {
                 // sunflower rod perk
                 if (rod.is(TideItems.SUNFLOWER_FISHING_ROD)) {
                     boolean canSeeSky = level.canSeeSky(player.blockPosition());
-                    boolean isSunny = level.isDay() && level.dimensionType().hasSkyLight() && !level.isRaining();
+                    boolean isSunny = level.isBrightOutside() && level.dimensionType().hasSkyLight() && !level.isRaining();
                     if (canSeeSky && isSunny) luck += 1;
                 }
 
                 // hybrid aquatic hook perks
                 if (CompatHelper.isHybridAquaticLoaded()) {
-                    if (CustomRodManager.getHook(rod).getItem().toString().matches("barbed_hook") && level.isDay()) speed += 1;
-                    if (CustomRodManager.getHook(rod).getItem().toString().matches("glowing_hook") && level.isNight()) speed += 1;
+                    if (CustomRodManager.getHook(rod).getItem().toString().matches("barbed_hook") && level.isBrightOutside()) speed += 1;
+                    if (CustomRodManager.getHook(rod).getItem().toString().matches("glowing_hook") && level.isDarkOutside()) speed += 1;
                     if (CustomRodManager.getHook(rod).getItem().toString().matches("magnetic_hook")) luck += 1;
                 }
 
@@ -338,9 +340,9 @@ public class TideFishingRodItem extends FishingRodItem {
     public void retrieveHook(ItemStack rod, Player player, Level level) {
         TideFishingHook activeHook = HookAccessor.getHook(player);
         if (activeHook != null) {
-            if (!level.isClientSide) {
+            if (!level.isClientSide()) {
                 int durabilityLoss = activeHook.retrieve(rod, (ServerLevel) level, player);
-                rod.hurtAndBreak(durabilityLoss, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
+                rod.hurtAndBreak(durabilityLoss, player, player.getUsedItemHand().asEquipmentSlot());
             }
 
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE,
@@ -374,8 +376,8 @@ public class TideFishingRodItem extends FishingRodItem {
         // return CustomRodManager.getLine(rod).is(TideItems.BRAIDED_LINE) ? 15 : 25;
     }
 
-    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack stack) {
-        return UseAnim.BOW;
+    public @NotNull ItemUseAnimation getUseAnimation(@NotNull ItemStack stack) {
+        return ItemUseAnimation.BOW;
     }
 
     public void onItemBroken(ItemStack stack, ServerPlayer player) {
@@ -385,12 +387,8 @@ public class TideFishingRodItem extends FishingRodItem {
 
     private void giveOrDrop(ItemStack stack, Player player) {
         if (stack == null || stack.isEmpty()) return;
-        ItemEntity item = player.drop(stack, false);
+        ItemEntity item = player.drop(stack, false, net.minecraft.util.Prediction.SERVER_ONLY);
         if (item != null) item.setNoPickUpDelay();
     }
 
-    @Override
-    public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
-        return repairCandidate.is(Items.STRING);
-    }
 }

@@ -12,7 +12,7 @@ import com.li64.tide.data.player.TidePlayerData;
 import com.li64.tide.util.TideUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -160,7 +160,7 @@ public class FishProfile implements Renderable {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // render background
         int tlX = (graphics.guiWidth() - BG_WIDTH) / 2;
         int tlY = (graphics.guiHeight() - BG_HEIGHT) / 2;

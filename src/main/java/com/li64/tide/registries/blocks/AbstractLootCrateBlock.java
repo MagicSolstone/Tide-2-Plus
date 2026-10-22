@@ -30,7 +30,7 @@ public abstract class AbstractLootCrateBlock<E extends BlockEntity> extends Barr
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult result) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
         if (level.getBlockEntity(pos) instanceof LootCrateBlockEntity block) player.openMenu(block);
         return InteractionResult.CONSUME;
     }

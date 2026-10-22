@@ -3,12 +3,11 @@ package com.li64.tide.registries.items;
 import com.li64.tide.Tide;
 import com.li64.tide.data.player.TidePlayerData;
 import com.li64.tide.network.messages.OpenJournalMsg;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.triggers.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +19,7 @@ public class FishingJournalItem extends Item {
         super(properties);
     }
 
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
+    public @NotNull InteractionResult use(@NotNull Level level, Player player, @NotNull InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
 
         if (player instanceof ServerPlayer serverPlayer) {
@@ -30,6 +29,6 @@ public class FishingJournalItem extends Item {
             TidePlayerData.getOrCreate(serverPlayer).syncTo(serverPlayer);
             Tide.NETWORK.sendToPlayer(new OpenJournalMsg(), serverPlayer);
         }
-        return InteractionResultHolder.success(stack);
+        return InteractionResult.SUCCESS;
     }
 }

@@ -1035,7 +1035,7 @@ public class TideFish {
             .build();
 
     public static final Item SAILFISH = new Builder("sailfish")
-            .item(properties -> new SwordfishItem(Tiers.IRON, 2, -3.0f, properties))
+            .item(properties -> new SwordfishItem(net.minecraft.world.item.ToolMaterial.IRON, 2, -3.0f, properties))
             .food(TideFoods.BIG_RAW_FISH)
             .cookedItem(TideItems.LARGE_COOKED_FISH)
             .fishData(builder -> builder
@@ -1069,7 +1069,7 @@ public class TideFish {
             .build();
 
     public static final Item SWORDFISH = new Builder("swordfish")
-            .item(properties -> new SwordfishItem(Tiers.IRON, 3, -2.8f, properties))
+            .item(properties -> new SwordfishItem(net.minecraft.world.item.ToolMaterial.IRON, 3, -2.8f, properties))
             .food(TideFoods.BIG_RAW_FISH)
             .cookedItem(TideItems.LARGE_COOKED_FISH)
             .fishData(builder -> builder
@@ -2654,7 +2654,7 @@ public class TideFish {
             .build();
 
     public static final Item BLAZING_SWORDFISH = new Builder("blazing_swordfish")
-            .item(properties -> new BlazingSwordfishItem(Tiers.IRON, 4, -2.8f, properties))
+            .item(properties -> new BlazingSwordfishItem(net.minecraft.world.item.ToolMaterial.IRON, 4, -2.8f, properties))
             .food(TideFoods.BIG_FIERY_FISH)
             .fireproof()
             .fishData(builder -> builder
@@ -2768,8 +2768,12 @@ public class TideFish {
             .build();
 
     public static final Item CHORUS_COD = new Builder("chorus_cod")
-            .item(ChorusFruitItem::new)
             .food(TideFoods.RAW_FISH.withAlwaysEdible())
+            // like chorus fruit: eating it teleports you (26.x has no ChorusFruitItem; it's a consume effect)
+            .properties(p -> p.component(net.minecraft.core.component.DataComponents.CONSUMABLE,
+                    TideFoods.RAW_FISH.withAlwaysEdible().toConsumableBuilder()
+                            .onConsume(new net.minecraft.world.item.consume_effects.TeleportRandomlyConsumeEffect()).build())
+                    .useCooldown(1.0f))
             .fishData(builder -> builder
                     .size(55.0, 75.0, 110.0)
                     .strength(0.72f)
@@ -3149,7 +3153,7 @@ public class TideFish {
             }
 
             if (entityData != null) {
-                String path = key.location().getPath();
+                String path = key.identifier().getPath();
                 ENTITY_DATA.put(path, entityData);
                 createSpawningItems(path, entityData);
             }
@@ -3161,10 +3165,9 @@ public class TideFish {
         @SuppressWarnings("unchecked")
         private <T extends Mob> void createSpawningItems(String key, FishEntityData<T> entityData) {
             EntityType<T> type = (EntityType<T>) TideEntityTypes.ENTITY_TYPES
-                    .computeIfAbsent(key, k -> entityData.createEntityBuilder().build(k));
+                    .computeIfAbsent(key, k -> entityData.createEntityBuilder().build(net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.ENTITY_TYPE, Tide.resource(k))));
 
-            Item egg = TideItems.register(key + "_spawn_egg", properties ->
-                    new SpawnEggItem(type, 0xffffff, 0x000000, properties));
+            Item egg = TideItems.register(key + "_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(type));
             Item bucket = TideItems.register(key + "_bucket", properties -> entityData.bucketBuilder().apply(type, properties),
                     new Item.Properties().stacksTo(1).component(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY));
 

@@ -27,7 +27,7 @@ public class LunarCalendarItem extends BlockItem implements InformationalItem, T
 
     @Override
     public String getResult(ServerLevel level, ServerPlayer player) {
-        return Integer.toString(level.getMoonPhase());
+        return Integer.toString(com.li64.tide.util.Mc26.moonPhase(level, player.blockPosition()));
     }
 
     @Override
@@ -41,8 +41,8 @@ public class LunarCalendarItem extends BlockItem implements InformationalItem, T
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
-        super.appendHoverText(stack, context, lines, flag);
-        this.addTooltip(stack, lines::add);
+    public void appendHoverText(ItemStack stack, net.minecraft.world.item.Item.TooltipContext context, net.minecraft.world.item.component.TooltipDisplay display, java.util.function.Consumer<Component> lines, TooltipFlag flag) {
+        super.appendHoverText(stack, context, display, lines, flag);
+        this.addTooltip(stack, lines);
     }
 }

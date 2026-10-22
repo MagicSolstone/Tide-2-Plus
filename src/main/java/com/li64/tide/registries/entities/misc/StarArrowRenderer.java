@@ -16,7 +16,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 
 public class StarArrowRenderer extends EntityRenderer<StarArrow> {
     public static final Identifier STAR_ARROW_LOCATION = Tide.resource("textures/entity/projectiles/star_arrow.png");
@@ -47,7 +47,7 @@ public class StarArrowRenderer extends EntityRenderer<StarArrow> {
         poseStack.scale(1, -1, 1);
         poseStack.translate(0, -1.28, 0);
         VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity)));
-        model.renderToBuffer(poseStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255, 255, 255, 255));
+        model.renderToBuffer(poseStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ARGB.ARGB32.color(255, 255, 255, 255));
         poseStack.popPose();
     }
 }

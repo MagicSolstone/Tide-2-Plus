@@ -10,7 +10,7 @@ import com.li64.tide.data.fishing.FishData;
 import com.li64.tide.data.player.TidePlayerData;
 import com.li64.tide.registries.TideSoundEvents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.player.LocalPlayer;
@@ -76,7 +76,7 @@ public class FishyNoteScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (!isJournal) {
             super.render(graphics, mouseX, mouseY, partialTick);
         }

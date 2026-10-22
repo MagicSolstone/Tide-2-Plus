@@ -49,7 +49,7 @@ public final class TideServerConfig {
             public VoidHeightEntry() {}
 
             public VoidHeightEntry(ResourceKey<Level> dimension, Type type, int height) {
-                this.dimension = dimension.location().toString();
+                this.dimension = dimension.identifier().toString();
                 this.type = type;
                 this.height = height;
             }

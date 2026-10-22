@@ -31,7 +31,7 @@ public class EnchantedPocketWatchItem extends PocketWatchItem {
     @Override
     public @NotNull InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity target, InteractionHand hand) {
         if (!(target instanceof Mob mob) || !(target instanceof FreezableMob freezable)
-                || player.getCooldowns().isOnCooldown(this) || target.getType().is(TideTags.Entities.IGNORES_POCKET_WATCH)
+                || player.getCooldowns().isOnCooldown(stack) || target.is(TideTags.Entities.IGNORES_POCKET_WATCH)
                 || Tide.SERVER_CONFIG.items.pocketWatchBlacklist.contains(BuiltInRegistries.ENTITY_TYPE.getKey(target.getType()).toString())) {
             return super.interactLivingEntity(stack, player, target, hand);
         }
@@ -39,7 +39,7 @@ public class EnchantedPocketWatchItem extends PocketWatchItem {
         if (freezable.tide$isFrozen()) {
             level.playSound(null, mob.blockPosition(), SoundEvents.CHAIN_BREAK, SoundSource.PLAYERS, 1.0f, 1.0f);
             freezable.tide$setFrozen(false);
-            player.getCooldowns().addCooldown(this, 20);
+            player.getCooldowns().addCooldown(stack, 20);
         }
         else {
             if (BuiltInRegistries.ENTITY_TYPE.getKey(mob.getType()).getPath().equals("coelacanth")) TideCriteriaTriggers.FROZE_COELACANTH.trigger((ServerPlayer) player);
@@ -47,7 +47,7 @@ public class EnchantedPocketWatchItem extends PocketWatchItem {
             level.playSound(null, mob.blockPosition(), SoundEvents.ELDER_GUARDIAN_CURSE, SoundSource.PLAYERS, 0.8f, 0.9f);
             level.sendParticles(TideParticleTypes.MAGIC_CHAIN, mob.getX(), mob.getY() + mob.getBbHeight() / 2, mob.getZ(), 8, 0, 0, 0, 0);
             freezable.tide$setFrozen(true);
-            player.getCooldowns().addCooldown(this, 200);
+            player.getCooldowns().addCooldown(stack, 200);
         }
         return InteractionResult.SUCCESS;
     }

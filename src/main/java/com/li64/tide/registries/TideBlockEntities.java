@@ -13,18 +13,14 @@ TideBlockEntities {
     public static final HashMap<String, BlockEntityType<?>> BLOCK_ENTITIES = new HashMap<>();
 
     public static final BlockEntityType<? extends LootCrateBlockEntity> WOODEN_CRATE =
-            register("wooden_crate", BlockEntityType.Builder.of(WoodenCrateBlockEntity::new,
-                    TideBlocks.WOODEN_CRATE).build(null));
+            register("wooden_crate", new BlockEntityType<>(WoodenCrateBlockEntity::new, java.util.Set.of(TideBlocks.WOODEN_CRATE)));
     public static final BlockEntityType<? extends LootCrateBlockEntity> OBSIDIAN_CRATE =
-            register("obsidian_crate", BlockEntityType.Builder.of(ObsidianCrateBlockEntity::new,
-                    TideBlocks.OBSIDIAN_CRATE).build(null));
+            register("obsidian_crate", new BlockEntityType<>(ObsidianCrateBlockEntity::new, java.util.Set.of(TideBlocks.OBSIDIAN_CRATE)));
     public static final BlockEntityType<? extends LootCrateBlockEntity> PURPUR_CRATE =
-            register("purpur_crate", BlockEntityType.Builder.of(PurpurCrateBlockEntity::new,
-                    TideBlocks.PURPUR_CRATE).build(null));
+            register("purpur_crate", new BlockEntityType<>(PurpurCrateBlockEntity::new, java.util.Set.of(TideBlocks.PURPUR_CRATE)));
 
     public static final BlockEntityType<FishDisplayBlockEntity> FISH_DISPLAY =
-            register("fish_display", BlockEntityType.Builder.of(FishDisplayBlockEntity::new,
-                    TideBlocks.FISH_DISPLAY).build(null));
+            register("fish_display", new BlockEntityType<>(FishDisplayBlockEntity::new, java.util.Set.of(TideBlocks.FISH_DISPLAY)));
 
     public static <T extends BlockEntity> BlockEntityType<T> register(String key, BlockEntityType<T> block) {
         BLOCK_ENTITIES.put(key, block);

@@ -4,7 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.li64.tide.Tide;
 import com.li64.tide.data.ModAssociatedEntry;
 import com.li64.tide.data.loot.LootTableRef;
-import com.li64.tide.datagen.fabric.providers.SimpleDataOutput;
+import com.li64.tide.data.SimpleDataOutput;
 import com.li64.tide.data.fishing.conditions.FishingCondition;
 import com.li64.tide.data.fishing.conditions.types.*;
 import com.li64.tide.data.fishing.mediums.FishingMedium;
@@ -62,7 +62,7 @@ public record FishingLootData(ResourceKey<LootTable> lootTable,
     @Override
     public MutableComponent getTestKey() {
         return Component.translatable("commands.fishing.entries.loot_table").append(" \"").append(Component.literal(
-                lootTable.location().toString())).append("\"");
+                lootTable.identifier().toString())).append("\"");
     }
 
     public static Builder builder() {
@@ -160,7 +160,7 @@ public record FishingLootData(ResourceKey<LootTable> lootTable,
         }
 
         public void build(SimpleDataOutput<FishingLootData> output) {
-            this.build(this.lootKey.location(), output);
+            this.build(this.lootKey.identifier(), output);
         }
 
         public void build(String path, SimpleDataOutput<FishingLootData> output) {

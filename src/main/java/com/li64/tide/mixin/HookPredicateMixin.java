@@ -1,7 +1,7 @@
 package com.li64.tide.mixin;
 
 import com.li64.tide.registries.entities.misc.fishing.TideFishingHook;
-import net.minecraft.advancements.critereon.FishingHookPredicate;
+import net.minecraft.advancements.predicates.entity.FishingHookPredicate;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;

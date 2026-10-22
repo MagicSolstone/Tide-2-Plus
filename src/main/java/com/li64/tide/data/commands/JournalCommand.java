@@ -16,13 +16,13 @@ import net.minecraft.world.item.ItemStack;
 
 public class JournalCommand {
     public JournalCommand(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
-        dispatcher.register(Commands.literal("journal").requires((stack) -> stack.hasPermission(2))
+        dispatcher.register(Commands.literal("journal").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("reset").executes(ctx -> reset(ctx.getSource())))
                 .then(Commands.literal("unlock")
                         .then(Commands.literal("all")
                                 .executes(ctx -> unlockAll(ctx.getSource())))
                         .then(Commands.argument("fish", ItemArgument.item(buildContext))
-                                .executes(ctx -> unlock(ctx.getSource(), ItemArgument.getItem(ctx, "fish").getItem())))));
+                                .executes(ctx -> unlock(ctx.getSource(), ItemArgument.getItem(ctx, "fish").item().value())))));
     }
 
     private int unlock(CommandSourceStack source, Item fishItem) {

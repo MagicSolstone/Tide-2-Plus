@@ -56,9 +56,9 @@ public abstract class LavaAnimal extends PathfinderMob {
     }
 
     @Override
-    protected int getBaseExperienceReward() {
+    protected int getBaseExperienceReward(net.minecraft.server.level.ServerLevel level) {
         if (isInLava()) return 0;
-        return super.getBaseExperienceReward();
+        return super.getBaseExperienceReward(level);
     }
 
     @Override

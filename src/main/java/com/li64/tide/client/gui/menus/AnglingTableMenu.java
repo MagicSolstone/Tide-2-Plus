@@ -24,7 +24,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
     }
 
     public AnglingTableMenu(int menuId, Inventory inventory, ContainerLevelAccess level) {
-        super(TideMenuTypes.ANGLING_TABLE, menuId, inventory, level);
+        super(TideMenuTypes.ANGLING_TABLE, menuId, inventory, level, createInputSlotDefinitions());
         this.level = inventory.player.level();
     }
 
@@ -35,10 +35,10 @@ public class AnglingTableMenu extends ItemCombinerMenu {
 
     @Override
     protected void onTake(Player player, ItemStack stack) {
-        level.playLocalSound(player.blockPosition(), SoundEvents.FISHING_BOBBER_RETRIEVE, SoundSource.BLOCKS, 1.5F, this.level.random.nextFloat() * 0.1F + 0.9F, false);
+        level.playLocalSound(player.blockPosition(), SoundEvents.FISHING_BOBBER_RETRIEVE, SoundSource.BLOCKS, 1.5F, this.level.getRandom().nextFloat() * 0.1F + 0.9F, false);
         this.access.execute((level, pos) -> level.levelEvent(1044, pos, 0));
 
-        stack.onCraftedBy(player.level(), player, stack.getCount());
+        stack.onCraftedBy(player, stack.getCount());
         inputSlots.clearContent();
     }
 
@@ -60,7 +60,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                 ItemStack line = CustomRodManager.getLine(rod);
                 CustomRodManager.setLine(rod, null);
                 if (!inputSlots.getItem(1).isEmpty()) {
-                    if (!player.addItem(line.copy())) player.drop(line, true);
+                    if (!player.addItem(line.copy())) player.drop(line, true, net.minecraft.util.Prediction.SERVER_ONLY);
                 }
                 else inputSlots.setItem(1, line);
             }
@@ -68,7 +68,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                 ItemStack bobber = CustomRodManager.getBobber(rod);
                 CustomRodManager.setBobber(rod, null);
                 if (!inputSlots.getItem(2).isEmpty()) {
-                    if (!player.addItem(bobber.copy())) player.drop(bobber, true);
+                    if (!player.addItem(bobber.copy())) player.drop(bobber, true, net.minecraft.util.Prediction.SERVER_ONLY);
                 }
                 else inputSlots.setItem(2, bobber);
             }
@@ -76,7 +76,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                 ItemStack hook = CustomRodManager.getHook(rod);
                 CustomRodManager.setHook(rod, null);
                 if (!inputSlots.getItem(3).isEmpty()) {
-                    if (!player.addItem(hook.copy())) player.drop(hook, true);
+                    if (!player.addItem(hook.copy())) player.drop(hook, true, net.minecraft.util.Prediction.SERVER_ONLY);
                 }
                 else inputSlots.setItem(3, hook);
             }
@@ -105,8 +105,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
         return newRod;
     }
 
-    @Override
-    protected @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
+    private static @NotNull ItemCombinerMenuSlotDefinition createInputSlotDefinitions() {
         return ItemCombinerMenuSlotDefinition.create()
             .withSlot(0, 26, 11,
                     stack -> stack.is(TideTags.Items.FISHING_RODS))

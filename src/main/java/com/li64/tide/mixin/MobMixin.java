@@ -36,7 +36,7 @@ public abstract class MobMixin implements FreezableMob {
             if (mob.isDeadOrDying()) return;
             if (mob.tickCount > 0) mob.tickCount--;
             if (mob.hurtTime > 0) mob.hurtTime--;
-            if (mob.invulnerableTime > 0) mob.invulnerableTime--;
+            if (mob.getInvulnerableTime() > 0) mob.setInvulnerableTime(mob.getInvulnerableTime() - 1);
             ci.cancel();
         }
     }

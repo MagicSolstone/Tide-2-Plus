@@ -28,7 +28,7 @@ public abstract class FlatDataLoader<T> extends AbstractDataLoader<T, List<T>> {
         ArrayList<T> tempValues = new ArrayList<>();
         int size = buf.readInt();
         for (int i = 0; i < size; i++) {
-            tempValues.add(buf.readJsonWithCodec(getEntryCodec()));
+            tempValues.add(buf.readLenientJsonWithCodec(getEntryCodec()));
         }
         this.setData(ImmutableList.copyOf(tempValues));
     }

@@ -12,7 +12,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.DirectionalPlaceContext;
-import net.minecraft.world.level.GameRules;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -74,9 +74,9 @@ public class LootCrateEntity extends FallingBlockEntity {
                 if (this.isAlive() || this.forceTickAfterTeleportToDuplicate) {
                     BlockPos pos = this.blockPosition();
                     if (!this.onGround()) {
-                        if (this.time > 100 && (pos.getY() <= this.level().getMinBuildHeight() || pos.getY() > this.level().getMaxBuildHeight()) || this.time > 600) {
-                            if (this.dropItem && serverLevel.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                                this.spawnAtLocation(block);
+                        if (this.time > 100 && (pos.getY() <= this.level().getMinY() || pos.getY() > (this.level().getMaxY() + 1)) || this.time > 600) {
+                            if (this.dropItem && serverLevel.getGameRules().get(GameRules.ENTITY_DROPS)) {
+                                this.spawnAtLocation(serverLevel, block);
                             }
 
                             this.discard();
@@ -94,13 +94,13 @@ public class LootCrateEntity extends FallingBlockEntity {
                                 }
 
                                 if (!this.level().setBlock(pos, this.blockState, 3)) {
-                                    if (this.dropItem && serverLevel.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                                    if (this.dropItem && serverLevel.getGameRules().get(GameRules.ENTITY_DROPS)) {
                                         this.discard();
                                         this.callOnBrokenAfterFall(block, pos);
-                                        this.spawnAtLocation(block);
+                                        this.spawnAtLocation(serverLevel, block);
                                     }
                                 } else {
-                                    ((ServerLevel) this.level()).getChunkSource().chunkMap.broadcast(this, new ClientboundBlockUpdatePacket(pos, this.level().getBlockState(pos)));
+                                    ((ServerLevel) this.level()).getChunkSource().chunkMap.sendToTrackingPlayers(this, new ClientboundBlockUpdatePacket(pos, this.level().getBlockState(pos)));
                                     this.discard();
                                     BlockEntity blockEntity = this.level().getBlockEntity(pos);
                                     if (blockEntity != null) {
@@ -109,10 +109,10 @@ public class LootCrateEntity extends FallingBlockEntity {
                                 }
                             } else {
                                 this.discard();
-                                if (this.dropItem && serverLevel.getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                                if (this.dropItem && serverLevel.getGameRules().get(GameRules.ENTITY_DROPS)) {
                                     this.dropCrateLoot();
                                     this.callOnBrokenAfterFall(block, pos);
-                                    this.spawnAtLocation(block);
+                                    this.spawnAtLocation(serverLevel, block);
                                 }
                             }
                         }
@@ -127,7 +127,7 @@ public class LootCrateEntity extends FallingBlockEntity {
     public void dropCrateLoot() {
         if (level() instanceof ServerLevel serverLevel && tableKey != null) {
             LootTable lootTable = tableKey.getTable(serverLevel.getServer());
-            lootTable.getRandomItems(lootParams).forEach(this::spawnAtLocation);
+            lootTable.getRandomItems(lootParams).forEach(stack -> this.spawnAtLocation(serverLevel, stack));
         }
     }
 

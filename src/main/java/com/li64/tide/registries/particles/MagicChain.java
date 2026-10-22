@@ -88,8 +88,8 @@ public class MagicChain extends TextureSheetParticle {
                                                 double x, double y, double z,
                                                 double vx, double vy, double vz) {
             return new MagicChain(level, x, y, z, sprites,
-                    1.0f + level.random.nextFloat() * 0.6f,
-                    (level.random.nextFloat() - 0.5f) * 200f);
+                    1.0f + level.getRandom().nextFloat() * 0.6f,
+                    (level.getRandom().nextFloat() - 0.5f) * 200f);
         }
     }
 }

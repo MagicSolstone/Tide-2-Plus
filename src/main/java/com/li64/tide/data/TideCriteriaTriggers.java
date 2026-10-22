@@ -1,12 +1,12 @@
 package com.li64.tide.data;
 
 import com.li64.tide.data.triggers.TideSimpleTrigger;
-import net.minecraft.advancements.CriterionTrigger;
-import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.triggers.CriterionTrigger;
+import net.minecraft.advancements.triggers.SimpleCriterionTrigger;
 
 import com.li64.tide.Tide;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.advancements.Criterion;
+import net.minecraft.advancements.triggers.Criterion;
 import java.util.Optional;
 
 import java.util.HashMap;

@@ -4,7 +4,7 @@ import com.li64.tide.registries.entities.misc.fishing.HookAccessor;
 import com.li64.tide.util.TideUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public class SonarOverlay {
     private static float fadeout;
 
     @SuppressWarnings("DataFlowIssue")
-    public static void render(GuiGraphics graphics, float dt) {
+    public static void render(GuiGraphicsExtractor graphics, float dt) {
         if (stack == null) return;
         Player player = Minecraft.getInstance().player;
         boolean hooked = !HookAccessor.bobberRemoved(player) && HookAccessor.getHook(player).isFishHooked();

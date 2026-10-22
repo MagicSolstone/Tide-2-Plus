@@ -2,7 +2,7 @@ package com.li64.tide.client.gui.screens;
 
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.menus.AnglingTableMenu;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -19,5 +19,5 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
     }
 
     @Override
-    protected void renderErrorIcon(@NotNull GuiGraphics graphics, int p_266822_, int p_267045_) {}
+    protected void renderErrorIcon(@NotNull GuiGraphicsExtractor graphics, int p_266822_, int p_267045_) {}
 }

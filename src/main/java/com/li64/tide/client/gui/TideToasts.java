@@ -2,7 +2,7 @@ package com.li64.tide.client.gui;
 
 import com.li64.tide.Tide;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
@@ -27,7 +27,7 @@ public class TideToasts {
         }
 
         @Override
-        public @NotNull Visibility render(GuiGraphics graphics, ToastComponent component, long time) {
+        public @NotNull Visibility render(GuiGraphicsExtractor graphics, ToastComponent component, long time) {
             graphics.blitSprite(TEXTURE, 0, 0, this.width(), this.height());
             graphics.drawString(component.getMinecraft().font, title, 30, 7, -11534256, false);
             graphics.drawString(component.getMinecraft().font, description, 30, 18, -16777216, false);

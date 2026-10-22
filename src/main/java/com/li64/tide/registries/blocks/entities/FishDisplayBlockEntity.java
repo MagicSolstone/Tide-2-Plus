@@ -87,13 +87,14 @@ public class FishDisplayBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
-        if (this.fish != null) tag.put("fish", this.fish.save(registries));
+    protected void saveAdditional(@NotNull net.minecraft.world.level.storage.ValueOutput output) {
+        if (this.fish != null && !this.fish.isEmpty()) output.store("fish", ItemStack.CODEC, this.fish);
     }
 
     @Override
-    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
-        if (tag.contains("fish")) ItemStack.parse(registries, tag.get("fish")).ifPresent(this::setDisplayStack);
+    protected void loadAdditional(@NotNull net.minecraft.world.level.storage.ValueInput input) {
+        java.util.Optional<ItemStack> fish = input.read("fish", ItemStack.CODEC);
+        if (fish.isPresent()) this.setDisplayStack(fish.get());
         else {
             this.fish = null;
             this.displayData = null;
@@ -105,15 +106,19 @@ public class FishDisplayBlockEntity extends BlockEntity {
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.@NotNull Provider registries) {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        return tag;
+        return this.saveCustomOnly(registries);
     }
 
 
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state) {
+        if (this.level != null && !this.isEmpty())
+            net.minecraft.world.level.block.Block.popResource(this.level, pos, this.getDisplayStack());
     }
 
     protected void markUpdated() {

@@ -22,16 +22,16 @@ public class FabricNetworkPlatform implements NetworkPlatform {
     @Override
     public <T extends CustomPacketPayload> void registerClientBoundPacket(Class<T> msgClass, Identifier id, BiConsumer<T, RegistryFriendlyByteBuf> encoder, Function<RegistryFriendlyByteBuf, T> decoder, BiConsumer<T, Player> handler) {
         CustomPacketPayload.Type<T> type = this.idToType(id);
-        PayloadTypeRegistry.playS2C().register(type, CustomPacketPayload.codec(encoder::accept, decoder::apply));
+        PayloadTypeRegistry.clientboundPlay().register(type, CustomPacketPayload.codec(encoder::accept, decoder::apply));
         clientMessages.add(new ClientMsgRegistration<>(type, handler));
     }
 
     @Override
     public <T extends CustomPacketPayload> void registerServerBoundPacket(Class<T> msgClass, Identifier id, BiConsumer<T, RegistryFriendlyByteBuf> encoder, Function<RegistryFriendlyByteBuf, T> decoder, BiConsumer<T, Player> handler) {
         CustomPacketPayload.Type<T> type = this.idToType(id);
-        PayloadTypeRegistry.playC2S().register(type, CustomPacketPayload.codec(encoder::accept, decoder::apply));
+        PayloadTypeRegistry.serverboundPlay().register(type, CustomPacketPayload.codec(encoder::accept, decoder::apply));
         ServerPlayNetworking.registerGlobalReceiver(type, (payload, context) ->
-                context.player().server.execute(() -> handler.accept(payload, context.player())));
+                context.player().level().getServer().execute(() -> handler.accept(payload, context.player())));
     }
 
     private <T extends CustomPacketPayload> CustomPacketPayload.Type<T> idToType(Identifier id) {

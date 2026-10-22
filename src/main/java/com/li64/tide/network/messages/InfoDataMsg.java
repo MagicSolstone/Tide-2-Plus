@@ -25,7 +25,7 @@ public record InfoDataMsg(Map<Identifier, String> data) implements TidePacketPay
         int count = buf.readInt();
         Map<Identifier, String> data = new HashMap<>(count);
         for (int i = 0; i < count; i++) {
-            data.put(buf.readResourceLocation(), buf.readUtf());
+            data.put(buf.readIdentifier(), buf.readUtf());
         }
         return data;
     }
@@ -33,7 +33,7 @@ public record InfoDataMsg(Map<Identifier, String> data) implements TidePacketPay
     public static void encode(InfoDataMsg message, FriendlyByteBuf buf) {
         buf.writeInt(message.data.size());
         message.data.forEach((item, data) -> {
-            buf.writeResourceLocation(item);
+            buf.writeIdentifier(item);
             buf.writeUtf(data);
         });
     }
@@ -41,7 +41,7 @@ public record InfoDataMsg(Map<Identifier, String> data) implements TidePacketPay
     public static void handle(InfoDataMsg message, Player player) {
         Map<Identifier, Component> results = new HashMap<>();
         message.data().forEach((key, data) -> {
-            Item item = BuiltInRegistries.ITEM.get(key);
+            Item item = BuiltInRegistries.ITEM.getValue(key);
             results.put(key, ((InformationalItem)item).parseResult(data));
         });
         FishingInfoOverlay.CLIENT_INFO_DATA = results;

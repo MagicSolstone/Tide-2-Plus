@@ -9,7 +9,7 @@ public class Snail extends AmphibiousFish {
     }
 
     @Override
-    protected void handleAirSupply(int airSupply) {
+    protected void handleAirSupply(net.minecraft.server.level.ServerLevel level, int airSupply) {
         this.setAirSupply(300);
     }
 

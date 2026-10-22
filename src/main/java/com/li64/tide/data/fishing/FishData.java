@@ -7,7 +7,7 @@ import com.li64.tide.config.TideServerConfig;
 import com.li64.tide.data.ModAssociatedEntry;
 import com.li64.tide.data.commands.TestType;
 import com.li64.tide.data.item.TideItemData;
-import com.li64.tide.datagen.fabric.providers.SimpleDataOutput;
+import com.li64.tide.data.SimpleDataOutput;
 import com.li64.tide.data.TideData;
 import com.li64.tide.data.fishing.conditions.FishingCondition;
 import com.li64.tide.data.fishing.conditions.types.*;
@@ -252,7 +252,7 @@ public record FishData( Holder<Item> fish,
 
         public Builder fish(String namespace, String path) {
             ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Tide.resource(namespace, path));
-            this.fish = Holder.Reference.createStandAlone(BuiltInRegistries.ITEM.holderOwner(), key);
+            this.fish = Holder.Reference.createStandAlone((net.minecraft.core.HolderOwner<Item>) BuiltInRegistries.ITEM, key);
             return this.journalDescription("journal.description." + namespace + "." + path);
         }
 
@@ -397,7 +397,7 @@ public record FishData( Holder<Item> fish,
                 Identifier id = TideUtils.holderId(this.fish);
                 builder.entityType(ResourceKey.create(Registries.ENTITY_TYPE, id));
             }
-            else builder.entityType(BuiltInRegistries.ENTITY_TYPE.get(TideUtils.holderId(this.fish)));
+            else builder.entityType(BuiltInRegistries.ENTITY_TYPE.getValue(TideUtils.holderId(this.fish)));
             modifiers.accept(builder);
             this.display = builder.build();
             return this;
@@ -414,7 +414,7 @@ public record FishData( Holder<Item> fish,
         }
 
         public Builder journalAltSprite(int size) {
-            Identifier location = this.fish.unwrap().map(ResourceKey::location, BuiltInRegistries.ITEM::getKey);
+            Identifier location = this.fish.unwrap().map(ResourceKey::identifier, BuiltInRegistries.ITEM::getKey);
             this.profile.altSprite(location.withPath(path -> "textures/item/" + path + "_full.png"), size);
             return this;
         }

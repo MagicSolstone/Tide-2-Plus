@@ -21,7 +21,7 @@ import java.util.Map;
 public class FishingCommand {
     public FishingCommand(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext buildContext) {
         dispatcher.register(Commands.literal("fishing")
-                .requires(source -> source.hasPermission(2))
+                .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("test")
                         .then(Commands.literal("loot").executes(ctx -> test(ctx.getSource(), TestType.LOOT)))
                         .then(Commands.literal("crate").executes(ctx -> test(ctx.getSource(), TestType.CRATES)))

@@ -1,5 +1,6 @@
 package com.li64.tide.registries.items;
 
+import net.minecraft.world.InteractionResult;
 import com.li64.tide.data.fishing.FishData;
 import com.li64.tide.data.item.SatchelContents;
 import com.li64.tide.data.TideTags;
@@ -10,7 +11,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -31,7 +31,7 @@ import net.minecraft.world.item.component.BundleContents;
 import java.util.List;
 
 public class FishSatchelItem extends AbstractTooltipItem {
-    private static final int BAR_COLOR = Mth.color(0.4f, 0.4f, 1.0f);
+    private static final int BAR_COLOR = 0x6666FF;
 
     public FishSatchelItem(Item.Properties properties) {
         super(properties);
@@ -52,11 +52,11 @@ public class FishSatchelItem extends AbstractTooltipItem {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand used) {
+    public @NotNull InteractionResult use(Level level, Player player, InteractionHand used) {
         ItemStack satchel = player.getItemInHand(used);
         TideItemData.FISH_SATCHEL_OPENED.set(satchel, !TideItemData.FISH_SATCHEL_OPENED.getOrDefault(satchel, false));
         player.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.8f, 0.8f + player.level().getRandom().nextFloat() * 0.4f);
-        return InteractionResultHolder.success(satchel);
+        return InteractionResult.SUCCESS;
     }
 
     @Override
@@ -139,9 +139,9 @@ public class FishSatchelItem extends AbstractTooltipItem {
 
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
-        return !stack.has(DataComponents.HIDE_TOOLTIP) && !stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)
+        return !stack.getOrDefault(DataComponents.TOOLTIP_DISPLAY, net.minecraft.world.item.component.TooltipDisplay.DEFAULT).hideTooltip()
                 ? Optional.ofNullable(TideItemData.SATCHEL_CONTENTS.getOrDefault(stack, new SatchelContents()))
-                .map(contents -> new BundleTooltip(new BundleContents(contents.items())))
+                .map(contents -> new BundleTooltip(new BundleContents(contents.items().stream().filter(i -> !i.isEmpty()).map(net.minecraft.world.item.ItemStackTemplate::fromNonEmptyStack).toList())))
                 : Optional.empty();
     }
 
@@ -150,7 +150,7 @@ public class FishSatchelItem extends AbstractTooltipItem {
         SatchelContents contents = TideItemData.SATCHEL_CONTENTS.get(entity.getItem());
         if (contents == null) return;
         TideItemData.SATCHEL_CONTENTS.set(entity.getItem(), new SatchelContents());
-        ItemUtils.onContainerDestroyed(entity, List.copyOf(contents.items()));
+        ItemUtils.onContainerDestroyed(entity, contents.items().stream().map(ItemStack::copy));
     }
 
     private void playRemoveOneSound(Entity entity) {

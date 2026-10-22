@@ -1,7 +1,7 @@
 package com.li64.tide.data.loot;
 
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.storage.loot.LootTable;
 
@@ -12,7 +12,7 @@ public record KeyedLootTableRef(ResourceKey<LootTable> key) implements LootTable
     }
 
     @Override
-    public ResourceLocation getId() {
+    public Identifier getId() {
         return this.key.location();
     }
 

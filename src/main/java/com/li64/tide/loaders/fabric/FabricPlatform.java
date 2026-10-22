@@ -9,7 +9,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -44,7 +44,7 @@ public class FabricPlatform implements LoaderPlatform {
     }
 
     @Override
-    public <T> T register(Registry<? super T> registry, ResourceLocation id, T toRegister) {
+    public <T> T register(Registry<? super T> registry, Identifier id, T toRegister) {
         return Registry.register(registry, id, toRegister);
     }
 
@@ -54,7 +54,7 @@ public class FabricPlatform implements LoaderPlatform {
     }
 
     @Override
-    public <T> Holder.Reference<T> registerForHolder(Registry<T> registry, ResourceLocation id, T toRegister) {
+    public <T> Holder.Reference<T> registerForHolder(Registry<T> registry, Identifier id, T toRegister) {
         return Registry.registerForHolder(registry, id, toRegister);
     }
 

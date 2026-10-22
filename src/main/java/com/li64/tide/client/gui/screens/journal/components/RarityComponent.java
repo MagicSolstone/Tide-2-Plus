@@ -5,11 +5,11 @@ import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import com.li64.tide.data.journal.FishRarity;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class RarityComponent extends ProfileComponent {
-    private static final ResourceLocation STAR = Tide.resource("textures/gui/journal/star_note.png");
+    private static final Identifier STAR = Tide.resource("textures/gui/journal/star_note.png");
 
     public int numStars;
 

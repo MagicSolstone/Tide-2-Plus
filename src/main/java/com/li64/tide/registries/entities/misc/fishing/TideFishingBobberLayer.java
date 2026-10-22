@@ -13,7 +13,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import com.li64.tide.Tide;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,7 +46,7 @@ public class TideFishingBobberLayer extends RenderLayer<TideFishingHook, TideFis
                     poseStack, buffer, hookEntity.level(), hookEntity.getId());
             poseStack.popPose();
         } else {
-            ResourceLocation textureLocation = FishingBobberItem.getTexture(hookEntity.getBobber());
+            Identifier textureLocation = FishingBobberItem.getTexture(hookEntity.getBobber());
             VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(textureLocation));
             this.model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255, 255, 255 ,255));
         }

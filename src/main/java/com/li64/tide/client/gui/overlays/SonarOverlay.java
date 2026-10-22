@@ -5,12 +5,12 @@ import com.li64.tide.util.TideUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public class SonarOverlay {
-    private static final ResourceLocation SLOT_BACKGROUND_SPRITE = TideUtils.sprite("bait/slot_background");
+    private static final Identifier SLOT_BACKGROUND_SPRITE = TideUtils.sprite("bait/slot_background");
     private static final float MAX_TIMEOUT = 20f;
     private static final float MAX_FADEOUT = 20f;
 

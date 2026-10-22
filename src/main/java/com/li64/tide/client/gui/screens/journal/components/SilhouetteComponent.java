@@ -6,7 +6,7 @@ import com.li64.tide.data.fishing.FishData;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,7 +26,7 @@ public class SilhouetteComponent extends ProfileComponent {
 
         // get fish sizing and offsets
         boolean isLarge = data.profile().altSprite().isPresent();
-        ResourceLocation alternateTexture = data.profile().altSprite().orElse(null);
+        Identifier alternateTexture = data.profile().altSprite().orElse(null);
         int fishSize = isLarge ? data.profile().altSpriteSize().orElse(16) : 16;
         final int shadowOffset = 1;
 //

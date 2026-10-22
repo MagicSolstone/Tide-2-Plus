@@ -12,7 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -53,7 +53,7 @@ public class TideUtils {
                 stack), player);
     }
 
-    public static Item itemFromLocation(ResourceLocation location) {
+    public static Item itemFromLocation(Identifier location) {
         return BuiltInRegistries.ITEM.getOptional(location).orElse(
                 BuiltInRegistries.ITEM.get(BuiltInRegistries.ITEM.getKey(Items.AIR)));
     }
@@ -166,11 +166,11 @@ public class TideUtils {
         return String.format("%02d:%02d", hour, minute);
     }
 
-    public static ResourceLocation sprite(String path) {
+    public static Identifier sprite(String path) {
          return Tide.resource(path);
     }
 
-    public static ResourceLocation holderId(Holder<Item> holder) {
+    public static Identifier holderId(Holder<Item> holder) {
         return holder.unwrap().map(ResourceKey::location, BuiltInRegistries.ITEM::getKey);
     }
 

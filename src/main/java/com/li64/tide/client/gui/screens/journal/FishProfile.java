@@ -16,7 +16,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 public class FishProfile implements Renderable {
-    private static final ResourceLocation BORDERS = Tide.resource("textures/gui/journal/profile_borders.png");
-    private static final ResourceLocation STAR = Tide.resource("textures/gui/journal/star.png");
+    private static final Identifier BORDERS = Tide.resource("textures/gui/journal/profile_borders.png");
+    private static final Identifier STAR = Tide.resource("textures/gui/journal/star.png");
 
     private static final int BG_WIDTH = FishingJournal.BG_WIDTH;
     private static final int BG_HEIGHT = FishingJournal.BG_HEIGHT;
@@ -178,7 +178,7 @@ public class FishProfile implements Renderable {
 
         // get fish sizing and offsets
         boolean isLarge = data.profile().altSprite().isPresent();
-        ResourceLocation alternateTexture = data.profile().altSprite().orElse(null);
+        Identifier alternateTexture = data.profile().altSprite().orElse(null);
         int fishSize = isLarge ? data.profile().altSpriteSize().orElse(16) : 16;
         int itemCenterX = tlX + 109;
         int itemCenterY = tlY + 100;

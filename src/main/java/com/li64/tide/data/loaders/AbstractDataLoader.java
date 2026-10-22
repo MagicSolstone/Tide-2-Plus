@@ -7,7 +7,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.JsonOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -44,7 +44,7 @@ public abstract class AbstractDataLoader<T, R> extends SimplePreparableReloadLis
         Tide.LOG.info("Loaded {} entries from '{}'", getEntryCount(data), getDirectory());
     }
 
-    protected void parseOrLog(ResourceLocation key, Reader reader, Consumer<T> onSuccess) {
+    protected void parseOrLog(Identifier key, Reader reader, Consumer<T> onSuccess) {
         var json = JsonParser.parseReader(reader);
         getEntryCodec().parse(JsonOps.INSTANCE, json)
                 .resultOrPartial(error -> {
@@ -62,7 +62,7 @@ public abstract class AbstractDataLoader<T, R> extends SimplePreparableReloadLis
                 .ifPresent(onSuccess);
     }
 
-    public ResourceLocation getDirectory() {
+    public Identifier getDirectory() {
         return Tide.resource(directory);
     }
 

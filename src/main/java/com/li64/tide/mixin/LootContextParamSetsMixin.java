@@ -2,7 +2,7 @@ package com.li64.tide.mixin;
 
 import com.google.common.collect.BiMap;
 import com.li64.tide.Tide;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
@@ -17,7 +17,7 @@ import java.util.function.Consumer;
 
 @Mixin(LootContextParamSets.class)
 public class LootContextParamSetsMixin {
-    @Shadow @Final private static BiMap<ResourceLocation, LootContextParamSet> REGISTRY;
+    @Shadow @Final private static BiMap<Identifier, LootContextParamSet> REGISTRY;
 
     @Inject(at = @At(value = "HEAD"), method = "register", cancellable = true)
     private static void register(String registryName, Consumer<LootContextParamSet.Builder> builderConsumer, CallbackInfoReturnable<LootContextParamSet> cir) {
@@ -31,7 +31,7 @@ public class LootContextParamSetsMixin {
             LootContextParamSet.Builder builder = new LootContextParamSet.Builder();
             builderConsumer.accept(builder);
             LootContextParamSet paramSet = builder.build();
-            ResourceLocation registry = Tide.resource("minecraft", registryName);
+            Identifier registry = Tide.resource("minecraft", registryName);
             LootContextParamSet newParamSet = REGISTRY.put(registry, paramSet);
             if (newParamSet != null) {
                 throw new IllegalStateException("Loot table parameter set " + registry + " is already registered");

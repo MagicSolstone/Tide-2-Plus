@@ -3,12 +3,12 @@ package com.li64.tide.client.gui.overlays;
 import com.li64.tide.Tide;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 public class CastBarOverlay {
-    private static final ResourceLocation BAR_EMPTY_TEX = Tide.resource("textures/gui/fishing/cast_bar_empty.png");
-    private static final ResourceLocation BAR_FILLED_TEX = Tide.resource("textures/gui/fishing/cast_bar_filled.png");
+    private static final Identifier BAR_EMPTY_TEX = Tide.resource("textures/gui/fishing/cast_bar_empty.png");
+    private static final Identifier BAR_FILLED_TEX = Tide.resource("textures/gui/fishing/cast_bar_filled.png");
 
     private static float rodChargePercent = 0f;
     private static float timer = 20f;

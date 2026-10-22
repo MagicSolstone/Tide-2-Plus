@@ -2,7 +2,7 @@ package com.li64.tide.data.fishing.mediums;
 
 import com.li64.tide.registries.entities.misc.fishing.TideFishingHook;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public interface FishingMedium {
         return medium;
     }
 
-    ResourceLocation id();
+    Identifier id();
 
     boolean canFishIn(TideFishingHook hook);
 

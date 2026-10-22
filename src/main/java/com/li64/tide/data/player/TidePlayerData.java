@@ -16,7 +16,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +46,7 @@ public class TidePlayerData {
         fishList.forEach(t -> {
             if (!(t instanceof CompoundTag fishTag) || !fishTag.contains("fish")) return;
             Holder<Item> item = BuiltInRegistries.ITEM.wrapAsHolder(BuiltInRegistries.ITEM.get(
-                    ResourceLocation.tryParse(fishTag.getString("fish"))));
+                    Identifier.tryParse(fishTag.getString("fish"))));
             fishPlayerData.put(item, FishPlayerData.readFrom(fishTag, "data").orElse(new FishPlayerData()));
         });
     }

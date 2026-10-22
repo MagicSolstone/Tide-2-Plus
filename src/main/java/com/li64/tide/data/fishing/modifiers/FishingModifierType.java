@@ -6,7 +6,7 @@ import com.li64.tide.data.fishing.modifiers.types.TemperatureModifier;
 import com.li64.tide.registries.TideRegistries;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface FishingModifierType<T extends FishingModifier> {
     FishingModifierType<ConditionalModifier> CONDITIONAL = register("conditional", ConditionalModifier.CODEC);
@@ -22,7 +22,7 @@ public interface FishingModifierType<T extends FishingModifier> {
         return register(Tide.resource(name), codec);
     }
 
-    static <T extends FishingModifier> FishingModifierType<T> register(ResourceLocation name, MapCodec<T> codec) {
+    static <T extends FishingModifier> FishingModifierType<T> register(Identifier name, MapCodec<T> codec) {
         return Registry.register(TideRegistries.FISHING_MODIFIERS, name, () -> codec);
     }
 }

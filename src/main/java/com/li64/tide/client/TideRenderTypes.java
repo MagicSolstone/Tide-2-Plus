@@ -6,13 +6,13 @@ import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.function.Function;
 
 public abstract class TideRenderTypes {
-    private static final Function<ResourceLocation, RenderType> FULL_WHITE_RENDER_TYPE;
-    private static final Function<ResourceLocation, RenderType> FULL_WHITE_ITEM_RENDER_TYPE;
+    private static final Function<Identifier, RenderType> FULL_WHITE_RENDER_TYPE;
+    private static final Function<Identifier, RenderType> FULL_WHITE_ITEM_RENDER_TYPE;
     private static final RenderStateShard.ShaderStateShard FULL_WHITE_SHADER;
     private static final RenderStateShard.ShaderStateShard FULL_WHITE_ITEM_SHADER;
 
@@ -46,7 +46,7 @@ public abstract class TideRenderTypes {
         );
     }
 
-    public static RenderType singleColor(ResourceLocation location) {
+    public static RenderType singleColor(Identifier location) {
         return FULL_WHITE_RENDER_TYPE.apply(location);
     }
 

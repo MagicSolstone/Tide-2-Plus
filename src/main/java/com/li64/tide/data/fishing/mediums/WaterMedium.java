@@ -4,7 +4,7 @@ import com.li64.tide.Tide;
 import com.li64.tide.registries.entities.misc.fishing.TideFishingHook;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.FluidTags;
@@ -12,10 +12,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class WaterMedium implements FishingMedium {
-    private final ResourceLocation id = Tide.resource("water");
+    private final Identifier id = Tide.resource("water");
 
     @Override
-    public ResourceLocation id() {
+    public Identifier id() {
         return id;
     }
 

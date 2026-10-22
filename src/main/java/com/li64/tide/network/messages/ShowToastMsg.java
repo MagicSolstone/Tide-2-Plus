@@ -5,17 +5,17 @@ import com.li64.tide.client.TideClientHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 public record ShowToastMsg(Component title, Component description, ItemStack display) implements TidePacketPayload {
-    public static final ResourceLocation ID = Tide.resource("show_toast");
-    @Override public ResourceLocation id() { return ID; }
+    public static final Identifier ID = Tide.resource("show_toast");
+    @Override public Identifier id() { return ID; }
 
     public ShowToastMsg(FriendlyByteBuf buf) {
         this(Component.translatable(buf.readUtf()), Component.translatable(buf.readUtf()), BuiltInRegistries.ITEM
-                .getOptional(ResourceLocation.tryParse(buf.readUtf())).orElseThrow().getDefaultInstance());
+                .getOptional(Identifier.tryParse(buf.readUtf())).orElseThrow().getDefaultInstance());
     }
 
     public static void encode(ShowToastMsg message, FriendlyByteBuf buf) {

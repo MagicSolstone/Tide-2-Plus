@@ -17,7 +17,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -73,7 +73,7 @@ public record CrateData(BlockStateProvider blockProvider,
     @Override
     public MutableComponent getTestKey() {
         if (lootTable.isEmpty()) return Component.translatable("commands.fishing.entries.crate.unknown");
-        ResourceLocation tableLocation = lootTable.get().location();
+        Identifier tableLocation = lootTable.get().location();
         return Component.translatable("commands.fishing.entries.crate").append(" \"")
                 .append(Component.literal(tableLocation.toString())).append("\"");
     }
@@ -207,7 +207,7 @@ public record CrateData(BlockStateProvider blockProvider,
             this.build(Tide.resource(path), output);
         }
 
-        public void build(ResourceLocation path, SimpleDataOutput<CrateData> output) {
+        public void build(Identifier path, SimpleDataOutput<CrateData> output) {
             output.accept(path, build());
         }
 

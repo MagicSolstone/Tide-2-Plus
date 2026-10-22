@@ -4,7 +4,7 @@ import com.li64.tide.util.TideUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 
 public record BaitData(String item, int speedBonus, int luckBonus) {
@@ -19,6 +19,6 @@ public record BaitData(String item, int speedBonus, int luckBonus) {
     }
 
     public Item getItem() {
-        return TideUtils.itemFromLocation(ResourceLocation.tryParse(item));
+        return TideUtils.itemFromLocation(Identifier.tryParse(item));
     }
 }

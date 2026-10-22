@@ -3,12 +3,12 @@ package com.li64.tide.network.messages;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.overlays.CatchMinigameOverlay;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 public record MinigameClientMsg(byte event, byte display, byte behavior, float area, float speed) implements TidePacketPayload {
-    public static final ResourceLocation ID = Tide.resource("minigame_client");
-    @Override public ResourceLocation id() { return ID; }
+    public static final Identifier ID = Tide.resource("minigame_client");
+    @Override public Identifier id() { return ID; }
 
     public MinigameClientMsg(int event) {
         this((byte) event, (byte) 0, (byte) 0, 0, 0);

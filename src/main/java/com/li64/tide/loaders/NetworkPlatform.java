@@ -1,7 +1,7 @@
 package com.li64.tide.loaders;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 
@@ -9,12 +9,12 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public interface NetworkPlatform {
-    <T extends CustomPacketPayload> void registerClientBoundPacket(Class<T> msgClass, ResourceLocation id,
+    <T extends CustomPacketPayload> void registerClientBoundPacket(Class<T> msgClass, Identifier id,
                                                                    BiConsumer<T, RegistryFriendlyByteBuf> encoder,
                                                                    Function<RegistryFriendlyByteBuf, T> decoder,
                                                                    BiConsumer<T, Player> handler);
 
-    <T extends CustomPacketPayload> void registerServerBoundPacket(Class<T> msgClass, ResourceLocation id,
+    <T extends CustomPacketPayload> void registerServerBoundPacket(Class<T> msgClass, Identifier id,
                                                                    BiConsumer<T, RegistryFriendlyByteBuf> encoder,
                                                                    Function<RegistryFriendlyByteBuf, T> decoder,
                                                                    BiConsumer<T, Player> handler);

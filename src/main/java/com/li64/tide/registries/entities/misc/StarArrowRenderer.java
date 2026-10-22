@@ -12,14 +12,14 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.util.FastColor;
 
 public class StarArrowRenderer extends EntityRenderer<StarArrow> {
-    public static final ResourceLocation STAR_ARROW_LOCATION = Tide.resource("textures/entity/projectiles/star_arrow.png");
+    public static final Identifier STAR_ARROW_LOCATION = Tide.resource("textures/entity/projectiles/star_arrow.png");
 
     private final StarArrowModel model;
 
@@ -28,7 +28,7 @@ public class StarArrowRenderer extends EntityRenderer<StarArrow> {
         this.model = new StarArrowModel(context.bakeLayer(StarArrowModel.MODEL_LOCATION));
     }
 
-    public @NotNull ResourceLocation getTextureLocation(StarArrow arrow) {
+    public @NotNull Identifier getTextureLocation(StarArrow arrow) {
         return STAR_ARROW_LOCATION;
     }
 

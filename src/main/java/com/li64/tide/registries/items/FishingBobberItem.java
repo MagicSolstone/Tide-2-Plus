@@ -3,7 +3,7 @@ package com.li64.tide.registries.items;
 import com.li64.tide.Tide;
 import com.li64.tide.data.rods.AccessoryData;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -12,7 +12,7 @@ public class FishingBobberItem extends Item {
         super(properties.stacksTo(1));
     }
 
-    public static ResourceLocation getTexture(ItemStack stack) {
+    public static Identifier getTexture(ItemStack stack) {
         return Tide.resource("textures/item/" + BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath() + ".png");
     }
 

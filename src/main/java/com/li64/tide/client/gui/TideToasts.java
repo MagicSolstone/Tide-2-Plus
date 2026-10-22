@@ -6,13 +6,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class TideToasts {
     // TODO: maybe make some custom art for this?
-    private static final ResourceLocation TEXTURE = Tide.resource("minecraft", "toast/recipe");
+    private static final Identifier TEXTURE = Tide.resource("minecraft", "toast/recipe");
 
     public static void display(Toast toast) {
         Minecraft.getInstance().getToasts().addToast(toast);

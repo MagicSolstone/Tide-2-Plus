@@ -4,12 +4,12 @@ import com.li64.tide.Tide;
 import com.li64.tide.loaders.NetworkPlatform;
 import com.li64.tide.network.messages.*;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import java.util.HashMap;
 import java.util.Map;
 
 public class TideMessages {
-    public static final Map<ResourceLocation, CustomPacketPayload.Type<? extends CustomPacketPayload>> ID_TO_TYPE = new HashMap<>();
+    public static final Map<Identifier, CustomPacketPayload.Type<? extends CustomPacketPayload>> ID_TO_TYPE = new HashMap<>();
 
     public static void init(NetworkPlatform network) {
         network.registerClientBoundPacket(OpenJournalMsg.class, OpenJournalMsg.ID, OpenJournalMsg::encode, OpenJournalMsg::new, OpenJournalMsg::handle);

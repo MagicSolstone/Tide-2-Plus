@@ -5,7 +5,7 @@ import com.li64.tide.data.SendableDataMap;
 import com.mojang.serialization.Codec;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,10 +36,10 @@ public abstract class LayeredDataLoader<T> extends AbstractDataLoader<T, Sendabl
 
     @Override
     protected SendableDataMap<T> prepareData(ResourceManager manager, FileToIdConverter lister) {
-        Map<ResourceLocation, List<SourcedValue<T>>> collected = new HashMap<>();
+        Map<Identifier, List<SourcedValue<T>>> collected = new HashMap<>();
 
         lister.listMatchingResourceStacks(manager).forEach((path, resources) -> {
-            ResourceLocation key = lister.fileToId(path);
+            Identifier key = lister.fileToId(path);
             resources.forEach(resource -> {
                 try (Reader reader = resource.openAsReader()) {
                     parseOrLog(path, reader, value -> collected
@@ -58,8 +58,8 @@ public abstract class LayeredDataLoader<T> extends AbstractDataLoader<T, Sendabl
         return data.count();
     }
 
-    private Map<ResourceLocation, T> mergeDuplicates(Map<ResourceLocation, List<SourcedValue<T>>> input) {
-        Map<ResourceLocation, T> output = new TreeMap<>();
+    private Map<Identifier, T> mergeDuplicates(Map<Identifier, List<SourcedValue<T>>> input) {
+        Map<Identifier, T> output = new TreeMap<>();
         input.forEach((key, list) -> output.put(key, list.stream()
                 .sorted(Comparator.comparingInt(SourcedValue::loadOrder))
                 .map(SourcedValue::value)

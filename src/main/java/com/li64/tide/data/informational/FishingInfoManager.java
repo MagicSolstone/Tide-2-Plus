@@ -8,7 +8,7 @@ import com.li64.tide.registries.items.InfoItemContainer;
 import com.li64.tide.registries.items.InformationalItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.*;
 
 public class FishingInfoManager {
-    private static final Map<UUID, Map<ResourceLocation, String>> CACHE = new HashMap<>();
-    private static final Map<UUID, Map<ResourceLocation, Integer>> TIMERS = new HashMap<>();
+    private static final Map<UUID, Map<Identifier, String>> CACHE = new HashMap<>();
+    private static final Map<UUID, Map<Identifier, Integer>> TIMERS = new HashMap<>();
     private static final Map<UUID, Integer> PROXIMITY_SCAN_TIMER = new HashMap<>();
     private static final Map<UUID, Set<Item>> NEARBY_BLOCK_ITEMS = new HashMap<>();
 
@@ -29,9 +29,9 @@ public class FishingInfoManager {
         CACHE.putIfAbsent(id, new HashMap<>());
         TIMERS.putIfAbsent(id, new HashMap<>());
 
-        Map<ResourceLocation, String> cache = CACHE.get(id);
-        Map<ResourceLocation, Integer> timers = TIMERS.get(id);
-        Map<ResourceLocation, String> results = new HashMap<>();
+        Map<Identifier, String> cache = CACHE.get(id);
+        Map<Identifier, Integer> timers = TIMERS.get(id);
+        Map<Identifier, String> results = new HashMap<>();
 
         hasNewData = false;
 
@@ -39,7 +39,7 @@ public class FishingInfoManager {
         List<Item> surveyItems = getActiveInformationalItems(player);
         for (Item item : surveyItems) {
             if (!(item instanceof InformationalItem surveyItem)) continue;
-            ResourceLocation key = BuiltInRegistries.ITEM.getKey(item);
+            Identifier key = BuiltInRegistries.ITEM.getKey(item);
 
             int timer = timers.getOrDefault(key, 0);
             if (timer <= 0 || !cache.containsKey(key)) {

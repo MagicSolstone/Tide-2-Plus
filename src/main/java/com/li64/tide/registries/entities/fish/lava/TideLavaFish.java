@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -51,7 +51,7 @@ public class TideLavaFish extends LavaAnimal implements Bucketable, FishLengthHo
 
     public TideLavaFish(EntityType<? extends LavaAnimal> entityType, Level level) {
         super(entityType, level);
-        ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        Identifier key = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
         Item fishItem = BuiltInRegistries.ITEM.getOptional(key).orElseThrow();
         this.bucketItem = BuiltInRegistries.ITEM.getOptional(key.withSuffix("_bucket")).orElseThrow();
         this.length = FishData.get(fishItem).map(data -> data.getRandomLength(getRandom())).orElse(0.0);

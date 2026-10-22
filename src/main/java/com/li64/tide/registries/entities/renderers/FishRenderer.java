@@ -8,14 +8,14 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FishRenderer<M extends FishModel> extends MobRenderer<Mob, FishModel> {
-    private final ResourceLocation texLocation;
+    private final Identifier texLocation;
     private final double xTiltScale;
     private final float swimAnimSpeed;
     private final float swimAnimScale;
@@ -30,12 +30,12 @@ public class FishRenderer<M extends FishModel> extends MobRenderer<Mob, FishMode
         this.renderTranslucent = model.renderTranslucent();
     }
 
-    public @NotNull ResourceLocation getTextureLocation() {
+    public @NotNull Identifier getTextureLocation() {
         return this.texLocation;
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull Mob entity) {
+    public @NotNull Identifier getTextureLocation(@NotNull Mob entity) {
         return this.getTextureLocation();
     }
 
@@ -65,7 +65,7 @@ public class FishRenderer<M extends FishModel> extends MobRenderer<Mob, FishMode
 
     @Override
     protected @Nullable RenderType getRenderType(@NotNull Mob fish, boolean isVisible, boolean renderTranslucent, boolean appearsGlowing) {
-        ResourceLocation texture = this.getTextureLocation(fish);
+        Identifier texture = this.getTextureLocation(fish);
         if (this.renderTranslucent) return RenderType.entityTranslucent(texture);
         return super.getRenderType(fish, isVisible, renderTranslucent, appearsGlowing);
     }

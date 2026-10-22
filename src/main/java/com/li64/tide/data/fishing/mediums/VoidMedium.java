@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
@@ -21,17 +21,17 @@ import java.util.Map;
 public class VoidMedium implements FishingMedium {
     private final Map<ResourceKey<Level>, TideServerConfig.General.VoidHeightEntry> CACHE = new HashMap<>();
     private final TideServerConfig.General.VoidHeightEntry DEFAULT_ENTRY = new TideServerConfig.General.VoidHeightEntry();
-    private final ResourceLocation id = Tide.resource("void");
+    private final Identifier id = Tide.resource("void");
 
     public VoidMedium() {
         Tide.SERVER_CONFIG.general.fishableVoidHeights.forEach(entry -> {
-            ResourceKey<Level> dimension = ResourceKey.create(Registries.DIMENSION, ResourceLocation.tryParse(entry.dimension));
+            ResourceKey<Level> dimension = ResourceKey.create(Registries.DIMENSION, Identifier.tryParse(entry.dimension));
             CACHE.put(dimension, entry);
         });
     }
 
     @Override
-    public ResourceLocation id() {
+    public Identifier id() {
         return id;
     }
 

@@ -16,18 +16,16 @@ jobs:
           distribution: temurin
           java-version: 25
       - uses: gradle/actions/setup-gradle@v4
-      - name: Decompile
-        run: ./gradlew genSources --no-daemon || true
+      - name: Set up Minecraft
+        run: ./gradlew dependencies --no-daemon > /dev/null || true
       - name: Push the sources to the mc-sources branch
         shell: bash
         run: |
           set +e +o pipefail
           find ~/.gradle .gradle -name '*.jar' 2>/dev/null | grep -i -E 'minecraft|sources' | head -30 | while read -r l; do echo "::notice::$l $(stat -c %s "$l")"; done
           mkdir -p /tmp/s && cd /tmp/s && git init -q -b mc-sources
-          for f in $(find ~/.gradle .gradle -name '*sources*.jar' 2>/dev/null | grep -i minecraft); do
-            unzip -qo "$f" 'net/*' 'com/mojang/*' -d src
-          done
-          echo "::notice::files $(find src -name '*.java' | wc -l)"
+          cp ~/.gradle/caches/fabric-loom/minecraftMaven/net/minecraft/minecraft-merged-deobf/26.3/minecraft-merged-deobf-26.3.jar mc.jar
+          ls -la
           git config --global user.name ci; git config --global user.email ci@users.noreply.github.com
           git add -A && git commit -qm "26.3 sources" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" mc-sources
           echo "::notice::push $?"

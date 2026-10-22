@@ -6,12 +6,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import java.util.Map;
 
 public class FishingInfoOverlay {
-    public static Map<ResourceLocation, Component> CLIENT_INFO_DATA = Map.of();
+    public static Map<Identifier, Component> CLIENT_INFO_DATA = Map.of();
 
     private static final int PADDING = 5;
     private static final int LINE_SPACING = 2;
@@ -24,7 +24,7 @@ public class FishingInfoOverlay {
         int offsetY = Tide.CLIENT_CONFIG.general.infoOffsetY;
 
         int i = 0;
-        for (Map.Entry<ResourceLocation, Component> entry : CLIENT_INFO_DATA.entrySet()) {
+        for (Map.Entry<Identifier, Component> entry : CLIENT_INFO_DATA.entrySet()) {
             graphics.blit(
                     Tide.resource("textures/gui/info_icons/" + entry.getKey().getPath() + ".png"),
                     placement.isLeft()

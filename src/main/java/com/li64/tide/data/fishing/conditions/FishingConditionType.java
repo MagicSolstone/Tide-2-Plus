@@ -5,7 +5,7 @@ import com.li64.tide.data.fishing.conditions.types.*;
 import com.li64.tide.registries.TideRegistries;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface FishingConditionType<T extends FishingCondition> {
     FishingConditionType<EitherCondition> EITHER = register("either", EitherCondition.CODEC);
@@ -38,7 +38,7 @@ public interface FishingConditionType<T extends FishingCondition> {
         return register(Tide.resource(name), codec);
     }
 
-    static <T extends FishingCondition> FishingConditionType<T> register(ResourceLocation name, MapCodec<T> codec) {
+    static <T extends FishingCondition> FishingConditionType<T> register(Identifier name, MapCodec<T> codec) {
         return Registry.register(TideRegistries.FISHING_CONDITIONS, name, () -> codec);
     }
 }

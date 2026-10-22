@@ -6,7 +6,7 @@ import com.li64.tide.data.fishing.conditions.FishingConditionType;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.biome.Biome;
@@ -20,21 +20,21 @@ public class BiomeWhitelistCondition extends FishingCondition {
     ).apply(instance, BiomeWhitelistCondition::fromData));
 
     private final List<TagKey<Biome>> tags;
-    private final List<ResourceLocation> biomes;
+    private final List<Identifier> biomes;
 
     private static BiomeWhitelistCondition fromData(List<ExtraCodecs.TagOrElementLocation> data) {
         List<TagKey<Biome>> tags = data.stream()
                 .filter(ExtraCodecs.TagOrElementLocation::tag)
                 .map(entry -> TagKey.create(Registries.BIOME, entry.id()))
                 .toList();
-        List<ResourceLocation> biomes = data.stream()
+        List<Identifier> biomes = data.stream()
                 .filter(entry -> !entry.tag())
                 .map(ExtraCodecs.TagOrElementLocation::id)
                 .toList();
         return new BiomeWhitelistCondition(tags, biomes);
     }
 
-    public BiomeWhitelistCondition(List<TagKey<Biome>> tags, List<ResourceLocation> biomes) {
+    public BiomeWhitelistCondition(List<TagKey<Biome>> tags, List<Identifier> biomes) {
         this.tags = tags;
         this.biomes = biomes;
     }

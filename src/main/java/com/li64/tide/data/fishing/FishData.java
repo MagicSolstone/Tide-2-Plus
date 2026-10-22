@@ -26,7 +26,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -127,7 +127,7 @@ public record FishData( Holder<Item> fish,
     }
 
     public static Optional<FishData> get(EntityType<?> entityType) {
-        ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
+        Identifier key = BuiltInRegistries.ENTITY_TYPE.getKey(entityType);
         return BuiltInRegistries.ITEM.getOptional(key).flatMap(FishData::get);
     }
 
@@ -246,7 +246,7 @@ public record FishData( Holder<Item> fish,
 
         public Builder fish(Item fish) {
             this.fish = BuiltInRegistries.ITEM.wrapAsHolder(fish);
-            ResourceLocation key = BuiltInRegistries.ITEM.getKey(fish);
+            Identifier key = BuiltInRegistries.ITEM.getKey(fish);
             return this.journalDescription("journal.description." + key.getNamespace() + "." + key.getPath());
         }
 
@@ -394,7 +394,7 @@ public record FishData( Holder<Item> fish,
         public Builder displayData(Consumer<DisplayData.Builder> modifiers) {
             DisplayData.Builder builder = DisplayData.builder();
             if (this.fish instanceof Holder.Reference<Item>) {
-                ResourceLocation id = TideUtils.holderId(this.fish);
+                Identifier id = TideUtils.holderId(this.fish);
                 builder.entityType(ResourceKey.create(Registries.ENTITY_TYPE, id));
             }
             else builder.entityType(BuiltInRegistries.ENTITY_TYPE.get(TideUtils.holderId(this.fish)));
@@ -414,7 +414,7 @@ public record FishData( Holder<Item> fish,
         }
 
         public Builder journalAltSprite(int size) {
-            ResourceLocation location = this.fish.unwrap().map(ResourceKey::location, BuiltInRegistries.ITEM::getKey);
+            Identifier location = this.fish.unwrap().map(ResourceKey::location, BuiltInRegistries.ITEM::getKey);
             this.profile.altSprite(location.withPath(path -> "textures/item/" + path + "_full.png"), size);
             return this;
         }
@@ -434,12 +434,12 @@ public record FishData( Holder<Item> fish,
             return this;
         }
 
-        public void build(ResourceLocation path, SimpleDataOutput<FishData> output) {
+        public void build(Identifier path, SimpleDataOutput<FishData> output) {
             output.accept(path, build());
         }
 
         public void build(String group, SimpleDataOutput<FishData> output) {
-            ResourceLocation key = TideUtils.holderId(this.fish);
+            Identifier key = TideUtils.holderId(this.fish);
             output.accept(Tide.resource(key.getNamespace().replace('-', '_'),
                     group + "/" + key.getPath()), build());
         }
@@ -466,8 +466,8 @@ public record FishData( Holder<Item> fish,
         }
     }
 
-    public static Map<ResourceLocation, FishData> createGeneratedFishData() {
-        Map<ResourceLocation, FishData> entries = new HashMap<>();
+    public static Map<Identifier, FishData> createGeneratedFishData() {
+        Map<Identifier, FishData> entries = new HashMap<>();
         if (VANILLA_FISH_TABLE == null || VANILLA_FISH_TABLE == LootTable.EMPTY) {
             Tide.LOG.error("Failed to find vanilla fishing loot table during post-process! Some compat functionality may not be present.");
             return entries;
@@ -476,7 +476,7 @@ public record FishData( Holder<Item> fish,
             for (LootPoolEntryContainer container : pool.entries) {
                 if (!(container instanceof LootItem lootItem)) continue;
                 Item item = lootItem.item.value();
-                ResourceLocation key = BuiltInRegistries.ITEM.getKey(item);
+                Identifier key = BuiltInRegistries.ITEM.getKey(item);
                 if (Tide.SERVER_CONFIG.general.autoFishDataBlacklist.contains(key.toString()) || get(item).isPresent()) continue;
                 Tide.LOG.info("Found unknown fish \"{}\" in vanilla fishing loot table, auto-generating fish data", item);
                 FishData data = builder().fish(item)

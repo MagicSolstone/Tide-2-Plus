@@ -16,7 +16,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootTable;
@@ -167,7 +167,7 @@ public record FishingLootData(ResourceKey<LootTable> lootTable,
             this.build(Tide.resource(path), output);
         }
 
-        public void build(ResourceLocation path, SimpleDataOutput<FishingLootData> output) {
+        public void build(Identifier path, SimpleDataOutput<FishingLootData> output) {
             output.accept(path, build());
         }
 

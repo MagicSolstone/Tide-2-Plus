@@ -13,7 +13,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 
 import java.util.Random;
@@ -21,14 +21,14 @@ import java.util.Random;
 public class CatchMinigameOverlay {
     private static final int INIT_DELAY_MILLIS = 200;
 
-    private static final ResourceLocation BAR_BG = Tide.resource("textures/gui/fishing/minigame_bg.png");
-    private static final ResourceLocation FILL_WATER = TideUtils.sprite("fishing/minigame_fill");
-    private static final ResourceLocation FILL_LAVA = TideUtils.sprite("fishing/minigame_fill_lava");
-    private static final ResourceLocation FILL_VOID = TideUtils.sprite("fishing/minigame_fill_void");
-    private static final ResourceLocation BAR_OVERLAY = Tide.resource("textures/gui/fishing/minigame_overlay.png");
+    private static final Identifier BAR_BG = Tide.resource("textures/gui/fishing/minigame_bg.png");
+    private static final Identifier FILL_WATER = TideUtils.sprite("fishing/minigame_fill");
+    private static final Identifier FILL_LAVA = TideUtils.sprite("fishing/minigame_fill_lava");
+    private static final Identifier FILL_VOID = TideUtils.sprite("fishing/minigame_fill_void");
+    private static final Identifier BAR_OVERLAY = Tide.resource("textures/gui/fishing/minigame_overlay.png");
 
-    private static final ResourceLocation MARKER = Tide.resource("textures/gui/fishing/marker.png");
-    private static final ResourceLocation SELECT = Tide.resource("textures/gui/fishing/marker_select.png");
+    private static final Identifier MARKER = Tide.resource("textures/gui/fishing/marker.png");
+    private static final Identifier SELECT = Tide.resource("textures/gui/fishing/marker_select.png");
 
     private static float timeLeft = 100f;
     private static float animProgress = 0f;
@@ -121,14 +121,14 @@ public class CatchMinigameOverlay {
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
 
-        ResourceLocation fillSprite = type == 1 ? FILL_LAVA : (type == 2 ? FILL_VOID : FILL_WATER);
+        Identifier fillSprite = type == 1 ? FILL_LAVA : (type == 2 ? FILL_VOID : FILL_WATER);
 
         graphics.blit(BAR_BG, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight);
         graphics.blitSprite(fillSprite, x + offset, y, texWidth - offset * 2, texHeight);
         graphics.blit(BAR_OVERLAY, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight);
 
         int markerX = Math.round((x + texWidth / 2f - 2) + getMinigamePosition() * (texWidth / 2f - 2));
-        ResourceLocation markerTexture = timer % 4 < 2 ? MARKER : SELECT;
+        Identifier markerTexture = timer % 4 < 2 ? MARKER : SELECT;
         graphics.blit(markerTexture, markerX, y - 1, 0, 0, 4, 9, 4, 9);
 
         if (Tide.CLIENT_CONFIG.minigame.doFeedback && accuracyText != null) {

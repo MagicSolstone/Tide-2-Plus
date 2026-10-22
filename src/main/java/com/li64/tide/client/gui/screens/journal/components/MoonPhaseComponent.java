@@ -5,13 +5,13 @@ import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class MoonPhaseComponent extends ProfileComponent {
-    private static final ResourceLocation MOON_PHASES = Tide.resource("textures/gui/journal/moon_phases.png");
+    private static final Identifier MOON_PHASES = Tide.resource("textures/gui/journal/moon_phases.png");
     private static final Component TITLE = Component.translatable("journal.info.moon_phase.title");
 
     public List<Integer> phases;

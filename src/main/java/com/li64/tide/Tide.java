@@ -6,7 +6,7 @@ import com.li64.tide.config.TideServerConfig;
 import com.li64.tide.data.TideFishingManager;
 import com.li64.tide.loaders.LoaderPlatform;
 import com.li64.tide.loaders.NetworkPlatform;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,13 +43,13 @@ public class Tide {
 
     public static TideFishingManager FISHING_MANAGER;
 
-    public static ResourceLocation resource(String path) {
+    public static Identifier resource(String path) {
         return resource(MOD_ID, path);
     }
 
-    public static ResourceLocation resource(String namespace, String path) {
-         return ResourceLocation.fromNamespaceAndPath(namespace, path);
-         /*return new ResourceLocation(namespace, path);*/
+    public static Identifier resource(String namespace, String path) {
+         return Identifier.fromNamespaceAndPath(namespace, path);
+         /*return new Identifier(namespace, path);*/
     }
 
     public static void initialize() {

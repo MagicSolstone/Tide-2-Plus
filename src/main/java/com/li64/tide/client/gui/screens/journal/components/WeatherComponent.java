@@ -6,13 +6,13 @@ import com.li64.tide.data.fishing.conditions.types.WeatherType;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class WeatherComponent extends ProfileComponent {
-    private static final ResourceLocation ICONS = Tide.resource("textures/gui/journal/weather.png");
+    private static final Identifier ICONS = Tide.resource("textures/gui/journal/weather.png");
     private static final Component TITLE = Component.translatable("journal.info.weather.title");
 
     public List<WeatherType> weatherTypes;

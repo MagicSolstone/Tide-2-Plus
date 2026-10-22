@@ -8,7 +8,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.Optional;
@@ -51,7 +51,7 @@ public record DisplayData(ResourceKey<EntityType<?>> entityKey, Optional<Compoun
             return this.entityType(BuiltInRegistries.ENTITY_TYPE.getResourceKey(entityType).orElseThrow());
         }
 
-        public Builder entityType(ResourceLocation id) {
+        public Builder entityType(Identifier id) {
             this.entityType = ResourceKey.create(Registries.ENTITY_TYPE, id);
             return this;
         }

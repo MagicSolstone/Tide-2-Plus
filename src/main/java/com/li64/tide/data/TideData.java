@@ -9,7 +9,7 @@ import com.li64.tide.data.loaders.LayeredDataLoader;
 import com.li64.tide.data.rods.AccessoryData;
 import com.li64.tide.data.rods.BaitData;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
 
 import java.util.ArrayList;
@@ -30,7 +30,7 @@ public class TideData {
         return loader;
     }
 
-    public static void onRegisterReloadListeners(BiConsumer<ResourceLocation, PreparableReloadListener> registry) {
+    public static void onRegisterReloadListeners(BiConsumer<Identifier, PreparableReloadListener> registry) {
         LOADERS.forEach(loader -> registry.accept(loader.getDirectory(), loader));
     }
 

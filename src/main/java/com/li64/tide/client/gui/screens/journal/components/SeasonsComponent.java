@@ -6,13 +6,13 @@ import com.li64.tide.compat.seasons.Season;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class SeasonsComponent extends ProfileComponent {
-    private static final ResourceLocation SEASONS = Tide.resource("textures/gui/journal/seasons.png");
+    private static final Identifier SEASONS = Tide.resource("textures/gui/journal/seasons.png");
     private static final Component TITLE = Component.translatable("journal.info.seasons.title");
 
     public List<Season> seasons;

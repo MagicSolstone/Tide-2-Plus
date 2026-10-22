@@ -113,7 +113,8 @@ jobs:
           pgrep Xvfb > /dev/null || (Xvfb :99 -screen 0 1280x720x24 +extension GLX +render -nolisten tcp > /dev/null 2>&1 &)
           rm -rf run/world/datapacks/tide_smoke; mkdir -p run/world/datapacks
           cp -r ci/smokepack run/world/datapacks/tide_smoke
-          sed -i 's/^fishinglevel set @s .*/fishinglevel set @s 2/' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
+          # level 2 casts short: stand at the water's edge
+          sed -i -e 's/^fishinglevel set @s .*/fishinglevel set @s 2/' -e 's/^tp @s ~ ~ ~ 0 35$/tp @s ~ ~ ~2 0 40/' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
           printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nenforce-secure-profile=false\nwhite-list=false\nenforce-whitelist=false\n' > run/server.properties
           ./gradlew runServer --no-daemon > server-mp.log 2>&1 &
           spid=$!

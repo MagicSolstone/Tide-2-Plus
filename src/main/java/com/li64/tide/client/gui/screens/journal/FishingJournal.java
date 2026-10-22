@@ -207,36 +207,33 @@ public class FishingJournal extends Screen {
 
     @Override
     public boolean keyPressed(net.minecraft.client.input.KeyEvent event) {
-        return switch (event.key()) {
-            // escape/e
-            case 256, 69 -> {
-                if (this.activeFish != null) {
-                    this.activeFish = null;
-                    this.pageChanged();
-                }
-                else if (this.activeNote != null) {
-                    this.activeNote = null;
-                    this.pageChanged();
-                }
-                else if (this.showAngler) {
-                    this.showAngler = false;
-                    this.pageChanged();
-                }
-                else this.onClose();
-                yield true;
+        // 26.3 uses SDL key codes, so go through the event's helpers (and the inventory key) rather than raw numbers
+        boolean back = event.isEscape() || Minecraft.getInstance().options.keyInventory.matches(event);
+        if (back) {
+            if (this.activeFish != null) {
+                this.activeFish = null;
+                this.pageChanged();
             }
-            // right arrow
-            case 262 -> {
-                if (this.activeFish == null && !showAngler) pageRight();
-                yield true;
+            else if (this.activeNote != null) {
+                this.activeNote = null;
+                this.pageChanged();
             }
-            // left arrow
-            case 263 -> {
-                if (this.activeFish == null && !showAngler) pageLeft();
-                yield true;
+            else if (this.showAngler) {
+                this.showAngler = false;
+                this.pageChanged();
             }
-            default -> super.keyPressed(event);
-        };
+            else this.onClose();
+            return true;
+        }
+        if (event.isRight()) {
+            if (this.activeFish == null && !showAngler) pageRight();
+            return true;
+        }
+        if (event.isLeft()) {
+            if (this.activeFish == null && !showAngler) pageLeft();
+            return true;
+        }
+        return super.keyPressed(event);
     }
 
     @Override

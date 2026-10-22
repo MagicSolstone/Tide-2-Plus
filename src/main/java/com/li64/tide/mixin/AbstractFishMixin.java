@@ -20,17 +20,17 @@ public abstract class AbstractFishMixin implements FishLengthHolder {
     @Unique public double tide$length = 0.0;
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void readAdditionalSaveData(CompoundTag tag, CallbackInfo ci) {
+    private void readAdditionalSaveData(net.minecraft.world.level.storage.ValueInput input, CallbackInfo ci) {
         FishData data = FishData.get((Entity)(Object)this).orElse(null);
         if (data == null) return;
 
-        this.tide$length = tag.getDoubleOr(tide$LENGTH_KEY, this.tide$getLength());
+        this.tide$length = input.getDoubleOr(tide$LENGTH_KEY, this.tide$getLength());
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void addAdditionalSaveData(CompoundTag compound, CallbackInfo ci) {
+    private void addAdditionalSaveData(net.minecraft.world.level.storage.ValueOutput output, CallbackInfo ci) {
         if (FishData.get((Entity)(Object)this).isEmpty()) return;
-        compound.putDouble(tide$LENGTH_KEY, this.tide$getLength());
+        output.putDouble(tide$LENGTH_KEY, this.tide$getLength());
     }
 
     @Inject(method = "saveToBucketTag", at = @At("TAIL"))

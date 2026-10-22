@@ -65,6 +65,10 @@ public class FabricClientEntrypoint implements ClientModInitializer {
 
         TideItemModelProperties.registerAll();
 
+        // minigame bar, cast bar, sonar and fishing info, drawn over the HUD
+        net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry.addLast(Tide.resource("overlays"),
+                (graphics, deltaTracker) -> com.li64.tide.client.gui.TideGuiOverlays.render(graphics));
+
         // (jelly torches: 26.x picks cutout rendering from the texture by itself)
 
         BlockEntityRenderers.register(TideBlockEntities.FISH_DISPLAY, FishDisplayRenderer::new);

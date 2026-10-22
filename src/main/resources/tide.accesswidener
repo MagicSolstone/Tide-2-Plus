@@ -5,10 +5,7 @@ extendable method net/minecraft/world/entity/Entity getX ()D
 extendable method net/minecraft/world/entity/Entity getY ()D
 extendable method net/minecraft/world/entity/Entity getZ ()D
 accessible method net/minecraft/core/particles/SimpleParticleType <init> (Z)V
-accessible method net/minecraft/client/renderer/GameRenderer getFov (Lnet/minecraft/client/Camera;FZ)D
 accessible method net/minecraft/world/entity/ai/navigation/PathNavigation resetStuckTimeout ()V
-accessible method net/minecraft/client/renderer/entity/ItemRenderer renderModelLists (Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
-accessible method net/minecraft/client/particle/SingleQuadParticle renderVertex (Lcom/mojang/blaze3d/vertex/VertexConsumer;Lorg/joml/Quaternionf;FFFFFFFFI)V
 
 # Fields
 accessible field net/minecraft/world/entity/item/FallingBlockEntity blockState Lnet/minecraft/world/level/block/state/BlockState;
@@ -16,8 +13,7 @@ accessible field net/minecraft/world/entity/ai/navigation/PathNavigation pathFin
 accessible field net/minecraft/world/entity/ai/navigation/PathNavigation targetPos Lnet/minecraft/core/BlockPos;
 accessible field net/minecraft/world/entity/ai/navigation/PathNavigation reachRange I
 accessible field net/minecraft/world/entity/ai/navigation/PathNavigation maxVisitedNodesMultiplier F
-accessible field net/minecraft/client/renderer/entity/EntityRenderDispatcher renderers Ljava/util/Map;
 accessible field net/minecraft/world/item/BucketItem content Lnet/minecraft/world/level/material/Fluid;
 accessible field net/minecraft/world/level/storage/loot/LootTable pools Ljava/util/List;
 accessible field net/minecraft/world/level/storage/loot/entries/LootItem item Lnet/minecraft/core/Holder;
-accessible field net/minecraft/server/level/ServerLevel serverLevelData Lnet/minecraft/world/level/storage/ServerLevelData;
+

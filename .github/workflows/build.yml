@@ -48,14 +48,11 @@ jobs:
           tail -400 build.log | sed "s#$GITHUB_WORKSPACE/##" > /tmp/results/latest-tail.txt
           git config user.name "ci"
           git config user.email "ci@users.noreply.github.com"
-          git fetch origin ci-results:ci-results 2>/dev/null || true
-          git worktree add /tmp/ci ci-results 2>/dev/null || { git worktree add --detach /tmp/ci && (cd /tmp/ci && git checkout --orphan ci-results && git rm -rfq . ); }
-          cp /tmp/results/latest.txt /tmp/ci/latest.txt
-          cp /tmp/results/latest-tail.txt /tmp/ci/latest-tail.txt
-          cd /tmp/ci
+          mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt .
           git add -A
-          git commit -qm "build $sha: $status" || true
-          git push -q origin ci-results
+          git commit -qm "build $sha: $status"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-results
 
       - name: Dev build download
         if: success() && github.event_name == 'push'

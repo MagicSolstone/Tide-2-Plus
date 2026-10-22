@@ -1,12 +1,9 @@
 {
   "block": {
-    "type": "minecraft:simple",
-    "state": {
-      "Name": "tide:wooden_crate",
-      "Properties": {
-        "facing": "north",
-        "open": "false"
-      }
+    "id": "tide:wooden_crate",
+    "properties": {
+      "facing": "north",
+      "open": "false"
     }
   },
   "conditions": [

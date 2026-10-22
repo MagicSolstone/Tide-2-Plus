@@ -1,12 +1,9 @@
 {
   "block": {
-    "type": "minecraft:simple",
-    "state": {
-      "Name": "tide:purpur_crate",
-      "Properties": {
-        "facing": "north",
-        "open": "false"
-      }
+    "id": "tide:purpur_crate",
+    "properties": {
+      "facing": "north",
+      "open": "false"
     }
   },
   "conditions": [

@@ -29,6 +29,27 @@ jobs:
           set -o pipefail
           ./gradlew build --stacktrace --no-daemon 2>&1 | tee build.log
 
+      # Boot a dedicated server with the mod for a couple of minutes and keep its log: data-pack
+      # format errors, registry problems and crashes show up here without launching the game.
+      - name: Server smoke test
+        id: smoke
+        if: steps.build.outcome == 'success'
+        shell: bash
+        run: |
+          set +e
+          mkdir -p run
+          echo "eula=true" > run/eula.txt
+          printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\n' > run/server.properties
+          ./gradlew runServer --no-daemon > server.log 2>&1 &
+          pid=$!
+          for i in $(seq 1 84); do
+            sleep 5
+            if grep -q "Done (" server.log; then sleep 30; break; fi
+            if ! kill -0 $pid 2>/dev/null; then break; fi
+          done
+          pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null
+          grep -q "Done (" server.log && echo "started=yes" || echo "started=no"
+
       # The full build output is hard to read from outside GitHub, so the errors (and the tail
       # of the log) are also written to the ci-results branch: one file per run, plus latest.
       - name: Publish results to the ci-results branch
@@ -48,11 +69,17 @@ jobs:
             grep -E -A3 '^\S+\.java:[0-9]+: (error|warning):|^e: |FAILURE:|What went wrong|^\* What went wrong|Could not|Caused by' build.log | sed "s#$GITHUB_WORKSPACE/##" | head -6000
           } > /tmp/results/latest.txt
           tail -400 build.log | sed "s#$GITHUB_WORKSPACE/##" > /tmp/results/latest-tail.txt
+          touch server.log
+          {
+            echo "server started: $(grep -c 'Done (' server.log)"
+            grep -nE 'ERROR|WARN|Exception|Caused by|Failed|Couldn.t|Unknown|Missing' server.log | grep -v 'Using default\|Ambiguous' | head -3000
+            echo; echo "---- tail ----"; tail -150 server.log
+          } > /tmp/results/server.txt
           git config --global user.name "ci"
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt .
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt .
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

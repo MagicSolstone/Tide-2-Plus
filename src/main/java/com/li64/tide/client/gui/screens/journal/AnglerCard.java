@@ -62,7 +62,7 @@ final class AnglerCard {
 
         Gui26.text(g, font, "Catch quality odds", x, y, DARK, false);
         y += 11;
-        double[] odds = CatchQuality.odds(effective, Angler.Hook.GOOD);
+        double[] odds = CatchQuality.odds(effective);
         for (CatchQuality q : CatchQuality.values()) {
             double p = odds[q.ordinal()];
             String val = p >= 0.01 ? Math.round(p * 100) + "%" : "1 in " + String.format("%,d", Math.round(1 / p));
@@ -70,7 +70,7 @@ final class AnglerCard {
             Gui26.text(g, font, val, x + COL - font.width(val), y, INK, false);
             y += 10;
         }
-        Gui26.text(g, font, "Better hooks raise these.", x, y + 2, OK, false);
+        Gui26.text(g, font, "Bigger fish fight harder.", x, y + 2, OK, false);
 
         // ---------------- right page: what the level does
         x = tlX + 215;

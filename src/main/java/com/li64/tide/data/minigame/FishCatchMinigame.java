@@ -75,8 +75,22 @@ public class FishCatchMinigame {
         // fishing level: how wide the good zones are, and how hard this fish fights for this angler
         int level = Angler.effectiveLevel(player);
         FishRarity rarity = data.map(d -> d.profile().rarity()).orElse(FishRarity.COMMON);
-        this.zones = Angler.Zones.of(area, Angler.Stats.of(level).hookZones());
+        double zoneScale = Angler.Stats.of(level).hookZones();
         speed *= (float) Angler.fightSpeed(level, rarity);
+
+        // catch quality is decided at the bite, so a bigger fish fights harder: faster, smaller zones
+        hook.pendingQuality = null;
+        if (data.isPresent() && com.li64.tide.data.angler.CatchQuality.enabled()) {
+            com.li64.tide.data.angler.CatchQuality q = com.li64.tide.data.angler.CatchQuality.roll(player.getRandom(), level);
+            hook.pendingQuality = q;
+            speed *= (float) q.fightSpeed();
+            zoneScale *= q.zoneScale();
+            if (q.ordinal() >= com.li64.tide.data.angler.CatchQuality.TROPHY.ordinal())
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(
+                        q == com.li64.tide.data.angler.CatchQuality.MYTHIC ? "This one feels enormous!" : "Something big is on the line!")
+                        .withStyle(s -> s.withColor(q.color)));
+        }
+        this.zones = Angler.Zones.of(area, zoneScale);
 
         // Start client minigame gui
         int type = 0;

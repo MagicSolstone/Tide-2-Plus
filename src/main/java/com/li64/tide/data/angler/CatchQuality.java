@@ -22,8 +22,8 @@ import net.minecraft.world.item.ItemStack;
  * How good one caught fish is. Separate from rarity (how hard the species is to find):
  * a Mythic guppy and a Poor shark are both possible. Shown with ◆ marks, never stars.
  *
- * Base odds (level 40, a "good" hook): Poor 30%, Average 48%, Fine 17%, Prime 1/25, Trophy ~1/111, Mythic 1/1000.
- * Higher levels and cleaner hooks push the odds up.
+ * Base odds (level 40): Poor 30%, Average 48%, Fine 17%, Prime 1/25, Trophy ~1/111, Mythic 1/1000.
+ * Higher levels push the odds up. Quality is decided when the fish bites, and better fish fight harder.
  */
 public enum CatchQuality {
     POOR("Poor", 0x9A9A9A, 30.0),
@@ -60,23 +60,17 @@ public enum CatchQuality {
 
     // ------------------------------------------------------------------ rolling
 
-    private static double hookBonus(Angler.Hook hook) {
-        return switch (hook) {
-            case PERFECT -> 1.4;
-            case GREAT -> 1.2;
-            case GOOD -> 1.0;
-            case BAD, TERRIBLE -> 0.8;
-        };
+    /** Odds multiplier for the good tiers: 0.7 at level 1, 1.0 at the baseline, 1.5 at 99. */
+    public static double luck(int level) {
+        return Angler.curve(level, 0.7, 1.5);
     }
 
-    /** Odds multiplier for the good tiers: 0.7 at level 1, 1.0 at the baseline, 1.5 at 99, times the hook bonus. */
-    public static double luck(int level, Angler.Hook hook) {
-        return Angler.curve(level, 0.7, 1.5) * hookBonus(hook);
-    }
-
-    /** Chance of each quality (sums to 1) for a level and hook. */
-    public static double[] odds(int level, Angler.Hook hook) {
-        double m = luck(level, hook);
+    /**
+     * Chance of each quality (sums to 1) at a level. Mythic grows slowest, so it stays a story:
+     * about 1 in 1,500 at level 1, 1 in 1,000 at the baseline, 1 in 700 at 99.
+     */
+    public static double[] odds(int level) {
+        double m = luck(level);
         double[] w = new double[values().length];
         double total = 0;
         for (CatchQuality q : values()) {
@@ -84,8 +78,9 @@ public enum CatchQuality {
                 case POOR -> 1.0 / m;
                 case AVERAGE -> 1.0;
                 case FINE -> m;
-                case PRIME -> Math.pow(m, 1.5);
-                case TROPHY, MYTHIC -> m * m;
+                case PRIME -> Math.pow(m, 1.3);
+                case TROPHY -> Math.pow(m, 1.5);
+                case MYTHIC -> m;
             };
             w[q.ordinal()] = q.baseWeight * scale;
             total += w[q.ordinal()];
@@ -94,8 +89,32 @@ public enum CatchQuality {
         return w;
     }
 
-    public static CatchQuality roll(RandomSource rng, int level, Angler.Hook hook) {
-        double[] p = odds(level, hook);
+    /** How much faster this fish moves in the minigame than an average one of its kind. */
+    public double fightSpeed() {
+        return switch (this) {
+            case POOR -> 0.9;
+            case AVERAGE -> 1.0;
+            case FINE -> 1.05;
+            case PRIME -> 1.12;
+            case TROPHY -> 1.2;
+            case MYTHIC -> 1.3;
+        };
+    }
+
+    /** How wide the good hook zones are against an average fish (big fish leave less room). */
+    public double zoneScale() {
+        return switch (this) {
+            case POOR -> 1.1;
+            case AVERAGE -> 1.0;
+            case FINE -> 0.97;
+            case PRIME -> 0.92;
+            case TROPHY -> 0.85;
+            case MYTHIC -> 0.78;
+        };
+    }
+
+    public static CatchQuality roll(RandomSource rng, int level) {
+        double[] p = odds(level);
         double r = rng.nextDouble();
         for (CatchQuality q : values()) {
             r -= p[q.ordinal()];
@@ -159,12 +178,13 @@ public enum CatchQuality {
     }
 
     /** Roll quality for a freshly caught fish and set its quality, length, weight and name. */
-    public static void apply(ServerPlayer player, ItemStack stack, Angler.Hook hook) {
+    /** {@code rolled}: the quality decided at the bite (null: roll now, e.g. with the minigame off). */
+    public static void apply(ServerPlayer player, ItemStack stack, CatchQuality rolled) {
         if (!enabled()) return;
         FishData data = FishData.get(stack).orElse(null);
         if (data == null) return;
         RandomSource rng = player.getRandom();
-        CatchQuality q = roll(rng, Angler.effectiveLevel(player), hook);
+        CatchQuality q = rolled != null ? rolled : roll(rng, Angler.effectiveLevel(player));
 
         if (data.size().isPresent()) {
             double length = q.sampleLength(data.size().get(), rng);

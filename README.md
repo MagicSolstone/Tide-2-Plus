@@ -2,7 +2,21 @@
 
 A Fabric-only fork of [Tide 2](https://github.com/Lightning-64/Tide-2) by Lightning64, ported to
 **Minecraft 26.3**, for a family server run alongside [Solstone](https://github.com/TJusczak/Solstone).
-Planned on top: quality tiers for fish and a fishing level system.
+
+Added on top of Tide:
+
+- **Fishing levels 1–99** with XP, titles every 10 levels and an angler page in the journal. Level
+  changes cast distance, bite speed, hook zones, luck and how hard fish fight; level 40 fishes like
+  original Tide. `/fishinglevel` shows yours; ops can set levels and turn on *fair play* (everyone
+  at level 40, for contests).
+- **Hook zones** in the minigame (perfect, great, good, bad, miss) with a chance to land each.
+- **Catch quality** (Poor, Average, Fine, Prime, Trophy, Mythic), decided at the bite: better fish
+  are bigger, heavier and fight harder. Shown with ◆ marks, kept through buckets.
+- **Weight** from length and body shape; US units by default (`useImperial` in the client config).
+- **Journal records:** best quality, heaviest, longest, shortest, and how many of each quality.
+- A `[Tide catch]` line in the server log for every fish, which Solstone reads for contests.
+
+Porting to a new Minecraft version: see [PORTING.md](PORTING.md).
 
 - **Fabric only, 26.x only.** Forge, NeoForge, 1.20.1/1.21.1 and the Stonecutter multi-version setup
   were removed (the sources were baked to their 1.21.1 Fabric form, then ported).

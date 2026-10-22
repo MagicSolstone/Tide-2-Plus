@@ -47,3 +47,5 @@ bin/
 /src/generated-1.21.1/neoforge-resources/.cache/
 /src/generated-1.20.1/resources/.cache/
 /src/generated-1.20.1/forge-resources/.cache/
+# Fork: no Stonecutter/versions any more
+/versions/

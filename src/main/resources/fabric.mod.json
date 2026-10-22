@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "tide",
+  "name": "Tide (Fabric 26 fork)",
+  "version": "${version}",
+  "icon": "tide.png",
+  "description": "Expands the fishing system and adds 100+ new fish. A Fabric-only fork of Tide 2 for Minecraft 26.x.",
+  "contact": {
+    "homepage": "https://github.com/TJusczak/Tide-2-fabric26plus-levels",
+    "sources": "https://github.com/TJusczak/Tide-2-fabric26plus-levels",
+    "issues": "https://github.com/TJusczak/Tide-2-fabric26plus-levels/issues"
+  },
+  "authors": ["Lightning64"],
+  "contributors": ["TJusczak"],
+  "license": "MPL-2.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["com.li64.tide.loaders.fabric.FabricEntrypoint"],
+    "client": ["com.li64.tide.loaders.fabric.FabricClientEntrypoint"]
+  },
+  "mixins": ["tide.mixins.json"],
+  "accessWidener": "tide.accesswidener",
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "~${minecraft_version}",
+    "java": ">=25",
+    "fabric-api": "*"
+  }
+}

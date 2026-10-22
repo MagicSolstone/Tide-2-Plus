@@ -68,10 +68,10 @@ public class LootCrateEntity extends FallingBlockEntity {
             ++this.time;
             if (!this.isNoGravity()) this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
             this.move(MoverType.SELF, this.getDeltaMovement());
-            /*? if >= 1.21*/this.handlePortal();
+            this.handlePortal();
             Level var3 = this.level();
             if (var3 instanceof ServerLevel serverLevel) {
-                if (this.isAlive()/*? if >=1.21 {*/ || this.forceTickAfterTeleportToDuplicate/*?}*/) {
+                if (this.isAlive() || this.forceTickAfterTeleportToDuplicate) {
                     BlockPos pos = this.blockPosition();
                     if (!this.onGround()) {
                         if (this.time > 100 && (pos.getY() <= this.level().getMinBuildHeight() || pos.getY() > this.level().getMaxBuildHeight()) || this.time > 600) {

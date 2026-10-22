@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "tide:item/smallmouth_bass_spawn_egg"
-  }
-}

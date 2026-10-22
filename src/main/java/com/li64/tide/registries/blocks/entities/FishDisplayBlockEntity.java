@@ -17,7 +17,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-/*? if >=1.21*/import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup;
 
 public class FishDisplayBlockEntity extends BlockEntity {
     private ItemStack fish;
@@ -86,7 +86,6 @@ public class FishDisplayBlockEntity extends BlockEntity {
         this.level.setBlock(getBlockPos(), getBlockState().setValue(FishDisplayBlock.SHAPE, shape), 1);
     }
 
-    //? if >=1.21 {
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         if (this.fish != null) tag.put("fish", this.fish.save(registries));
@@ -111,28 +110,6 @@ public class FishDisplayBlockEntity extends BlockEntity {
         return tag;
     }
 
-    //?} else {
-
-    /*@Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
-        if (this.fish != null) tag.put("fish", this.fish.save(new CompoundTag()));
-    }
-
-    @Override
-    public void load(@NotNull CompoundTag tag) {
-        if (tag.contains("fish")) {
-            ItemStack stack = ItemStack.of(tag.getCompound("fish"));
-            if (!stack.isEmpty()) this.setDisplayStack(stack);
-        }
-    }
-
-    @Override
-    public @NotNull CompoundTag getUpdateTag() {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag);
-        return tag;
-    }
-    *///?}
 
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {

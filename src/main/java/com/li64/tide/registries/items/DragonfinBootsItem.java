@@ -17,19 +17,11 @@ public class DragonfinBootsItem extends ArmorItem implements TooltipItem {
         super(TideArmorMaterials.DRAGONFIN, ArmorItem.Type.BOOTS, properties);
     }
 
-    //? if >=1.21.1 {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
         super.appendHoverText(stack, context, lines, flag);
         this.addTooltip(stack, lines::add);
     }
-    //?} else {
-    /*@Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> lines, TooltipFlag flag) {
-        super.appendHoverText(stack, level, lines, flag);
-        this.addTooltip(stack, lines::add);
-    }
-    *///?}
 
     @Override
     public void addTooltip(ItemStack stack, Consumer<Component> tooltip) {

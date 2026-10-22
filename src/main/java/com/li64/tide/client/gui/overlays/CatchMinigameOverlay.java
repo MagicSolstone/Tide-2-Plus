@@ -124,12 +124,7 @@ public class CatchMinigameOverlay {
         ResourceLocation fillSprite = type == 1 ? FILL_LAVA : (type == 2 ? FILL_VOID : FILL_WATER);
 
         graphics.blit(BAR_BG, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight);
-        /*? if >=1.21 {*/graphics.blitSprite(fillSprite, x + offset, y, texWidth - offset * 2, texHeight);
-        //?} else {
-        /*TideUtils.blitNineSliced(graphics, fillSprite, x + offset, y,
-                texWidth - offset * 2, texHeight, 2, 2, 2, 4,
-                6, 7, 0, 0, 6, 7);
-        *///?}
+        graphics.blitSprite(fillSprite, x + offset, y, texWidth - offset * 2, texHeight);
         graphics.blit(BAR_OVERLAY, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight);
 
         int markerX = Math.round((x + texWidth / 2f - 2) + getMinigamePosition() * (texWidth / 2f - 2));

@@ -34,8 +34,8 @@ public class CustomRodManager {
             dataKey.set(rod, new CompoundTag());
             return;
         }
-        /*? if >=1.21 {*/dataKey.set(rod, (CompoundTag) ItemStack.CODEC.encode(accessory, NbtOps.INSTANCE, new CompoundTag()).getOrThrow());
-        /*?} else*/ /*dataKey.set(rod, accessory.save(new CompoundTag()));*/
+        dataKey.set(rod, (CompoundTag) ItemStack.CODEC.encode(accessory, NbtOps.INSTANCE, new CompoundTag()).getOrThrow());
+         /*dataKey.set(rod, accessory.save(new CompoundTag()));*/
     }
 
     public static ItemStack getBobber(ItemStack rod) {
@@ -69,8 +69,7 @@ public class CustomRodManager {
     private static ItemStack getAccessory(ItemDataKey<CompoundTag> dataKey, ItemStack rod, ItemStack defaultItem) {
         CompoundTag data = dataKey.get(rod);
         if (data == null || data.isEmpty()) return defaultItem;
-        /*? if >=1.21 {*/Optional<ItemStack> accessory = ItemStack.CODEC.parse(NbtOps.INSTANCE, data).result();
-        /*?} else*//*Optional<ItemStack> accessory = Optional.of(ItemStack.of(data)).map(s -> s.isEmpty() ? null : s);*/
+        Optional<ItemStack> accessory = ItemStack.CODEC.parse(NbtOps.INSTANCE, data).result();
         return accessory.orElse(defaultItem);
     }
 
@@ -82,11 +81,6 @@ public class CustomRodManager {
         return builder.build();
     }
 
-    //? if >=1.21 {
-    /**
-     * Kept for Stardew Fishing support
-     * @deprecated The version of this method without registryAccess should be used instead
-     */
     @Deprecated(forRemoval = true, since = "2.0")
     public static boolean hasBobber(ItemStack rod, HolderLookup.Provider registryAccess) {
         return getAccessory(TideItemData.FISHING_BOBBER, rod) != null;
@@ -145,5 +139,4 @@ public class CustomRodManager {
     public static ItemStack getLine(ItemStack rod, HolderLookup.Provider registryAccess) {
         return getAccessory(TideItemData.FISHING_LINE, rod, DEFAULT_LINE);
     }
-    //?}
 }

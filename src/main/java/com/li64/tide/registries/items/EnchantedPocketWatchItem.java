@@ -59,10 +59,4 @@ public class EnchantedPocketWatchItem extends PocketWatchItem {
         tooltip.accept(Component.translatable("item.tide.enchanted_pocket_watch.desc").setStyle(gold));
     }
 
-    //? if <1.21 {
-    /*@Override
-    public boolean isFoil(ItemStack itemStack) {
-        return true;
-    }
-    *///?}
 }

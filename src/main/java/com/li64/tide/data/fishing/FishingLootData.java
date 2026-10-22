@@ -21,21 +21,19 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootTable;
 
-/*? if >= 1.21*/import net.minecraft.core.registries.Registries;
+import net.minecraft.core.registries.Registries;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public record FishingLootData(/*? if >= 1.21 {*/ResourceKey<LootTable> lootTable,
-                              /*?} else*//*ResourceLocation lootTable,*/
+public record FishingLootData(ResourceKey<LootTable> lootTable,
                               List<String> associatedMods,
                               List<FishingCondition> conditions,
                               List<FishingModifier> modifiers,
                               double weight, double quality) implements FishingEntry, ModAssociatedEntry {
 
     public static final Codec<FishingLootData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            /*? if >= 1.21 {*/ResourceKey.codec(Registries.LOOT_TABLE).fieldOf("loot_table").forGetter(FishingLootData::lootTable),
-             /*?} else*//*ResourceLocation.CODEC.fieldOf("loot_table").forGetter(FishingLootData::lootTable),*/
+            ResourceKey.codec(Registries.LOOT_TABLE).fieldOf("loot_table").forGetter(FishingLootData::lootTable),
             Codec.STRING.listOf().optionalFieldOf("associated_mods", List.of()).forGetter(FishingLootData::associatedMods),
             FishingCondition.CODEC.listOf().optionalFieldOf("conditions", List.of()).forGetter(FishingLootData::conditions),
             FishingModifier.CODEC.listOf().optionalFieldOf("modifiers", List.of()).forGetter(FishingLootData::modifiers),
@@ -64,7 +62,7 @@ public record FishingLootData(/*? if >= 1.21 {*/ResourceKey<LootTable> lootTable
     @Override
     public MutableComponent getTestKey() {
         return Component.translatable("commands.fishing.entries.loot_table").append(" \"").append(Component.literal(
-                lootTable/*? if >=1.21 {*/.location()/*?}*/.toString())).append("\"");
+                lootTable.location().toString())).append("\"");
     }
 
     public static Builder builder() {
@@ -72,8 +70,7 @@ public record FishingLootData(/*? if >= 1.21 {*/ResourceKey<LootTable> lootTable
     }
 
     public static class Builder {
-        /*? if >= 1.21 {*/private ResourceKey<LootTable> lootKey;
-         /*?} else*//*private ResourceLocation lootKey;*/
+        private ResourceKey<LootTable> lootKey;
 
         private final List<FishingCondition> conditions = new ArrayList<>();
         private final List<FishingModifier> modifiers = new ArrayList<>();
@@ -87,21 +84,10 @@ public record FishingLootData(/*? if >= 1.21 {*/ResourceKey<LootTable> lootTable
             return this.lootTable(lootKey.get());
         }
 
-        //? if >=1.21 {
         public Builder lootTable(ResourceKey<LootTable> lootKey) {
             this.lootKey = lootKey;
             return this;
         }
-        //?} else {
-        /*public Builder lootTable(ResourceKey<LootTable> lootKey) {
-            return this.lootTable(lootKey.location());
-        }
-
-        public Builder lootTable(ResourceLocation lootKey) {
-            this.lootKey = lootKey;
-            return this;
-        }
-        *///?}
 
         public Builder condition(FishingCondition condition) {
             this.conditions.add(condition);
@@ -174,7 +160,7 @@ public record FishingLootData(/*? if >= 1.21 {*/ResourceKey<LootTable> lootTable
         }
 
         public void build(SimpleDataOutput<FishingLootData> output) {
-            this.build(this.lootKey/*? if >=1.21 {*/.location()/*?}*/, output);
+            this.build(this.lootKey.location(), output);
         }
 
         public void build(String path, SimpleDataOutput<FishingLootData> output) {

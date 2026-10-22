@@ -39,11 +39,6 @@ public interface FishingConditionType<T extends FishingCondition> {
     }
 
     static <T extends FishingCondition> FishingConditionType<T> register(ResourceLocation name, MapCodec<T> codec) {
-        /*? if !forge {*/return Registry.register(TideRegistries.FISHING_CONDITIONS, name, () -> codec);
-         //?} else {
-        /*FishingConditionType<T> type = () -> codec;
-        TideRegistries.FISHING_CONDITIONS.register(name, type);
-        return type;
-        *///?}
+        return Registry.register(TideRegistries.FISHING_CONDITIONS, name, () -> codec);
     }
 }

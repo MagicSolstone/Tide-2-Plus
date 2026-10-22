@@ -104,7 +104,7 @@ public class TideEntityModels {
         registerSimpleFish("bedrock_tetra", TetraModel::new, TetraModel.MODEL_LOCATION, TetraModel::createBodyLayer);
         registerCustomFish("chasm_eel", ChasmEelModel::new, ChasmEelModel.MODEL_LOCATION, ChasmEelModel::createBodyLayer, GlowingEyesFishRenderer::new);
         registerSimpleFish("echo_snapper", EchoSnapperModel::new, EchoSnapperModel.MODEL_LOCATION, EchoSnapperModel::createBodyLayer);
-        /*? if >=1.21*/registerSimpleFish("windbass", WindbassModel::new, WindbassModel.MODEL_LOCATION, WindbassModel::createBodyLayer);
+        registerSimpleFish("windbass", WindbassModel::new, WindbassModel.MODEL_LOCATION, WindbassModel::createBodyLayer);
         registerSimpleFish("devils_hole_pupfish", PupfishModel::new, PupfishModel.MODEL_LOCATION, PupfishModel::createBodyLayer);
         registerSimpleFish("midas_fish", MidasFishModel::new, MidasFishModel.MODEL_LOCATION, MidasFishModel::createBodyLayer);
 

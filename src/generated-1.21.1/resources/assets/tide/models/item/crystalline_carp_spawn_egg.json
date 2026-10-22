@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "tide:item/crystalline_carp_spawn_egg"
-  }
-}

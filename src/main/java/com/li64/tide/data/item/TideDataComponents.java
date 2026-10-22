@@ -1,4 +1,3 @@
-//? if >=1.21 {
 package com.li64.tide.data.item;
 
 import com.li64.tide.Tide;
@@ -71,4 +70,3 @@ public class TideDataComponents {
 
     public static void init() {}
 }
-//?}

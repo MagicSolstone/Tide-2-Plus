@@ -27,19 +27,10 @@ public class AnglingTableBlock extends CraftingTableBlock {
                 containerId, inventory, ContainerLevelAccess.create(level, pos)), CONTAINER_TITLE);
     }
 
-    //? if >=1.21 {
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult pHitResult) {
         if (level.isClientSide) return InteractionResult.SUCCESS;
         player.openMenu(state.getMenuProvider(level, pos));
         return InteractionResult.CONSUME;
     }
-    //?} else {
-    /*@Override
-    public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
-        player.openMenu(state.getMenuProvider(level, pos));
-        return InteractionResult.CONSUME;
-    }
-    *///?}
 }

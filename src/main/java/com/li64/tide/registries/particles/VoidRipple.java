@@ -9,7 +9,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
-/*? if <1.21*//*import org.joml.Vector3f;*/
 
 import java.util.function.BiConsumer;
 
@@ -41,12 +40,10 @@ public class VoidRipple extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    //? if >=1.21 {
     @Override
     public @NotNull FacingCameraMode getFacingCameraMode() {
         return (q, cam, f) -> facingCameraFunc.accept(q, cam);
     }
-    //?}
 
     @Override
     public void render(VertexConsumer buffer, Camera cam, float partialTicks) {
@@ -75,12 +72,6 @@ public class VoidRipple extends TextureSheetParticle {
         this.renderVertex(buffer, quaternion, x, y, z, -1f, -1f, size, u0, v1, color);
     }
 
-    //? if <1.21 {
-    /*public final void renderVertex(VertexConsumer buffer, Quaternionf q, float x, float y, float z, float xOffset, float yOffset, float quadSize, float u, float v, int packedLight) {
-        Vector3f pos = new Vector3f(xOffset, yOffset, 0.0F).rotate(q).mul(quadSize).add(x, y, z);
-        buffer.vertex(pos.x(), pos.y(), pos.z()).uv(u, v).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(packedLight).endVertex();
-    }
-    *///?}
 
     public record LargeProvider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         @Override

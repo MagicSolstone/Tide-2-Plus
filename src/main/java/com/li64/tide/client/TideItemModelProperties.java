@@ -27,7 +27,7 @@ public class TideItemModelProperties {
     public static final ResourceLocation PULL_PROPERTY = Tide.resource("pull");
     public static final ClampedItemPropertyFunction PULL_FUNCTION = (stack, level, player, i) -> {
         if (player == null) return 0f;
-        return player.getUseItem() != stack ? 0f : (float)(stack.getUseDuration(/*? if >=1.21 {*/player/*?}*/) - player.getUseItemRemainingTicks()) / 20f;
+        return player.getUseItem() != stack ? 0f : (float)(stack.getUseDuration(player) - player.getUseItemRemainingTicks()) / 20f;
     };
 
     public static final ResourceLocation SATCHEL_STATE_PROPERTY = Tide.resource("satchel_state");

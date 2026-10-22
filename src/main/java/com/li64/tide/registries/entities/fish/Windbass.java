@@ -1,4 +1,3 @@
-//? if >=1.21 {
 package com.li64.tide.registries.entities.fish;
 
 import net.minecraft.core.particles.ParticleTypes;
@@ -20,4 +19,3 @@ public class Windbass extends TideFishEntity {
         }
     }
 }
-//?}

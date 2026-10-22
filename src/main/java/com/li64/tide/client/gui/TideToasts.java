@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class TideToasts {
     // TODO: maybe make some custom art for this?
-    /*? if >=1.21*/private static final ResourceLocation TEXTURE = Tide.resource("minecraft", "toast/recipe");
+    private static final ResourceLocation TEXTURE = Tide.resource("minecraft", "toast/recipe");
 
     public static void display(Toast toast) {
         Minecraft.getInstance().getToasts().addToast(toast);
@@ -28,8 +28,7 @@ public class TideToasts {
 
         @Override
         public @NotNull Visibility render(GuiGraphics graphics, ToastComponent component, long time) {
-            /*? if >=1.21 {*/graphics.blitSprite(TEXTURE, 0, 0, this.width(), this.height());
-            /*?} else*//*graphics.blit(TEXTURE, 0, 0, 0, 32, this.width(), this.height());*/
+            graphics.blitSprite(TEXTURE, 0, 0, this.width(), this.height());
             graphics.drawString(component.getMinecraft().font, title, 30, 7, -11534256, false);
             graphics.drawString(component.getMinecraft().font, description, 30, 18, -16777216, false);
             graphics.renderFakeItem(displayedItem, 8, 8);

@@ -51,8 +51,7 @@ public record ClientFishingRodTooltip(int slots, BaitContents contents) implemen
     }
 
     private void renderSlot(int x, int y, int index, GuiGraphics graphics, Font font) {
-        /*? if >=1.21 {*/graphics.blitSprite(SLOT_BACKGROUND_SPRITE, x - 4 + BG_BORDER, y - 4 + BG_BORDER, 24, 24);
-        /*?} else*//*graphics.blit(SLOT_BACKGROUND_SPRITE, x - 4 + BG_BORDER, y - 4 + BG_BORDER, 0, 0, 24, 24, 24, 24);*/
+        graphics.blitSprite(SLOT_BACKGROUND_SPRITE, x - 4 + BG_BORDER, y - 4 + BG_BORDER, 24, 24);
 
         if (index >= this.contents.size()) return;
         ItemStack stack = this.contents.items().get(index);

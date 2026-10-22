@@ -13,12 +13,4 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Cat.class)
 public abstract class CatMixin {
-    //? if <1.21 {
-    /*@Shadow @Final @Mutable private static Ingredient TEMPT_INGREDIENT;
-
-    @Inject(method = "<clinit>", at = @At("TAIL"))
-    private static void modifyIngredient(CallbackInfo ci) {
-        TEMPT_INGREDIENT = Ingredient.of(TideTags.Items.CAT_FOOD);
-    }
-    *///?}
 }

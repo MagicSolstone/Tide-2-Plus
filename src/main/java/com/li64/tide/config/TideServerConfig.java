@@ -2,29 +2,16 @@ package com.li64.tide.config;
 
 import com.google.gson.Gson;
 import com.li64.tide.Tide;
-import me.shedaniel.autoconfig.ConfigData;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import me.shedaniel.clothconfig2.gui.entries.SelectionListEntry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-
-@Config(name = Tide.MOD_ID + "_server")
-public final class TideServerConfig implements ConfigData {
-    @ConfigEntry.Gui.CollapsibleObject
+public final class TideServerConfig {
     public General general;
-
-    @ConfigEntry.Gui.CollapsibleObject
     public Items items;
-
-    @ConfigEntry.Gui.CollapsibleObject
     public Journal journal;
-
-    @ConfigEntry.Gui.CollapsibleObject
     public Minigame minigame;
 
     public TideServerConfig() {
@@ -45,19 +32,9 @@ public final class TideServerConfig implements ConfigData {
     }
 
     public static class General {
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.RequiresRestart
         public boolean overrideVanillaRod = true;
-
-        @ConfigEntry.Gui.Tooltip
         public boolean holdToCast = true;
-
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.RequiresRestart
         public double rodDurabilityMultiplier = 1.0;
-
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.RequiresRestart
         public List<VoidHeightEntry> fishableVoidHeights = List.of(
                 new VoidHeightEntry(Level.OVERWORLD, VoidHeightEntry.Type.RELATIVE_TO_BOTTOM, -6),
                 new VoidHeightEntry(Level.NETHER, VoidHeightEntry.Type.RELATIVE_TO_BOTTOM, -6),
@@ -65,14 +42,8 @@ public final class TideServerConfig implements ConfigData {
         );
 
         public static class VoidHeightEntry {
-            @ConfigEntry.Gui.RequiresRestart
             public String dimension = "minecraft:overworld";
-
-            @ConfigEntry.Gui.RequiresRestart
-            @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
             public Type type = Type.RELATIVE_TO_BOTTOM;
-
-            @ConfigEntry.Gui.RequiresRestart
             public Integer height = -6;
 
             public VoidHeightEntry() {}
@@ -83,27 +54,17 @@ public final class TideServerConfig implements ConfigData {
                 this.height = height;
             }
 
-            public enum Type implements SelectionListEntry.Translatable {
+            public enum Type {
                 RELATIVE_TO_BOTTOM, RELATIVE_TO_TOP, ABSOLUTE;
 
-                @Override
-                public @NotNull String getKey() {
+                                public @NotNull String getKey() {
                     return "text.autoconfig.tide.option.VoidHeightEntry.Type." + name().toLowerCase();
                 }
             }
         }
-
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.RequiresRestart
         public List<String> autoFishDataBlacklist = List.of();
-
-        @ConfigEntry.Gui.Tooltip
         public double crateWeight = 4.0;
-
-        @ConfigEntry.Gui.Tooltip
         public double crateQuality = 1.0;
-
-        @ConfigEntry.Gui.Tooltip
         public boolean logDataErrors = false;
 
         @Override
@@ -122,37 +83,25 @@ public final class TideServerConfig implements ConfigData {
     }
 
     public static class Items {
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.RequiresRestart
-        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public SizeMode fishItemSizes = SizeMode.ALWAYS;
 
-        public enum SizeMode implements SelectionListEntry.Translatable {
+        public enum SizeMode {
             ALWAYS, IN_JOURNAL, NEVER;
 
-            @Override
-            public @NotNull String getKey() {
+                        public @NotNull String getKey() {
                 return "text.autoconfig.tide.option.server.items.fishItemSizes." + name().toLowerCase();
             }
         }
-
-        @ConfigEntry.Gui.Tooltip
-        @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
         public BucketableMode bucketableFishItems = BucketableMode.WHEN_LIVING;
 
-        public enum BucketableMode implements SelectionListEntry.Translatable {
+        public enum BucketableMode {
             ALWAYS, WHEN_LIVING, NEVER;
 
-            @Override
-            public @NotNull String getKey() {
+                        public @NotNull String getKey() {
                 return "text.autoconfig.tide.option.server.items.bucketableFishItems." + name().toLowerCase();
             }
         }
-
-        @ConfigEntry.Gui.Tooltip
         public boolean enableBedrockBreakingItems = true;
-
-        @ConfigEntry.Gui.Tooltip
         public List<String> pocketWatchBlacklist = List.of();
 
         @Override
@@ -167,10 +116,7 @@ public final class TideServerConfig implements ConfigData {
     }
 
     public static class Journal {
-        @ConfigEntry.Gui.Tooltip
         public boolean giveJournal = true;
-
-        @ConfigEntry.Gui.Tooltip
         public boolean showToasts = true;
 
         @Override
@@ -183,22 +129,11 @@ public final class TideServerConfig implements ConfigData {
     }
 
     public static class Minigame {
-        @ConfigEntry.Gui.Tooltip
         public boolean doMinigame = true;
-
-        @ConfigEntry.Gui.Tooltip
         public float minigameDifficultyMultiplier = 1.0f;
-
-        @ConfigEntry.Gui.Tooltip
         public boolean doSuccessSound = true;
-
-        @ConfigEntry.Gui.Tooltip
         public boolean doFailSound = true;
-
-        @ConfigEntry.Gui.Tooltip
         public boolean useThirdPartyMinigames = true;
-
-        @ConfigEntry.Gui.Tooltip
         public boolean useThirdPartyFishData = false;
 
         @Override

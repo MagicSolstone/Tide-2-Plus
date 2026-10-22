@@ -49,10 +49,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//? if >=1.21 {
 import com.li64.tide.data.item.TideDataComponents;
 import net.minecraft.core.component.DataComponents;
-//?}
 
 public class TideFishingRodItem extends FishingRodItem {
     private final int baitSlots;
@@ -60,12 +58,11 @@ public class TideFishingRodItem extends FishingRodItem {
     public TideFishingRodItem(int baitSlots, double baseDurability, Properties properties) {
         super(properties
                 .durability((int) (baseDurability * (Tide.SERVER_CONFIG == null ? 1.0 : Tide.SERVER_CONFIG.general.rodDurabilityMultiplier)))
-                /*? if >=1.21*/.component(TideDataComponents.BAIT_CONTENTS, new BaitContents())
+                .component(TideDataComponents.BAIT_CONTENTS, new BaitContents())
         );
         this.baitSlots = baitSlots;
     }
 
-    //? if >=1.21 {
     @Override
     public void verifyComponentsAfterLoad(ItemStack stack) {
         super.verifyComponentsAfterLoad(stack);
@@ -76,7 +73,6 @@ public class TideFishingRodItem extends FishingRodItem {
             TideItemData.BAIT_CONTENTS.set(stack, new BaitContents(List.copyOf(fitted)));
         }
     }
-    //?}
 
     public static List<Component> getDescriptionLines(ItemStack stack) {
         ArrayList<Component> builder = new ArrayList<>();
@@ -120,7 +116,6 @@ public class TideFishingRodItem extends FishingRodItem {
         return ImmutableList.copyOf(builder);
     }
 
-    //? if >=1.21 {
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         return !stack.has(DataComponents.HIDE_TOOLTIP) && !stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)
@@ -128,12 +123,6 @@ public class TideFishingRodItem extends FishingRodItem {
                         .map(contents -> new FishingRodTooltip(this.baitSlots, contents))
                 : Optional.empty();
     }
-    //?} else {
-    /*@Override
-    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
-        return Optional.of(new FishingRodTooltip(this.baitSlots, TideItemData.BAIT_CONTENTS.getOrDefault(stack, new BaitContents())));
-    }
-    *///?}
 
     @Override
     public boolean overrideStackedOnOther(@NotNull ItemStack stack, @NotNull Slot slot, @NotNull ClickAction action, @NotNull Player player) {
@@ -304,13 +293,8 @@ public class TideFishingRodItem extends FishingRodItem {
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_THROW,
                     SoundSource.NEUTRAL, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
             if (!level.isClientSide()) {
-                //? if >=1.21 {
                 int speed = (int)(EnchantmentHelper.getFishingTimeReduction((ServerLevel) level, rod, player) / 5f);
                 int luck = EnchantmentHelper.getFishingLuckBonus((ServerLevel) level, rod, player);
-                //?} else {
-                /*int speed = EnchantmentHelper.getFishingSpeedBonus(rod);
-                int luck = EnchantmentHelper.getFishingLuckBonus(rod);
-                *///?}
 
                 if (BaitUtils.hasBait(rod)) {
                     speed += BaitUtils.getCombinedSpeed(rod);
@@ -356,8 +340,7 @@ public class TideFishingRodItem extends FishingRodItem {
         if (activeHook != null) {
             if (!level.isClientSide) {
                 int durabilityLoss = activeHook.retrieve(rod, (ServerLevel) level, player);
-                /*? if >=1.21 {*/rod.hurtAndBreak(durabilityLoss, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
-                /*?} else*//*rod.hurtAndBreak(durabilityLoss, player, p -> p.broadcastBreakEvent(player.getUsedItemHand()));*/
+                rod.hurtAndBreak(durabilityLoss, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
             }
 
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE,
@@ -381,16 +364,10 @@ public class TideFishingRodItem extends FishingRodItem {
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack/*? if >=1.21 {*/, @NotNull LivingEntity entity/*?}*/) {
+    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
         return 60000;
     }
 
-    //? if <1.21 {
-    /*@SuppressWarnings("unused")
-    public int getUseDuration(@NotNull ItemStack stack, LivingEntity entity) {
-        return this.getUseDuration(stack);
-    }
-    *///?}
 
     public int getChargeDuration(ItemStack rod, LivingEntity entity) {
         return 25;

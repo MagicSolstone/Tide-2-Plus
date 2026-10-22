@@ -20,16 +20,11 @@ import java.util.function.Supplier;
 
 @Mixin(MobBucketItem.class)
 public abstract class MobBucketItemMixin {
-    //? if !forge {
     @Shadow @Final private EntityType<?> type;
-    //?} else {
-    /*@Shadow(remap = false) @Final private Supplier<? extends EntityType<?>> entityTypeSupplier;
-    *///?}
 
     @Inject(method = "checkExtraContent", at = @At("HEAD"))
     private void spawn(Player player, Level level, ItemStack stack, BlockPos pos, CallbackInfo ci) {
         if (player instanceof ServerPlayer serverPlayer) {
-            /*? if forge*//*EntityType<?> type = entityTypeSupplier.get();*/
             if (BuiltInRegistries.ENTITY_TYPE.getKey(type).getPath().equals("devils_hole_pupfish"))
                 TideCriteriaTriggers.RELEASED_PUPFISH.trigger(serverPlayer);
         }

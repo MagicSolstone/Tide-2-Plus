@@ -1,4 +1,3 @@
-//? if >=1.21 {
 package com.li64.tide.data.loot;
 
 import net.minecraft.resources.ResourceKey;
@@ -22,4 +21,3 @@ public record KeyedLootTableRef(ResourceKey<LootTable> key) implements LootTable
         return server.reloadableRegistries().getLootTable(this.key);
     }
 }
-//?}

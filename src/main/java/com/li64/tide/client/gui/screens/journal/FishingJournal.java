@@ -240,12 +240,7 @@ public class FishingJournal extends Screen {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        //? if >=1.21 {
         float deltaTicks = Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
-        //?} else {
-        /*float deltaTicks = Minecraft.getInstance().getDeltaFrameTime();
-        this.renderBackground(graphics);
-        *///?}
         super.render(graphics, mouseX, mouseY, partialTick);
 
         boolean updatePage = false;
@@ -361,13 +356,7 @@ public class FishingJournal extends Screen {
 
                 groupIndex++;
                 if (groupIndex < fishByPage.get(page).size())
-                    //? if >=1.21 {
                     graphics.blitSprite(LINE_BOTTOM, tlX + 40, tlY + 36 + cursorY - GROUP_SPACING / 2, 327, 2);
-                     //?} else {
-                    /*TideUtils.blitNineSliced(graphics, LINE_BOTTOM, tlX + 40,
-                            tlY + 36 + cursorY - GROUP_SPACING / 2, 327, 2, 3, 0,
-                            71, 2, 0, 0, 71, 2);
-                    *///?}
             }
         }
 
@@ -390,22 +379,12 @@ public class FishingJournal extends Screen {
         RenderSystem.setShader(TideCoreShaders::fullWhite);
         Matrix4f pose = graphics.pose().last().pose();
 
-        //? if >=1.21 {
         BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         builder.addVertex(pose, x, y, 0).setUv(0, 0);
         builder.addVertex(pose, x, y + h, 0).setUv(0, 1);
         builder.addVertex(pose, x + w, y + h, 0).setUv(1, 1);
         builder.addVertex(pose, x + w, y, 0).setUv(1, 0);
         BufferUploader.drawWithShader(builder.buildOrThrow());
-        //?} else {
-        /*BufferBuilder builder = Tesselator.getInstance().getBuilder();
-        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        builder.vertex(pose, x, y, 0).uv(0, 0).endVertex();
-        builder.vertex(pose, x, y + h, 0).uv(0, 1).endVertex();
-        builder.vertex(pose, x + w, y + h, 0).uv(1, 1).endVertex();
-        builder.vertex(pose, x + w, y, 0).uv(1, 0).endVertex();
-        BufferUploader.drawWithShader(builder.end());
-        *///?}
     }
 
     public static void renderItemSilhouette(GuiGraphics graphics, ItemStack stack, int x, int y) {

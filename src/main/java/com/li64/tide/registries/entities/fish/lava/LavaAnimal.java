@@ -6,12 +6,12 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.pathfinder./*? if >=1.21 {*/PathType/*?} else {*//*BlockPathTypes*//*?}*/;
+import net.minecraft.world.level.pathfinder.PathType;
 
 public abstract class LavaAnimal extends PathfinderMob {
     protected LavaAnimal(EntityType<? extends LavaAnimal> type, Level level) {
         super(type, level);
-        this.setPathfindingMalus(/*? if >=1.21 {*/PathType/*?} else {*//*BlockPathTypes*//*?}*/.LAVA, 0f);
+        this.setPathfindingMalus(PathType.LAVA, 0f);
     }
 
     @Override
@@ -55,7 +55,6 @@ public abstract class LavaAnimal extends PathfinderMob {
         return true;
     }
 
-    //? if >=1.21 {
     @Override
     protected int getBaseExperienceReward() {
         if (isInLava()) return 0;
@@ -67,17 +66,4 @@ public abstract class LavaAnimal extends PathfinderMob {
         return
         false;
     }
-    //?} else {
-
-    /*@Override
-    public int getExperienceReward() {
-        if (isInLava()) return 0;
-        return super.getExperienceReward();
-    }
-
-    @Override
-    public boolean canBeLeashed(Player player) {
-        return super.canBeLeashed(player);
-    }
-    *///?}
 }

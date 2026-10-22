@@ -27,10 +27,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//? if >=1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-//?}
 
 public abstract class AbstractTideFish extends WaterAnimal implements Bucketable, FishLengthHolder {
     private static final EntityDataAccessor<Boolean> FROM_BUCKET = SynchedEntityData.defineId(AbstractTideFish.class, EntityDataSerializers.BOOLEAN);
@@ -72,11 +70,6 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
         return !this.fromBucket() && !this.hasCustomName();
     }
 
-    //? if <1.21 {
-    /*public boolean isInLiquid() {
-        return this.isInWaterOrBubble() || this.isInLava();
-    }
-    *///?}
 
     @Override
     public void aiStep() {
@@ -126,19 +119,11 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
         return SoundEvents.BUCKET_FILL_FISH;
     }
 
-    //? if >=1.21 {
     @Override
     protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
         super.defineSynchedData(builder);
         builder.define(FROM_BUCKET, false);
     }
-    //?} else {
-    /*@Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(FROM_BUCKET, false);
-    }
-    *///?}
 
     @Override
     public boolean fromBucket() {
@@ -167,14 +152,9 @@ public abstract class AbstractTideFish extends WaterAnimal implements Bucketable
     @Override @SuppressWarnings("deprecation")
     public void saveToBucketTag(@NotNull ItemStack stack) {
         Bucketable.saveDefaultDataToBucketTag(this, stack);
-        //? if >=1.21 {
         CustomData.update(DataComponents.BUCKET_ENTITY_DATA, stack, tag -> {
             tag.putDouble(tide$LENGTH_KEY, this.tide$getLength());
         });
-        //?} else {
-        /*CompoundTag tag = stack.getOrCreateTag();
-        tag.putDouble(tide$LENGTH_KEY, this.tide$getLength());
-        *///?}
     }
 
     @Override @SuppressWarnings("deprecation")

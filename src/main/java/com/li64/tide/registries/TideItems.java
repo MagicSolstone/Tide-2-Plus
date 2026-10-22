@@ -18,10 +18,8 @@ import net.minecraft.world.item.*;
 import java.util.*;
 import java.util.function.Function;
 
-//? if >=1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.BundleContents;
-//?}
 
 public class TideItems {
     public static final HashMap<ResourceKey<Item>, Item> ITEMS = new HashMap<>();
@@ -66,7 +64,7 @@ public class TideItems {
     public static final Item APPLE_BOBBER = register("apple_bobber", FishingBobberItem::new, new Item.Properties().food(Foods.APPLE));
     public static final Item GOLDEN_APPLE_BOBBER = register("golden_apple_bobber", FishingBobberItem::new, new Item.Properties().food(Foods.GOLDEN_APPLE));
     public static final Item ENCHANTED_GOLDEN_APPLE_BOBBER = register("enchanted_golden_apple_bobber", EnchantedFishingBobberItem::new, new Item.Properties()
-            /*? if >=1.21*/.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
             .food(Foods.ENCHANTED_GOLDEN_APPLE));
     public static final Item IRON_BOBBER = register("iron_bobber", FishingBobberItem::new);
     public static final Item GOLDEN_BOBBER = register("golden_bobber", FishingBobberItem::new);
@@ -99,7 +97,7 @@ public class TideItems {
     public static final Item FISHING_JOURNAL = register("fishing_journal", FishingJournalItem::new);
     public static final Item FISHY_NOTE = register("fishy_note", FishyNoteItem::new, new Item.Properties().stacksTo(1));
     public static final Item FISH_SATCHEL = register("fish_satchel", FishSatchelItem::new, new Item.Properties()
-            /*? if >=1.21*/.component(DataComponents.BUNDLE_CONTENTS, new BundleContents(List.of()))
+            .component(DataComponents.BUNDLE_CONTENTS, new BundleContents(List.of()))
             .stacksTo(1));
 
     public static final Item POCKET_WATCH = register("pocket_watch", PocketWatchItem::new);
@@ -110,12 +108,12 @@ public class TideItems {
     public static final Item FISH_FINDER = register("fish_finder", FishFinderItem::new, new Item.Properties().rarity(Rarity.RARE));
 
     public static final Item ENCHANTED_POCKET_WATCH = register("enchanted_pocket_watch", EnchantedPocketWatchItem::new, new Item.Properties()
-            /*? if >=1.21*/.component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true)
             .rarity(Rarity.EPIC));
     public static final Item STARLIGHT_BOW = register("starlight_bow", StarlightBowItem::new,
             new Item.Properties().rarity(Rarity.EPIC).durability(750));
     public static final Item DRAGONFIN_BOOTS = register("dragonfin_boots", DragonfinBootsItem::new, new Item.Properties()
-            /*? if >=1.21*/.durability(ArmorItem.Type.BOOTS.getDurability(37))
+            .durability(ArmorItem.Type.BOOTS.getDurability(37))
             .rarity(Rarity.EPIC).fireResistant());
 
     public static final Item ANGLING_TABLE = register("angling_table", properties -> new BlockItem(TideBlocks.ANGLING_TABLE, properties));

@@ -26,11 +26,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-/*? if >=1.21 {*/
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.BundleContents;
 import java.util.List;
-/*?} else*//*import net.minecraft.core.NonNullList;*/
 
 public class FishSatchelItem extends AbstractTooltipItem {
     private static final int BAR_COLOR = Mth.color(0.4f, 0.4f, 1.0f);
@@ -57,7 +55,7 @@ public class FishSatchelItem extends AbstractTooltipItem {
     public @NotNull InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand used) {
         ItemStack satchel = player.getItemInHand(used);
         TideItemData.FISH_SATCHEL_OPENED.set(satchel, !TideItemData.FISH_SATCHEL_OPENED.getOrDefault(satchel, false));
-        player.playSound(SoundEvents.ARMOR_EQUIP_LEATHER/*? if >=1.21 {*/.value()/*?}*/, 0.8f, 0.8f + player.level().getRandom().nextFloat() * 0.4f);
+        player.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.8f, 0.8f + player.level().getRandom().nextFloat() * 0.4f);
         return InteractionResultHolder.success(satchel);
     }
 
@@ -139,7 +137,6 @@ public class FishSatchelItem extends AbstractTooltipItem {
     }
 
 
-    //? if >=1.21 {
     @Override
     public @NotNull Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         return !stack.has(DataComponents.HIDE_TOOLTIP) && !stack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)
@@ -147,25 +144,13 @@ public class FishSatchelItem extends AbstractTooltipItem {
                 .map(contents -> new BundleTooltip(new BundleContents(contents.items())))
                 : Optional.empty();
     }
-    //?} else {
-    /*@Override
-    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
-        return Optional.ofNullable(TideItemData.SATCHEL_CONTENTS.getOrDefault(stack, new SatchelContents()))
-                .map(contents -> {
-                    NonNullList<ItemStack> stacks = NonNullList.create();
-                    stacks.addAll(contents.items());
-                    return new BundleTooltip(stacks, 0);
-                });
-    }
-    *///?}
 
     @Override
     public void onDestroyed(ItemEntity entity) {
         SatchelContents contents = TideItemData.SATCHEL_CONTENTS.get(entity.getItem());
         if (contents == null) return;
         TideItemData.SATCHEL_CONTENTS.set(entity.getItem(), new SatchelContents());
-        /*? if >=1.21 {*/ItemUtils.onContainerDestroyed(entity, List.copyOf(contents.items()));
-        /*?} else*//*ItemUtils.onContainerDestroyed(entity, contents.items().stream());*/
+        ItemUtils.onContainerDestroyed(entity, List.copyOf(contents.items()));
     }
 
     private void playRemoveOneSound(Entity entity) {

@@ -85,17 +85,9 @@ public class WeatherRadioItem extends BlockItem implements InformationalItem, To
         return 20;
     }
 
-    //? if >=1.21.1 {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> lines, TooltipFlag flag) {
         super.appendHoverText(stack, context, lines, flag);
         this.addTooltip(stack, lines::add);
     }
-    //?} else {
-    /*@Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> lines, TooltipFlag flag) {
-        super.appendHoverText(stack, level, lines, flag);
-        this.addTooltip(stack, lines::add);
-    }
-    *///?}
 }

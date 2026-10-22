@@ -11,10 +11,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 
-//? if >=1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-//?}
 
 import java.util.List;
 
@@ -42,12 +40,7 @@ public class EnchantmentsCondition extends FishingCondition {
     @SuppressWarnings("deprecation")
     public boolean test(FishingContext context) {
         if (context.hook() == null || context.hook().rod() == null || context.hook().rod().isEmpty()) return false;
-        //? if >=1.21 {
         ItemEnchantments enchantments = context.hook().rod().getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         return enchantments.keySet().stream().anyMatch(e -> this.enchantments.stream().anyMatch(e::is));
-        //?} else {
-        /*return EnchantmentHelper.getEnchantments(context.hook().rod()).keySet().stream().anyMatch(e ->
-                this.enchantments.stream().anyMatch(e2 -> e2.location().equals(BuiltInRegistries.ENCHANTMENT.getKey(e))));
-        *///?}
     }
 }

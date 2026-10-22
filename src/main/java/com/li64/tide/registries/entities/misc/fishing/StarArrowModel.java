@@ -32,15 +32,8 @@ public class StarArrowModel extends EntityModel<StarArrow> {
     @Override
     public void setupAnim(StarArrow entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
 
-    //? if >=1.21 {
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
         this.root.render(poseStack, buffer, packedLight, packedOverlay, color);
     }
-    //?} else {
-    /*@Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float r, float g, float b, float a) {
-        this.root.render(poseStack, buffer, packedLight, packedOverlay, r, g, b, a);
-    }
-    *///?}
 }

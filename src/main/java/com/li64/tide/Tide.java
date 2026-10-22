@@ -6,18 +6,14 @@ import com.li64.tide.config.TideServerConfig;
 import com.li64.tide.data.TideFishingManager;
 import com.li64.tide.loaders.LoaderPlatform;
 import com.li64.tide.loaders.NetworkPlatform;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/*? if fabric*/ import com.li64.tide.loaders.fabric.*;
-/*? if neoforge*/ /*import com.li64.tide.loaders.neoforge.*;*/
-/*? if forge*/ /*import com.li64.tide.loaders.forge.*;*/
+ import com.li64.tide.loaders.fabric.*;
+ /*import com.li64.tide.loaders.neoforge.*;*/
+ /*import com.li64.tide.loaders.forge.*;*/
 
 // looks like you've stumbled upon the code for
 // .___________. __   _______   _______
@@ -36,19 +32,9 @@ public class Tide {
     public static final LoaderPlatform PLATFORM;
     public static final NetworkPlatform NETWORK;
     static {
-        //? if fabric {
         PLATFORM = new FabricPlatform();
-        NETWORK = /*? if >=1.21 {*/new FabricNetworkPlatform();
-                  /*?} else*/ /*new FabricLegacyNetworkPlatform();*/
-        //?}
-        //? if neoforge {
-        /*PLATFORM = new NeoforgePlatform();
-        NETWORK = new NeoforgeNetworkPlatform();
-        *///?}
-        //? if forge {
-        /*PLATFORM = new ForgePlatform();
-        NETWORK = new ForgeNetworkPlatform();
-        *///?}
+        NETWORK = new FabricNetworkPlatform();
+                   /*new FabricLegacyNetworkPlatform();*/
     }
 
     public static TideConfig CONFIG;
@@ -62,8 +48,8 @@ public class Tide {
     }
 
     public static ResourceLocation resource(String namespace, String path) {
-        /*? if >=1.21 {*/ return ResourceLocation.fromNamespaceAndPath(namespace, path);
-        /*?} else*/ /*return new ResourceLocation(namespace, path);*/
+         return ResourceLocation.fromNamespaceAndPath(namespace, path);
+         /*return new ResourceLocation(namespace, path);*/
     }
 
     public static void initialize() {
@@ -73,19 +59,9 @@ public class Tide {
 
     public static void setupConfigs() {
         if (CONFIG == null) {
-            ConfigHolder<TideConfig> holder = AutoConfig.register(TideConfig.class, PartitioningSerializer.wrap(GsonConfigSerializer::new));
-            holder.registerLoadListener(Tide::updateConfig);
-            holder.registerSaveListener(Tide::updateConfig);
-
-            CONFIG = holder.getConfig();
-
-            updateConfig(holder, CONFIG);
+            CONFIG = TideConfig.load(net.fabricmc.loader.api.FabricLoader.getInstance().getConfigDir());
+            CLIENT_CONFIG = CONFIG.client();
+            SERVER_CONFIG = CONFIG.server();
         }
-    }
-
-    public static InteractionResult updateConfig(ConfigHolder<TideConfig> holder, TideConfig config) {
-        CLIENT_CONFIG = config.client();
-        SERVER_CONFIG = config.server();
-        return InteractionResult.SUCCESS;
     }
 }

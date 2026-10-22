@@ -97,20 +97,10 @@ public abstract class FishModel extends EntityModel<Mob> {
         return true;
     }
 
-    //? if >=1.21 {
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
         this.root().render(poseStack, buffer, packedLight, packedOverlay, FastColor.ARGB32.multiply(color, this.tint()));
     }
-    //?} else {
-    /*@Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float r, float g, float b, float a) {
-        if (this.tint() != -1) this.root().render(poseStack, buffer, packedLight, packedOverlay,
-                r * (FastColor.ARGB32.red(this.tint()) / 255f), g * (FastColor.ARGB32.green(this.tint()) / 255f),
-                b * (FastColor.ARGB32.blue(this.tint()) / 255f), a * (FastColor.ARGB32.alpha(this.tint()) / 255f));
-        else this.root().render(poseStack, buffer, packedLight, packedOverlay, r, g, b, a);
-    }
-    *///?}
 
     private record SwimAnimConfig(ModelPart modelPart, float speed, float magnitude, float offset, float origin, SwimAxis axis) {
         public void animate(float clock, float multiplier, boolean isDisplay) {

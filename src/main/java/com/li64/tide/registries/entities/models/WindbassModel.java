@@ -1,4 +1,3 @@
-//? if >=1.21 {
 package com.li64.tide.registries.entities.models;
 
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -37,4 +36,3 @@ public class WindbassModel extends FishModel {
 		return LayerDefinition.create(mesh, 32, 32);
 	}
 }
-//?}

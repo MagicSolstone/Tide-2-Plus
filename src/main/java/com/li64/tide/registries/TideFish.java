@@ -30,10 +30,8 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.levelgen.structure.BuiltinStructures;
 import net.minecraft.world.level.material.Fluids;
 
-//? if >=1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-//?}
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1956,7 +1954,6 @@ public class TideFish {
             ))
             .build();
 
-    //? if >=1.21 {
     public static final Item WINDBASS = new Builder("windbass")
             .food(TideFoods.RAW_FISH)
             .cookedItem(TideItems.COOKED_FISH)
@@ -1985,7 +1982,6 @@ public class TideFish {
                             .add(Attributes.MOVEMENT_SPEED, 2.0f)
             ))
             .build();
-    //?}
     
     public static final Item DEVILS_HOLE_PUPFISH = new Builder("devils_hole_pupfish")
             .food(TideFoods.TINY_RAW_FISH)
@@ -3170,7 +3166,7 @@ public class TideFish {
             Item egg = TideItems.register(key + "_spawn_egg", properties ->
                     new SpawnEggItem(type, 0xffffff, 0x000000, properties));
             Item bucket = TideItems.register(key + "_bucket", properties -> entityData.bucketBuilder().apply(type, properties),
-                    new Item.Properties().stacksTo(1)/*? if >=1.21 {*/.component(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY)/*?}*/);
+                    new Item.Properties().stacksTo(1).component(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY));
 
             if (Tide.PLATFORM.isDevEnvironment()) {
                 SPAWNING_ITEMS.add(egg);

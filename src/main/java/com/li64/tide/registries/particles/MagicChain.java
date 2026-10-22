@@ -10,7 +10,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
-/*? if <1.21*//*import org.joml.Vector3f;*/
 
 import java.util.function.BiConsumer;
 
@@ -45,12 +44,10 @@ public class MagicChain extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    //? if >=1.21 {
     @Override
     public @NotNull FacingCameraMode getFacingCameraMode() {
         return (q, cam, f) -> facingCameraFunc.accept(q, cam);
     }
-    //?}
 
     @Override
     public void render(VertexConsumer buffer, Camera cam, float partialTicks) {
@@ -76,19 +73,13 @@ public class MagicChain extends TextureSheetParticle {
         float moveT = Mth.clamp(((float) this.age + partialTicks) * MOVE_SPEED / this.lifetime, 0f, 1.0f);
         float yOffset = OFFSET;
         float vOffset = MOVE_DST * moveT;
-        final int order = /*? if >=1.21 {*/1;/*?} else*//*-1;*/
+        final int order = 1;
         this.renderVertex(buffer, quaternion, x, y, z, 1f * order, 1f + yOffset - vOffset, size, u1, v1, color);
         this.renderVertex(buffer, quaternion, x, y, z, 1f * order, 1f + yOffset, size, u1, Mth.lerp(moveT, v1, v0), color);
         this.renderVertex(buffer, quaternion, x, y, z, -1f * order, 1f + yOffset, size, u0, Mth.lerp(moveT, v1, v0), color);
         this.renderVertex(buffer, quaternion, x, y, z, -1f * order, 1f + yOffset - vOffset, size, u0, v1, color);
     }
 
-    //? if <1.21 {
-    /*public final void renderVertex(VertexConsumer buffer, Quaternionf q, float x, float y, float z, float xOffset, float yOffset, float quadSize, float u, float v, int packedLight) {
-        Vector3f pos = new Vector3f(xOffset, yOffset, 0.0F).rotate(q).mul(quadSize).add(x, y, z);
-        buffer.vertex(pos.x(), pos.y(), pos.z()).uv(u, v).color(this.rCol, this.gCol, this.bCol, this.alpha).uv2(packedLight).endVertex();
-    }
-    *///?}
 
     public record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         @Override

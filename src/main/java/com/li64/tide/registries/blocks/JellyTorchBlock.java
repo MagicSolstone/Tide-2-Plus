@@ -17,8 +17,7 @@ public class JellyTorchBlock extends TorchBlock implements SimpleWaterloggedBloc
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
     public JellyTorchBlock(Properties properties) {
-        /*? if >=1.21 {*/super(ParticleTypes.END_ROD, properties);
-        /*?} else*//*super(properties, ParticleTypes.END_ROD);*/
+        super(ParticleTypes.END_ROD, properties);
     }
 
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {

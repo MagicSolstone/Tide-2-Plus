@@ -1,4 +1,3 @@
-//? if fabric {
 package com.li64.tide.loaders.fabric;
 
 import com.li64.tide.Tide;
@@ -70,8 +69,7 @@ public class FabricClientEntrypoint implements ClientModInitializer {
             return null;
         });
 
-        /*? if >=1.21 {*/ItemTooltipCallback.EVENT.register((stack, ctx, flag, lines) -> TideClientEventHandler.onTooltipRender(stack, lines));
-        /*?} else*//*ItemTooltipCallback.EVENT.register((stack, flag, lines) -> TideClientEventHandler.onTooltipRender(stack, lines));*/
+        ItemTooltipCallback.EVENT.register((stack, ctx, flag, lines) -> TideClientEventHandler.onTooltipRender(stack, lines));
 
         TideItemModelProperties.registerAll();
 
@@ -93,4 +91,3 @@ public class FabricClientEntrypoint implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(location, definition::get);
     }
 }
-//?}

@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-/*? if >=1.21*/import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup;
 
 public class LootCrateBlockEntity extends RandomizableContainerBlockEntity {
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
@@ -58,7 +58,6 @@ public class LootCrateBlockEntity extends RandomizableContainerBlockEntity {
         super(type, pos, state);
     }
 
-    //? if >=1.21 {
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         super.saveAdditional(tag, registries);
@@ -72,21 +71,6 @@ public class LootCrateBlockEntity extends RandomizableContainerBlockEntity {
         if (!this.tryLoadLootTable(tag)) ContainerHelper.loadAllItems(tag, this.items, registries);
     }
     
-    //?} else {
-
-    /*@Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        if (!this.trySaveLootTable(tag)) ContainerHelper.saveAllItems(tag, this.items);
-    }
-
-    @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (!this.tryLoadLootTable(tag)) ContainerHelper.loadAllItems(tag, this.items);
-    }
-    *///?}
 
     @Override
     public int getContainerSize() {

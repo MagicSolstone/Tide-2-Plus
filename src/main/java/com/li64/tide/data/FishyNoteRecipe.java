@@ -8,23 +8,17 @@ import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-//? if >= 1.21 {
 import net.minecraft.core.HolderLookup;
-//?} else {
-/*import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.inventory.CraftingContainer;
-*///?}
 
 public class FishyNoteRecipe extends CustomRecipe {
-    public FishyNoteRecipe(/*? if <1.21 {*//*ResourceLocation id, *//*?}*/CraftingBookCategory category) {
-        super(/*? if <1.21 {*//*id, *//*?}*/category);
+    public FishyNoteRecipe(CraftingBookCategory category) {
+        super(category);
     }
 
-    private ItemStack getFishToConvert(/*? if >=1.21 {*/CraftingInput/*?} else {*//*CraftingContainer*//*?}*/ input) {
+    private ItemStack getFishToConvert(CraftingInput input) {
         ItemStack stack1 = null, stack2 = null;
 
-        for (int i = 0; i < /*? if >=1.21 {*/input.size()/*?} else {*//*input.getContainerSize()*//*?}*/; i++) {
+        for (int i = 0; i < input.size(); i++) {
             ItemStack inSlot = input.getItem(i);
             if (inSlot.isEmpty()) continue;
             if (stack1 == null) stack1 = inSlot;
@@ -44,13 +38,13 @@ public class FishyNoteRecipe extends CustomRecipe {
     }
 
     @Override
-    public boolean matches(/*? if >=1.21 {*/CraftingInput/*?} else {*//*CraftingContainer*//*?}*/ input, Level level) {
+    public boolean matches(CraftingInput input, Level level) {
         return getFishToConvert(input) != null;
     }
 
     @Override
-    public @NotNull ItemStack assemble(/*? if >=1.21 {*/CraftingInput input, HolderLookup.Provider registries
-                                       /*?} else {*//*CraftingContainer input, RegistryAccess registries*//*?}*/) {
+    public @NotNull ItemStack assemble(CraftingInput input, HolderLookup.Provider registries
+                                       ) {
         ItemStack fish = getFishToConvert(input);
         if (fish == null || fish.isEmpty()) return ItemStack.EMPTY;
         return FishyNoteItem.create(new ItemStack(fish.getItem()));

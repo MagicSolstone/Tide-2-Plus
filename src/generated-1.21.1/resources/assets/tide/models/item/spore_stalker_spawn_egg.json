@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:item/generated",
-  "textures": {
-    "layer0": "tide:item/spore_stalker_spawn_egg"
-  }
-}

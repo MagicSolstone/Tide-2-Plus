@@ -12,8 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-/*? if >=1.21 {*/import net.minecraft.world.level.portal.DimensionTransition;
-/*?} else*//*import net.minecraft.world.entity.player.Player;*/
+import net.minecraft.world.level.portal.DimensionTransition;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -35,13 +34,7 @@ public class VoidseekerItem extends AbstractTooltipItem {
             ServerLevel respawnLevel = player.getServer().getLevel(dimension);
             if (respawnLevel == null) return result;
 
-            //? if >=1.21 {
             Optional<Vec3> respawnPos = Optional.of(player.findRespawnPositionAndUseSpawnBlock(true, DimensionTransition.DO_NOTHING).pos());
-            //?} else {
-            /*Optional<Vec3> respawnPos = Player.findRespawnPositionAndUseSpawnBlock(
-                    respawnLevel, player.getRespawnPosition(), player.getRespawnAngle(),
-                    false, true);
-            *///?}
             respawnPos.ifPresent(pos -> player.teleportTo(respawnLevel,
                     pos.x(), pos.y(), pos.z(), player.getRespawnAngle(), 0f));
         }

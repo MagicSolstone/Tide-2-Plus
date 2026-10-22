@@ -49,7 +49,6 @@ public class TideFishingHookModel<T extends TideFishingHook> extends EntityModel
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
 
-    //? if >=1.21 {
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
         bobber.render(poseStack, buffer, packedLight, packedOverlay, color);
@@ -57,13 +56,4 @@ public class TideFishingHookModel<T extends TideFishingHook> extends EntityModel
         top2.render(poseStack, buffer, packedLight, packedOverlay, color);
         hook.render(poseStack, buffer, packedLight, packedOverlay, color);
     }
-    //?} else {
-    /*@Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float r, float g, float b, float a) {
-        bobber.render(poseStack, buffer, packedLight, packedOverlay, r, g, b, a);
-        top.render(poseStack, buffer, packedLight, packedOverlay, r, g, b, a);
-        top2.render(poseStack, buffer, packedLight, packedOverlay, r, g, b, a);
-        hook.render(poseStack, buffer, packedLight, packedOverlay, r, g, b, a);
-    }
-    *///?}
 }

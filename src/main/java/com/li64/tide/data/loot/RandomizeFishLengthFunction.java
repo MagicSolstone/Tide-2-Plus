@@ -17,7 +17,7 @@ public class RandomizeFishLengthFunction implements LootItemFunction {
 
     public RandomizeFishLengthFunction() {}
 
-    public @NotNull LootItemFunctionType/*? if >=1.21 {*/<RandomizeFishLengthFunction>/*?}*/ getType() {
+    public @NotNull LootItemFunctionType<RandomizeFishLengthFunction> getType() {
         return TideLootFunctions.RANDOMIZE_FISH_LENGTH;
     }
 

@@ -1,8 +1,0 @@
-{
-  "entries": [
-    "tide:add_prismarine_fishing_rod",
-    "tide:add_echo_fishing_rod",
-    "tide:add_blazing_fishing_rod"
-  ],
-  "replace": false
-}

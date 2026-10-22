@@ -1,4 +1,3 @@
-//? if fabric {
 package com.li64.tide.loaders.fabric;
 
 import com.li64.tide.data.TidePlayer;
@@ -54,16 +53,13 @@ public class FabricPlatform implements LoaderPlatform {
         return Registry.register(registry, id.location(), toRegister);
     }
 
-    //? if >=1.21 {
     @Override
     public <T> Holder.Reference<T> registerForHolder(Registry<T> registry, ResourceLocation id, T toRegister) {
         return Registry.registerForHolder(registry, id, toRegister);
     }
-    //?}
 
     @Override
     public <T extends AbstractContainerMenu> MenuType<T> createMenuType(MenuType.MenuSupplier<T> menuSupplier, FeatureFlagSet flags) {
         return new MenuType<>(menuSupplier, flags);
     }
 }
-//?}

@@ -1,4 +1,3 @@
-//? if >=1.21 {
 package com.li64.tide.data.item;
 
 import com.li64.tide.data.ItemDataKey;
@@ -38,4 +37,3 @@ public record ComponentItemDataKey<T>(DataComponentType<T> component) implements
         return stack.has(component);
     }
 }
-//?}

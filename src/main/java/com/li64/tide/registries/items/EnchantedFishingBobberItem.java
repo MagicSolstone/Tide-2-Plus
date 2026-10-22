@@ -7,5 +7,5 @@ public class EnchantedFishingBobberItem extends FishingBobberItem {
         super(properties);
     }
 
-    /*? if <1.21*/ /*@Override public boolean isFoil(ItemStack itemStack) { return true; }*/
+     /*@Override public boolean isFoil(ItemStack itemStack) { return true; }*/
 }

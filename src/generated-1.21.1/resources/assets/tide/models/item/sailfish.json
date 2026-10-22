@@ -1,6 +1,0 @@
-{
-  "parent": "tide:item/fish_sword",
-  "textures": {
-    "layer0": "tide:item/sailfish"
-  }
-}

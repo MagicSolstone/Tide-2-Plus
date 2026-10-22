@@ -12,10 +12,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-//? if >=1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-//?}
 
 @Mixin(AbstractFish.class)
 public abstract class AbstractFishMixin implements FishLengthHolder {
@@ -38,13 +36,8 @@ public abstract class AbstractFishMixin implements FishLengthHolder {
     @Inject(method = "saveToBucketTag", at = @At("TAIL"))
     private void saveToBucketTag(ItemStack stack, CallbackInfo ci) {
         if (FishData.get((Entity)(Object)this).isEmpty()) return;
-        //? if >=1.21 {
         CustomData.update(DataComponents.BUCKET_ENTITY_DATA, stack, tag ->
                 tag.putDouble(tide$LENGTH_KEY, this.tide$getLength()));
-        //?} else {
-        /*CompoundTag tag = stack.getOrCreateTag();
-        tag.putDouble(tide$LENGTH_KEY, this.tide$getLength());
-        *///?}
     }
 
     @Inject(method = "loadFromBucketTag", at = @At("TAIL"))
@@ -59,8 +52,7 @@ public abstract class AbstractFishMixin implements FishLengthHolder {
     private void tide$randomizeLength() {
         Entity self = (Entity)(Object)this;
         this.tide$length = FishData.get(self)
-                /*? if >=1.21.1 {*/.map(data -> data.getRandomLength(self.getRandom()))
-                /*?} else*//*.map(data -> data.getRandomLength(self.random))*/
+                .map(data -> data.getRandomLength(self.getRandom()))
                 .orElse(0.0);
     }
 

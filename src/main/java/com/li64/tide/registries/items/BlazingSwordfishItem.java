@@ -11,8 +11,7 @@ public class BlazingSwordfishItem extends SwordfishItem {
 
     @Override
     public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-        /*? if >=1.21 {*/target.igniteForTicks(80);
-        /*?} else*//*target.setSecondsOnFire(4);*/
+        target.igniteForTicks(80);
         return super.hurtEnemy(stack, target, attacker);
     }
 }

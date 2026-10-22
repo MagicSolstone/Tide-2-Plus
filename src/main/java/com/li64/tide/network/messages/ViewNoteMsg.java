@@ -12,11 +12,11 @@ public record ViewNoteMsg(ItemStack stack) implements TidePacketPayload {
     @Override public ResourceLocation id() { return ID; }
 
     public ViewNoteMsg(FriendlyByteBuf buf) {
-        this(buf.readJsonWithCodec(ItemStack./*? if >=1.21 {*/SIMPLE_ITEM_CODEC/*?} else {*//*CODEC*//*?}*/));
+        this(buf.readJsonWithCodec(ItemStack.SIMPLE_ITEM_CODEC));
     }
 
     public static void encode(ViewNoteMsg message, FriendlyByteBuf buf) {
-        buf.writeJsonWithCodec(ItemStack./*? if >=1.21 {*/SIMPLE_ITEM_CODEC/*?} else {*//*CODEC*//*?}*/, message.stack);
+        buf.writeJsonWithCodec(ItemStack.SIMPLE_ITEM_CODEC, message.stack);
     }
 
     public static void handle(ViewNoteMsg message, Player player) {

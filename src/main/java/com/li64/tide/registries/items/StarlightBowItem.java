@@ -13,16 +13,9 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-//? if >=1.21 {
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.server.level.ServerLevel;
-//?} else {
-/*import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.Enchantments;
-import net.minecraft.stats.Stats;
-import net.minecraft.world.entity.player.Player;
-*///?}
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -45,7 +38,6 @@ public class StarlightBowItem extends BowItem implements TooltipItem {
         return projectile;
     }
 
-    //? if >=1.21 {
     @Override
     protected void shoot(@NotNull ServerLevel level, @NotNull LivingEntity shooter, @NotNull InteractionHand hand, @NotNull ItemStack weapon, @NotNull List<ItemStack> projectileItems, float velocity, float inaccuracy, boolean isCrit, @Nullable LivingEntity target) {
         super.shoot(level, shooter, hand, weapon, projectileItems, velocity, inaccuracy, isCrit, target);
@@ -58,64 +50,4 @@ public class StarlightBowItem extends BowItem implements TooltipItem {
         this.addTooltip(stack, lines::add);
     }
 
-    //?} else {
-
-    /*@Override
-    public void releaseUsing(ItemStack weapon, Level level, LivingEntity shooter, int i) {
-        if (shooter instanceof Player player) {
-            boolean hasInfinity = player.getAbilities().instabuild || EnchantmentHelper.getItemEnchantmentLevel(Enchantments.INFINITY_ARROWS, weapon) > 0;
-            ItemStack ammo = player.getProjectile(weapon);
-            if (!ammo.isEmpty() || hasInfinity) {
-                if (ammo.isEmpty()) ammo = new ItemStack(Items.ARROW);
-
-                int j = this.getUseDuration(weapon) - i;
-                float power = getPowerForTime(j);
-                if (!(power < 0.1)) {
-                    boolean skipAmmoConsume = (hasInfinity && ammo.is(Items.ARROW)) || shooter.getRandom().nextFloat() < 0.6f;
-                    if (!level.isClientSide) {
-                        AbstractArrow arrow = (AbstractArrow) createProjectile(level, shooter, weapon, ammo, power == 1f);
-                        arrow.shootFromRotation(player, player.getXRot(), player.getYRot(), 0.0F, power * 3.0F, 1.0F);
-
-                        int powerBonus = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, weapon);
-                        if (powerBonus > 0) arrow.setBaseDamage(arrow.getBaseDamage() + powerBonus * 0.5 + 0.5);
-
-                        int kbBonus = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.PUNCH_ARROWS, weapon);
-                        if (kbBonus > 0) arrow.setKnockback(kbBonus);
-
-                        if (EnchantmentHelper.getItemEnchantmentLevel(Enchantments.FLAMING_ARROWS, weapon) > 0) arrow.setSecondsOnFire(100);
-
-                        weapon.hurtAndBreak(1, player, player2 -> player2.broadcastBreakEvent(player.getUsedItemHand()));
-                        if (skipAmmoConsume || player.getAbilities().instabuild && (ammo.is(Items.SPECTRAL_ARROW) || ammo.is(Items.TIPPED_ARROW))) arrow.pickup = AbstractArrow.Pickup.CREATIVE_ONLY;
-
-                        level.addFreshEntity(arrow);
-                    }
-
-                    level.playSound(
-                            null,
-                            player.getX(),
-                            player.getY(),
-                            player.getZ(),
-                            SoundEvents.ARROW_SHOOT,
-                            SoundSource.PLAYERS,
-                            1.0F,
-                            1.0F / (level.getRandom().nextFloat() * 0.4F + 1.2F) + power * 0.5F
-                    );
-                    level.playSound(null, shooter.blockPosition(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 1.5f, 1.0f - (level.random.nextFloat() - level.random.nextFloat()) * 0.1f);
-                    if (!skipAmmoConsume && !player.getAbilities().instabuild) {
-                        ammo.shrink(1);
-                        if (ammo.isEmpty()) player.getInventory().removeItem(ammo);
-                    }
-
-                    player.awardStat(Stats.ITEM_USED.get(this));
-                }
-            }
-        }
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> lines, TooltipFlag flag) {
-        super.appendHoverText(stack, level, lines, flag);
-        this.addTooltip(stack, lines::add);
-    }
-    *///?}
 }

@@ -1,4 +1,3 @@
-//? if fabric {
 package com.li64.tide.loaders.fabric;
 
 import com.li64.tide.Tide;
@@ -27,7 +26,7 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.jetbrains.annotations.NotNull;
 
-/*? if >=1.21*/import com.li64.tide.data.item.TideDataComponents;
+import com.li64.tide.data.item.TideDataComponents;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -51,7 +50,7 @@ public class FabricEntrypoint implements ModInitializer {
         TideCriteriaTriggers.init();
         TideRecipeSerializers.init();
         TideArmorMaterials.init();
-        /*? if >=1.21*/TideDataComponents.init();
+        TideDataComponents.init();
 
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, Tide.resource("tide"),
                 TideItems.getCreativeTab(FabricItemGroup.builder()).build());
@@ -98,4 +97,3 @@ public class FabricEntrypoint implements ModInitializer {
         FabricDefaultAttributeRegistry.register(reg.entityType(), reg.attributes());
     }
 }
-//?}

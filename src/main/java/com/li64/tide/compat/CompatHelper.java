@@ -1,8 +1,5 @@
 package com.li64.tide.compat;
 
-import com.li64.tide.Tide;
-import com.li64.tide.compat.fishingreal.FishingRealCompat;
-import com.li64.tide.compat.hybridaquatic.HybridAquaticCompat;
 import com.li64.tide.registries.entities.misc.fishing.HookAccessor;
 import com.li64.tide.registries.entities.misc.fishing.TideFishingHook;
 import net.minecraft.server.level.ServerPlayer;
@@ -16,79 +13,32 @@ import net.minecraft.world.phys.Vec3;
 import java.util.ArrayList;
 import java.util.List;
 
-//? if fabric {
-import com.li64.tide.compat.accessories.TrinketsCompat;
-//? if =1.20.1 {
-/*import com.li64.tide.compat.stardewfishing.StardewFishingCompat;
-*///?}
-//?} else {
-/*import com.li64.tide.compat.stardewfishing.StardewFishingCompat;
-import com.li64.tide.compat.accessories.CuriosCompat;
-/^? if neoforge^//^import com.li64.tide.compat.starcatcher.StarcatcherCompat;^/
-*///?}
-
+/**
+ * Hooks for other fishing mods. This Fabric 26.x fork carries no third-party integrations,
+ * so every hook reports "not loaded" and does nothing; the call sites stay as in upstream.
+ */
 public class CompatHelper {
-    // -- hybrid aquatic --
+    public static boolean isHybridAquaticLoaded() { return false; }
 
-    public static boolean isHybridAquaticLoaded() {
-        return Tide.PLATFORM.isModLoaded("hybrid_aquatic");
-    }
+    public static Entity hybridAquaticPullEntity(ItemEntity itemEntity, Player player, TideFishingHook hook) { return itemEntity; }
 
-    public static Entity hybridAquaticPullEntity(ItemEntity itemEntity, Player player, TideFishingHook hook) {
-        return HybridAquaticCompat.convertEntity(itemEntity, player, hook);
-    }
+    public static void hybridAquaticApplyVariant(Entity entity, ItemStack stack) {}
 
-    public static void hybridAquaticApplyVariant(Entity entity, ItemStack stack) {
-        HybridAquaticCompat.applyVariant(entity, stack);
-    }
+    public static boolean useStarcatcherMinigame() { return false; }
 
-    // -- starcatcher --
+    public static boolean starcatcherStartMinigame(ServerPlayer player, HookAccessor hook, ItemStack rod, List<ItemStack> hookedItems) { return false; }
 
-    public static boolean useStarcatcherMinigame() {
-        return Tide.PLATFORM.isModLoaded("starcatcher") && Tide.SERVER_CONFIG.minigame.useThirdPartyMinigames;
-    }
+    public static void starcatcherCompleteCatch(ServerPlayer player, TideFishingHook hook, boolean perfectCatch) {}
 
-    public static boolean starcatcherStartMinigame(ServerPlayer player, HookAccessor hook, ItemStack rod, List<ItemStack> hookedItems) {
-        /*? if neoforge {*/ /*return StarcatcherCompat.start(player, hook, rod, hookedItems);
-        *//*?} else*/ return false;
-    }
+    public static boolean useStardewMinigame() { return false; }
 
-    public static void starcatcherCompleteCatch(ServerPlayer player, TideFishingHook hook, boolean perfectCatch) {
-        /*? if neoforge {*/ /*StarcatcherCompat.completeCatch(player, hook, perfectCatch);
-        *//*?}*/
-    }
+    public static boolean stardewFishingStartMinigame(ServerPlayer player, HookAccessor hook, ItemStack rod, List<ItemStack> hookedItems) { return false; }
 
-    // -- stardew fishing --
+    public static List<ItemStack> stardewFishingGetRewards(HookAccessor hook) { return List.of(); }
 
-    public static boolean useStardewMinigame() {
-        return Tide.PLATFORM.isModLoaded("stardew_fishing") && Tide.SERVER_CONFIG.minigame.useThirdPartyMinigames;
-    }
+    public static double stardewFishingBiteTimeMultiplier() { return 1.0; }
 
-    public static boolean stardewFishingStartMinigame(ServerPlayer player, HookAccessor hook, ItemStack rod, List<ItemStack> hookedItems) {
-        /*? if neoforge || forge || (fabric && =1.20.1) {*/ /*return StardewFishingCompat.start(player, hook, rod, hookedItems);
-         *//*?} else*/ return false;
-    }
+    public static Entity fishingRealConvertItemStack(ItemStack stack, Player player, Vec3 pos) { return null; }
 
-    public static List<ItemStack> stardewFishingGetRewards(HookAccessor hook) {
-        /*? if neoforge || forge {*/ /*return StardewFishingCompat.getRewards(hook);
-        *//*?} else*/ return List.of();
-    }
-
-    public static double stardewFishingBiteTimeMultiplier() {
-        /*? if neoforge || forge {*/ /*return StardewFishingCompat.getBiteTimeMultiplier();
-        *//*?} else*/ return 1.0;
-    }
-
-    // -- fishing real --
-
-    public static Entity fishingRealConvertItemStack(ItemStack stack, Player player, Vec3 pos) {
-        return FishingRealCompat.convertItemStack(stack, player, pos);
-    }
-
-    // -- curios/trinkets --
-
-    public static void addInformationItemsFromAccessories(Player player, ArrayList<Item> items) {
-        /*? if fabric {*/if (Tide.PLATFORM.isModLoaded("trinkets")) TrinketsCompat.addInformationalItems(player, items);
-        /*?} else*//*if (Tide.PLATFORM.isModLoaded("curios")) CuriosCompat.addInformationalItems(player, items);*/
-    }
+    public static void addInformationItemsFromAccessories(Player player, ArrayList<Item> items) {}
 }

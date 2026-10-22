@@ -23,7 +23,7 @@ public class ApplyFishEntityLengthFunction implements LootItemFunction {
 
     public ApplyFishEntityLengthFunction() {}
 
-    public @NotNull LootItemFunctionType/*? if >=1.21 {*/<ApplyFishEntityLengthFunction>/*?}*/ getType() {
+    public @NotNull LootItemFunctionType<ApplyFishEntityLengthFunction> getType() {
         return TideLootFunctions.APPLY_FISH_ENTITY_LENGTH;
     }
 

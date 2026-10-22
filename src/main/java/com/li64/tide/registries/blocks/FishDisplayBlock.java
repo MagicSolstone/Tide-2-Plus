@@ -31,10 +31,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-//? if >=1.21 {
 import net.minecraft.world.ItemInteractionResult;
 import com.mojang.serialization.MapCodec;
-//?}
 
 import java.util.Map;
 
@@ -144,7 +142,6 @@ public class FishDisplayBlock extends BaseEntityBlock implements SimpleWaterlogg
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
-    //? if >=1.21 {
 
     @Override
     protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
@@ -190,54 +187,4 @@ public class FishDisplayBlock extends BaseEntityBlock implements SimpleWaterlogg
         return super.getCloneItemStack(level, pos, state);
     }
 
-    //?} else {
-
-    /*@Override
-    public @NotNull InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        ItemStack inHand = player.getItemInHand(hand);
-        if (!inHand.isEmpty()) {
-            InteractionResult useItemResult = useItemOn(inHand, state, level, pos, player, hand, hitResult);
-            if (useItemResult != InteractionResult.PASS) return useItemResult;
-        }
-        return useWithoutItem(state, level, pos, player, hitResult);
-    }
-
-    protected @NotNull InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state,
-                                                       @NotNull Level level, @NotNull BlockPos pos,
-                                                       @NotNull Player player, @NotNull InteractionHand hand,
-                                                       @NotNull BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof FishDisplayBlockEntity display) {
-            ItemStack displayed = stack.copyWithCount(1);
-            if (display.setDisplayStack(displayed)) {
-                if (!player.isCreative()) stack.shrink(1);
-                level.playSound(null, pos, SoundEvents.COD_FLOP, SoundSource.BLOCKS, 1.0f, 1.0f);
-                return InteractionResult.SUCCESS;
-            }
-        }
-        return InteractionResult.PASS;
-    }
-
-    protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level level,
-                                                        @NotNull BlockPos pos, @NotNull Player player,
-                                                        @NotNull BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof FishDisplayBlockEntity display) {
-            if (!display.isEmpty()) {
-                ItemStack stack = display.takeDisplayStack();
-                if (!player.addItem(stack)) player.drop(stack, false);
-                level.playSound(null, pos, SoundEvents.COD_FLOP, SoundSource.BLOCKS, 1.0f, 1.0f);
-                return InteractionResult.SUCCESS;
-            }
-        }
-        return InteractionResult.PASS;
-    }
-
-
-    @Override
-    public @NotNull ItemStack getCloneItemStack(BlockGetter level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof FishDisplayBlockEntity display) {
-            if (!display.isEmpty()) return display.getDisplayStack().copy();
-        }
-        return super.getCloneItemStack(level, pos, state);
-    }
-    *///?}
 }

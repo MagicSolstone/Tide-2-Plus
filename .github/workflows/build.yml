@@ -1,0 +1,75 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        id: build
+        shell: bash
+        run: |
+          set -o pipefail
+          ./gradlew build --stacktrace --no-daemon 2>&1 | tee build.log
+
+      # The full build output is hard to read from outside GitHub, so the errors (and the tail
+      # of the log) are also written to the ci-results branch: one file per run, plus latest.
+      - name: Publish results to the ci-results branch
+        if: always() && github.event_name == 'push'
+        shell: bash
+        run: |
+          status="${{ steps.build.outcome }}"
+          sha="${GITHUB_SHA::7}"
+          mkdir -p /tmp/results
+          {
+            echo "commit: $GITHUB_SHA"
+            echo "status: $status"
+            echo "errors: $(grep -cE '^\S+\.java:[0-9]+: error:' build.log || true)"
+            echo
+            grep -E -A3 '^\S+\.java:[0-9]+: (error|warning):|^e: |FAILURE:|What went wrong|^\* What went wrong|Could not|Caused by' build.log | sed "s#$GITHUB_WORKSPACE/##" | head -6000
+          } > /tmp/results/latest.txt
+          tail -400 build.log | sed "s#$GITHUB_WORKSPACE/##" > /tmp/results/latest-tail.txt
+          git config user.name "ci"
+          git config user.email "ci@users.noreply.github.com"
+          git fetch origin ci-results:ci-results 2>/dev/null || true
+          git worktree add /tmp/ci ci-results 2>/dev/null || { git worktree add --detach /tmp/ci && (cd /tmp/ci && git checkout --orphan ci-results && git rm -rfq . ); }
+          cp /tmp/results/latest.txt /tmp/ci/latest.txt
+          cp /tmp/results/latest-tail.txt /tmp/ci/latest-tail.txt
+          cd /tmp/ci
+          git add -A
+          git commit -qm "build $sha: $status" || true
+          git push -q origin ci-results
+
+      - name: Dev build download
+        if: success() && github.event_name == 'push'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: dev
+          name: Latest dev build
+          prerelease: true
+          make_latest: false
+          body: "Built from ${{ github.sha }}. For testing only: Minecraft 26.3, Fabric Loader 0.19.5+, Fabric API."
+          files: build/libs/tide-fabric-*[!s].jar
+
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: tide-fabric
+          path: build/libs/*.jar

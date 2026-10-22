@@ -23,11 +23,6 @@ public interface FishingModifierType<T extends FishingModifier> {
     }
 
     static <T extends FishingModifier> FishingModifierType<T> register(ResourceLocation name, MapCodec<T> codec) {
-        /*? if !forge {*/return Registry.register(TideRegistries.FISHING_MODIFIERS, name, () -> codec);
-        //?} else {
-        /*FishingModifierType<T> type = () -> codec;
-        TideRegistries.FISHING_MODIFIERS.register(name, type);
-        return type;
-        *///?}
+        return Registry.register(TideRegistries.FISHING_MODIFIERS, name, () -> codec);
     }
 }

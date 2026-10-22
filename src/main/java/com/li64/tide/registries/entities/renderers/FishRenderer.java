@@ -40,13 +40,8 @@ public class FishRenderer<M extends FishModel> extends MobRenderer<Mob, FishMode
     }
 
     @Override
-    //? if >=1.21 {
     protected void setupRotations(Mob fish, PoseStack poseStack, float bob, float yBodyRot, float partialTick, float scale) {
         super.setupRotations(fish, poseStack, bob, yBodyRot, partialTick, scale);
-    //?} else {
-    /*protected void setupRotations(Mob fish, PoseStack poseStack, float bob, float yBodyRot, float partialTick) {
-        super.setupRotations(fish, poseStack, bob, yBodyRot, partialTick);
-    *///?}
         float f = swimAnimScale * 4.3f * Mth.sin(swimAnimSpeed * (fish.tickCount + partialTick));
         poseStack.mulPose(Axis.YP.rotationDegrees(f));
         if (!(fish.isInWaterOrBubble() || fish.isInLava()) && flipInAir()) {

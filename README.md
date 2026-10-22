@@ -1,3 +1,21 @@
+# Tide (Fabric 26 fork)
+
+A Fabric-only fork of [Tide 2](https://github.com/Lightning-64/Tide-2) by Lightning64, ported to
+**Minecraft 26.3**, for a family server run alongside [Solstone](https://github.com/TJusczak/Solstone).
+Planned on top: quality tiers for fish and a fishing level system.
+
+- **Fabric only, 26.x only.** Forge, NeoForge, 1.20.1/1.21.1 and the Stonecutter multi-version setup
+  were removed (the sources were baked to their 1.21.1 Fabric form, then ported).
+- **No third-party compat** (Stardew Fishing, Starcatcher, seasons mods, Trinkets/Curios, Fishing Real,
+  Hybrid Aquatic). The hooks in `CompatHelper` remain as no-ops.
+- **No Cloth Config / Mod Menu:** settings are plain JSON in `config/tide.json`.
+- **Builds on GitHub Actions** (`.github/workflows/build.yml`). Each push publishes the compiler
+  errors to the `ci-results` branch (`latest.txt`) and, when it builds, a jar to the `dev` release.
+
+Licensed MPL-2.0, like upstream. Original README below.
+
+---
+
 # Tide-2
 A Minecraft mod that expands the fishing experience, adding many new fish, mechanics, and rewards.
 

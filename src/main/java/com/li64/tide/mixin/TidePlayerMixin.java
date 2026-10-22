@@ -11,7 +11,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
 public abstract class TidePlayerMixin implements TidePlayer {
-    //? if fabric {
     @Unique public CompoundTag tide$playerData = new CompoundTag();
     @Unique public String tide$dataKey = "TidePersistentData";
 
@@ -35,5 +34,4 @@ public abstract class TidePlayerMixin implements TidePlayer {
     public void tide$setTidePlayerData(CompoundTag tag) {
         this.tide$playerData = tag;
     }
-    //?}
 }

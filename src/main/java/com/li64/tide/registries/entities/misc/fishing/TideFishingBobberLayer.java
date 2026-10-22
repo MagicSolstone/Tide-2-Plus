@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemDisplayContext;
 import org.jetbrains.annotations.NotNull;
 
-/*? if >=1.21*/import net.minecraft.util.FastColor;
+import net.minecraft.util.FastColor;
 
 public class TideFishingBobberLayer extends RenderLayer<TideFishingHook, TideFishingHookModel<TideFishingHook>> {
     public static final ModelLayerLocation MODEL_LOCATION = new ModelLayerLocation(Tide.resource("fishing_hook"), "bobber");
@@ -48,8 +48,7 @@ public class TideFishingBobberLayer extends RenderLayer<TideFishingHook, TideFis
         } else {
             ResourceLocation textureLocation = FishingBobberItem.getTexture(hookEntity.getBobber());
             VertexConsumer consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(textureLocation));
-            /*? if >=1.21 {*/this.model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255, 255, 255 ,255));
-            /*?} else*//*this.model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, 255, 255, 255 ,255);*/
+            this.model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255, 255, 255 ,255));
         }
     }
 }

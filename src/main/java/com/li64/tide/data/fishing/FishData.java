@@ -41,15 +41,11 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 
-/*? if <1.21 {*/
-/*import java.util.function.Function;
-*///?}
 
 import java.util.*;
 import java.util.function.Consumer;
 
-public record FishData(/*? if >=1.21 {*/ Holder<Item> fish,
-                       /*?} else*//*ResourceKey<Item> fishKey,*/
+public record FishData( Holder<Item> fish,
                        Optional<Holder<Item>> bucket,
                        List<String> associatedMods,
                        boolean showInJournal,
@@ -69,8 +65,7 @@ public record FishData(/*? if >=1.21 {*/ Holder<Item> fish,
     private static Map<Item, List<FishData>> MERGER_MAP;
 
     public static final Codec<FishData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            /*? if >=1.21 {*/BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("fish").forGetter(FishData::fish),
-            /*?} else*//*ResourceKey.codec(Registries.ITEM).fieldOf("fish").forGetter(FishData::fishKey),*/
+            BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("fish").forGetter(FishData::fish),
             BuiltInRegistries.ITEM.holderByNameCodec().optionalFieldOf("bucket").forGetter(FishData::bucket),
             Codec.STRING.listOf().optionalFieldOf("associated_mods", List.of()).forGetter(FishData::associatedMods),
             Codec.BOOL.optionalFieldOf("show_in_journal", true).forGetter(FishData::showInJournal),
@@ -173,23 +168,6 @@ public record FishData(/*? if >=1.21 {*/ Holder<Item> fish,
                 .nextInt(TideData.FISH.get().count())).fish());
     }
 
-    //? if <1.21 {
-    /*public Holder<Item> fish() {
-        return BuiltInRegistries.ITEM.getHolder(fishKey)
-                .orElseThrow(() -> new IllegalStateException("could not find item " + fishKey));
-    }
-
-    @Override
-    public boolean isValid() {
-        return BuiltInRegistries.ITEM.getHolder(fishKey).isPresent() && ModAssociatedEntry.super.isValid();
-    }
-
-    @Override
-    public String invalidReason() {
-        if (!ModAssociatedEntry.super.isValid()) return ModAssociatedEntry.super.invalidReason();
-        return "fish item '" + fishKey.location() + "' was not found";
-    }
-    *///?}
 
     public boolean hasJournalEntry() {
         return this.isOriginal() && this.showInJournal();
@@ -473,11 +451,7 @@ public record FishData(/*? if >=1.21 {*/ Holder<Item> fish,
         public FishData build() {
             if (fish == null) throw new IllegalStateException("Fish item must be provided");
             return new FishData(
-                    /*? if >=1.21 {*/fish,
-                    //?} else {
-                    /*fish.unwrap().map(Function.identity(), item ->
-                            BuiltInRegistries.ITEM.getResourceKey(item).orElseThrow()),
-                    *///?}
+                    fish,
                     Optional.ofNullable(bucket),
                     List.of(), true,
                     ImmutableList.copyOf(conditions),
@@ -501,7 +475,7 @@ public record FishData(/*? if >=1.21 {*/ Holder<Item> fish,
         for (LootPool pool : VANILLA_FISH_TABLE.pools) {
             for (LootPoolEntryContainer container : pool.entries) {
                 if (!(container instanceof LootItem lootItem)) continue;
-                Item item = lootItem.item/*? if >=1.21 {*/.value()/*?}*/;
+                Item item = lootItem.item.value();
                 ResourceLocation key = BuiltInRegistries.ITEM.getKey(item);
                 if (Tide.SERVER_CONFIG.general.autoFishDataBlacklist.contains(key.toString()) || get(item).isPresent()) continue;
                 Tide.LOG.info("Found unknown fish \"{}\" in vanilla fishing loot table, auto-generating fish data", item);

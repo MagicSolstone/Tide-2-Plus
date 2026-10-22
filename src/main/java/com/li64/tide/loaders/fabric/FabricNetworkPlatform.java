@@ -1,4 +1,3 @@
-//? if fabric && >=1.21 {
 package com.li64.tide.loaders.fabric;
 
 import com.li64.tide.loaders.NetworkPlatform;
@@ -60,4 +59,3 @@ public class FabricNetworkPlatform implements NetworkPlatform {
                 context.client().execute(() -> handler.accept(payload, context.player())));
     }
 }
-//?}

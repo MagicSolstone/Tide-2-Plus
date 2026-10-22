@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#c:is_plains",
-    "minecraft:plains",
-    "minecraft:sunflower_plains"
-  ]
-}

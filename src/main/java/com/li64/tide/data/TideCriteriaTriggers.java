@@ -4,16 +4,10 @@ import com.li64.tide.data.triggers.TideSimpleTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 
-//? if >=1.21 {
 import com.li64.tide.Tide;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.advancements.Criterion;
 import java.util.Optional;
-//?} else {
-/*import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
-*///?}
 
 import java.util.HashMap;
 import java.util.function.Function;
@@ -29,23 +23,16 @@ public class TideCriteriaTriggers {
     public static TideSimpleTrigger JOURNAL_HALFWAY_COMPLETE = (TideSimpleTrigger) register("journal_halfway_complete", TideSimpleTrigger::new);
     public static TideSimpleTrigger JOURNAL_COMPLETE = (TideSimpleTrigger) register("journal_complete", TideSimpleTrigger::new);
 
-    public static /*? if >=1.21 {*/<T extends SimpleCriterionTrigger.SimpleInstance>/*?} else {*//*<T extends AbstractCriterionTriggerInstance>*//*?}*/
+    public static <T extends SimpleCriterionTrigger.SimpleInstance>
             SimpleCriterionTrigger<T> register(String key, Function<String, SimpleCriterionTrigger<T>> triggerFunc) {
         SimpleCriterionTrigger<T> trigger = triggerFunc.apply(key);
         CRITERIA_TRIGGERS.put(key, trigger);
-        /*? if >=1.21 {*/return Tide.PLATFORM.register(BuiltInRegistries.TRIGGER_TYPES, Tide.resource(key), trigger);
-        /*?} else*//*return CriteriaTriggers.register(trigger);*/
+        return Tide.PLATFORM.register(BuiltInRegistries.TRIGGER_TYPES, Tide.resource(key), trigger);
     }
 
     public static void init() {}
 
-    //? if >=1.21 {
     public static Criterion<TideSimpleTrigger.TriggerInstance> simpleInstance(TideSimpleTrigger trigger) {
         return trigger.createCriterion(new TideSimpleTrigger.TriggerInstance(Optional.empty()));
     }
-    //?} else {
-    /*public static TideSimpleTrigger.TriggerInstance simpleInstance(TideSimpleTrigger trigger) {
-        return new TideSimpleTrigger.TriggerInstance(trigger.getId(), ContextAwarePredicate.ANY);
-    }
-    *///?}
 }

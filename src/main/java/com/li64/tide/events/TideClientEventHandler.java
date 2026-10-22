@@ -12,10 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-//? if >=1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-//?}
 
 import java.util.List;
 
@@ -33,7 +31,6 @@ public class TideClientEventHandler {
         if (TideItemData.FISH_LENGTH.isPresent(stack)) {
             lines.add(TideUtils.getFormattedLength(stack).withStyle(ChatFormatting.BLUE));
         }
-        //? if >=1.21 {
         else if (stack.has(DataComponents.BUCKET_ENTITY_DATA)) {
             CustomData data = stack.getOrDefault(DataComponents.BUCKET_ENTITY_DATA, CustomData.EMPTY);
             if (data.contains("Length")) {
@@ -41,6 +38,5 @@ public class TideClientEventHandler {
                 lines.add(TideUtils.getFormattedLength(length).withStyle(ChatFormatting.BLUE));
             }
         }
-        //?}
     }
 }

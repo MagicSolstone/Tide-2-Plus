@@ -1,8 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "tide:purpur_crate",
-    "tide:obsidian_crate",
-    "tide:weather_radio"
-  ]
-}

@@ -21,10 +21,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-//? if >=1.21 {
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.component.CustomData;
-//?}
 
 import java.util.Optional;
 
@@ -58,26 +56,15 @@ public abstract class ItemMixin {
                 || !(data.bucket().get().value() instanceof BucketItem fishBucketItem))
             return false;
 
-        //? if !forge {
         Fluid fluid = fishBucketItem.content;
         if (!bucket.content.isSame(fluid)) return false;
-        //?} else {
-        /*Fluid fluid = fishBucketItem.getFluid();
-        Tide.LOG.info("fluid 1: {}, fluid 2: {}", bucket.getFluid(), fluid);
-        if (!bucket.getFluid().isSame(fluid)) {
-            Tide.LOG.info("check failed :(");
-            return false;
-        }
-        *///?}
 
         ItemStack newStack = new ItemStack(data.bucket().get());
         if (TideItemData.FISH_LENGTH.isPresent(fish)) {
             double length = TideItemData.FISH_LENGTH.getOrDefault(fish, 0.0);
-            /*? if >=1.21 {*/CustomData.update(DataComponents.BUCKET_ENTITY_DATA, newStack, tag -> {
+            CustomData.update(DataComponents.BUCKET_ENTITY_DATA, newStack, tag -> {
                 if (TideItemData.FISH_LENGTH.isPresent(fish)) tag.putDouble(FishLengthHolder.tide$LENGTH_KEY, length);
             });
-            /*?} else*/
-            /*newStack.getOrCreateTag().putDouble(FishLengthHolder.tide$LENGTH_KEY, length);*/
             
         }
 

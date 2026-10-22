@@ -101,7 +101,6 @@ public class TideSchoolingLavaFish extends TideLavaFish {
                 .forEach(f -> f.startFollowing(this));
     }
 
-    //? if >=1.21 {
     @Override
     public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData groupData) {
         super.finalizeSpawn(level, difficulty, spawnType, groupData);
@@ -109,15 +108,6 @@ public class TideSchoolingLavaFish extends TideLavaFish {
         else this.startFollowing(((SchoolSpawnGroupData) groupData).leader);
         return groupData;
     }
-    //?} else {
-    /*@Override
-    public @Nullable SpawnGroupData finalizeSpawn(ServerLevelAccessor level, DifficultyInstance difficulty, MobSpawnType spawnType, @Nullable SpawnGroupData groupData, @Nullable CompoundTag tag) {
-        super.finalizeSpawn(level, difficulty, spawnType, groupData, tag);
-        if (groupData == null) groupData = new SchoolSpawnGroupData(this);
-        else this.startFollowing(((SchoolSpawnGroupData) groupData).leader);
-        return groupData;
-    }
-    *///?}
 
     public record SchoolSpawnGroupData(TideSchoolingLavaFish leader) implements SpawnGroupData {}
 

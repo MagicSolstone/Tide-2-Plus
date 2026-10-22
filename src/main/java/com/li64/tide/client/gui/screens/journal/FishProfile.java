@@ -173,14 +173,8 @@ public class FishProfile implements Renderable {
         int titleWidth = font.width(title);
         int underlineWidth = titleWidth + 6;
         graphics.drawString(font, title, titleX - titleWidth / 2, titleY, TEXT_COLOR, false);
-        //? if >=1.21 {
         graphics.blitSprite(FishingJournal.LINE_BOTTOM, titleX - underlineWidth / 2,
                 titleY + font.lineHeight + 2, underlineWidth, 2);
-        //?} else {
-        /*TideUtils.blitNineSliced(graphics, FishingJournal.LINE_BOTTOM, titleX - underlineWidth / 2,
-                titleY + font.lineHeight + 2, underlineWidth, 2, 3, 0,
-                71, 2, 0, 0, 71, 2);
-        *///?}
 
         // get fish sizing and offsets
         boolean isLarge = data.profile().altSprite().isPresent();

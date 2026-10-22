@@ -69,8 +69,7 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook> imp
         model.setupAnim(hookEntity, partialTick, 0.0F, -0.1F, 0.0F, 0.0F);
         VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(hookEntity)));
 
-        /*? if >=1.21 {*/model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255, 255, 255, 255));
-        /*?} else*//*model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, 1f, 1f, 1f, 1f);*/
+        model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, FastColor.ARGB32.color(255, 255, 255, 255));
         bobberLayer.render(poseStack, buffer, packedLight, hookEntity, 0, 0, 0, 0, 0, 0);
 
         poseStack.popPose();
@@ -101,15 +100,9 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook> imp
         // Iris's hacky fix for a bug where fishing lines connect
         // https://github.com/IrisShaders/Iris/blob/multiloader-new/common/src/main/java/net/irisshaders/batchedentityrendering/mixin/MixinFishingHookRenderer.java
         if (Tide.PLATFORM.isModLoaded("iris") || Tide.PLATFORM.isModLoaded("oculus")) {
-            //? if >=1.21 {
             vertexConsumer.addVertex(0, 0, 0)
                     .setColor(0, 0, 0, 255)
                     .setNormal(0, 0, 0);
-            //?} else {
-            /*vertexConsumer.vertex(0, 0, 0)
-                    .color(0, 0, 0, 255)
-                    .normal(0, 0, 0);
-            *///?}
         }
     }
 
@@ -179,16 +172,9 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook> imp
         int g = (int) (color.getGreen() * colorBrightness);
         int b = (int) (color.getBlue() * colorBrightness);
 
-        //? if >=1.21 {
         vertexConsumer.addVertex(pose.pose(), f, f1, f2)
                 .setColor(FastColor.ARGB32.color(255, r, g, b))
                 .setNormal(pose, f3, f4, f5);
-        //?} else {
-        /*vertexConsumer.vertex(pose.pose(), f, f1, f2)
-                .color(FastColor.ARGB32.color(255, r, g, b))
-                .normal(pose.normal(), f3, f4, f5)
-                .endVertex();
-        *///?}
     }
 
     @Override

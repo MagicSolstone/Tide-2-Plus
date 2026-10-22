@@ -15,15 +15,7 @@ public class HorizontalLineComponent extends ProfileComponent {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
-        //? if >=1.21 {
         graphics.blitSprite(top ? ProfileComponent.LINE_TOP : ProfileComponent.LINE_BOTTOM, x, y + 4, ProfileComponent.AREA_WIDTH, 2);
-        //?} else {
-/*//        graphics.blit(top ? ProfileComponent.LINE_TOP : ProfileComponent.LINE_BOTTOM, x, y + 4, 0, 0,
-//                ProfileComponent.AREA_WIDTH, 2, 71, 2);
-        TideUtils.blitNineSliced(graphics, top ? ProfileComponent.LINE_TOP : ProfileComponent.LINE_BOTTOM,
-                x, y + 4, ProfileComponent.AREA_WIDTH, 2, 3, 0,
-                71, 2, 0, 0, 71, 2);
-        *///?}
     }
 
     @Override

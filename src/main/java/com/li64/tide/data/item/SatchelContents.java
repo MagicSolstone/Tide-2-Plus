@@ -12,15 +12,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-//? if >=1.21 {
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-//?}
 
 public record SatchelContents(List<ItemStack> items) {
     public static final Codec<SatchelContents> CODEC = ItemStack.CODEC.listOf().xmap(SatchelContents::new, contents -> contents.items);
-    /*? if >=1.21*/public static final StreamCodec<RegistryFriendlyByteBuf, SatchelContents> STREAM_CODEC = ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()).map(SatchelContents::new, contents -> contents.items);
+    public static final StreamCodec<RegistryFriendlyByteBuf, SatchelContents> STREAM_CODEC = ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()).map(SatchelContents::new, contents -> contents.items);
     public static final int MAX_STACKS = 64;
 
     public SatchelContents() {
@@ -44,56 +42,15 @@ public record SatchelContents(List<ItemStack> items) {
         if (this == other) return true;
         //noinspection DeconstructionCanBeUsed
         if (other instanceof SatchelContents contents)
-            /*? if >=1.21 {*/return ItemStack.listMatches(this.items, contents.items);
-            /*?} else*//*return listMatches(this.items, contents.items);*/
+            return ItemStack.listMatches(this.items, contents.items);
 
         return false;
     }
 
-    //? if >=1.21 {
     @SuppressWarnings("deprecation")
     public int hashCode() {
         return ItemStack.hashStackList(this.items);
     }
-    //?} else {
-    /*public static boolean listMatches(List<ItemStack> list, List<ItemStack> other) {
-        if (list.size() != other.size()) return false;
-        for (int i = 0; i < list.size(); i++) {
-            if (!ItemStack.matches(list.get(i), other.get(i))) return false;
-        }
-        return true;
-    }
-
-    public int hashCode() {
-        return hashStackList(this.items);
-    }
-
-    public static int hashItemAndComponents(@Nullable ItemStack stack) {
-        if (stack != null) {
-            int i = 31 + stack.getItem().hashCode();
-            return 31 * i + stack.getOrCreateTag().hashCode();
-        }
-        else return 0;
-    }
-
-    public static int hashStackList(List<ItemStack> list) {
-        int i = 0;
-        for (ItemStack itemStack : list)
-            i = i * 31 + hashItemAndComponents(itemStack);
-        return i;
-    }
-
-    public static SatchelContents fromNbt(CompoundTag tag) {
-        return CODEC.decode(NbtOps.INSTANCE, tag.get("FishSatchelContents"))
-                .result().map(Pair::getFirst)
-                .orElse(null);
-    }
-
-    public void toNbt(CompoundTag tag) {
-        CODEC.encodeStart(NbtOps.INSTANCE, this).result()
-                .ifPresent(t -> tag.put("FishSatchelContents", t));
-    }
-    *///?}
 
     public String toString() {
         return "SatchelContents" + this.items;
@@ -109,8 +66,7 @@ public record SatchelContents(List<ItemStack> items) {
 
         private int findStackIndex(ItemStack stack) {
             for (int i = 0; i < this.items.size(); i++) {
-                /*? if >=1.21 {*/if (ItemStack.isSameItemSameComponents(this.items.get(i), stack)) return i;
-                /*?} else*//*if (ItemStack.isSameItemSameTags(this.items.get(i), stack)) return i;*/
+                if (ItemStack.isSameItemSameComponents(this.items.get(i), stack)) return i;
             }
             return -1;
         }

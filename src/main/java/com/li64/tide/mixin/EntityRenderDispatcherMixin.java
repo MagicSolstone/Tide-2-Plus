@@ -11,14 +11,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-//? if !forge {
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
-//?}
 
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin {
-    //? if !forge {
     @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render(Lnet/minecraft/world/entity/Entity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
     private void modifyArgs(Args args) {
         if (args.get(0) instanceof FreezableMob freezable && freezable.tide$isFrozen()) {
@@ -26,23 +23,4 @@ public class EntityRenderDispatcherMixin {
             args.set(2, 0f);
         }
     }
-    //?} else {
-    /*@Redirect(
-            method = "render",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;render" +
-                            "(Lnet/minecraft/world/entity/Entity;FF" +
-                            "Lcom/mojang/blaze3d/vertex/PoseStack;" +
-                            "Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
-            )
-    )
-    private <T extends Entity> void redirectRender(EntityRenderer<T> renderer, T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        float newPartialTick = partialTick;
-        if (entity instanceof FreezableMob freezable && freezable.tide$isFrozen()) {
-            if (!(entity instanceof Mob mob && mob.isDeadOrDying())) newPartialTick = 0.0F;
-        }
-        renderer.render(entity, entityYaw, newPartialTick, poseStack, bufferSource, packedLight);
-    }
-    *///?}
 }

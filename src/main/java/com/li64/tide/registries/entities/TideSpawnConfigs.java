@@ -100,28 +100,28 @@ public class TideSpawnConfigs {
     
     public static SpawnConfig waterSpawnConfig(String entity, int weight, int maxGroupSize, int minGroupSize, TagKey<Biome> biomes) {
         return new SpawnConfig(entity, weight, maxGroupSize, minGroupSize, MobCategory.WATER_AMBIENT,
-                /*? if >=1.21 {*/SpawnPlacementTypes.IN_WATER/*?} else {*//*SpawnPlacements.Type.IN_WATER*//*?}*/,
+                SpawnPlacementTypes.IN_WATER,
                 TideFishEntity::checkWaterFishSpawnRules, biomes);
     }
 
     public static SpawnConfig lavaSpawnConfig(String entity, int weight, int maxGroupSize, int minGroupSize, TagKey<Biome> biomes) {
         return new SpawnConfig(entity, weight, maxGroupSize, minGroupSize, MobCategory.WATER_AMBIENT,
-                /*? if >=1.21 {*/SpawnPlacementTypes.IN_LAVA/*?} else {*//*SpawnPlacements.Type.IN_LAVA*//*?}*/,
+                SpawnPlacementTypes.IN_LAVA,
                 TideFishEntity::checkLavaFishSpawnRules, biomes);
     }
 
     public static SpawnConfig voidSpawnConfig(String entity, int weight, int maxGroupSize, int minGroupSize, TagKey<Biome> biomes) {
         return new SpawnConfig(entity, weight, maxGroupSize, minGroupSize, MobCategory.WATER_AMBIENT,
-                /*? if >=1.21 {*/SpawnPlacementTypes.NO_RESTRICTIONS/*?} else {*//*SpawnPlacements.Type.NO_RESTRICTIONS*//*?}*/,
+                SpawnPlacementTypes.NO_RESTRICTIONS,
                 TideFishEntity::checkVoidFishSpawnRules, biomes);
     }
 
     public record SpawnConfig(EntityType<Mob> entityType, int weight, int maxGroup, int minGroup, MobCategory mobCategory,
-                              /*? if >=1.21 {*/SpawnPlacementType/*?} else {*//*SpawnPlacements.Type*//*?}*/ placementType,
+                              SpawnPlacementType placementType,
                               SpawnPlacements.SpawnPredicate<Mob> spawnPredicate, TagKey<Biome> biomes) {
         @SuppressWarnings("unchecked")
         public SpawnConfig(String entity, int weight, int maxGroupSize, int minGroupSize, MobCategory category,
-                           /*? if >=1.21 {*/SpawnPlacementType/*?} else {*//*SpawnPlacements.Type*//*?}*/ placementType,
+                           SpawnPlacementType placementType,
                            SpawnPlacements.SpawnPredicate<Mob> predicate, TagKey<Biome> biomes) {
             this((EntityType<Mob>) BuiltInRegistries.ENTITY_TYPE.get(Tide.resource(entity)),
                     weight, maxGroupSize, minGroupSize, category, placementType, predicate, biomes);

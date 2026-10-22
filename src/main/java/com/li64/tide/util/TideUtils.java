@@ -26,11 +26,6 @@ import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
 
-/*? if <1.21 {*/
-/*import com.mojang.math.Divisor;
-import it.unimi.dsi.fastutil.ints.IntIterator;
-import net.minecraft.client.gui.GuiGraphics;
-*///?}
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -172,8 +167,7 @@ public class TideUtils {
     }
 
     public static ResourceLocation sprite(String path) {
-        /*? if >=1.21 {*/ return Tide.resource(path);
-        /*?} else*//*return Tide.resource("textures/gui/sprites/" + path + ".png");*/
+         return Tide.resource(path);
     }
 
     public static ResourceLocation holderId(Holder<Item> holder) {
@@ -184,67 +178,7 @@ public class TideUtils {
         return level.getDayTime() % 24000;
     }
 
-    //? if >=1.21 {
     public static LootTable getLootTable(ResourceKey<LootTable> key, MinecraftServer server) {
         return server.reloadableRegistries().getLootTable(key);
     }
-    //?} else {
-    /*public static LootTable getLootTable(ResourceLocation id, MinecraftServer server) {
-         return server.getLootData().getLootTable(id);
-    }
-
-    public static void blitNineSliced(GuiGraphics graphics, ResourceLocation tex, int x, int y, int width, int height, int sliceWidth, int sliceHeight, int uWidth, int vHeight, int textureX, int textureY, int textureWidth, int textureHeight) {
-        blitNineSliced(graphics, tex, x, y, width, height, sliceWidth, sliceHeight, sliceWidth, sliceHeight, uWidth, vHeight, textureX, textureY, textureWidth, textureHeight);
-    }
-
-    public static void blitNineSliced(GuiGraphics graphics, ResourceLocation tex, int x, int y, int width, int height, int left, int top, int right, int bottom, int uWidth, int vHeight, int uOffset, int vOffset, int textureWidth, int textureHeight) {
-        left = Math.min(left, width / 2);
-        right = Math.min(right, width / 2);
-        top = Math.min(top, height / 2);
-        bottom = Math.min(bottom, height / 2);
-        if (width == uWidth && height == vHeight) {
-            graphics.blit(tex, x, y, uOffset, vOffset, width, height, textureWidth, textureHeight);
-        } else if (height == vHeight) {
-            graphics.blit(tex, x, y, uOffset, vOffset, left, height, textureWidth, textureHeight);
-            blitRepeating(graphics, tex, x + left, y, width - right - left, height, uOffset + left, vOffset, uWidth - right - left, vHeight, textureWidth, textureHeight);
-            graphics.blit(tex, x + width - right, y, uOffset + uWidth - right, vOffset, right, height, textureWidth, textureHeight);
-        } else if (width == uWidth) {
-            graphics.blit(tex, x, y, uOffset, vOffset, width, top, textureWidth, textureHeight);
-            blitRepeating(graphics, tex, x, y + top, width, height - bottom - top, uOffset, vOffset + top, uWidth, vHeight - bottom - top, textureWidth, textureHeight);
-            graphics.blit(tex, x, y + height - bottom, uOffset, vOffset + vHeight - bottom, width, bottom, textureWidth, textureHeight);
-        } else {
-            graphics.blit(tex, x, y, uOffset, vOffset, left, top, textureWidth, textureHeight);
-            blitRepeating(graphics, tex, x + left, y, width - right - left, top, uOffset + left, vOffset, uWidth - right - left, top, textureWidth, textureHeight);
-            graphics.blit(tex, x + width - right, y, uOffset + uWidth - right, vOffset, right, top, textureWidth, textureHeight);
-            graphics.blit(tex, x, y + height - bottom, uOffset, vOffset + vHeight - bottom, left, bottom, textureWidth, textureHeight);
-            blitRepeating(graphics, tex, x + left, y + height - bottom, width - right - left, bottom, uOffset + left, vOffset + vHeight - bottom, uWidth - right - left, bottom, textureWidth, textureHeight);
-            graphics.blit(tex, x + width - right, y + height - bottom, uOffset + uWidth - right, vOffset + vHeight - bottom, right, bottom, textureWidth, textureHeight);
-            blitRepeating(graphics, tex, x, y + top, left, height - bottom - top, uOffset, vOffset + top, left, vHeight - bottom - top, textureWidth, textureHeight);
-            blitRepeating(graphics, tex, x + left, y + top, width - right - left, height - bottom - top, uOffset + left, vOffset + top, uWidth - right - left, vHeight - bottom - top, textureWidth, textureHeight);
-            blitRepeating(graphics, tex, x + width - right, y + top, left, height - bottom - top, uOffset + uWidth - right, vOffset + top, right, vHeight - bottom - top, textureWidth, textureHeight);
-        }
-    }
-
-    private static void blitRepeating(GuiGraphics graphics, ResourceLocation atlasLocation, int x, int y, int width, int height, int uOffset, int vOffset, int uWidth, int uHeight, int textureWidth, int textureHeight) {
-        int i = x;
-        int j;
-        for(IntIterator intIterator = slices(width, uWidth); intIterator.hasNext(); i += j) {
-            j = intIterator.nextInt();
-            int k = (uWidth - j) / 2;
-            int l = y;
-
-            int m;
-            for(IntIterator intIterator2 = slices(height, uHeight); intIterator2.hasNext(); l += m) {
-                m = intIterator2.nextInt();
-                int n = (uHeight - m) / 2;
-                graphics.blit(atlasLocation, i, l, uOffset + k, vOffset + n, j, m, textureWidth, textureHeight);
-            }
-        }
-    }
-
-    private static IntIterator slices(int target, int total) {
-        int i = Mth.positiveCeilDiv(target, total);
-        return new Divisor(target, i);
-    }
-    *///?}
 }

@@ -1,4 +1,3 @@
-//? if fabric {
 package com.li64.tide.loaders.fabric;
 
 import com.li64.tide.data.TidePlayer;
@@ -27,10 +26,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCon
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 
-/*? if >=1.21 {*/
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
 import net.minecraft.world.item.trading.ItemCost;
-/*?} else*//*import net.fabricmc.fabric.api.loot.v2.LootTableEvents;*/
 
 public class FabricEventHandler {
     public static void init() {
@@ -51,8 +48,7 @@ public class FabricEventHandler {
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
                 TideEventHandler.onPlayerJoinWorld(handler.getPlayer()));
 
-        /*? if >=1.21 {*/LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
-        /*?} else*//*LootTableEvents.MODIFY.register((resourceManager, lootDataManager, key, tableBuilder, source) -> {*/
+        LootTableEvents.MODIFY.register((key, tableBuilder, source, registries) -> {
             if (key == BuiltInLootTables.FISHING_JUNK) {
                 tableBuilder.modifyPools(builder -> builder
                         .add(LootItem.lootTableItem(TideItems.FISH_BONE).setWeight(8)));
@@ -113,20 +109,13 @@ public class FabricEventHandler {
 
         TradeOfferHelper.registerVillagerOffers(VillagerProfession.FISHERMAN, 4, (factories) -> {
             factories.add((entity, random) -> new MerchantOffer(
-                    /*? if >=1.21 {*/new ItemCost(Items.EMERALD, 15),
-                    /*?} else*//*new ItemStack(Items.EMERALD, 15),*/
+                    new ItemCost(Items.EMERALD, 15),
                     new ItemStack(TideItems.VILLAGE_FISHING_ROD, 1),
                     1, 15, 0.05f
             ));
         });
 
-        //? if >=1.21 {
         LootTableEvents.ALL_LOADED.register((resourceManager, registry) ->
                 FishData.VANILLA_FISH_TABLE = registry.get(BuiltInLootTables.FISHING_FISH.location()));
-        //?} else {
-        /*LootTableEvents.ALL_LOADED.register((resourceManager, lootDataManager) ->
-                FishData.VANILLA_FISH_TABLE = lootDataManager.getLootTable(BuiltInLootTables.FISHING_FISH));
-        *///?}
     }
 }
-//?}

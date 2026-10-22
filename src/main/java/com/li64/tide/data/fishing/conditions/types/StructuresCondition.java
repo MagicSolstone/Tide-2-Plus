@@ -41,14 +41,7 @@ public class StructuresCondition extends FishingCondition {
 
     @Override
     public boolean test(FishingContext context) {
-        //? if >=1.21 {
         return context.level().structureManager().getStructureWithPieceAt(context.blockPos(),
                 holder -> structures.stream().anyMatch(holder::is)).isValid();
-        //?} else {
-        /*for (ResourceKey<Structure> structure : structures) {
-            if (context.level().structureManager().getStructureWithPieceAt(context.blockPos(), structure).isValid()) return true;
-        }
-        return false;
-        *///?}
     }
 }

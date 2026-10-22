@@ -101,6 +101,42 @@ jobs:
           xdotool key Escape; sleep 1
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null; true
 
+      # Multiplayer: a dedicated server and the client joining it over the network (single player
+      # skips network encoding, so some problems only show here). The player starts at level 2, so
+      # the catch also levels them up (title, sound, broadcast).
+      - name: Multiplayer smoke test
+        if: steps.build.outcome == 'success'
+        shell: bash
+        run: |
+          set +e
+          export DISPLAY=:99 LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
+          pgrep Xvfb > /dev/null || (Xvfb :99 -screen 0 1280x720x24 +extension GLX +render -nolisten tcp > /dev/null 2>&1 &)
+          rm -rf run/world/datapacks/tide_smoke; mkdir -p run/world/datapacks
+          cp -r ci/smokepack run/world/datapacks/tide_smoke
+          sed -i 's/^fishinglevel set @s .*/fishinglevel set @s 2/' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
+          printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nenforce-secure-profile=false\n' > run/server.properties
+          ./gradlew runServer --no-daemon > server-mp.log 2>&1 &
+          spid=$!
+          for i in $(seq 1 84); do sleep 5; grep -q "Done (" server-mp.log && break; kill -0 $spid 2>/dev/null || break; done
+          echo "server: $(grep -c 'Done (' server-mp.log)"
+          ./gradlew runSmokeMp --no-daemon > client-mp.log 2>&1 &
+          cpid=$!
+          for i in $(seq 1 60); do sleep 5; grep -q "joined the game" server-mp.log && break; kill -0 $cpid 2>/dev/null || break; done
+          sleep 25; import -window root shots/m1-joined.png
+          xdotool mousemove 640 360; xdotool mousedown 3; sleep 1.4; xdotool mouseup 3
+          for i in $(seq 1 90); do grep -q "TIDE-CI bite" server-mp.log && break; sleep 0.5; done
+          echo "bite: $(grep -c 'TIDE-CI bite' server-mp.log)"
+          sleep 0.3; xdotool click 3
+          for i in $(seq 1 20); do grep -q "TIDE-CI minigame" client-mp.log && break; sleep 0.25; done
+          echo "minigame: $(grep -c 'TIDE-CI minigame' client-mp.log)"
+          sleep 0.6; import -window root shots/m2-minigame.png
+          xdotool click 3
+          sleep 2; import -window root shots/m3-caught.png
+          sleep 6; import -window root shots/m4-after.png
+          echo "--- server"; grep -nE "TIDE-CI|\[Tide catch\]|reached fishing|lost connection|left the game|Exception|ERROR" server-mp.log | tail -20
+          echo "--- client"; grep -nE "TIDE-CI|Exception|ERROR|Disconnect|disconnect|lost" client-mp.log | grep -v "OpenGL\|GLX\|flite\|narrator\|OpenAL\|SoundSystem\|Realms\|sessionserver" | tail -20
+          pkill -f 'net.fabricmc' ; sleep 3; kill $spid $cpid 2>/dev/null; true
+
       # The full build output is hard to read from outside GitHub, so the errors (and the tail
       # of the log) are also written to the ci-results branch: one file per run, plus latest.
       - name: Publish results to the ci-results branch
@@ -135,7 +171,7 @@ jobs:
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

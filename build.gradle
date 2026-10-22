@@ -54,8 +54,18 @@ loom {
             programArgs "--quickPlaySingleplayer", "smoke"
             vmArgs "-Dtide.ci=true"
         }
+        // the same client joining a dedicated server on this machine (multiplayer smoke test)
+        smokeMp {
+            client()
+            name = "Smoke Multiplayer Client"
+            programArgs "--quickPlayMultiplayer", "localhost:25565"
+            vmArgs "-Dtide.ci=true"
+        }
+        server {
+            vmArgs "-Dtide.ci=true"
+        }
     }
 }
 
 // the CI workflow runs its own virtual screen so it can take screenshots of it
-tasks.matching { it.name == 'runSmokeClient' }.configureEach { useXvfb = false }
+tasks.matching { it.name == 'runSmokeClient' || it.name == 'runSmokeMp' }.configureEach { useXvfb = false }

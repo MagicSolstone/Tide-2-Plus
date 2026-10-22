@@ -79,7 +79,7 @@ jobs:
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt .
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt . ; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

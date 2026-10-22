@@ -3134,7 +3134,7 @@ public class TideFish {
 
         public Item build() {
             ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Tide.resource(id));
-            Item item = factory.apply(properties);
+            Item item = factory.apply(properties.setId(key));
 
             // Saving all of this datagen utility data may take up large portions
             // of memory, so only add these when running in a dev environment

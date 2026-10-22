@@ -605,7 +605,7 @@
   "journal.description.tide.marstilus": "Dieses alte, nautilusähnliche Wesen besitzt Eigenschaften, komplett anders als alles andere, was in der Oberwelt zu finden ist.",
   "journal.description.tide.midas_fish": "Ein Fisch, gesegnet mit der Fähigkeit, alles in Gold zu verwandeln, was er berührt, unglücklicherweise einschließlich seiner Nahrung.",
   "journal.description.tide.mirage_catfish": "Dieser Wels fühlt sich am wohlsten in extremer Hitze und verwirrt Reisende schon seit vielen Jahren.",
-  "journal.description.tide.mooneye":  "Nur wenige haben diesen Fisch je in der Wildnis zu Gesicht bekommen. Er ist in kühlen Gewässern zu Hause, wo er sich aber sämtlichen Blicken entzieht.",
+  "journal.description.tide.mooneye": "Nur wenige haben diesen Fisch je in der Wildnis zu Gesicht bekommen. Er ist in kühlen Gewässern zu Hause, wo er sich aber sämtlichen Blicken entzieht.",
   "journal.description.tide.nephrosilu": "Dieses deformierte Wesen mit seinen rasiermesserscharfen Flossen und einem hellen, violettem Auge wird als sog. Spitzenprädator bezeichnet.",
   "journal.description.tide.neptune_koi": "Dieser Fisch trägt anmutig leuchtende Ringe um seinen Körper. Man sagt, er schütze die Gewässer, in denen er lebt, vor bösen Geistern.",
   "journal.description.tide.obsidian_pike": "Forscher haben bisher noch nicht herausfinden können, wie dieser Hecht trotz seines extrem starren Gewebes seine Flossen bewegen kann.",
@@ -795,5 +795,6 @@
   "text.tide.rod_tooltip.diamond_bonus": "Zusätzliche Erfahrungspunkte",
   "text.tide.rod_tooltip.gold_bonus": "+1 Glück",
   "text.tide.rod_tooltip.midas_bonus": "Fange zusätzliche Golditems",
-  "text.tide.rod_tooltip.netherite_bonus": "Kann in Lava angeln"
+  "text.tide.rod_tooltip.netherite_bonus": "Kann in Lava angeln",
+  "item.tide.fish_satchel.fullness": "%s/%s"
 }

@@ -165,7 +165,7 @@ public class FishSatchelItem extends AbstractTooltipItem {
     public void addTooltip(ItemStack stack, Consumer<Component> tooltip) {
         Style gray = Component.empty().getStyle().withColor(ChatFormatting.GRAY);
         SatchelContents contents = TideItemData.SATCHEL_CONTENTS.get(stack);
-        if (contents != null) tooltip.accept(Component.translatable("item.minecraft.bundle.fullness",
+        if (contents != null) tooltip.accept(Component.translatable("item.tide.fish_satchel.fullness",
                 contents.size(), SatchelContents.MAX_STACKS).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("item.tide.fish_satchel.desc_0").setStyle(gray));
         tooltip.accept(Component.translatable("item.tide.fish_satchel.desc_1").setStyle(gray));

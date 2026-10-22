@@ -1,5 +1,6 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import com.li64.tide.util.TideUtils;
 import com.li64.tide.client.Gui26;
 import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
@@ -40,7 +41,7 @@ public class DepthComponent extends BarComponent {
                 && mouseY >= y + BAR_Y && mouseY <= y + BAR_Y + BAR_HEIGHT) {
             float depthFloat = Mth.clamp((float) (mouseX - (x + BAR_X)) / BAR_WIDTH, 0f, 1f);
             int depthMeters = Math.abs(floatToDepth(depthFloat) - MAX_Y);
-            graphics.setTooltipForNextFrame(font, Component.literal(depthMeters + " m"), mouseX, y + BAR_Y);
+            graphics.setTooltipForNextFrame(font, Component.literal(TideUtils.formatDepth(depthMeters)), mouseX, y + BAR_Y);
             graphics.blit(RenderPipelines.GUI_TEXTURED, CURSOR, mouseX - 1, y + BAR_Y, 0, 0, 3, 9, 3, 9);
         }
     }

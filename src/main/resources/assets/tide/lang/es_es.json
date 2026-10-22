@@ -23,14 +23,12 @@
   "advancements.tide.release_pupfish.title": "Experto en Preservación",
   "advancements.tide.root.description": "¡Hazte con todos!",
   "advancements.tide.root.title": "Tide",
-
   "block.tide.angling_table": "Mesa de Pesca",
   "block.tide.fish_display": "Expositor de Peces",
   "block.tide.jelly_torch": "Antorcha de Medusa",
   "block.tide.obsidian_crate": "Caja de Obsidiana",
   "block.tide.purpur_crate": "Caja de Púrpura",
   "block.tide.wooden_crate": "Caja de Madera",
-
   "commands.fishing.entries.crate": "Caja",
   "commands.fishing.entries.crate.unknown": "Caja Desconocida",
   "commands.fishing.entries.crate_selector": "Selector de Cajas",
@@ -46,10 +44,8 @@
   "commands.journal.unlock.already_unlocked": "El pez \"%s\" ya está desbloqueado",
   "commands.journal.unlock.fail": "\"%s\" no está en el diario de pesca",
   "commands.journal.unlock_all": "Se han desbloqueado todos los peces para %s",
-
   "container.tide.angling_table": "Mejorar Caña",
   "container.tide.loot_crate": "Caja",
-
   "entity.tide.abyss_angler": "Rape Abisal",
   "entity.tide.alpha_fish": "Pez Alfa",
   "entity.tide.amber_rockfish": "Pez Roca de Ámbar",
@@ -154,7 +150,6 @@
   "entity.tide.windbass": "Vientobina",
   "entity.tide.witherfin": "Marchitaleta",
   "entity.tide.yellow_perch": "Perca Amarilla",
-
   "item.tide.abyss_angler": "Rape Abisal",
   "item.tide.abyss_angler_bucket": "Cubo con Rape Abisal",
   "item.tide.abyss_angler_spawn_egg": "Huevo Generador de Rape Abisal",
@@ -537,9 +532,7 @@
   "item.tide.yellow_perch": "Perca Amarilla",
   "item.tide.yellow_perch_bucket": "Cubo con Perca Amarilla",
   "item.tide.yellow_perch_spawn_egg": "Huevo Generador de Perca Amarilla",
-
   "itemGroup.tide.main": "Tide",
-
   "journal.description.minecraft.cod": "Un elemento básico de los mares fríos. Estos peces son conocidos por su presencia tranquila bajo las olas.",
   "journal.description.minecraft.pufferfish": "Sus tácticas de supervivencia son bastante simples. Si alguien se acerca, explota.",
   "journal.description.minecraft.salmon": "Este pez fuerte y resistente es una cara familiar para todos los pescadores (y un bocado sabroso).",
@@ -646,7 +639,6 @@
   "journal.description.tide.windbass": "Este pez posee una velocidad increíble, potenciada por su habilidad para crear corrientes de viento bajo el agua.",
   "journal.description.tide.witherfin": "Alguna vez una criatura próspera, ahora porta una infección mortal que se transmite a quienes la tocan.",
   "journal.description.tide.yellow_perch": "Este pez de rayas amarillas brillantes es tan llamativo como abundante.",
-
   "journal.info.climate.title": "Clima",
   "journal.info.depth.title": "Profundidad",
   "journal.info.dimensions.overworld": "Mundo Exterior",
@@ -697,19 +689,15 @@
   "journal.rarity.title": "Rareza",
   "journal.rarity.uncommon": "Poco Común",
   "journal.rarity.very_rare": "Muy Raro",
-
   "minigame.catch": "Bien",
   "minigame.miss": "Fallo",
   "minigame.perfect": "¡Captura Perfecta!",
-
   "newfish.toast.title": "Nuevo Pez Descubierto",
   "newpage.toast.title": "Nueva Página del Diario",
-
   "subtitles.item.fishing_rod.reel": "Carrete de caña de pescar",
   "subtitles.tide.journal_close": "El diario de pesca se cierra",
   "subtitles.tide.journal_open": "El diario de pesca se abre",
   "subtitles.tide.page_flip": "La página cruje",
-
   "text.autoconfig.tide.category.general": "General",
   "text.autoconfig.tide.category.items": "Objetos",
   "text.autoconfig.tide.category.journal": "Diario",
@@ -766,7 +754,6 @@
   "text.autoconfig.tide.option.minigame.minigameDifficulty": "Dificultad del Minijuego",
   "text.autoconfig.tide.option.minigame.minigameDifficulty.@Tooltip": "Multiplicador que aumenta o disminuye la velocidad del minijuego",
   "text.autoconfig.tide.title": "Configuración de Tide",
-
   "text.tide.accessory_tooltip.prefix": "Al aplicarse:",
   "text.tide.bait_tooltip.crate": "%s probabilidad de caja",
   "text.tide.bait_tooltip.lucky": "%s suerte de pesca",
@@ -780,5 +767,6 @@
   "text.tide.rod_tooltip.diamond_bonus": "XP extra",
   "text.tide.rod_tooltip.gold_bonus": "+1 de suerte",
   "text.tide.rod_tooltip.midas_bonus": "Captura objetos de oro adicionales",
-  "text.tide.rod_tooltip.netherite_bonus": "Puede pescar en lava"
+  "text.tide.rod_tooltip.netherite_bonus": "Puede pescar en lava",
+  "item.tide.fish_satchel.fullness": "%s/%s"
 }

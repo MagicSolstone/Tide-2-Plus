@@ -18,7 +18,7 @@ public class DepthMeterItem extends AbstractInformationalItem {
     public Component parseResult(String result) {
         int depth = Integer.parseInt(result);
         char addition = depth > 0 ? '-' : '+';
-        return Component.literal(addition + result.replace("-", "") + " m");
+        return Component.literal(addition + com.li64.tide.util.TideUtils.formatDepth(Math.abs(depth)));
     }
 
     @Override

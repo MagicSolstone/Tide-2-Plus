@@ -863,5 +863,6 @@
   "text.tide.rod_tooltip.prismarine_bonus": "+1 speed and luck while in the rain",
   "text.tide.rod_tooltip.sunflower_bonus": "+1 luck while in sunlight",
   "text.tide.rod_tooltip.village_bonus": "Can catch additional loot",
-  "trinkets.slot.hand.informational": "Informational"
+  "trinkets.slot.hand.informational": "Informational",
+  "item.tide.fish_satchel.fullness": "%s/%s"
 }

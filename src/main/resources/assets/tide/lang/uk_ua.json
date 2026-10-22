@@ -804,5 +804,6 @@
   "text.tide.rod_tooltip.prismarine_bonus": "+1 до швидкості та везіння під час дощу",
   "text.tide.rod_tooltip.sunflower_bonus": "+1 до везіння під сонячним світлом",
   "text.tide.rod_tooltip.village_bonus": "Дозволяє виловлювати додаткову здобич",
-  "trinkets.slot.hand.informational": "Інформаційні"
+  "trinkets.slot.hand.informational": "Інформаційні",
+  "item.tide.fish_satchel.fullness": "%s/%s"
 }

@@ -59,6 +59,8 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
         if (entity == null || entity.getType() != entityType) {
             entity = entityType.create(Minecraft.getInstance().level, EntitySpawnReason.LOAD);
             if (entity != null) {
+                // never added to the world, so give it the placeholder id vanilla's spawner display uses
+                entity.setId(-1);
                 if (displayData.nbt().isPresent()) entity.load(TagValueInput.create(ProblemReporter.DISCARDING,
                         Minecraft.getInstance().level.registryAccess(), displayData.nbt().get()));
                 if (CompatHelper.isHybridAquaticLoaded()) CompatHelper.hybridAquaticApplyVariant(entity, display.getDisplayStack());

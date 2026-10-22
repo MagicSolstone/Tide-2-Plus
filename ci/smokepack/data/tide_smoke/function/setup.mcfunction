@@ -9,6 +9,10 @@ fill ~-6 ~-1 ~-2 ~6 ~-1 ~1 minecraft:grass_block
 fill ~-6 ~-5 ~2 ~6 ~-1 ~14 minecraft:stone
 fill ~-5 ~-4 ~3 ~5 ~-1 ~13 minecraft:water
 tp @s ~ ~ ~ 0 35
+setblock ~2 ~ ~1 minecraft:stone
+setblock ~2 ~ ~0 tide:fish_display[facing=north]{fish:{id:"tide:catfish",count:1}}
+setblock ~-2 ~ ~1 minecraft:stone
+setblock ~-2 ~ ~0 tide:fish_display[facing=north]{fish:{id:"tide:largemouth_bass",count:1}}
 summon tide:largemouth_bass ~-2 ~-2 ~5 {NoAI:1b,Rotation:[90f,0f]}
 summon tide:rainbow_trout ~0 ~-2 ~6 {NoAI:1b,Rotation:[90f,0f]}
 summon tide:guppy ~2 ~-2 ~5 {NoAI:1b,Rotation:[90f,0f]}

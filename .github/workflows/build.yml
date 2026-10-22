@@ -58,13 +58,16 @@ jobs:
         shell: bash
         run: |
           set +e
-          sudo apt-get install -y -q xvfb imagemagick xdotool libgl1-mesa-dri mesa-vulkan-drivers > /dev/null 2>&1
+          sudo apt-get update -q > /dev/null 2>&1
+          sudo apt-get install -y -q xvfb imagemagick xdotool libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-utils mesa-vulkan-drivers 2>&1 | tail -3
+          export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
           mkdir -p run/saves shots
           rm -rf run/saves/smoke && cp -r run/world run/saves/smoke
           mkdir -p run/saves/smoke/datapacks && cp -r ci/smokepack run/saves/smoke/datapacks/tide_smoke
           printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\ntutorialStep:none\nrenderDistance:4\nsimulationDistance:5\nsoundCategory_master:0.0\npauseOnLostFocus:false\n' > run/options.txt
-          Xvfb :99 -screen 0 1280x720x24 > /dev/null 2>&1 &
+          Xvfb :99 -screen 0 1280x720x24 +extension GLX +render -nolisten tcp > xvfb.log 2>&1 &
           export DISPLAY=:99
+          sleep 3; glxinfo -B 2>&1 | head -12 | tee glx.txt; cat xvfb.log | head -5
           ./gradlew runSmokeClient --no-daemon > client.log 2>&1 &
           pid=$!
           for i in $(seq 1 60); do
@@ -84,7 +87,7 @@ jobs:
           xdotool mousemove 340 140; sleep 0.5; xdotool click 1; sleep 2; import -window root shots/4b-angler.png
           xdotool key Escape; sleep 1
           xdotool key Escape; sleep 2; import -window root shots/5-after.png
-          pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null
+          pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null; true
 
       # The full build output is hard to read from outside GitHub, so the errors (and the tail
       # of the log) are also written to the ci-results branch: one file per run, plus latest.
@@ -120,7 +123,7 @@ jobs:
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

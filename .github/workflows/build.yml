@@ -35,6 +35,8 @@ jobs:
         if: always() && github.event_name == 'push'
         shell: bash
         run: |
+          set +e +o pipefail
+          touch build.log
           status="${{ steps.build.outcome }}"
           sha="${GITHUB_SHA::7}"
           mkdir -p /tmp/results
@@ -53,6 +55,7 @@ jobs:
           cp /tmp/results/latest.txt /tmp/results/latest-tail.txt .
           git add -A
           git commit -qm "build $sha: $status"
+          tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done
           git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-results
 
       - name: Dev build download

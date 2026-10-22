@@ -38,3 +38,9 @@ java {
 jar {
 	from("LICENSE.txt") { rename { "${it}_tide" } }
 }
+
+// CI helper: copy everything the code compiles against into build/cp (for working offline)
+tasks.register('dumpClasspath', Copy) {
+    from configurations.compileClasspath
+    into layout.buildDirectory.dir('cp')
+}

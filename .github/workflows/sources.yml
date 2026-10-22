@@ -17,7 +17,7 @@ jobs:
           java-version: 25
       - uses: gradle/actions/setup-gradle@v4
       - name: Set up Minecraft
-        run: ./gradlew dependencies --no-daemon > /dev/null || true
+        run: ./gradlew dumpClasspath --no-daemon || true
       - name: Push the sources to the mc-sources branch
         shell: bash
         run: |
@@ -28,6 +28,8 @@ jobs:
           curl -sL -o /tmp/vf.jar https://repo1.maven.org/maven2/org/vineflower/vineflower/1.11.1/vineflower-1.11.1.jar
           java -Xmx6g -jar /tmp/vf.jar -din=0 -rbr=1 -dgs=1 -log=WARN mc.jar src > /dev/null 2>&1
           echo "::notice::decompiled $(find src -name '*.java' | wc -l) files"
+          mkdir -p cp && cp $GITHUB_WORKSPACE/build/cp/*.jar cp/ ; du -sh cp; ls cp | head -200 > cp.txt
+          find cp -size +95M -delete
           ls -la
           git config --global user.name ci; git config --global user.email ci@users.noreply.github.com
           git add -A && git commit -qm "26.3 sources" && git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" mc-sources

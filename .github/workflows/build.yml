@@ -114,7 +114,7 @@ jobs:
           rm -rf run/world/datapacks/tide_smoke; mkdir -p run/world/datapacks
           cp -r ci/smokepack run/world/datapacks/tide_smoke
           sed -i 's/^fishinglevel set @s .*/fishinglevel set @s 2/' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
-          printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nenforce-secure-profile=false\n' > run/server.properties
+          printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nenforce-secure-profile=false\nwhite-list=false\nenforce-whitelist=false\n' > run/server.properties
           ./gradlew runServer --no-daemon > server-mp.log 2>&1 &
           spid=$!
           for i in $(seq 1 84); do sleep 5; grep -q "Done (" server-mp.log && break; kill -0 $spid 2>/dev/null || break; done

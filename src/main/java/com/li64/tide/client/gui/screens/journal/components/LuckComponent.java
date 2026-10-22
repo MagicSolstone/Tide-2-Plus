@@ -1,5 +1,6 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import com.li64.tide.client.Gui26;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -22,7 +23,7 @@ public class LuckComponent extends ProfileComponent {
     @Override
     public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int center = x + AREA_WIDTH / 2;
-        graphics.drawString(font, text, center - font.width(text) / 2, y, TEXT_COLOR, false);
+        Gui26.text(graphics, font, text, center - font.width(text) / 2, y, TEXT_COLOR, false);
     }
 
     @Override

@@ -1,10 +1,13 @@
 package com.li64.tide.client.gui;
 
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -15,10 +18,15 @@ public class TideToasts {
     private static final Identifier TEXTURE = Tide.resource("minecraft", "toast/recipe");
 
     public static void display(Toast toast) {
-        Minecraft.getInstance().getToasts().addToast(toast);
+        Minecraft.getInstance().gui.toastManager().addToast(toast);
     }
 
-    public record NewPageToast(Component title, Component description, ItemStack displayedItem) implements Toast {
+    public static final class NewPageToast implements Toast {
+        private final Component title;
+        private final Component description;
+        private final ItemStack displayedItem;
+        private Visibility wantedVisibility = Visibility.SHOW;
+
         public NewPageToast(Component title, Component description, ItemStack displayedItem) {
             this.title = title;
             this.description = description;
@@ -27,12 +35,21 @@ public class TideToasts {
         }
 
         @Override
-        public @NotNull Visibility render(GuiGraphicsExtractor graphics, ToastComponent component, long time) {
-            graphics.blitSprite(TEXTURE, 0, 0, this.width(), this.height());
-            graphics.drawString(component.getMinecraft().font, title, 30, 7, -11534256, false);
-            graphics.drawString(component.getMinecraft().font, description, 30, 18, -16777216, false);
-            graphics.renderFakeItem(displayedItem, 8, 8);
-            return (double) (time) >= 5000.0D * component.getNotificationDisplayTimeMultiplier() ? Visibility.HIDE : Visibility.SHOW;
+        public @NotNull Visibility getWantedVisibility() {
+            return this.wantedVisibility;
+        }
+
+        @Override
+        public void update(@NotNull ToastManager manager, long fullyVisibleForMs) {
+            this.wantedVisibility = fullyVisibleForMs >= 5000.0 * manager.getNotificationDisplayTimeMultiplier() ? Visibility.HIDE : Visibility.SHOW;
+        }
+
+        @Override
+        public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, @NotNull Font font, long fullyVisibleForMs) {
+            graphics.blitSprite(RenderPipelines.GUI_TEXTURED, TEXTURE, 0, 0, this.width(), this.height());
+            Gui26.text(graphics, font, title, 30, 7, -11534256, false);
+            Gui26.text(graphics, font, description, 30, 18, -16777216, false);
+            graphics.fakeItem(displayedItem, 8, 8);
         }
     }
 }

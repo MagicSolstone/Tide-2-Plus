@@ -1,5 +1,7 @@
 package com.li64.tide.client.gui.screens.journal;
 
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.components.*;
 import com.li64.tide.compat.seasons.SeasonsCompat;
@@ -160,11 +162,11 @@ public class FishProfile implements Renderable {
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         // render background
         int tlX = (graphics.guiWidth() - BG_WIDTH) / 2;
         int tlY = (graphics.guiHeight() - BG_HEIGHT) / 2;
-        graphics.blit(BORDERS, tlX, tlY, 0, 0, BG_WIDTH, BG_HEIGHT, BG_WIDTH, BG_HEIGHT);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BORDERS, tlX, tlY, 0, 0, BG_WIDTH, BG_HEIGHT, BG_WIDTH, BG_HEIGHT);
 
         // render title
         int titleX = tlX + 110;
@@ -172,8 +174,8 @@ public class FishProfile implements Renderable {
         Component title = TideUtils.removeRawTextInName(fish.getHoverName());
         int titleWidth = font.width(title);
         int underlineWidth = titleWidth + 6;
-        graphics.drawString(font, title, titleX - titleWidth / 2, titleY, TEXT_COLOR, false);
-        graphics.blitSprite(FishingJournal.LINE_BOTTOM, titleX - underlineWidth / 2,
+        Gui26.text(graphics, font, title, titleX - titleWidth / 2, titleY, TEXT_COLOR, false);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, FishingJournal.LINE_BOTTOM, titleX - underlineWidth / 2,
                 titleY + font.lineHeight + 2, underlineWidth, 2);
 
         // get fish sizing and offsets
@@ -186,49 +188,41 @@ public class FishProfile implements Renderable {
         final float scale = 2f;
 
         // scale around the fish's center
-        graphics.pose().pushPose();
-        graphics.pose().translate(itemCenterX, itemCenterY, 0);
-        graphics.pose().scale(scale, scale, 1f);
-        graphics.pose().translate(-itemCenterX, -itemCenterY, 0);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(itemCenterX, itemCenterY);
+        graphics.pose().scale(scale, scale);
+        graphics.pose().translate(-itemCenterX, -itemCenterY);
 
         // offset for shadow rendering
-        graphics.pose().pushPose();
-        graphics.pose().translate(shadowOffset / scale, shadowOffset / scale, 0f);
+        graphics.pose().pushMatrix();
+        graphics.pose().translate(shadowOffset / scale, shadowOffset / scale);
 
-        // set shadow color
-        graphics.flush();
-        RenderSystem.setShaderColor(0.8431f, 0.7098f, 0.5804f, 1f);
-
-        // render fish silhouette
+        // render fish silhouette (its shadow)
         if (!isLarge) FishingJournal.renderItemSilhouette(graphics, fish,
-                itemCenterX - fishSize / 2, itemCenterY - fishSize / 2);
+                itemCenterX - fishSize / 2, itemCenterY - fishSize / 2, FishingJournal.SHADOW_COLOR);
         else FishingJournal.renderTextureSilhouette(graphics, alternateTexture,
-                itemCenterX - fishSize / 2, itemCenterY - fishSize / 2, fishSize, fishSize);
-
-        // reset shader color
-        graphics.flush();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+                itemCenterX - fishSize / 2, itemCenterY - fishSize / 2, fishSize, fishSize, FishingJournal.SHADOW_COLOR);
 
         // pop shadow offset
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
 
-        if (!isLarge) graphics.renderItem(fish, itemCenterX - fishSize / 2, itemCenterY - fishSize / 2);
-        else graphics.blit(alternateTexture,
+        if (!isLarge) graphics.item(fish, itemCenterX - fishSize / 2, itemCenterY - fishSize / 2);
+        else graphics.blit(RenderPipelines.GUI_TEXTURED, alternateTexture,
                 itemCenterX - fishSize / 2, itemCenterY - fishSize / 2,
                 0, 0, fishSize, fishSize, fishSize, fishSize);
 
         // pop fish scaling
-        graphics.pose().popPose();
+        graphics.pose().popMatrix();
 
         // render rarity text
         int stars = rarity.getNumStars();
         int rarityX = tlX + 40;
         int rarityY = tlY + 167;
-        graphics.drawString(font, rarityPrefix, rarityX, rarityY, TEXT_COLOR, false);
-        for (int i = 0; i < stars; i++) graphics.blit(STAR,
+        Gui26.text(graphics, font, rarityPrefix, rarityX, rarityY, TEXT_COLOR, false);
+        for (int i = 0; i < stars; i++) graphics.blit(RenderPipelines.GUI_TEXTURED, STAR,
                 rarityX + font.width(rarityPrefix) + i * 8, rarityY, 0, 0,
                 7, 6, 7, 6);
-        graphics.drawString(font, ")", rarityX + font.width(rarityPrefix) + stars * 8, rarityY, TEXT_COLOR, false);
+        Gui26.text(graphics, font, ")", rarityX + font.width(rarityPrefix) + stars * 8, rarityY, TEXT_COLOR, false);
 
         // render description
         int descX = tlX + 38;
@@ -236,7 +230,7 @@ public class FishProfile implements Renderable {
         List<FormattedCharSequence> descriptionLines = font.split(this.description, 156);
         descY -= (descriptionLines.size() * font.lineHeight) / 2;
         for (int i = 0; i < descriptionLines.size(); i++) {
-            graphics.drawString(font, descriptionLines.get(i), descX,
+            Gui26.text(graphics, font, descriptionLines.get(i), descX,
                     descY + i * font.lineHeight, TEXT_COLOR, false);
         }
 

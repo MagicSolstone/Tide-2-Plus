@@ -1,5 +1,6 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import com.li64.tide.data.journal.FishRarity;
@@ -23,7 +24,7 @@ public class RarityComponent extends ProfileComponent {
         int padding = 2;
         for (int i = 0; i < numStars; i++) {
             int cellSize = 7 + padding;
-            graphics.blit(STAR, center - ((numStars - 1) * cellSize / 2) + (i * cellSize) - 4, y,
+            graphics.blit(RenderPipelines.GUI_TEXTURED, STAR, center - ((numStars - 1) * cellSize / 2) + (i * cellSize) - 4, y,
                     0, 0, 7, 6, 7, 6);
         }
     }

@@ -1,13 +1,5 @@
 {
   "parent": "minecraft:item/handheld_rod",
-  "overrides": [
-    {
-      "model": "tide:item/stone_fishing_rod_cast",
-      "predicate": {
-        "tide:cast": 1
-      }
-    }
-  ],
   "textures": {
     "layer0": "tide:item/stone_fishing_rod"
   }

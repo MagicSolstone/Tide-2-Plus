@@ -19,5 +19,5 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
     }
 
     @Override
-    protected void renderErrorIcon(@NotNull GuiGraphicsExtractor graphics, int p_266822_, int p_267045_) {}
+    protected void extractErrorIcon(@NotNull GuiGraphicsExtractor graphics, int x, int y) {}
 }

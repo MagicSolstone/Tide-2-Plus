@@ -1,31 +1,21 @@
 package com.li64.tide.registries.entities.models;
 
 import com.li64.tide.Tide;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.li64.tide.registries.entities.renderers.FishRenderState;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Mob;
-
-/*if >=1.21*/import net.minecraft.util.ARGB;
 
 import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
-public abstract class FishModel extends EntityModel<Mob> {
+public abstract class FishModel extends EntityModel<FishRenderState> {
     private final ArrayList<SwimAnimConfig> swimConfigs = new ArrayList<>();
 
-    private final ModelPart root;
-
     protected FishModel(EntityRendererProvider.Context context, ModelLayerLocation modelLocation) {
-        this.root = context.bakeLayer(modelLocation);
-    }
-
-    protected ModelPart root() {
-        return this.root;
+        super(context.bakeLayer(modelLocation));
     }
 
     protected void addSwimAnimation(String path, float speed, float magnitude) {
@@ -60,9 +50,10 @@ public abstract class FishModel extends EntityModel<Mob> {
     }
 
     @Override
-    public void setupAnim(Mob fish, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        float multiplier = (fish.isInWater() || fish.isInLava()) ? 1.0F : 1.5F;
-        this.swimConfigs.forEach(config -> config.animate(ageInTicks, multiplier, ageInTicks == 0));
+    public void setupAnim(FishRenderState fish) {
+        super.setupAnim(fish);
+        float multiplier = fish.inLiquid ? 1.0F : 1.5F;
+        this.swimConfigs.forEach(config -> config.animate(fish.ageInTicks, multiplier, fish.isDisplay));
     }
 
     public double xTiltScale() {
@@ -95,11 +86,6 @@ public abstract class FishModel extends EntityModel<Mob> {
 
     public boolean flipInAir() {
         return true;
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
-        this.root().render(poseStack, buffer, packedLight, packedOverlay, ARGB.ARGB32.multiply(color, this.tint()));
     }
 
     private record SwimAnimConfig(ModelPart modelPart, float speed, float magnitude, float offset, float origin, SwimAxis axis) {

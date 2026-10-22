@@ -1,23 +1,21 @@
 package com.li64.tide.registries.particles;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Quaternionf;
 
-import java.util.function.BiConsumer;
-
-public class VoidRipple extends TextureSheetParticle {
-    private final BiConsumer<Quaternionf, Camera> facingCameraFunc;
+/** A ripple lying flat on the surface of the void (faces up, turns with the camera's yaw). */
+public class VoidRipple extends SingleQuadParticle {
     private final SpriteSet sprites;
 
     protected VoidRipple(ClientLevel level, double x, double y, double z, SpriteSet sprites, float quadSize) {
-        super(level, x, y, z, 0, 0, 0);
+        super(level, x, y, z, 0, 0, 0, sprites.first());
         this.lifetime = 8;
         this.hasPhysics = false;
         this.xd = 0;
@@ -26,7 +24,6 @@ public class VoidRipple extends TextureSheetParticle {
         this.sprites = sprites;
         this.quadSize = quadSize;
         this.setSpriteFromAge(sprites);
-        this.facingCameraFunc = (q, cam) -> q.set(0, 0, 0, cam.rotation().w).rotateLocalX(-Mth.HALF_PI);
     }
 
     @Override
@@ -36,59 +33,27 @@ public class VoidRipple extends TextureSheetParticle {
     }
 
     @Override
-    public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    protected @NotNull Layer getLayer() {
+        return Layer.TRANSLUCENT;
     }
 
     @Override
     public @NotNull FacingCameraMode getFacingCameraMode() {
-        return (q, cam, f) -> facingCameraFunc.accept(q, cam);
+        return (q, cam, partialTick) -> q.set(0, 0, 0, cam.rotation().w).rotateLocalX(-Mth.HALF_PI);
     }
-
-    @Override
-    public void render(VertexConsumer buffer, Camera cam, float partialTicks) {
-        Vec3 camPos = cam.getPosition();
-        float x = (float)(Mth.lerp(partialTicks, this.xo, this.x) - camPos.x());
-        float y = (float)(Mth.lerp(partialTicks, this.yo, this.y) - camPos.y());
-        float z = (float)(Mth.lerp(partialTicks, this.zo, this.z) - camPos.z());
-        Quaternionf q = new Quaternionf();
-        facingCameraFunc.accept(q, cam);
-        if (this.roll != 0.0F) q.rotateZ(Mth.lerp(partialTicks, this.oRoll, this.roll));
-
-        this.renderRotatedQuad(buffer, q, x, y, z, partialTicks);
-    }
-
-    protected void renderRotatedQuad(@NotNull VertexConsumer buffer, @NotNull Quaternionf quaternion,
-                                     float x, float y, float z, float partialTicks) {
-        float size = this.getQuadSize(partialTicks);
-        float u0 = this.getU0();
-        float u1 = this.getU1();
-        float v0 = this.getV0();
-        float v1 = this.getV1();
-        int color = this.getLightColor(partialTicks);
-        this.renderVertex(buffer, quaternion, x, y, z, 1f, -1f, size, u1, v1, color);
-        this.renderVertex(buffer, quaternion, x, y, z, 1f, 1f, size, u1, v0, color);
-        this.renderVertex(buffer, quaternion, x, y, z, -1f, 1f, size, u0, v0, color);
-        this.renderVertex(buffer, quaternion, x, y, z, -1f, -1f, size, u0, v1, color);
-    }
-
 
     public record LargeProvider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         @Override
-        public @NotNull Particle createParticle(@NotNull SimpleParticleType type,
-                                                @NotNull ClientLevel level,
-                                                double x, double y, double z,
-                                                double vx, double vy, double vz) {
+        public @NotNull Particle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level,
+                                                double x, double y, double z, double vx, double vy, double vz, RandomSource random) {
             return new VoidRipple(level, x, y, z, sprites, 0.5f);
         }
     }
 
     public record SmallProvider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         @Override
-        public @NotNull Particle createParticle(@NotNull SimpleParticleType type,
-                                                @NotNull ClientLevel level,
-                                                double x, double y, double z,
-                                                double vx, double vy, double vz) {
+        public @NotNull Particle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level,
+                                                double x, double y, double z, double vx, double vy, double vz, RandomSource random) {
             return new VoidRipple(level, x, y, z, sprites, 0.25f);
         }
     }

@@ -1,5 +1,7 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import net.minecraft.client.gui.Font;
@@ -29,8 +31,8 @@ public class DepthComponent extends BarComponent {
         int center = x + ProfileComponent.AREA_WIDTH / 2;
 
         // render temperature bar
-        graphics.drawString(font, TITLE, center - font.width(TITLE) / 2, y, ProfileComponent.TEXT_COLOR, false);
-        graphics.blit(EMPTY_BAR, x + BAR_X, y + BAR_Y, 0, 0, BAR_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT);
+        Gui26.text(graphics, font, TITLE, center - font.width(TITLE) / 2, y, ProfileComponent.TEXT_COLOR, false);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, EMPTY_BAR, x + BAR_X, y + BAR_Y, 0, 0, BAR_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT);
         renderFilledBar(DEPTH_BAR, graphics, x + BAR_X, y + BAR_Y, minDepth, maxDepth);
 
         // render temperature mouse cursor
@@ -38,8 +40,8 @@ public class DepthComponent extends BarComponent {
                 && mouseY >= y + BAR_Y && mouseY <= y + BAR_Y + BAR_HEIGHT) {
             float depthFloat = Mth.clamp((float) (mouseX - (x + BAR_X)) / BAR_WIDTH, 0f, 1f);
             int depthMeters = Math.abs(floatToDepth(depthFloat) - MAX_Y);
-            graphics.renderTooltip(font, Component.literal(depthMeters + " m"), mouseX, y + BAR_Y);
-            graphics.blit(CURSOR, mouseX - 1, y + BAR_Y, 0, 0, 3, 9, 3, 9);
+            graphics.setTooltipForNextFrame(font, Component.literal(depthMeters + " m"), mouseX, y + BAR_Y);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, CURSOR, mouseX - 1, y + BAR_Y, 0, 0, 3, 9, 3, 9);
         }
     }
 

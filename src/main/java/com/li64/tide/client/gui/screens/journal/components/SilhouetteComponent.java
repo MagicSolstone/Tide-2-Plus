@@ -31,8 +31,7 @@ public class SilhouetteComponent extends ProfileComponent {
         final int shadowOffset = 1;
 //
 //        // set shadow color
-//        graphics.flush();
-//        RenderSystem.setShaderColor(0.8431f, 0.7098f, 0.5804f, 1f);
+//        //        RenderSystem.setShaderColor(0.8431f, 0.7098f, 0.5804f, 1f);
 //
 //        // render fish silhouette
 //        if (!isLarge) FishingJournal.renderItemSilhouette(graphics, fish,
@@ -43,19 +42,11 @@ public class SilhouetteComponent extends ProfileComponent {
 //                centerY - fishSize / 2 + shadowOffset, fishSize, fishSize);
 
         // setup shader color for silhouette
-        graphics.flush();
-//        RenderSystem.setShaderColor(0.8431f, 0.7098f, 0.5804f, 1f); // #d7b694
-        RenderSystem.setShaderColor(215 / 255f, 181 / 255f, 148 / 255f, 1f); // #b08561
-//        RenderSystem.setShaderColor(176 / 255f, 133 / 255f, 97 / 255f, 1f); // #b08561
-
+        //        RenderSystem.setShaderColor(0.8431f, 0.7098f, 0.5804f, 1f); // #d7b694
         if (!isLarge) FishingJournal.renderItemSilhouette(graphics, fish,
-                centerX - fishSize / 2, centerY - fishSize / 2);
+                centerX - fishSize / 2, centerY - fishSize / 2, FishingJournal.SHADOW_COLOR);
         else FishingJournal.renderTextureSilhouette(graphics, alternateTexture,
-                centerX - fishSize / 2, centerY - fishSize / 2, fishSize, fishSize);
-
-        // reset shader color
-        graphics.flush();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+                centerX - fishSize / 2, centerY - fishSize / 2, fishSize, fishSize, FishingJournal.SHADOW_COLOR);
     }
 
     @Override

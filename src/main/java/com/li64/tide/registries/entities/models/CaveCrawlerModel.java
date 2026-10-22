@@ -57,9 +57,9 @@ public class CaveCrawlerModel extends FishModel {
 	}
 
     @Override
-    public void setupAnim(Mob fish, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        super.setupAnim(fish, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        float value = Mth.cos(1.4f * fish.walkAnimation.position()) * 0.32f;
+    public void setupAnim(com.li64.tide.registries.entities.renderers.FishRenderState fish) {
+        super.setupAnim(fish);
+        float value = Mth.cos(1.4f * fish.walkAnimationPos) * 0.32f;
         legFL.yRot = value;
         legFR.yRot = -value;
         legBL.yRot = -value;

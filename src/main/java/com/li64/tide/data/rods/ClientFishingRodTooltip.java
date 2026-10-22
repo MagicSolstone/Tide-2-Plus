@@ -1,5 +1,7 @@
 package com.li64.tide.data.rods;
 
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.util.TideUtils;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -20,10 +22,11 @@ public record ClientFishingRodTooltip(int slots, BaitContents contents) implemen
     private static final int SLOT_SIZE_Y = 20;
 
     @Override
-    public int getHeight() {
+    public int getHeight(@NotNull Font font) {
         return this.backgroundHeight() + MARGIN_Y + OFFSET_Y;
     }
 
+    @Override
     public int getWidth(@NotNull Font font) {
         return Math.max(this.backgroundWidth(), font.width(MESSAGE));
     }
@@ -37,10 +40,10 @@ public record ClientFishingRodTooltip(int slots, BaitContents contents) implemen
     }
 
     @Override
-    public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphicsExtractor graphics) {
+    public void extractImage(@NotNull Font font, int x, int y, int w, int h, @NotNull GuiGraphicsExtractor graphics) {
         int gridWidth = this.gridWidth();
 
-        graphics.drawString(font, MESSAGE, x, y, DyeColor.LIGHT_GRAY.getTextColor());
+        Gui26.text(graphics, font, MESSAGE, x, y, DyeColor.LIGHT_GRAY.getTextColor());
 
         for (int i = 0; i < gridWidth; i++) {
             int dspX = x + i * SLOT_SIZE_X + BG_BORDER;
@@ -51,13 +54,13 @@ public record ClientFishingRodTooltip(int slots, BaitContents contents) implemen
     }
 
     private void renderSlot(int x, int y, int index, GuiGraphicsExtractor graphics, Font font) {
-        graphics.blitSprite(SLOT_BACKGROUND_SPRITE, x - 4 + BG_BORDER, y - 4 + BG_BORDER, 24, 24);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_BACKGROUND_SPRITE, x - 4 + BG_BORDER, y - 4 + BG_BORDER, 24, 24);
 
         if (index >= this.contents.size()) return;
         ItemStack stack = this.contents.items().get(index);
 
-        graphics.renderItem(stack, x + BG_BORDER, y + BG_BORDER, index);
-        graphics.renderItemDecorations(font, stack, x + BG_BORDER, y + BG_BORDER);
+        graphics.item(stack, x + BG_BORDER, y + BG_BORDER, index);
+        graphics.itemDecorations(font, stack, x + BG_BORDER, y + BG_BORDER);
     }
 
     private int gridWidth() {

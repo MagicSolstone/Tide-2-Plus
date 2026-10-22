@@ -1,5 +1,7 @@
 package com.li64.tide.client.gui.overlays;
 
+import net.minecraft.util.ARGB;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.registries.entities.misc.fishing.HookAccessor;
 import com.li64.tide.util.TideUtils;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -35,14 +37,8 @@ public class SonarOverlay {
         int y = graphics.guiHeight() / 2 + 12;
         float alpha = fadeout / MAX_FADEOUT;
 
-        RenderSystem.enableBlend();
-        graphics.setColor(1f, 1f, 1f, alpha);
-
-        graphics.blitSprite(SLOT_BACKGROUND_SPRITE, x - 4, y - 4, 24, 24);
-        graphics.renderItem(stack, x, y);
-
-        RenderSystem.disableBlend();
-        graphics.setColor(1f, 1f, 1f, 1f);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, SLOT_BACKGROUND_SPRITE, x - 4, y - 4, 24, 24, ARGB.white(alpha));
+        if (alpha > 0.4f) graphics.item(stack, x, y); // (26.x can't fade items, so it just goes as the slot fades)
     }
 
     public static void show(ItemStack stack) {

@@ -1,26 +1,6 @@
 {
-   "parent": "minecraft:item/generated",
-   "textures": {
-      "layer0": "tide:item/fish_satchel"
-   },
-   "overrides": [
-      {
-         "predicate": {
-            "tide:satchel_state": 0.3
-         },
-         "model": "tide:item/fish_satchel_open"
-      },
-      {
-         "predicate": {
-            "tide:satchel_state": 0.6
-         },
-         "model": "tide:item/fish_satchel_fish"
-      },
-      {
-         "predicate": {
-            "tide:satchel_state": 1
-         },
-         "model": "tide:item/fish_satchel_two_fish"
-      }
-   ]
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/fish_satchel"
+  }
 }

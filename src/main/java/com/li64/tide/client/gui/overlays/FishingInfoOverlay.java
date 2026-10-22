@@ -1,5 +1,7 @@
 package com.li64.tide.client.gui.overlays;
 
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.config.TideClientConfig;
 import net.minecraft.client.Minecraft;
@@ -25,7 +27,7 @@ public class FishingInfoOverlay {
 
         int i = 0;
         for (Map.Entry<Identifier, Component> entry : CLIENT_INFO_DATA.entrySet()) {
-            graphics.blit(
+            graphics.blit(RenderPipelines.GUI_TEXTURED, 
                     Tide.resource("textures/gui/info_icons/" + entry.getKey().getPath() + ".png"),
                     placement.isLeft()
                             ? PADDING + offsetX
@@ -36,7 +38,7 @@ public class FishingInfoOverlay {
                     0f, 0f, 9, 9, 9, 9
             );
             Component text = entry.getValue();
-            graphics.drawString(
+            Gui26.text(graphics, 
                     font, text,
                     placement.isLeft()
                             ? PADDING + 12 + offsetX

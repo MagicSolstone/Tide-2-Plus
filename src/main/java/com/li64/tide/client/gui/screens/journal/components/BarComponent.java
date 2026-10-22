@@ -1,9 +1,9 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.Identifier;
 
 public abstract class BarComponent extends ProfileComponent {
@@ -22,10 +22,10 @@ public abstract class BarComponent extends ProfileComponent {
         int minX = Math.max((int)(min * BAR_WIDTH), 0);
         int maxX = Math.min((int)(max * BAR_WIDTH), BAR_WIDTH);
         int width = maxX - minX;
-        graphics.blit(bar, x + minX, y, minX, 0, width, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, bar, x + minX, y, minX, 0, width, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT);
 
         // render dividers on time bar
-        graphics.blit(DIVIDER, x + minX - 1, y - 1, 0, 0, DIV_WIDTH, DIV_HEIGHT, DIV_WIDTH, DIV_HEIGHT);
-        graphics.blit(DIVIDER, x + maxX - 1, y - 1, 0, 0, DIV_WIDTH, DIV_HEIGHT, DIV_WIDTH, DIV_HEIGHT);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, DIVIDER, x + minX - 1, y - 1, 0, 0, DIV_WIDTH, DIV_HEIGHT, DIV_WIDTH, DIV_HEIGHT);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, DIVIDER, x + maxX - 1, y - 1, 0, 0, DIV_WIDTH, DIV_HEIGHT, DIV_WIDTH, DIV_HEIGHT);
     }
 }

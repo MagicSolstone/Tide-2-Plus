@@ -1,5 +1,7 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import com.li64.tide.data.fishing.conditions.FishingCondition;
@@ -37,7 +39,7 @@ public class DimensionsComponent extends ProfileComponent {
     @Override
     public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int center = x + AREA_WIDTH / 2;
-        graphics.drawString(font, TITLE, center - font.width(TITLE) / 2, y, TEXT_COLOR, false);
+        Gui26.text(graphics, font, TITLE, center - font.width(TITLE) / 2, y, TEXT_COLOR, false);
 
         int count = dimensions.size();
         int spriteY = y + 12;
@@ -48,10 +50,10 @@ public class DimensionsComponent extends ProfileComponent {
             int spriteX = center - ((count - 1) * cellSize / 2) + (i * cellSize) - 4;
 
             int offset = getOffset(dimensions.get(i));
-            graphics.blit(DIMENSIONS, spriteX, spriteY, offset, 0, 10, 10, 30, 10);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, DIMENSIONS, spriteX, spriteY, offset, 0, 10, 10, 30, 10);
 
             if (mouseX >= spriteX && mouseX <= spriteX + 10 && mouseY >= spriteY && mouseY <= spriteY + 10)
-                graphics.renderTooltip(font, Component.translatable("journal.info.dimensions." + dimensions.get(i).identifier().getPath()), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, Component.translatable("journal.info.dimensions." + dimensions.get(i).identifier().getPath()), mouseX, mouseY);
         }
     }
 

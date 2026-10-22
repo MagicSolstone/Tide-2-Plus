@@ -1,5 +1,7 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import com.li64.tide.util.TideUtils;
@@ -27,20 +29,20 @@ public class TemperatureComponent extends BarComponent {
         int center = x + ProfileComponent.AREA_WIDTH / 2;
 
         // render temperature bar
-        graphics.drawString(font, TITLE, center - font.width(TITLE) / 2, y, ProfileComponent.TEXT_COLOR, false);
-        graphics.blit(EMPTY_BAR, x + BAR_X, y + BAR_Y, 0, 0, BAR_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT);
+        Gui26.text(graphics, font, TITLE, center - font.width(TITLE) / 2, y, ProfileComponent.TEXT_COLOR, false);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, EMPTY_BAR, x + BAR_X, y + BAR_Y, 0, 0, BAR_WIDTH, BAR_HEIGHT, BAR_WIDTH, BAR_HEIGHT);
         renderFilledBar(TEMP_BAR, graphics, x + BAR_X, y + BAR_Y, minTemp / 2f + 0.5f, maxTemp / 2f + 0.5f);
 
         // render temperature mouse cursor
         if (mouseX >= x + BAR_X && mouseX <= x + BAR_X + BAR_WIDTH
                 && mouseY >= y + BAR_Y && mouseY <= y + BAR_Y + BAR_HEIGHT) {
             float temp = Mth.clamp((float) (mouseX - (x + BAR_X)) / BAR_WIDTH, 0f, 1f) * 2f - 1f;
-            graphics.renderTooltip(font, Component.literal(
+            graphics.setTooltipForNextFrame(font, Component.literal(
                     Math.round(TideUtils.mcTempToRealTemp(temp))
                             + (Tide.CLIENT_CONFIG.journal.useFahrenheit ? "°F" : "°C")),
                     mouseX, y + BAR_Y
             );
-            graphics.blit(CURSOR, mouseX - 1, y + BAR_Y, 0, 0, 3, 9, 3, 9);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, CURSOR, mouseX - 1, y + BAR_Y, 0, 0, 3, 9, 3, 9);
         }
     }
 

@@ -9,7 +9,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class TideGuiOverlays {
     public static void render(GuiGraphicsExtractor graphics) {
-        float dt = Minecraft.getInstance().getTimer().getRealtimeDeltaTicks();
+        float dt = Minecraft.getInstance().getDeltaTracker().getRealtimeDeltaTicks();
         CatchMinigameOverlay.render(graphics, dt);
         CastBarOverlay.render(graphics, dt);
         SonarOverlay.render(graphics, dt);

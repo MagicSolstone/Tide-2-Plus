@@ -3,11 +3,7 @@ package com.li64.tide.registries.entities.misc;
 import com.li64.tide.Tide;
 import com.li64.tide.registries.entities.misc.fishing.StarArrowModel;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -18,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import net.minecraft.util.ARGB;
 
-public class StarArrowRenderer extends EntityRenderer<StarArrow> {
+public class StarArrowRenderer extends EntityRenderer<StarArrow, StarArrowRenderer.State> {
     public static final Identifier STAR_ARROW_LOCATION = Tide.resource("textures/entity/projectiles/star_arrow.png");
 
     private final StarArrowModel model;
@@ -28,8 +24,21 @@ public class StarArrowRenderer extends EntityRenderer<StarArrow> {
         this.model = new StarArrowModel(context.bakeLayer(StarArrowModel.MODEL_LOCATION));
     }
 
-    public @NotNull Identifier getTextureLocation(StarArrow arrow) {
-        return STAR_ARROW_LOCATION;
+    public static class State extends net.minecraft.client.renderer.entity.state.EntityRenderState {
+        public float yRot;
+        public float xRot;
+    }
+
+    @Override
+    public @NotNull State createRenderState() {
+        return new State();
+    }
+
+    @Override
+    public void extractRenderState(StarArrow entity, State state, float partialTick) {
+        super.extractRenderState(entity, state, partialTick);
+        state.yRot = Mth.lerp(partialTick, entity.yRotO, entity.getYRot());
+        state.xRot = Mth.lerp(partialTick, entity.xRotO, entity.getXRot());
     }
 
     @Override
@@ -38,16 +47,17 @@ public class StarArrowRenderer extends EntityRenderer<StarArrow> {
     }
 
     @Override
-    public void render(StarArrow entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+    public void submit(State state, PoseStack poseStack, net.minecraft.client.renderer.SubmitNodeCollector collector,
+                       net.minecraft.client.renderer.state.level.CameraRenderState camera) {
         poseStack.pushPose();
         poseStack.translate(0, 0.25, 0);
-        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, entity.yRotO, entity.getYRot()) - 90f));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, entity.xRotO, entity.getXRot())));
+        poseStack.rotateDegrees(Axis.YP, state.yRot - 90f);
+        poseStack.rotateDegrees(Axis.ZP, state.xRot);
         poseStack.scale(1, -1, 1);
         poseStack.translate(0, -1.28, 0);
-        VertexConsumer buffer = bufferSource.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity)));
-        model.renderToBuffer(poseStack, buffer, LightTexture.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, ARGB.ARGB32.color(255, 255, 255, 255));
+        collector.submitModel(this.model, state, poseStack, net.minecraft.client.renderer.rendertype.RenderTypes.entityCutout(STAR_ARROW_LOCATION),
+                net.minecraft.util.LightCoordsUtil.FULL_BRIGHT, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor);
         poseStack.popPose();
+        super.submit(state, poseStack, collector, camera);
     }
 }

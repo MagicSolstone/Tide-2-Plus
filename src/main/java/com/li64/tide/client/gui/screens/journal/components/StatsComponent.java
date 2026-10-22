@@ -1,5 +1,6 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import com.li64.tide.client.Gui26;
 import com.google.common.collect.ImmutableList;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
@@ -60,7 +61,7 @@ public class StatsComponent extends ProfileComponent {
         int center = x + AREA_WIDTH / 2;
         int cursorY = 0;
         for (Component line : lines) {
-            graphics.drawString(font, line, center - font.width(line) / 2, y + cursorY, TEXT_COLOR, false);
+            Gui26.text(graphics, font, line, center - font.width(line) / 2, y + cursorY, TEXT_COLOR, false);
             cursorY += 11;
         }
     }

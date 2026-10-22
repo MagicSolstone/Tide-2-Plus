@@ -8,7 +8,8 @@
    "compatibilityLevel": "JAVA_21",
    "client": [
       "EntityRenderDispatcherMixin",
-      "GuiRenderMixin"
+      "GuiRenderMixin",
+      "RangeSelectItemModelPropertiesAccessor"
    ],
    "mixins": [
       "AbstractFishMixin",

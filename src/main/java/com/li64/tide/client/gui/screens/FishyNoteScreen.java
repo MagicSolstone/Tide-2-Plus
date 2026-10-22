@@ -1,5 +1,6 @@
 package com.li64.tide.client.gui.screens;
 
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.FishProfile;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
@@ -76,17 +77,17 @@ public class FishyNoteScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float partialTick) {
         if (!isJournal) {
-            super.render(graphics, mouseX, mouseY, partialTick);
+            super.extractRenderState(graphics, mouseX, mouseY, partialTick);
         }
         int x = (graphics.guiWidth() - WIDTH) / 2;
         int y = (graphics.guiHeight() - HEIGHT) / 2;
-        graphics.blit(BG, x, y, 0, 0, WIDTH, HEIGHT, WIDTH, HEIGHT);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BG, x, y, 0, 0, WIDTH, HEIGHT, WIDTH, HEIGHT);
 
         // render "discovered" checkmark
         if (discovered) {
-            graphics.blit(CHECKMARK, x + 18, y + 18, 0, 0,
+            graphics.blit(RenderPipelines.GUI_TEXTURED, CHECKMARK, x + 18, y + 18, 0, 0,
                     16, 16, 16, 16);
         }
 
@@ -102,6 +103,6 @@ public class FishyNoteScreen extends Screen {
             cursorY += area.getRequiredHeight() + padding;
         }
 
-        if (xButton != null) xButton.render(graphics, mouseX, mouseY, partialTick);
+        if (xButton != null) xButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
     }
 }

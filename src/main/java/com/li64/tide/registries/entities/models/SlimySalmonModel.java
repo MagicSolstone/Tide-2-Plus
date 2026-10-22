@@ -18,7 +18,7 @@ public class SlimySalmonModel extends FishModel {
 
     @Override
     public int tint() {
-        return ARGB.ARGB32.color(190, 255, 255, 255);
+        return ARGB.color(190, 255, 255, 255);
     }
 
     @Override

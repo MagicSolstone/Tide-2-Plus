@@ -3,7 +3,6 @@ package com.li64.tide.registries;
 import com.li64.tide.Tide;
 import com.li64.tide.registries.entities.misc.StarArrowRenderer;
 import com.li64.tide.registries.entities.misc.fishing.StarArrowModel;
-import com.li64.tide.registries.entities.misc.fishing.TideFishingBobberLayer;
 import com.li64.tide.registries.entities.misc.fishing.TideFishingHookModel;
 import com.li64.tide.registries.entities.misc.fishing.TideFishingHookRenderer;
 import com.li64.tide.registries.entities.models.*;
@@ -33,7 +32,7 @@ public class TideEntityModels {
     public static void init() {
         registerEntityRenderer(TideEntityTypes.FISHING_BOBBER, TideFishingHookRenderer::new);
         registerLayerDefinition(TideFishingHookModel.MODEL_LOCATION, TideFishingHookModel::createBodyLayer);
-        registerLayerDefinition(TideFishingBobberLayer.MODEL_LOCATION, TideFishingHookModel::createBodyLayer);
+        registerLayerDefinition(TideFishingHookModel.BOBBER_LOCATION, TideFishingHookModel::createBodyLayer);
 
         registerEntityRenderer(TideEntityTypes.STAR_ARROW, StarArrowRenderer::new);
         registerLayerDefinition(StarArrowModel.MODEL_LOCATION, StarArrowModel::createBodyLayer);

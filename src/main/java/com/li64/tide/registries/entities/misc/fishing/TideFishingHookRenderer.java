@@ -1,20 +1,22 @@
 package com.li64.tide.registries.entities.misc.fishing;
 
+import com.li64.tide.Tide;
 import com.li64.tide.registries.TideItems;
+import com.li64.tide.registries.items.FishingBobberItem;
 import com.li64.tide.registries.items.FishingHookItem;
 import com.li64.tide.registries.items.FishingLineItem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.item.ItemModelResolver;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
@@ -22,19 +24,18 @@ import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.FishingRodItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import com.li64.tide.Tide;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Map;
 
-public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook> implements RenderLayerParent<TideFishingHook, TideFishingHookModel<TideFishingHook>> {
-    private final TideFishingHookModel<TideFishingHook> model;
-    private final TideFishingBobberLayer bobberLayer;
+/** Draws a Tide hook: the hook model, the bobber on top (a model or the bobber item itself), and the
+ * line back to the rod, coloured by the line item and dimmed in the dark. */
+public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook, TideHookRenderState> {
     private static final Identifier HOOK_TEX_LOCATION = Tide.resource("textures/entity/fishing_hook/fishing_hook.png");
 
     public static final Map<Item, Vec2> OFFSETS = Map.of(
@@ -46,64 +47,107 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook> imp
             TideItems.SUNFLOWER_FISHING_ROD, new Vec2(0.05f, -0.1f)
     );
 
+    private final TideFishingHookModel model;
+    private final TideFishingHookModel bobberModel;
+    private final ItemModelResolver itemModelResolver;
+
     public TideFishingHookRenderer(EntityRendererProvider.Context context) {
         super(context);
-        this.model = new TideFishingHookModel<>(context.bakeLayer(TideFishingHookModel.MODEL_LOCATION));
-        this.bobberLayer = new TideFishingBobberLayer(this, context.getModelSet(), context.getItemRenderer());
+        this.model = new TideFishingHookModel(context.bakeLayer(TideFishingHookModel.MODEL_LOCATION));
+        this.bobberModel = new TideFishingHookModel(context.bakeLayer(TideFishingHookModel.BOBBER_LOCATION));
+        this.itemModelResolver = context.getItemModelResolver();
         this.shadowRadius = 0.1f;
     }
 
     @Override
-    public void render(TideFishingHook hookEntity, float entityYaw, float partialTick, @NotNull PoseStack poseStack, @NotNull MultiBufferSource buffer, int packedLight) {
-        Player player = hookEntity.getPlayerOwner();
-        if (player == null) return;
+    public boolean shouldRender(TideFishingHook entity, Frustum culler, double camX, double camY, double camZ, float partialTicks) {
+        return super.shouldRender(entity, culler, camX, camY, camZ, partialTicks) && entity.getPlayerOwner() != null;
+    }
 
+    @Override
+    protected boolean affectedByCulling(TideFishingHook entity) {
+        return false;
+    }
+
+    @Override
+    public @NotNull TideHookRenderState createRenderState() {
+        return new TideHookRenderState();
+    }
+
+    @Override
+    public void extractRenderState(TideFishingHook hook, TideHookRenderState state, float partialTick) {
+        super.extractRenderState(hook, state, partialTick);
+        Player player = hook.getPlayerOwner();
+        state.hasOwner = player != null;
+        state.initialYaw = hook.getInitialYaw();
+        state.hookTexture = allowModifiers() ? FishingHookItem.getTexture(hook.getHook()) : HOOK_TEX_LOCATION;
+
+        ItemStack bobber = hook.getBobber();
+        state.bobberIsItem = FishingBobberItem.renderItemModel(bobber);
+        if (state.bobberIsItem) this.itemModelResolver.updateForNonLiving(state.bobberItem, bobber, ItemDisplayContext.FIXED, hook);
+        else state.bobberTexture = FishingBobberItem.getTexture(bobber);
+
+        if (player == null) {
+            state.lineOriginOffset = Vec3.ZERO;
+            return;
+        }
+        float swing = player.getSwingAnimation(partialTick);
+        float swing2 = Mth.sin(Mth.sqrt(swing) * (float) Math.PI);
+        Vec3 handPos = this.getPlayerHandPos(player, swing2, partialTick);
+        Vec3 hookPos = hook.getPosition(partialTick).add(0.0, 0.25, 0.0);
+        state.lineOriginOffset = handPos.subtract(hookPos);
+        state.lineColor = lineColor(player, FishingLineItem.getColor(hook.getLine()));
+    }
+
+    @Override
+    public void submit(TideHookRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState camera) {
+        if (!state.hasOwner) return;
         poseStack.pushPose();
         poseStack.pushPose();
 
         poseStack.translate((1f / 16f) / 2f, 0, (1f / 16f) / 2f);
-        poseStack.mulPose(Axis.YP.rotationDegrees(180f - hookEntity.getInitialYaw()));
-
+        poseStack.rotateDegrees(Axis.YP, 180f - state.initialYaw);
         poseStack.scale(-1.0F, -1.0F, 1.0F);
 
-        model.setupAnim(hookEntity, partialTick, 0.0F, -0.1F, 0.0F, 0.0F);
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(hookEntity)));
+        collector.submitModel(this.model, state, poseStack, RenderTypes.entityCutout(state.hookTexture),
+                state.lightCoords, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor);
 
-        model.renderToBuffer(poseStack, vertexConsumer, packedLight, OverlayTexture.NO_OVERLAY, ARGB.ARGB32.color(255, 255, 255, 255));
-        bobberLayer.render(poseStack, buffer, packedLight, hookEntity, 0, 0, 0, 0, 0, 0);
-
+        if (state.bobberIsItem) {
+            poseStack.pushPose();
+            poseStack.scale(0.5f, 0.5f, 0.5f);
+            poseStack.translate(0.03f, -0.22f, 0.0f);
+            poseStack.rotateDegrees(Axis.ZP, 180.0f);
+            state.bobberItem.submit(poseStack, collector, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor);
+            poseStack.popPose();
+        } else if (state.bobberTexture != null) {
+            collector.submitModel(this.bobberModel, state, poseStack, RenderTypes.entityCutout(state.bobberTexture),
+                    state.lightCoords, OverlayTexture.NO_OVERLAY, -1, null, state.outlineColor);
+        }
         poseStack.popPose();
 
-        renderConnectingString(hookEntity, partialTick, poseStack, buffer, player);
-
+        float xa = (float) state.lineOriginOffset.x;
+        float ya = (float) state.lineOriginOffset.y;
+        float za = (float) state.lineOriginOffset.z;
+        float width = Minecraft.getInstance().gameRenderer.gameRenderState().windowRenderState.appropriateLineWidth;
+        int color = state.lineColor;
+        collector.submitCustomGeometry(poseStack, RenderTypes.lines(), (pose, buffer) -> {
+            for (int i = 0; i < 16; i++) {
+                float a0 = i / 16f, a1 = (i + 1) / 16f;
+                stringVertex(xa, ya, za, buffer, pose, a0, a1, width, color);
+                stringVertex(xa, ya, za, buffer, pose, a1, a0, width, color);
+            }
+        });
         poseStack.popPose();
-
-        super.render(hookEntity, entityYaw, partialTick, poseStack, buffer, packedLight);
+        super.submit(state, poseStack, collector, camera);
     }
 
-    private void renderConnectingString(TideFishingHook hookEntity, float partialTick, PoseStack poseStack, MultiBufferSource buffer, Player player) {
-        float f = player.getAttackAnim(partialTick);
-        float f1 = Mth.sin(Mth.sqrt(f) * (float) Math.PI);
-        Vec3 vec3 = this.getPlayerHandPos(player, f1, partialTick);
-        Vec3 vec31 = hookEntity.getPosition(partialTick).add(0.0, 0.25, 0.0);
-        float f2 = (float)(vec3.x - vec31.x);
-        float f3 = (float)(vec3.y - vec31.y);
-        float f4 = (float)(vec3.z - vec31.z);
-        VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.lineStrip());
-        PoseStack.Pose pose = poseStack.last();
-
-        for (int k = 0; k <= 16; k++) {
-            stringVertex(f2, f3, f4, vertexConsumer, pose, fraction(k),
-                    fraction(k + 1), player, FishingLineItem.getColor(hookEntity.getLine()), partialTick);
-        }
-
-        // Iris's hacky fix for a bug where fishing lines connect
-        // https://github.com/IrisShaders/Iris/blob/multiloader-new/common/src/main/java/net/irisshaders/batchedentityrendering/mixin/MixinFishingHookRenderer.java
-        if (Tide.PLATFORM.isModLoaded("iris") || Tide.PLATFORM.isModLoaded("oculus")) {
-            vertexConsumer.addVertex(0, 0, 0)
-                    .setColor(0, 0, 0, 255)
-                    .setNormal(0, 0, 0);
-        }
+    /** The line's colour, dimmed by how dark it is where the player stands (unless the config says not to). */
+    private static int lineColor(Player player, String colorHex) {
+        Color color = Color.decode(colorHex);
+        float brightness = Tide.CLIENT_CONFIG.general.defaultLineColor ? 0.0f : Mth.clamp(
+                player.level().getMaxLocalRawBrightness(player.blockPosition().above()) / 15f,
+                player.level().dimensionType().ambientLight(), 1f);
+        return ARGB.color(255, (int) (color.getRed() * brightness), (int) (color.getGreen() * brightness), (int) (color.getBlue() * brightness));
     }
 
     private Vec3 getPlayerHandPos(Player player, float anim, float partialTick) {
@@ -115,77 +159,39 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook> imp
         if (!Tide.PLATFORM.isModLoaded("firstperson")
                 && this.entityRenderDispatcher.options.getCameraType().isFirstPerson()
                 && player == Minecraft.getInstance().player) {
-            double fovOption = this.entityRenderDispatcher.options.fov().get().doubleValue();
-            double d4 = 960.0 / (fovOption);
-            double fovScalar = (Minecraft.getInstance().gameRenderer.getFov(this.entityRenderDispatcher.camera, partialTick, true) / fovOption - 1.0) * 2.5 + 1.0;
+            float fovOption = this.entityRenderDispatcher.options.fov().get().intValue();
+            double d4 = 960.0 / fovOption;
             Vec3 vec3 = this.entityRenderDispatcher.camera
-                    .getNearPlane()
-                    .getPointOnPlane(
-                            i * (0.525F + stringOffset.x) * (float) fovScalar,
-                            (-0.1F + stringOffset.y) * (float) fovScalar)
+                    .getNearPlane(fovOption)
+                    .getPointOnPlane(i * (0.525F + stringOffset.x), -0.1F + stringOffset.y)
                     .scale(d4)
                     .yRot(anim * 0.5F)
                     .xRot(-anim * 0.7F);
             return player.getEyePosition(partialTick).add(vec3);
         }
-        else {
-            float f = Mth.lerp(partialTick, player.yBodyRotO, player.yBodyRot) * (float) (Math.PI / 180.0);
-            double d0 = Mth.sin(f);
-            double d1 = Mth.cos(f);
-            float f1 = player.getScale();
-            double d2 = (double)i * 0.35 * (double)f1;
-            double d3 = 0.8 * (double)f1;
-            float f2 = player.isCrouching() ? -0.1875F : 0.0F;
-            return player.getEyePosition(partialTick).add(-d1 * d2 - d0 * d3, (double)f2 - 0.45 * (double)f1, -d0 * d2 + d1 * d3);
-        }
+        float f = Mth.lerp(partialTick, player.yBodyRotO, player.yBodyRot) * (float) (Math.PI / 180.0);
+        double d0 = Mth.sin(f);
+        double d1 = Mth.cos(f);
+        float f1 = player.getScale();
+        double d2 = (double) i * 0.35 * (double) f1;
+        double d3 = 0.8 * (double) f1;
+        float f2 = player.isCrouching() ? -0.1875F : 0.0F;
+        return player.getEyePosition(partialTick).add(-d1 * d2 - d0 * d3, (double) f2 - 0.45 * (double) f1, -d0 * d2 + d1 * d3);
     }
 
-    private static float fraction(int pNumerator) {
-        return (float)pNumerator / (float) 16;
-    }
-
-    private static void stringVertex(float x, float y, float z, VertexConsumer vertexConsumer, PoseStack.Pose pose, float frac1, float frac2, Player player, String colorHex, float partialTick) {
-        float f = x * frac1;
-        float f1 = y * (frac1 * frac1 + frac1) * 0.5F + 0.25F;
-        float f2 = z * frac1;
-        float f3 = x * frac2 - f;
-        float f4 = y * (frac2 * frac2 + frac2) * 0.5F + 0.25F - f1;
-        float f5 = z * frac2 - f2;
-        float f6 = Mth.sqrt(f3 * f3 + f4 * f4 + f5 * f5);
-
-        f3 /= f6;
-        f4 /= f6;
-        f5 /= f6;
-
-        Color color = Color.decode(colorHex);
-        BlockPos samplePos = player.blockPosition().above();
-
-        float skyDarken = (1 - ((ClientLevel) player.level()).getSkyDarken(partialTick)) * 15;
-        float blockBrightness = player.level().getBrightness(LightLayer.BLOCK, samplePos);
-        float skyBrightness = player.level().getBrightness(LightLayer.SKY, samplePos) - skyDarken + 1;
-
-        float colorBrightness = Tide.CLIENT_CONFIG.general.defaultLineColor ? 0.0f : Mth.clamp(
-                Math.max(blockBrightness, skyBrightness) / 15f,
-                player.level().dimensionType().ambientLight(), 1f);
-
-        int r = (int) (color.getRed() * colorBrightness);
-        int g = (int) (color.getGreen() * colorBrightness);
-        int b = (int) (color.getBlue() * colorBrightness);
-
-        vertexConsumer.addVertex(pose.pose(), f, f1, f2)
-                .setColor(ARGB.ARGB32.color(255, r, g, b))
-                .setNormal(pose, f3, f4, f5);
-    }
-
-    @Override
-    public @NotNull TideFishingHookModel<TideFishingHook> getModel() {
-        return this.model;
-    }
-
-    @Override
-    public @NotNull Identifier getTextureLocation(@NotNull TideFishingHook hookEntity) {
-        if (!allowModifiers()) return HOOK_TEX_LOCATION;
-        return FishingHookItem.getTexture(hookEntity.getHook());
+    private static void stringVertex(float xa, float ya, float za, VertexConsumer buffer, PoseStack.Pose pose,
+                                     float aa, float nexta, float width, int color) {
+        float x = xa * aa;
+        float y = ya * (aa * aa + aa) * 0.5F + 0.25F;
+        float z = za * aa;
+        float nx = xa * nexta - x;
+        float ny = ya * (nexta * nexta + nexta) * 0.5F + 0.25F - y;
+        float nz = za * nexta - z;
+        float length = Mth.sqrt(nx * nx + ny * ny + nz * nz);
+        nx /= length;
+        ny /= length;
+        nz /= length;
+        buffer.addVertex(pose, x, y, z).setColor(color).setNormal(pose, nx, ny, nz).setLineWidth(width);
     }
 
     /** Override this to disable bobber, hook, and line modifiers */

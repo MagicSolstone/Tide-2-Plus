@@ -1,5 +1,7 @@
 package com.li64.tide.client.gui.screens.journal.components;
 
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.client.gui.screens.journal.ProfileComponent;
 import com.li64.tide.compat.seasons.Season;
@@ -24,7 +26,7 @@ public class SeasonsComponent extends ProfileComponent {
     @Override
     public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int center = x + AREA_WIDTH / 2;
-        graphics.drawString(font, TITLE, center - font.width(TITLE) / 2, y, TEXT_COLOR, false);
+        Gui26.text(graphics, font, TITLE, center - font.width(TITLE) / 2, y, TEXT_COLOR, false);
 
         int seasonCount = seasons.size();
         int seasonY = y + 12;
@@ -40,10 +42,10 @@ public class SeasonsComponent extends ProfileComponent {
                 case FALL -> 16;
                 case WINTER -> 24;
             };
-            graphics.blit(SEASONS, seasonX, seasonY, offset, 0, 8, 8, 32, 8);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, SEASONS, seasonX, seasonY, offset, 0, 8, 8, 32, 8);
 
             if (mouseX >= seasonX && mouseX <= seasonX + 8 && mouseY >= seasonY && mouseY <= seasonY + 8)
-                graphics.renderTooltip(font, Component.translatable("journal.info.seasons." + seasons.get(i).getSerializedName()), mouseX, mouseY);
+                graphics.setTooltipForNextFrame(font, Component.translatable("journal.info.seasons." + seasons.get(i).getSerializedName()), mouseX, mouseY);
         }
     }
 

@@ -30,7 +30,7 @@ public class PentapusModel extends FishModel {
 
     @Override
     public int tint() {
-        return ARGB.ARGB32.color(150, 255, 255, 255);
+        return ARGB.color(150, 255, 255, 255);
     }
 
     @Override

@@ -1,5 +1,8 @@
 package com.li64.tide.client.gui.overlays;
 
+import net.minecraft.util.ARGB;
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.li64.tide.compat.CompatHelper;
 import com.li64.tide.data.fishing.MinigameBehavior;
@@ -117,33 +120,28 @@ public class CatchMinigameOverlay {
         int x = (graphics.guiWidth() - texWidth) / 2;
         int y = graphics.guiHeight() / 2 - 18;
 
-        graphics.flush();
-        RenderSystem.enableBlend();
-        RenderSystem.setShaderColor(1f, 1f, 1f, alpha);
+        int color = ARGB.white(alpha);
 
         Identifier fillSprite = type == 1 ? FILL_LAVA : (type == 2 ? FILL_VOID : FILL_WATER);
 
-        graphics.blit(BAR_BG, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight);
-        graphics.blitSprite(fillSprite, x + offset, y, texWidth - offset * 2, texHeight);
-        graphics.blit(BAR_OVERLAY, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BAR_BG, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight, color);
+        graphics.blitSprite(RenderPipelines.GUI_TEXTURED, fillSprite, x + offset, y, texWidth - offset * 2, texHeight, color);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BAR_OVERLAY, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight, color);
 
         int markerX = Math.round((x + texWidth / 2f - 2) + getMinigamePosition() * (texWidth / 2f - 2));
         Identifier markerTexture = timer % 4 < 2 ? MARKER : SELECT;
-        graphics.blit(markerTexture, markerX, y - 1, 0, 0, 4, 9, 4, 9);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, markerTexture, markerX, y - 1, 0, 0, 4, 9, 4, 9, color);
 
         if (Tide.CLIENT_CONFIG.minigame.doFeedback && accuracyText != null) {
             Font font = Minecraft.getInstance().font;
             if (alpha >= 0.03f) {
-                graphics.drawString(font,
+                Gui26.text(graphics, font,
                         accuracyText.withStyle(accuracyText.getStyle().withColor(textColor)),
                         (graphics.guiWidth() - font.width(accuracyText)) / 2, y - 10,
-                        0xffffff, false);
+                        ARGB.color(alpha, 0xffffff), false);
             }
         }
 
-        graphics.flush();
-        RenderSystem.disableBlend();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
     }
 
     private static float getMinigamePosition() {

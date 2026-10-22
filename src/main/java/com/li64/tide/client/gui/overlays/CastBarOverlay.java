@@ -1,5 +1,7 @@
 package com.li64.tide.client.gui.overlays;
 
+import net.minecraft.util.ARGB;
+import net.minecraft.client.renderer.RenderPipelines;
 import com.li64.tide.Tide;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -27,12 +29,9 @@ public class CastBarOverlay {
 
         int fillWidth = (int) Math.ceil(rodChargePercent * texWidth);
 
-        RenderSystem.enableBlend();
-        graphics.setColor(1f, 1f, 1f, alpha);
-        graphics.blit(BAR_EMPTY_TEX, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight);
-        graphics.blit(BAR_FILLED_TEX, x, y, 0, 0, fillWidth, texHeight, texWidth, texHeight);
-        RenderSystem.disableBlend();
-        graphics.setColor(1f, 1f, 1f, 1f);
+        int color = ARGB.white(alpha);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BAR_EMPTY_TEX, x, y, 0, 0, texWidth, texHeight, texWidth, texHeight, color);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, BAR_FILLED_TEX, x, y, 0, 0, fillWidth, texHeight, texWidth, texHeight, color);
     }
 
     public static void rodChargeTick(float percent) {

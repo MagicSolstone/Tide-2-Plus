@@ -1,95 +1,79 @@
 package com.li64.tide.registries.particles;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.renderer.state.level.QuadParticleRenderState;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
-import java.util.function.BiConsumer;
-
-public class MagicChain extends TextureSheetParticle {
+/** A chain shooting out from a frozen mob (Enchanted Pocket Watch), at a random angle, fading away.
+ * (1.21.1 grew the chain out over a few ticks; 26.x particles are square quads, so it slides out instead.) */
+public class MagicChain extends SingleQuadParticle {
     private static final float OFFSET = 1.0f;
-    private static final float MOVE_DST = 2.0f;
     private static final float MOVE_SPEED = 6f;
 
-    private final BiConsumer<Quaternionf, Camera> facingCameraFunc;
+    private final float rotation;
 
     protected MagicChain(ClientLevel level, double x, double y, double z, SpriteSet sprites, float quadSize, float rotation) {
-        super(level, x, y, z, 0, 0, 0);
+        super(level, x, y, z, 0, 0, 0, sprites.first());
         this.lifetime = 18;
         this.hasPhysics = false;
         this.xd = 0;
         this.yd = 0;
         this.zd = 0;
         this.quadSize = quadSize;
+        this.rotation = rotation;
         this.setSpriteFromAge(sprites);
-        this.facingCameraFunc = (q, cam) -> q.set(cam.rotation()).mul(Axis.ZP.rotationDegrees(rotation));
     }
 
     @Override
     public void tick() {
         super.tick();
-        float t = (float) this.age / this.lifetime;
-        this.alpha = 1f - t;
+        this.alpha = 1f - (float) this.age / this.lifetime;
     }
 
     @Override
-    public @NotNull ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    protected @NotNull Layer getLayer() {
+        return Layer.TRANSLUCENT;
     }
 
     @Override
     public @NotNull FacingCameraMode getFacingCameraMode() {
-        return (q, cam, f) -> facingCameraFunc.accept(q, cam);
+        return (q, cam, partialTick) -> q.set(cam.rotation()).mul(Axis.ZP.rotationDegrees(rotation));
     }
 
     @Override
-    public void render(VertexConsumer buffer, Camera cam, float partialTicks) {
-        Vec3 camPos = cam.getPosition();
-        float x = (float)(Mth.lerp(partialTicks, this.xo, this.x) - camPos.x());
-        float y = (float)(Mth.lerp(partialTicks, this.yo, this.y) - camPos.y());
-        float z = (float)(Mth.lerp(partialTicks, this.zo, this.z) - camPos.z());
+    public void extract(QuadParticleRenderState state, Camera camera, float partialTick) {
         Quaternionf q = new Quaternionf();
-        facingCameraFunc.accept(q, cam);
-        if (this.roll != 0.0F) q.rotateZ(Mth.lerp(partialTicks, this.oRoll, this.roll));
-
-        this.renderRotatedQuad(buffer, q, x, y, z, partialTicks);
+        this.getFacingCameraMode().setRotation(q, camera, partialTick);
+        Vec3 cam = camera.position();
+        float moveT = Mth.clamp((this.age + partialTick) * MOVE_SPEED / this.lifetime, 0f, 1f);
+        float size = this.getQuadSize(partialTick);
+        // slide out along the chain's own "up" from the mob's centre
+        Vector3f out = new Vector3f(0, (OFFSET + moveT - 1f) * size, 0).rotate(q);
+        float x = (float) (Mth.lerp(partialTick, this.xo, this.x) - cam.x()) + out.x;
+        float y = (float) (Mth.lerp(partialTick, this.yo, this.y) - cam.y()) + out.y;
+        float z = (float) (Mth.lerp(partialTick, this.zo, this.z) - cam.z()) + out.z;
+        this.extractRotatedQuad(state, q, x, y, z, partialTick);
     }
-
-    protected void renderRotatedQuad(@NotNull VertexConsumer buffer, @NotNull Quaternionf quaternion,
-                                     float x, float y, float z, float partialTicks) {
-        float size = this.getQuadSize(partialTicks);
-        float u0 = this.getU0();
-        float u1 = this.getU1();
-        float v0 = this.getV0();
-        float v1 = this.getV1();
-        int color = this.getLightColor(partialTicks);
-        float moveT = Mth.clamp(((float) this.age + partialTicks) * MOVE_SPEED / this.lifetime, 0f, 1.0f);
-        float yOffset = OFFSET;
-        float vOffset = MOVE_DST * moveT;
-        final int order = 1;
-        this.renderVertex(buffer, quaternion, x, y, z, 1f * order, 1f + yOffset - vOffset, size, u1, v1, color);
-        this.renderVertex(buffer, quaternion, x, y, z, 1f * order, 1f + yOffset, size, u1, Mth.lerp(moveT, v1, v0), color);
-        this.renderVertex(buffer, quaternion, x, y, z, -1f * order, 1f + yOffset, size, u0, Mth.lerp(moveT, v1, v0), color);
-        this.renderVertex(buffer, quaternion, x, y, z, -1f * order, 1f + yOffset - vOffset, size, u0, v1, color);
-    }
-
 
     public record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         @Override
-        public @NotNull Particle createParticle(@NotNull SimpleParticleType type,
-                                                @NotNull ClientLevel level,
-                                                double x, double y, double z,
-                                                double vx, double vy, double vz) {
+        public @NotNull Particle createParticle(@NotNull SimpleParticleType type, @NotNull ClientLevel level,
+                                                double x, double y, double z, double vx, double vy, double vz, RandomSource random) {
             return new MagicChain(level, x, y, z, sprites,
-                    1.0f + level.getRandom().nextFloat() * 0.6f,
-                    (level.getRandom().nextFloat() - 0.5f) * 200f);
+                    1.0f + random.nextFloat() * 0.6f,
+                    (random.nextFloat() - 0.5f) * 200f);
         }
     }
 }

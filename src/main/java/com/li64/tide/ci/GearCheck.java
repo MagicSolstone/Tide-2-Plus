@@ -337,7 +337,7 @@ public final class GearCheck {
         for (int lv : new int[]{1, Angler.baseline(), Angler.MAX_LEVEL})
             for (double boost : new double[]{0, 0.95}) {
                 double[] p = CatchQuality.odds(lv, boost);
-                notes.add(String.format("quality at level %d%s: Poor %s, Average %s, Fine %s, Prime %s, Trophy %s, Mythic 1 in %,d", lv,
+                notes.add(String.format("quality at level %d%s: Poor %s, Average %s, Good %s, Great %s, Trophy %s, Mythic 1 in %,d", lv,
                         boost > 0 ? " with the best quality gear" : "", pct(p[0]), pct(p[1]), pct(p[2]), pct(p[3]), pct(p[4]), Math.round(1 / p[5])));
             }
         ItemStack anyTime = new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("clockwork_fishing_rod")));

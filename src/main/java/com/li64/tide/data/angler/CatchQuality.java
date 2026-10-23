@@ -22,14 +22,14 @@ import net.minecraft.world.item.ItemStack;
  * How good one caught fish is. Separate from rarity (how hard the species is to find):
  * a Mythic guppy and a Poor shark are both possible. Shown with ◆ marks, never stars.
  *
- * Base odds (level 40): Poor 30%, Average 48%, Fine 17%, Prime 1/25, Trophy ~1/111, Mythic 1/1000.
+ * Base odds (level 40): Poor 30%, Average 48%, Good 17%, Great 1/25, Trophy ~1/111, Mythic 1/1000.
  * Higher levels push the odds up. Quality is decided when the fish bites, and better fish fight harder.
  */
 public enum CatchQuality {
     POOR("Poor", 0x9A9A9A, 30.0),
     AVERAGE("Average", 0xE0E0E0, 48.0),
-    FINE("Fine", 0x6BCB5A, 17.0),
-    PRIME("Prime", 0x4FA3FF, 4.0),
+    GOOD("Good", 0x6BCB5A, 17.0),
+    GREAT("Great", 0x4FA3FF, 4.0),
     TROPHY("Trophy", 0xC77DFF, 0.9),
     MYTHIC("Mythic", 0xFFB020, 0.1);
 
@@ -82,8 +82,8 @@ public enum CatchQuality {
             double scale = switch (q) {
                 case POOR -> 1.0 / m;
                 case AVERAGE -> 1.0;
-                case FINE -> m;
-                case PRIME -> Math.pow(m, 1.3);
+                case GOOD -> m;
+                case GREAT -> Math.pow(m, 1.3);
                 case TROPHY -> Math.pow(m, 1.5);
                 case MYTHIC -> m;
             };
@@ -99,8 +99,8 @@ public enum CatchQuality {
         return switch (this) {
             case POOR -> 0.9;
             case AVERAGE -> 1.0;
-            case FINE -> 1.05;
-            case PRIME -> 1.12;
+            case GOOD -> 1.05;
+            case GREAT -> 1.12;
             case TROPHY -> 1.2;
             case MYTHIC -> 1.3;
         };
@@ -111,8 +111,8 @@ public enum CatchQuality {
         return switch (this) {
             case POOR -> 1.1;
             case AVERAGE -> 1.0;
-            case FINE -> 0.97;
-            case PRIME -> 0.92;
+            case GOOD -> 0.97;
+            case GREAT -> 0.92;
             case TROPHY -> 0.85;
             case MYTHIC -> 0.78;
         };
@@ -137,8 +137,8 @@ public enum CatchQuality {
     private static final double Z10 = -1.2815515655446004;
 
     /**
-     * A length (cm) that fits the quality. Poor to Fine come from the species' normal size curve
-     * (small, middling, upper end); Prime starts at the top of the typical range, Trophy runs to about
+     * A length (cm) that fits the quality. Poor to Good come from the species' normal size curve
+     * (small, middling, upper end); Great starts at the top of the typical range, Trophy runs to about
      * +25% over it and Mythic to about +45%.
      */
     public double sampleLength(SizeData size, RandomSource rng) {
@@ -149,8 +149,8 @@ public enum CatchQuality {
         double length = switch (this) {
             case POOR -> Math.exp(mu + sigma * (-2.0 + 1.45 * u));
             case AVERAGE -> Math.exp(mu + sigma * (-0.55 + 1.2 * u));
-            case FINE -> Math.exp(mu + sigma * (0.65 + 0.63 * u));
-            case PRIME -> hi * (1.0 + 0.1 * u);
+            case GOOD -> Math.exp(mu + sigma * (0.65 + 0.63 * u));
+            case GREAT -> hi * (1.0 + 0.1 * u);
             case TROPHY -> hi * (1.1 + 0.15 * u);
             case MYTHIC -> hi * (1.3 + 0.15 * u);
         };
@@ -163,8 +163,8 @@ public enum CatchQuality {
         return switch (this) {
             case POOR -> 0.85;
             case AVERAGE -> 1.0;
-            case FINE -> 1.04;
-            case PRIME -> 1.08;
+            case GOOD -> 1.04;
+            case GREAT -> 1.08;
             case TROPHY -> 1.1;
             case MYTHIC -> 1.12;
         };
@@ -173,8 +173,8 @@ public enum CatchQuality {
     public int bonusXp() {
         return switch (this) {
             case POOR, AVERAGE -> 0;
-            case FINE -> 5;
-            case PRIME -> 20;
+            case GOOD -> 5;
+            case GREAT -> 20;
             case TROPHY -> 60;
             case MYTHIC -> 250;
         };
@@ -205,7 +205,7 @@ public enum CatchQuality {
         if (q.ordinal() >= TROPHY.ordinal()) announce(player, stack, q);
     }
 
-    /** Quality onto a fish item: the component, and the name ("Fine Bluegill", coloured; Average keeps the plain name). */
+    /** Quality onto a fish item: the component, and the name ("Good Bluegill", coloured; Average keeps the plain name). */
     public static void mark(ItemStack stack, CatchQuality q) {
         TideItemData.FISH_QUALITY.set(stack, q.ordinal());
         if (q != AVERAGE) {

@@ -24,7 +24,7 @@ import java.util.List;
  * Cooking keeps what made a fish special: "Cooked Mythic Largemouth Bass" fills you up more than
  * a cooked Poor one, and the good ones give buffs. Rare species make it a bit better again.
  *
- *   Poor -1 food · Average as usual · Fine +1 · Prime +2, Regeneration · Trophy +3, Regeneration, Absorption
+ *   Poor -1 food · Average as usual · Good +1 · Great +2, Regeneration · Trophy +3, Regeneration, Absorption
  *   Mythic +5, Regeneration II, Absorption II, Luck, Water Breathing
  *   very rare species: +1 food and effects last 25% longer; legendary: +2 and 50% longer
  */
@@ -49,7 +49,7 @@ public final class CookedFish {
 
         FoodProperties food = cooked.get(DataComponents.FOOD);
         if (food != null) {
-            // Quality scales the food: a plain cooked fish (6) is Poor 1, Average 3, Fine 4, Prime 6, Trophy 8, Mythic 11
+            // Quality scales the food: a plain cooked fish (6) is Poor 1, Average 3, Good 4, Great 6, Trophy 8, Mythic 11
             double f = foodFactor(q);
             int extra = rarity == FishRarity.LEGENDARY ? 2 : rarity == FishRarity.VERY_RARE ? 1 : 0;
             cooked.set(DataComponents.FOOD, new FoodProperties(Math.max(1, (int) Math.round(food.nutrition() * f) + extra),
@@ -70,8 +70,8 @@ public final class CookedFish {
         return switch (q) {
             case POOR -> 0.2;
             case AVERAGE -> 0.5;
-            case FINE -> 0.7;
-            case PRIME -> 1.0;
+            case GOOD -> 0.7;
+            case GREAT -> 1.0;
             case TROPHY -> 1.3;
             case MYTHIC -> 1.8;
         };
@@ -80,7 +80,7 @@ public final class CookedFish {
     private static List<MobEffectInstance> buffs(CatchQuality q, double longer) {
         List<MobEffectInstance> out = new ArrayList<>();
         switch (q) {
-            case PRIME -> out.add(effect(MobEffects.REGENERATION, 8, 0, longer));
+            case GREAT -> out.add(effect(MobEffects.REGENERATION, 8, 0, longer));
             case TROPHY -> {
                 out.add(effect(MobEffects.REGENERATION, 12, 0, longer));
                 out.add(effect(MobEffects.ABSORPTION, 60, 0, longer));

@@ -66,8 +66,15 @@ final class TackleCard {
         if (!current.isEmpty()) pages.add(current);
     }
 
+    /** Rigs come after the tackle grid, four to a spread (two on each page). */
+    private static final int RIGS_PER_SPREAD = 4;
+
     int pageCount() {
-        return pages.size();
+        return pages.size() + rigPages();
+    }
+
+    private static int rigPages() {
+        return (com.li64.tide.data.rods.RigSets.SETS.size() + RIGS_PER_SPREAD - 1) / RIGS_PER_SPREAD;
     }
 
     private static boolean found(Item item) {
@@ -80,6 +87,7 @@ final class TackleCard {
             drawItemPage(g, font, tlX, tlY, mouseX, mouseY);
             return false;
         }
+        if (page >= pages.size()) return drawRigs(g, font, tlX, tlY, mouseX, mouseY, clicked);
         long have = BuiltInRegistries.ITEM.stream().filter(i -> TackleLog.category(i) != null && found(i)).count();
         Gui26.text(g, font, "Tackle found: " + have + " / " + total, tlX + 44, tlY + 228, DARK, false);
         if (pages.size() > 1) {
@@ -114,6 +122,65 @@ final class TackleCard {
                 x += CELL;
             }
             y += CELL;
+        }
+        return changed;
+    }
+
+    /**
+     * The rigs: each one's name and where it works, its pieces (blacked out until found; click a found one to
+     * open its page), and what two and three pieces give.
+     */
+    private boolean drawRigs(GuiGraphicsExtractor g, Font font, int tlX, int tlY, int mouseX, int mouseY, boolean clicked) {
+        var sets = com.li64.tide.data.rods.RigSets.SETS;
+        int spread = page - pages.size();
+        Gui26.text(g, font, "Rigs: 2 pieces on one rod give a small bonus, 3 or more the full one", tlX + 44, tlY + 228, DARK, false);
+        String p = "Page " + (page + 1) + " of " + pageCount();
+        Gui26.text(g, font, p, tlX + 356 - font.width(p), tlY + 228, INK, false);
+        boolean changed = false;
+        float s = 0.75f;
+        for (int k = 0; k < RIGS_PER_SPREAD; k++) {
+            int idx = spread * RIGS_PER_SPREAD + k;
+            if (idx >= sets.size()) break;
+            var set = sets.get(idx);
+            int x = k < 2 ? tlX + 40 : tlX + 215, y = tlY + 30 + (k % 2) * 98;
+            Gui26.text(g, font, set.name(), x, y, DARK, false);
+            g.pose().pushMatrix();
+            g.pose().translate(x + font.width(set.name()) + 4, y + 2);
+            g.pose().scale(s, s);
+            Gui26.text(g, font, set.when().text, 0, 0, INK, false);
+            g.pose().popMatrix();
+            // its pieces, small, in a row or two
+            int ix = x, iy = y + 11, n = 0;
+            for (String id : set.members().stream().sorted(java.util.Comparator.comparing(m -> {
+                    var c = TackleLog.category(BuiltInRegistries.ITEM.getValue(com.li64.tide.Tide.resource(m)));
+                    return (c == null ? 9 : c.ordinal()) + m; })).toList()) {
+                Item item = BuiltInRegistries.ITEM.getValue(com.li64.tide.Tide.resource(id));
+                ItemStack stack = new ItemStack(item);
+                int cx = ix + (n % 11) * 13, cy = iy + (n / 11) * 13;
+                g.pose().pushMatrix();
+                g.pose().translate(cx, cy);
+                g.pose().scale(s, s);
+                if (found(item)) g.item(stack, 0, 0);
+                else FishingJournal.renderItemSilhouette(g, stack, 0, 0, 0xFF000000);
+                g.pose().popMatrix();
+                if (mouseX >= cx && mouseX < cx + 12 && mouseY >= cy && mouseY < cy + 12) {
+                    g.setTooltipForNextFrame(font, found(item) ? stack.getHoverName() : Component.literal("Not found yet"), mouseX, mouseY);
+                    if (found(item) && clicked) { selected = stack; changed = true; }
+                }
+                n++;
+            }
+            int ty = iy + ((n + 10) / 11) * 13 + 2;
+            // what two and three pieces give, wrapped small
+            g.pose().pushMatrix();
+            g.pose().translate(x, ty);
+            g.pose().scale(s, s);
+            int ly = 0;
+            for (String[] line : new String[][]{{"2 pieces: ", set.twoText()}, {"3+ pieces: ", set.bonusText()}})
+                for (FormattedCharSequence part : font.split(Component.literal(line[0] + line[1]), (int) (150 / s))) {
+                    Gui26.text(g, font, part, 0, ly, line[0].startsWith("2") ? INK : 0xFF8A3FA8, false);
+                    ly += 10;
+                }
+            g.pose().popMatrix();
         }
         return changed;
     }

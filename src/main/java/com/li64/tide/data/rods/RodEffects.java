@@ -326,7 +326,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     public record Drop(String item, double chance, int minQuality, String text) {}
 
     private static final Map<String, List<Drop>> DROPS = Map.of(
-            "honeycomb_fishing_rod", List.of(new Drop("minecraft:honey_bottle", 0.5, 3, "50% chance of a honey bottle with Prime or better fish"),
+            "honeycomb_fishing_rod", List.of(new Drop("minecraft:honey_bottle", 0.5, 3, "50% chance of a honey bottle with Great or better fish"),
                     new Drop("minecraft:honeycomb", 0.10, 0, "10% chance of a honeycomb with any fish")),
             "mangrove_fishing_rod", List.of(new Drop("minecraft:slime_ball", 0.20, 0, "20% chance of a slime ball with any fish")),
             "cherry_fishing_rod", List.of(new Drop("minecraft:pink_petals", 0.25, 0, "25% chance of pink petals with any fish")));

@@ -599,7 +599,7 @@ public class TideFishingHook extends Projectile {
     }
 
     /** The fish as it would come out of a furnace (keeping its quality and species name), or as caught if it can't be cooked. */
-    private static ItemStack cookOnTheLine(ServerLevel level, ItemStack raw) {
+    public static ItemStack cookOnTheLine(ServerLevel level, ItemStack raw) {
         net.minecraft.world.item.crafting.SingleRecipeInput input = new net.minecraft.world.item.crafting.SingleRecipeInput(raw);
         return level.recipeAccess().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMELTING, input, level)
                 .map(r -> {
@@ -654,13 +654,15 @@ public class TideFishingHook extends Projectile {
                         int copies = 1;
                         if (catchType == CatchType.FISH) {
                             com.li64.tide.data.rods.RodEffects extras = com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod);
-                            if (extras.cook() > 0 && this.random.nextDouble() < extras.cook()) drop = cookOnTheLine(level, stack);
-                            if (extras.twin() > 0 && this.random.nextDouble() < extras.twin()) {
+                            if (extras.cook() > 0 && (Tide.CI || this.random.nextDouble() < extras.cook())) drop = cookOnTheLine(level, stack);
+                            if (extras.twin() > 0 && (Tide.CI || this.random.nextDouble() < extras.twin())) {
                                 copies = 2;
                                 serverPlayer.sendOverlayMessage(net.minecraft.network.chat.Component.literal("Two on the hook!")
                                         .withStyle(net.minecraft.ChatFormatting.AQUA));
                             }
                         }
+                        if (Tide.CI && catchType == CatchType.FISH)
+                            Tide.LOG.info("TIDE-CI extras: drop {} x{}{}", drop.getHoverName().getString(), copies, drop == stack ? "" : " (cooked)");
                         for (int copy = 0; copy < copies; copy++) {
                         ItemStack thisDrop = copy == 0 ? drop : drop.copy();
                         Entity entity;
@@ -695,7 +697,7 @@ public class TideFishingHook extends Projectile {
                         if (catchType == CatchType.FISH) {
                             int q = TideItemData.FISH_QUALITY.getOrDefault(stack, 1);
                             for (com.li64.tide.data.rods.RodEffects.Drop d : com.li64.tide.data.rods.RodEffects.drops(this.rod)) {
-                                if (q < d.minQuality() || this.random.nextDouble() >= d.chance()) continue;
+                                if (!Tide.CI && (q < d.minQuality() || this.random.nextDouble() >= d.chance())) continue;
                                 net.minecraft.world.item.Item extraItem = net.minecraft.core.registries.BuiltInRegistries.ITEM
                                         .getValue(net.minecraft.resources.Identifier.parse(d.item()));
                                 ItemEntity extra = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), new ItemStack(extraItem));

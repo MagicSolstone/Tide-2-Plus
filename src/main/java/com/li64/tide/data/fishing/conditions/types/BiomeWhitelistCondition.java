@@ -34,6 +34,10 @@ public class BiomeWhitelistCondition extends FishingCondition {
         return new BiomeWhitelistCondition(tags, biomes);
     }
 
+    public List<TagKey<Biome>> tags() {
+        return tags;
+    }
+
     public BiomeWhitelistCondition(List<TagKey<Biome>> tags, List<Identifier> biomes) {
         this.tags = tags;
         this.biomes = biomes;

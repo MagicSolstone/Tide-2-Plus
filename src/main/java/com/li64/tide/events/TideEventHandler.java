@@ -27,6 +27,11 @@ public class TideEventHandler {
         Tide.FISHING_MANAGER = new TideFishingManager();
     }
 
+    /** CI only: check every piece of fishing gear against every other once the server is up. */
+    public static void serverStartedCi(MinecraftServer server) {
+        if (Tide.CI && server.isDedicatedServer()) com.li64.tide.ci.GearCheck.run(server);
+    }
+
     public static void endServerTick(MinecraftServer server) {
         server.getPlayerList().getPlayers().forEach(FishingInfoManager::tick);
         if (server.getTickCount() % 40 == 0) server.getPlayerList().getPlayers().forEach(com.li64.tide.data.tackle.TackleLog::tick);

@@ -58,6 +58,10 @@ public class TideFishingRodItem extends FishingRodItem {
     /** Bait's fishing speed adds up across slots, to at most this (about 15 seconds sooner). */
     public static final int BAIT_SPEED_CAP = 3;
 
+    public int getBaitSlots() {
+        return baitSlots;
+    }
+
     public TideFishingRodItem(int baitSlots, double baseDurability, Properties properties) {
         super(properties
                 .durability((int) (baseDurability * (Tide.SERVER_CONFIG == null ? 1.0 : Tide.SERVER_CONFIG.general.rodDurabilityMultiplier)))

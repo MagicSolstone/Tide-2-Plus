@@ -42,6 +42,7 @@ public class FabricEventHandler {
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> TideEventHandler.serverStarted());
+        ServerLifecycleEvents.SERVER_STARTED.register(TideEventHandler::serverStartedCi);
 
         ServerTickEvents.END_SERVER_TICK.register(TideEventHandler::endServerTick);
 

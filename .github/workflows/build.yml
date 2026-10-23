@@ -29,6 +29,12 @@ jobs:
           set -o pipefail
           ./gradlew build --stacktrace --no-daemon 2>&1 | tee build.log
 
+      # Every item has its definition, models, textures, name (and hooks their in-water texture).
+      - name: Asset check
+        if: steps.build.outcome == 'success'
+        shell: bash
+        run: python3 ci/check_assets.py
+
       # Boot a dedicated server with the mod for a couple of minutes and keep its log: data-pack
       # format errors, registry problems and crashes show up here without launching the game.
       - name: Server smoke test
@@ -50,6 +56,7 @@ jobs:
           done
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null
           grep -q "Done (" server.log && echo "started=yes" || echo "started=no"
+          grep -E "TIDE-CI gear" server.log | sed 's/^.*TIDE-CI //' | tee gear.txt
 
       # Start the real client on a virtual screen, load into the test world (a small data pack builds
       # a fish tank in front of the player and fills the hotbar with Tide items) and take screenshots.
@@ -124,6 +131,8 @@ jobs:
           cp -r ci/smokepack run/world/datapacks/tide_smoke
           # level 2 casts short: stand at the water's edge
           sed -i -e 's/^fishinglevel set @s .*/fishinglevel set @s 2/' -e 's/^tp @s ~ ~ ~ 0 35$/tp @s ~ ~ ~2 0 40/' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
+          # a complicated rod: bonus honey, a line that cooks, a treble hook on a bone hook, the bell bobber, a lure
+          sed -i 's|^item replace entity @s hotbar.0 with .*|item replace entity @s hotbar.0 with tide:honeycomb_fishing_rod[enchantments={"minecraft:lure":5},tide:fishing_line={id:"tide:redstone_line",count:1},tide:fishing_hook={id:"tide:treble_hook",count:1,components:{"tide:base_hook":"bone_hook"}},tide:fishing_bobber={id:"tide:bell_bobber",count:1},tide:fishing_lure={id:"tide:glow_lure",count:1}]|' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
           printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nenforce-secure-profile=false\nwhite-list=false\nenforce-whitelist=false\n' > run/server.properties
           ./gradlew runServer --no-daemon > server-mp.log 2>&1 &
           spid=$!
@@ -196,11 +205,19 @@ jobs:
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done
           git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" ci-results
+
+      - name: Gear check
+        if: steps.build.outcome == 'success'
+        shell: bash
+        run: |
+          grep -q "TIDE-CI gear check done" server.log || { echo "the gear check didn't run"; exit 1; }
+          if grep -q "TIDE-CI gear problem" server.log; then grep "TIDE-CI gear problem" server.log | sed 's/^.*problem: /::error::/'; exit 1; fi
+          grep -E "TIDE-CI extras" server-mp.log | tail -3
 
       - name: Dev build download
         if: success() && github.event_name == 'push'

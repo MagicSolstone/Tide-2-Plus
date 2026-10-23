@@ -466,7 +466,7 @@ public class TideFishingHook extends Projectile {
                     String bobberPath = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(getBobber().getItem()).getPath();
                     if (bobberPath.equals("bell_bobber"))
                         this.level().playSound(null, getPlayerOwner().blockPosition(), SoundEvents.BELL_BLOCK, SoundSource.PLAYERS, 0.7f, 1.4f);
-                    if (bobberPath.equals("ender_pearl_bobber") && !rod.is(TideItems.ECHO_FISHING_ROD) && getPlayerOwner() instanceof ServerPlayer peeker) {
+                    if (bobberPath.equals("ender_eye_bobber") && !rod.is(TideItems.ECHO_FISHING_ROD) && getPlayerOwner() instanceof ServerPlayer peeker) {
                         if ((catchType == CatchType.ITEM || catchType == CatchType.FISH) && !hookedItems.isEmpty() && !hookedItems.get(0).isEmpty())
                             Tide.NETWORK.sendToPlayer(new EchoRodHookedMsg(hookedItems.get(0)), peeker);
                         else if (catchType == CatchType.CRATE && crateData != null)

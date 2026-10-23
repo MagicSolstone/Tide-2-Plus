@@ -4,10 +4,10 @@
   "ingredients": [
     "#c:slime_balls",
     "#minecraft:planks",
-    "minecraft:ender_pearl"
+    "minecraft:ender_eye"
   ],
   "result": {
     "count": 1,
-    "id": "tide:ender_pearl_bobber"
+    "id": "tide:ender_eye_bobber"
   }
 }

@@ -36,8 +36,6 @@ public final class Unlocks {
             Map.entry("spore_bait", Set.of("biome:has_mushroom_fish")),
             Map.entry("blossom_bait", Set.of("biome:has_cherry_grove_fish")),
             Map.entry("coastal_bait", Set.of("biome:has_coastal_fish")),
-            Map.entry("meadow_bait", Set.of("biome:has_plains_fish")),
-            Map.entry("rock_bait", Set.of("biome:has_rocky_fish")),
             Map.entry("dripstone_bait", Set.of("biome:has_dripstone_fish")),
             Map.entry("sculk_bait", Set.of("biome:has_deep_dark_fish")));
 
@@ -54,8 +52,6 @@ public final class Unlocks {
             Map.entry("biome:has_mushroom_fish", "Mushroom island fish bite in any water"),
             Map.entry("biome:has_cherry_grove_fish", "Cherry grove fish bite in any water"),
             Map.entry("biome:has_coastal_fish", "Coastal fish bite in any water"),
-            Map.entry("biome:has_plains_fish", "Plains fish bite in any water"),
-            Map.entry("biome:has_rocky_fish", "Rocky-shore fish bite in any water"),
             Map.entry("biome:has_dripstone_fish", "Dripstone cave fish bite in any water"),
             Map.entry("biome:has_deep_dark_fish", "Deep dark fish bite in any water"));
 

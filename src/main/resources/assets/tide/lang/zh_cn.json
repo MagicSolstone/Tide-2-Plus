@@ -876,7 +876,6 @@
   "item.tide.mushroom_bobber": "Mushroom Bobber",
   "item.tide.honey_bobber": "Honey Bobber",
   "item.tide.bell_bobber": "Bell Bobber",
-  "item.tide.ender_pearl_bobber": "Ender Pearl Bobber",
   "item.tide.spinner_lure": "Spinner Lure",
   "item.tide.golden_spoon_lure": "Golden Spoon",
   "item.tide.glow_lure": "Glow Lure",
@@ -914,10 +913,9 @@
   "item.tide.spore_bait": "Spore Bait",
   "item.tide.blossom_bait": "Blossom Bait",
   "item.tide.coastal_bait": "Coastal Bait",
-  "item.tide.meadow_bait": "Meadow Bait",
-  "item.tide.rock_bait": "Rock Bait",
   "item.tide.dripstone_bait": "Dripstone Bait",
   "item.tide.sculk_bait": "Sculk Bait",
   "item.tide.brine_shrimp": "Brine Shrimp",
-  "item.tide.tackle_box": "Tackle Box"
+  "item.tide.tackle_box": "Tackle Box",
+  "item.tide.ender_eye_bobber": "Ender Eye Bobber"
 }

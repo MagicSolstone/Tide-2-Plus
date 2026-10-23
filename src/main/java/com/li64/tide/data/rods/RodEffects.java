@@ -149,7 +149,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("cherry_bobber", new RodEffects(0, 0.05, 0, 0, 0, 0, 0, 0.05)),
             Map.entry("honey_bobber", xp(0.10)),
             Map.entry("bell_bobber", window(0.05)),
-            Map.entry("ender_pearl_bobber", NONE));
+            Map.entry("ender_eye_bobber", NONE));
 
     /** Lures' always-on perks (what fish they draw in is in {@link Lures}). One lure slot, so each one is a real choice. */
     private static final Map<String, RodEffects> LURES = Map.ofEntries(
@@ -435,7 +435,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
         out.addAll(Unlocks.describe(stack));
         if (path(stack).equals("bell_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Rings when a fish bites"));
-        if (path(stack).equals("ender_pearl_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Shows what's on the hook when it bites"));
+        if (path(stack).equals("ender_eye_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Shows what's on the hook when it bites"));
         return out;
     }
 

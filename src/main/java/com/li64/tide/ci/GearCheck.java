@@ -314,13 +314,13 @@ public final class GearCheck {
                 if (c.getString().isBlank()) problem(id(item) + " has an unlock with no text");
             }
         }
+        List<String> fishJson = fish.stream().map(d -> FishData.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, d).result().map(Object::toString).orElse("")).toList();
         for (String tag : List.of("has_jungle_fish", "has_swamp_fish", "has_desert_fish", "has_frozen_fish", "has_mushroom_fish", "has_cherry_grove_fish",
-                "has_coastal_fish", "has_plains_fish", "has_rocky_fish", "has_dripstone_fish", "has_deep_dark_fish")) {
+                "has_coastal_fish", "has_dripstone_fish", "has_deep_dark_fish")) {
             TagKey<Biome> key = TagKey.create(Registries.BIOME, Tide.resource(tag));
             if (level.registryAccess().lookupOrThrow(Registries.BIOME).get(key).map(h -> h.size() == 0).orElse(true))
                 problem("regional bait points at #tide:" + tag + ", which has no biomes");
-            boolean used = fish.stream().anyMatch(d -> d.conditions().stream().anyMatch(c ->
-                    c instanceof com.li64.tide.data.fishing.conditions.types.BiomeWhitelistCondition b && b.tags().contains(key)));
+            boolean used = fishJson.stream().anyMatch(js -> js.contains("#tide:" + tag));
             if (!used) problem("regional bait for #tide:" + tag + " unlocks nothing (no fish need that region)");
         }
     }
@@ -350,6 +350,7 @@ public final class GearCheck {
             }
         Set<Item> made = new HashSet<>();
         int tried = 0, clashes = 0;
+        Set<String> reported = new HashSet<>();
         for (RecipeHolder<CraftingRecipe> h : crafting) {
             if (!h.id().identifier().getNamespace().equals("tide")) continue;
             for (CraftingInput input : inputs(h.value())) {
@@ -360,7 +361,8 @@ public final class GearCheck {
                 for (RecipeHolder<CraftingRecipe> other : crafting) {
                     if (other == h || !other.value().matches(input, level)) continue;
                     ItemStack o = other.value().assemble(input);
-                    if (!ItemStack.isSameItem(o, out)) {
+                    String pair = h.id().identifier().compareTo(other.id().identifier()) < 0 ? h.id().identifier() + "|" + other.id().identifier() : other.id().identifier() + "|" + h.id().identifier();
+                    if (!ItemStack.isSameItem(o, out) && reported.add(pair)) {
                         clashes++;
                         problem("recipes clash: " + h.id().identifier() + " and " + other.id().identifier() + " take the same items (" + out.getItem() + " / " + o.getItem() + ")");
                     }

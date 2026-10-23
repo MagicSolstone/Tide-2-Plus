@@ -387,8 +387,10 @@ public class TideFishingRodItem extends FishingRodItem {
     }
 
     public void onItemBroken(ItemStack stack, ServerPlayer player) {
+        // line, hook, bobber and lure, and whatever bait was still loaded
         List<ItemStack> accessories = CustomRodManager.getAccessoryList(stack);
         accessories.forEach(accessory -> giveOrDrop(accessory, player));
+        BaitUtils.getBaitItems(stack).forEach(bait -> giveOrDrop(bait.copy(), player));
     }
 
     private void giveOrDrop(ItemStack stack, Player player) {

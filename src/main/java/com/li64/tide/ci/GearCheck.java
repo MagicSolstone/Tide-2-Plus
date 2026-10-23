@@ -299,15 +299,19 @@ public final class GearCheck {
         notes.add("strongest pull on one fish: x" + fmt(maxFactor) + " (" + maxWho + ")");
         if (maxFactor > 60) problem("one fish can be pulled x" + fmt(maxFactor) + ", it would crowd out everything else");
 
-        // crates against fish, from no luck to the most luck a loadout can reach
+        // what you reel in at each luck: Tide picks fish (85 - luck), crates (4 + luck) or junk and treasure first
         CrateSelector crates = new CrateSelector();
-        for (int luck : new int[]{0, 5, 10, 20}) {
+        com.li64.tide.data.fishing.selector.FishSelector fishSel = new com.li64.tide.data.fishing.selector.FishSelector();
+        for (int luck : new int[]{0, 5, 10, 17}) {
             FishingContext c = new FishingContext(level, null, plain, RandomSource.create(1), Vec3.atCenterOf(pos), pos,
                     luck, "water", biome, biome, level.dimension(), 0.5f, 0, SeasonsCompat.getSeason(level));
-            double fishTotal = pool(c, fish, null), crate = crates.weight(c);
-            if (fishTotal > 0) notes.add(String.format("luck %d: crates are %s of bites", luck, pct(crate / (crate + fishTotal))));
-            if (fishTotal > 0 && luck <= 10 && crate / (crate + fishTotal) > 0.5) problem("at luck " + luck + " crates outnumber fish");
+            double f = fishSel.weight(c), cr = crates.weight(c), loot = 0;
+            for (var l : TideData.FISHING_LOOT.get().values()) if (l.shouldKeep(c)) loot += l.weight(c);
+            double total = f + cr + loot;
+            notes.add(String.format("luck %d at spawn: %s fish, %s crates, %s junk and treasure", luck, pct(f / total), pct(cr / total), pct(loot / total)));
+            if (luck <= 10 && f / total < 0.5) problem("at luck " + luck + " fewer than half of bites are fish");
         }
+        oddsReport(level.getServer(), fish);
         // unlocks resolve to real biome tags
         for (Item item : BuiltInRegistries.ITEM) {
             for (Component c : Unlocks.describe(new ItemStack(item))) {
@@ -322,6 +326,57 @@ public final class GearCheck {
                 problem("regional bait points at #tide:" + tag + ", which has no biomes");
             boolean used = fishJson.stream().anyMatch(js -> js.contains("#tide:" + tag));
             if (!used) problem("regional bait for #tide:" + tag + " unlocks nothing (no fish need that region)");
+        }
+    }
+
+    /**
+     * The real chances for the family to look at: catch quality by level, and each legendary fish in the best
+     * place for it (every biome, depth and dimension tried; time, weather and moon taken as right for it).
+     */
+    private static void oddsReport(MinecraftServer server, Collection<FishData> fish) {
+        for (int lv : new int[]{1, Angler.baseline(), Angler.MAX_LEVEL})
+            for (double boost : new double[]{0, 0.95}) {
+                double[] p = CatchQuality.odds(lv, boost);
+                notes.add(String.format("quality at level %d%s: Poor %s, Average %s, Fine %s, Prime %s, Trophy %s, Mythic 1 in %,d", lv,
+                        boost > 0 ? " with the best quality gear" : "", pct(p[0]), pct(p[1]), pct(p[2]), pct(p[3]), pct(p[4]), Math.round(1 / p[5])));
+            }
+        ItemStack anyTime = new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("clockwork_fishing_rod")));
+        CustomRodManager.setLure(anyTime, new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("storm_lure"))));
+        TideItemData.BAIT_CONTENTS.set(anyTime, new BaitContents(List.of(new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("moon_bait")), 16))));
+        var biomes = server.overworld().registryAccess().lookupOrThrow(Registries.BIOME).listElements().toList();
+        com.li64.tide.data.fishing.selector.FishSelector fishSel = new com.li64.tide.data.fishing.selector.FishSelector();
+        CrateSelector crates = new CrateSelector();
+        record Spot(String medium, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dim, int[] ys) {}
+        List<Spot> spots = List.of(new Spot("water", net.minecraft.world.level.Level.OVERWORLD, new int[]{-50, 20, 64, 120}),
+                new Spot("lava", net.minecraft.world.level.Level.OVERWORLD, new int[]{-50}), new Spot("lava", net.minecraft.world.level.Level.NETHER, new int[]{32}),
+                new Spot("void", net.minecraft.world.level.Level.END, new int[]{-64}), new Spot("water", net.minecraft.world.level.Level.END, new int[]{60}));
+        for (FishData legend : fish) {
+            if (legend.profile().rarity() != FishRarity.LEGENDARY) continue;
+            for (int luck : new int[]{0, 10}) {
+                double best = 0; String where = "";
+                for (Spot spot : spots) {
+                    ServerLevel lvl = server.getLevel(spot.dim());
+                    if (lvl == null) continue;
+                    for (var b : biomes)
+                        for (int y : spot.ys())
+                            for (int moon : new int[]{0, 4}) {
+                                BlockPos bp = new BlockPos(0, y, 0);
+                                FishingContext c = new FishingContext(lvl, null, anyTime, RandomSource.create(1), Vec3.atCenterOf(bp), bp, luck, spot.medium(),
+                                        b, b, spot.dim(), b.value().getBaseTemperature(), moon, SeasonsCompat.getSeason(lvl));
+                                if (!legend.shouldKeep(c)) continue;
+                                double pool = 0;
+                                for (FishData d : fish) if (d.shouldKeep(c)) pool += d.weight(c);
+                                double f = fishSel.weight(c), others = crates.weight(c);
+                                for (var l : TideData.FISHING_LOOT.get().values()) if (l.shouldKeep(c)) others += l.weight(c);
+                                double p = pool > 0 ? legend.weight(c) / pool * f / (f + others) : 0;
+                                if (p > best) { best = p; where = spot.medium() + " in " + b.unwrapKey().map(k -> k.identifier().getPath()).orElse("?") + " at y " + y; }
+                            }
+                }
+                double mythic = CatchQuality.odds(Angler.MAX_LEVEL, 0)[5];
+                notes.add(String.format("legendary %s, luck %d: %s", legend.fish().getRegisteredName(), luck,
+                        best > 0 ? String.format("1 in %,d bites at best (%s); a Mythic one at level 99: 1 in %,d", Math.round(1 / best), where, Math.round(1 / (best * mythic)))
+                                : "can't be caught in any spot tried"));
+            }
         }
     }
 

@@ -337,6 +337,13 @@ public final class Angler {
         EXTRAS.computeIfAbsent(player.getUUID(), k -> new java.util.ArrayList<>()).add(what);
     }
 
+    private static final java.util.Map<java.util.UUID, java.util.List<String>> EFFECTS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** Something a rod did when the fish came in (the hex rod's potion, the sickle rod's crops), for the catch card. */
+    public static void markEffect(ServerPlayer player, String what) {
+        EFFECTS.computeIfAbsent(player.getUUID(), k -> new java.util.ArrayList<>()).add(what);
+    }
+
     /** The hook says a second fish came up with this one (shown on the catch banner). */
     public static void markTwin(ServerPlayer player) {
         TWIN.add(player.getUUID());
@@ -351,17 +358,21 @@ public final class Angler {
         java.util.List<String> bits = new java.util.ArrayList<>();
         double len = com.li64.tide.data.item.TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0);
         double grams = com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0);
-        if (len > 0) bits.add(FishWeight.imperialLength(len) + (grams > 0 ? " · " + FishWeight.imperial(grams) : ""));
+        if (len > 0 && grams <= 0) bits.add(FishWeight.imperialLength(len));
+        else if (len > 0) bits.add(FishWeight.imperialLength(len) + " long");
         if (extra.contains("new species")) bits.add("New species!");
         if (extra.contains("new record")) bits.add("New record!");
         if (TWIN.remove(player.getUUID())) bits.add("Two on the hook!");
         if (perfect) bits.add("Perfect hook");
         java.util.List<String> extras = EXTRAS.remove(player.getUUID());
+        java.util.List<String> effects = EFFECTS.remove(player.getUUID());
         String footer = "+" + xp + " fishing XP · Lv " + after + " (" + Math.round(progress(Data.of(player).xp) * 100) + "%)";
         if (after > before && title(after).equals(title(before))) footer = "+" + xp + " fishing XP · Level up! Fishing level " + after;
         Tide.NETWORK.sendToPlayer(new com.li64.tide.network.messages.CatchBannerMsg(
                 net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(), title,
-                q == null ? 0xFFFFFF : q.color, String.join(" · ", bits) + (extras == null ? "" : "\n" + String.join(" · ", extras)), footer, false), player);
+                q == null ? 0xFFFFFF : q.color, String.join(" · ", bits) + (extras == null ? "" : "\n" + String.join(" · ", extras))
+                        + (effects == null ? "" : "\n*" + String.join(" · ", effects)), footer, false,
+                grams > 0 ? FishWeight.imperial(grams) : ""), player);
     }
 
     private static void addXp(ServerPlayer player, long amount, String extra, boolean overlay) {
@@ -423,7 +434,7 @@ public final class Angler {
                     Component.literal("You are now a " + title + "!").withStyle(ChatFormatting.GOLD)));
         } else if (bannerIfSmall) {   // a plain level-up gets the small card (on a catch, the catch card says it)
             Tide.NETWORK.sendToPlayer(new com.li64.tide.network.messages.CatchBannerMsg("tide:fishing_journal",
-                    "Level up! Fishing level " + level, 0x7FE0FF, title, "", false), player);
+                    "Level up! Fishing level " + level, 0x7FE0FF, title, "", false, ""), player);
         }
         player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0f, 1.2f);
         if (newTitle || level % 10 == 0) firework(player, level >= 90);

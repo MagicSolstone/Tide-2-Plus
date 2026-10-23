@@ -15,11 +15,12 @@ public final class CatchBannerOverlay {
 
     private static final long SHOW_MS = 5000, FADE_MS = 800;
     private static ItemStack icon = ItemStack.EMPTY;
-    private static String title = "", detail = "", footer = "";
+    private static String title = "", detail = "", footer = "", weight = "";
     private static int color = 0xFFFFFF;
     private static long shownAt = 0;
 
-    public static void show(ItemStack icon, String title, int color, String detail, String footer) {
+    public static void show(ItemStack icon, String title, int color, String detail, String footer, String weight) {
+        CatchBannerOverlay.weight = weight;
         CatchBannerOverlay.icon = icon; CatchBannerOverlay.title = title; CatchBannerOverlay.color = color;
         CatchBannerOverlay.detail = detail; CatchBannerOverlay.footer = footer;
         shownAt = System.currentTimeMillis();
@@ -32,7 +33,8 @@ public final class CatchBannerOverlay {
         int a = Math.max(8, Math.round(alpha * 255));
         Font font = Minecraft.getInstance().font;
         String[] details = detail.isEmpty() ? new String[0] : detail.split("\n");
-        int textW = Math.max(font.width(title), font.width(footer));
+        String head = weight.isEmpty() ? title : title + "  ";
+        int textW = Math.max(font.width(head) + font.width(weight), font.width(footer));
         for (String d : details) textW = Math.max(textW, font.width(d));
         int w = textW + (icon.isEmpty() ? 12 : 32), h = 8 + 10 + details.length * 10 + (footer.isEmpty() ? 0 : 10);
         int x = (g.guiWidth() - w) / 2, y = g.guiHeight() - 72 - h;
@@ -41,9 +43,15 @@ public final class CatchBannerOverlay {
         int tx = x + 6;
         if (!icon.isEmpty()) { g.item(icon, x + 6, y + (h - 16) / 2); tx += 20; }
         int ty = y + 4;
-        Gui26.text(g, font, title, tx, ty, (a << 24) | (color & 0xFFFFFF), true);
+        Gui26.text(g, font, head, tx, ty, (a << 24) | (color & 0xFFFFFF), true);
+        if (!weight.isEmpty()) Gui26.text(g, font, weight, tx + font.width(head), ty, (a << 24) | 0xFFC83A, true);   // the weight, in gold: the number to brag about
         ty += 10;
-        for (int i = 0; i < details.length; i++) { Gui26.text(g, font, details[i], tx, ty, (a << 24) | (i == 0 ? 0xE8E8E8 : 0xFFE08A), true); ty += 10; }
+        for (int i = 0; i < details.length; i++) {
+            boolean effect = details[i].startsWith("*");      // what a rod did (purple), vs. items that came up (yellow)
+            String line = effect ? details[i].substring(1) : details[i];
+            Gui26.text(g, font, line, tx, ty, (a << 24) | (i == 0 ? 0xE8E8E8 : effect ? 0xD08AFF : 0xFFE08A), true);
+            ty += 10;
+        }
         if (!footer.isEmpty()) Gui26.text(g, font, footer, tx, ty, (a << 24) | 0x7FD8FF, true);
     }
 }

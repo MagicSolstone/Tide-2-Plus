@@ -228,8 +228,8 @@ public enum CatchQuality {
                 .append(Component.translatable(stack.getItem().getDescriptionId()).withStyle(s -> s.withColor(TextColor.fromRgb(q.color))));
         double grams = TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0);
         double length = TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0);
-        if (length > 0) msg.append(Component.literal(" (" + FishWeight.imperialLength(length)
-                + (grams > 0 ? ", " + FishWeight.imperial(grams) : "") + ")").withStyle(ChatFormatting.GRAY));
+        if (grams > 0 || length > 0) msg.append(Component.literal(" (" + (grams > 0 ? FishWeight.imperial(grams) + (length > 0 ? ", " : "") : "")
+                + (length > 0 ? FishWeight.imperialLength(length) : "") + ")").withStyle(ChatFormatting.GRAY));
         msg.append(Component.literal("!").withStyle(ChatFormatting.GRAY));
         server.getPlayerList().broadcastSystemMessage(msg, false);
     }

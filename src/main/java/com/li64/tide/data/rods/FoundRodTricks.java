@@ -42,15 +42,18 @@ public final class FoundRodTricks {
             if (state.is(BlockTags.CROPS) && state.getBlock() instanceof BonemealableBlock b && b.isValidBonemealTarget(level, pos, state, net.minecraft.world.level.block.BonemealSource.INTERACTION))
                 crops.add(pos.immutable());
         }
+        int grown = 0;
         for (int i = 0; i < MAX_CROPS && !crops.isEmpty(); i++) {
             BlockPos pos = crops.remove(random.nextInt(crops.size()));
             BlockState state = level.getBlockState(pos);
             if (state.getBlock() instanceof BonemealableBlock b) {
                 b.performBonemeal(level, random, pos, state, net.minecraft.world.level.block.BonemealSource.INTERACTION);
+                grown++;
                 level.sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 6, 0.3, 0.3, 0.3, 0);
             }
         }
-        if (Tide.CI) Tide.LOG.info("TIDE-CI sickle: {} crops in reach", crops.size());
+        if (grown > 0) com.li64.tide.data.angler.Angler.markEffect(player, "Sickle rod: " + grown + (grown == 1 ? " crop grew" : " crops grew"));
+        if (Tide.CI) Tide.LOG.info("TIDE-CI sickle: {} crops grew", grown);
     }
 
     private record Hex(Holder<MobEffect> effect, int ticks, String name) {}
@@ -64,7 +67,7 @@ public final class FoundRodTricks {
     private static void hex(ServerPlayer player, RandomSource random) {
         Hex h = HEXES.get(random.nextInt(HEXES.size()));
         player.addEffect(new MobEffectInstance(h.effect(), h.ticks(), 0));
-        player.sendOverlayMessage(Component.literal("The hex rod gives you " + h.name()).withStyle(ChatFormatting.LIGHT_PURPLE));
+        com.li64.tide.data.angler.Angler.markEffect(player, "Hex rod: " + h.name() + " (" + h.ticks() / 20 + "s)");
         player.level().sendParticles(ParticleTypes.WITCH, player.getX(), player.getY() + 1, player.getZ(), 10, 0.4, 0.5, 0.4, 0);
     }
 }

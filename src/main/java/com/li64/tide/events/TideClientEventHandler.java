@@ -53,12 +53,14 @@ public class TideClientEventHandler {
         }
     }
 
-    /** "◆◆◇◇◇ Fine" and "19 in · 3.4 lb" (either line only when known). */
+    /** "◆◆◇◇◇ Fine" and "3.4 lb · 19 in long" (the weight first, in gold: it's what records go by). */
     private static void addFishLines(List<Component> lines, int quality, double lengthCm, double grams) {
         if (quality >= 0) lines.add(com.li64.tide.data.angler.CatchQuality.byId(quality).describe());
         if (lengthCm <= 0 && grams <= 0) return;
-        net.minecraft.network.chat.MutableComponent size = lengthCm > 0 ? TideUtils.getFormattedLength(lengthCm) : Component.empty();
-        if (grams > 0) size.append((lengthCm > 0 ? " · " : "") + com.li64.tide.data.angler.FishWeight.format(grams));
-        lines.add(size.withStyle(ChatFormatting.BLUE));
+        net.minecraft.network.chat.MutableComponent size = Component.empty();
+        if (grams > 0) size.append(Component.literal(com.li64.tide.data.angler.FishWeight.format(grams)).withStyle(ChatFormatting.GOLD));
+        if (lengthCm > 0) size.append(Component.literal(grams > 0 ? " · " : "").withStyle(ChatFormatting.BLUE))
+                .append(TideUtils.getFormattedLength(lengthCm).copy().append(grams > 0 ? " long" : "").withStyle(ChatFormatting.BLUE));
+        lines.add(size);
     }
 }

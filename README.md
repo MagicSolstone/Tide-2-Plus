@@ -1,20 +1,14 @@
-# Tide (Fabric 26 fork)
+# Tide+
 
-A Fabric-only fork of [Tide 2](https://github.com/Lightning-64/Tide-2) by Lightning64, ported to
-**Minecraft 26.3**, for a family server run alongside [Solstone](https://github.com/TJusczak/Solstone).
+**Tide+** is a Fabric fork of [Tide 2](https://github.com/Lightning-64/Tide-2) by Lightning64 for
+**Minecraft 26.3**, made for a family server run alongside [Solstone](https://github.com/TJusczak/Solstone).
+It keeps everything Tide does and adds fishing levels, catch quality, and a full tackle system: rods,
+lines, hooks, bobbers, lures and bait that each matter, matched rigs, favorite lures, rare found rods,
+a tackle box and a better fish satchel. See **[RELEASE_NOTES.md](RELEASE_NOTES.md)** for everything in 1.0.0,
+and the [releases](https://github.com/TJusczak/Tide-2-fabric26plus-levels/releases) for the jar.
 
-Added on top of Tide:
-
-- **Fishing levels 1–99** with XP, titles every 10 levels and an angler page in the journal. Level
-  changes cast distance, bite speed, hook zones, luck and how hard fish fight; level 40 fishes like
-  original Tide. `/fishinglevel` shows yours; ops can set levels and turn on *fair play* (everyone
-  at level 40, for contests).
-- **Hook zones** in the minigame (perfect, great, good, bad, miss) with a chance to land each.
-- **Catch quality** (Poor, Average, Fine, Prime, Trophy, Mythic), decided at the bite: better fish
-  are bigger, heavier and fight harder. Shown with ◆ marks, kept through buckets.
-- **Weight** from length and body shape; US units by default (`useImperial` in the client config).
-- **Journal records:** best quality, heaviest, longest, shortest, and how many of each quality.
-- A `[Tide catch]` line in the server log for every fish, which Solstone reads for contests.
+**Install:** the jar in `mods/` on the server and every client, with Fabric Loader 0.19.5+ and Fabric API
+for 26.3. It uses Tide's mod ID, so it replaces Tide; don't install both.
 
 Porting to a new Minecraft version: see [PORTING.md](PORTING.md).
 

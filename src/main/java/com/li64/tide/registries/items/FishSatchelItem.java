@@ -71,16 +71,8 @@ public class FishSatchelItem extends AbstractTooltipItem {
         SatchelContents.Mutable mutable = new SatchelContents.Mutable(contents);
         ItemStack slotStack = slot.getItem();
 
-        if (slotStack.isEmpty() && !mutable.isEmpty()) {
-            // place next stack
-            ItemStack removed = mutable.removeStack();
-            if (removed != null && !removed.isEmpty()) {
-                this.playRemoveOneSound(player);
-                mutable.tryInsert(slot.safeInsert(removed));
-            }
-            else return false;
-        }
-        else if (!slotStack.isEmpty()
+        // (taking fish out one by one is gone: right-click the satchel to open it and pick the fish you want)
+        if (!slotStack.isEmpty()
                 && slotStack.getItem().canFitInsideContainerItems()
                 && canPutInSatchel(slotStack)) {
             if (mutable.tryTransfer(slot, player)) this.playInsertSound(player);
@@ -103,13 +95,12 @@ public class FishSatchelItem extends AbstractTooltipItem {
         SatchelContents.Mutable mutable = new SatchelContents.Mutable(contents);
 
         if (other.isEmpty()) {
-            // try pull next stack
-            ItemStack removedStack = mutable.removeStack();
-            if (removedStack != null && !removedStack.isEmpty()) {
-                if (playSound) this.playRemoveOneSound(player);
-                access.set(removedStack);
-            }
-            else return false;
+            // right-click with nothing on the cursor: open the satchel (only from the player's own inventory)
+            if (!playSound) return false;
+            if (player instanceof net.minecraft.server.level.ServerPlayer sp && sp.getInventory().contains(s -> s == stack))
+                sp.openMenu(new net.minecraft.world.SimpleMenuProvider((id, inv, p) -> new Menu(id, inv, stack), stack.getHoverName()));
+            this.playRemoveOneSound(player);
+            return true;
         }
         else if (other.getItem().canFitInsideContainerItems() && canPutInSatchel(other)) {
             // insert stack
@@ -182,6 +173,12 @@ public class FishSatchelItem extends AbstractTooltipItem {
 
         public Menu(int id, net.minecraft.world.entity.player.Inventory inventory) {
             this(id, inventory, ItemStack.EMPTY);
+        }
+
+        @Override
+        public boolean stillValid(@NotNull Player player) {
+            // open from the hand or straight from the inventory
+            return holder.isEmpty() || player.getInventory().contains(s -> s == holder) || player.getOffhandItem() == holder;
         }
 
         public Menu(int id, net.minecraft.world.entity.player.Inventory inventory, ItemStack satchel) {

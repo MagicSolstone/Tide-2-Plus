@@ -3,6 +3,7 @@ name: Build
 on:
   push:
     branches: [main]
+    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -226,7 +227,7 @@ jobs:
           grep -E "TIDE-CI extras" server-mp.log | tail -3 || echo "(no multiplayer catch this run)"
 
       - name: Dev build download
-        if: success() && github.event_name == 'push'
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
           tag_name: dev
@@ -234,10 +235,21 @@ jobs:
           prerelease: true
           make_latest: false
           body: "Built from ${{ github.sha }}. For testing only: Minecraft 26.3, Fabric Loader 0.19.5+, Fabric API."
-          files: build/libs/tide-fabric-*[!s].jar
+          files: build/libs/tide-plus-*[!s].jar
+
+      # a version tag (v1.0.0...) publishes a real release, with the notes from RELEASE_NOTES.md
+      - name: Release
+        if: success() && startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          name: Tide+ ${{ github.ref_name }}
+          prerelease: false
+          make_latest: true
+          body_path: RELEASE_NOTES.md
+          files: build/libs/tide-plus-*[!s].jar
 
       - uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: tide-fabric
+          name: tide-plus
           path: build/libs/*.jar

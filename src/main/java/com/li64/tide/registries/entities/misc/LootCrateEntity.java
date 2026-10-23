@@ -127,14 +127,24 @@ public class LootCrateEntity extends FallingBlockEntity {
     public void dropCrateLoot() {
         if (level() instanceof ServerLevel serverLevel && tableKey != null) {
             LootTable lootTable = tableKey.getTable(serverLevel.getServer());
-            lootTable.getRandomItems(lootParams).forEach(stack -> this.spawnAtLocation(serverLevel, stack));
+            lootTable.getRandomItems(lootParams).forEach(stack -> { grade(stack); this.spawnAtLocation(serverLevel, stack); });
         }
+    }
+
+    /** Fish from a crate get a quality (and size) too, rolled for whoever fished the crate up. */
+    private void grade(net.minecraft.world.item.ItemStack stack) {
+        if (stack.isEmpty() || lootParams == null || com.li64.tide.data.item.TideItemData.FISH_QUALITY.isPresent(stack)) return;
+        if (lootParams.contextMap().get(net.minecraft.world.level.storage.loot.parameters.LootContextParams.THIS_ENTITY)
+                instanceof com.li64.tide.registries.entities.misc.fishing.TideFishingHook hook
+                && hook.getPlayerOwner() instanceof net.minecraft.server.level.ServerPlayer player)
+            com.li64.tide.data.angler.CatchQuality.apply(player, stack, null);
     }
 
     public void addCrateLoot(Container container) {
         if (level() instanceof ServerLevel serverLevel && tableKey != null) {
             LootTable lootTable = tableKey.getTable(serverLevel.getServer());
             lootTable.fill(container, lootParams, random.nextLong());
+            for (int i = 0; i < container.getContainerSize(); i++) grade(container.getItem(i));
         }
     }
 }

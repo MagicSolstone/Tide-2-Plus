@@ -353,15 +353,15 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     }
 
     private static final Map<String, Pick> PICKS = Map.of(
-            "rotten_fishing_rod", new Pick(0.35, "35% chance of a mob drop with each fish: rotten flesh, bones, string, arrows, spider eyes, gunpowder; now and then a carrot, potato or iron ingot",
+            "rotten_fishing_rod", new Pick(0.35, "35% chance of a mob drop with each fish (bones, string, gunpowder...)",
                     w("minecraft:rotten_flesh", 30, "minecraft:bone", 20, "minecraft:string", 18, "minecraft:arrow", 8, "minecraft:spider_eye", 10,
                             "minecraft:gunpowder", 10, "minecraft:carrot", 4, "minecraft:potato", 4, "minecraft:iron_ingot", 3)),
-            "grove_fishing_rod", new Pick(0.35, "35% chance of something from the trees with each fish: a sapling, sticks or an apple; very rarely a golden apple",
+            "grove_fishing_rod", new Pick(0.35, "35% chance of tree drops with each fish (saplings, sticks, apples...)",
                     w("#minecraft:saplings", 35, "minecraft:stick", 35, "minecraft:apple", 25, "minecraft:golden_apple", 1)),
-            "drowned_fishing_rod", new Pick(0.35, "35% chance of sunken loot with each fish: kelp, copper, ink, prismarine, nautilus shells, sea pickles; very rarely a trident",
+            "drowned_fishing_rod", new Pick(0.35, "35% chance of sunken loot with each fish (kelp, copper, prismarine...)",
                     w("minecraft:kelp", 50, "minecraft:copper_ingot", 40, "minecraft:ink_sac", 30, "minecraft:prismarine_shard", 20, "minecraft:prismarine_crystals", 16,
                             "minecraft:nautilus_shell", 16, "minecraft:sea_pickle", 12, "minecraft:glow_ink_sac", 10, "minecraft:trident", 1)),
-            "sickle_fishing_rod", new Pick(0.25, "25% chance of seeds with each fish: wheat, beetroot, pumpkin or melon seeds",
+            "sickle_fishing_rod", new Pick(0.25, "25% chance of seeds with each fish",
                     w("minecraft:wheat_seeds", 40, "minecraft:beetroot_seeds", 20, "minecraft:pumpkin_seeds", 15, "minecraft:melon_seeds", 15)));
 
     /** This rod's pick-one bonus, if any. */
@@ -372,8 +372,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     /** What the sickle and hex rods do besides their numbers. */
     public static final double SICKLE_GROW = 0.35, HEX_EFFECT = 0.20, TWIN_CAP = 0.35;
     private static final Map<String, List<String>> SPECIAL_TEXT = Map.of(
-            "sickle_fishing_rod", List.of("35% chance each fish makes nearby crops grow, like bone meal (up to 4 crops within 8 blocks)"),
-            "hex_fishing_rod", List.of("20% chance each fish gives you a short potion effect: Night Vision, Water Breathing, Luck, Speed, Fire Resistance, Dolphin's Grace or Regeneration"),
+            "sickle_fishing_rod", List.of("35% chance each fish makes nearby crops grow"),
+            "hex_fishing_rod", List.of("20% chance each fish gives you a helpful potion effect"),
             "widow_fishing_rod", List.of("A night hunter: strong after dark, sluggish by day"));
 
     /** Bonus drops from this rod. */

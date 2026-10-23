@@ -21,12 +21,18 @@ import java.util.Map;
  *
  * All fractions: 0.10 = +10%. {@code fight} below zero makes fish easier; {@code land} adds to the
  * chance that a Good or Bad hook still lands the fish; {@code twin} is the chance of a second fish of
- * the same kind; {@code cook} the chance the fish comes up already cooked.
+ * the same kind; {@code cook} the chance the fish comes up already cooked; {@code speed} is original Tide's
+ * whole-number fishing speed (like the Lure enchantment: each point bites about 5 seconds sooner) and
+ * {@code ease} lowers catch difficulty (a bigger catch area in the minigame).
  */
 public record RodEffects(double cast, double bite, double window, double fight, int luck, double quality,
-                         double land, double xp, double twin, double cook) {
+                         double land, double xp, double twin, double cook, int speed, double ease) {
     public RodEffects(double cast, double bite, double window, double fight, int luck, double quality, double land, double xp) {
-        this(cast, bite, window, fight, luck, quality, land, xp, 0, 0);
+        this(cast, bite, window, fight, luck, quality, land, xp, 0, 0, 0, 0);
+    }
+
+    public RodEffects(double cast, double bite, double window, double fight, int luck, double quality, double land, double xp, double twin, double cook) {
+        this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, 0, 0);
     }
 
     public static final RodEffects NONE = new RodEffects(0, 0, 0, 0, 0, 0, 0, 0);
@@ -40,7 +46,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     /** Rods' own perks. Tiers climb from nothing (wood, stone) to netherite; the special rods each lean one way. */
     private static final Map<String, RodEffects> RODS = Map.ofEntries(
             Map.entry("iron_fishing_rod", window(0.05)),
-            Map.entry("golden_fishing_rod", xp(0.10)),
+            Map.entry("golden_fishing_rod", new RodEffects(0, 0, 0, 0, 1, 0, 0, 0.10)),
             Map.entry("crystal_fishing_rod", new RodEffects(0, 0, 0.05, 0, 0, 0.05, 0, 0)),
             Map.entry("diamond_fishing_rod", new RodEffects(0.10, 0, 0.10, 0, 0, 0.10, 0, 0)),
             Map.entry("netherite_fishing_rod", new RodEffects(0.10, 0.05, 0.12, -0.12, 0, 0.15, 0.10, 0)),
@@ -49,7 +55,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("village_fishing_rod", xp(0.15)),
             Map.entry("blazing_fishing_rod", new RodEffects(0, 0, 0, -0.08, 0, 0, 0, 0, 0, 0.15)),
             Map.entry("honeycomb_fishing_rod", land(0.15)),
-            Map.entry("midas_fishing_rod", new RodEffects(0, 0, 0, 0, 0, 0.10, 0, 0.10)),
+            Map.entry("midas_fishing_rod", new RodEffects(0, 0, 0, 0, 1, 0.10, 0, 0.10)),
             Map.entry("kids_fishing_pole", new RodEffects(0, 0.10, 0.15, -0.20, -1, -0.30, 0.10, 0)),
             Map.entry("bamboo_fishing_rod", cast(0.05)));
 
@@ -76,6 +82,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     /** Lines with their own perk, on top of every line's casting range. */
     private static final Map<String, RodEffects> LINES = Map.ofEntries(
+            Map.entry("copper_line", fight(-0.10)),
+            Map.entry("iron_line", ease(0.14)),
+            Map.entry("golden_line", new RodEffects(0, 0, 0, -0.05, 1, 0, 0, 0)),
+            Map.entry("diamond_line", ease(0.25)),
             Map.entry("coal_line", window(0.10)),
             Map.entry("honey_line", land(0.10)),
             Map.entry("silk_line", bite(0.08)),
@@ -108,18 +118,28 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("bell_bobber", window(0.05)),
             Map.entry("ender_pearl_bobber", NONE));
 
-    /** Lures' perks (what fish they draw in is in {@link Lures}). */
+    /** Lures' always-on perks (what fish they draw in is in {@link Lures}). One lure slot, so each one is a real choice. */
     private static final Map<String, RodEffects> LURES = Map.ofEntries(
-            Map.entry("fly_lure", bite(0.05)),
-            Map.entry("jig_lure", fight(-0.05)),
-            Map.entry("echo_lure", bite(-0.10)));
+            Map.entry("spinner_lure", cast(0.10)),
+            Map.entry("golden_spoon_lure", xp(0.10)),
+            Map.entry("fly_lure", bite(0.20)),
+            Map.entry("jig_lure", fight(-0.10)),
+            Map.entry("echo_lure", bite(-0.10)),
+            Map.entry("magnet_lure", luck(1)));
+
+    /** Bait's extra perks, on top of the speed and luck in its bait data (counted once per kind of bait loaded). */
+    private static final Map<String, RodEffects> BAITS = Map.ofEntries(
+            Map.entry("golden_bait", quality(0.10)),
+            Map.entry("chum", luck(-1)));
 
     // ------------------------------------------------------------------ situational
 
     /** Where or when a perk applies (judged where the angler stands). */
     public enum When {
-        DAY("by day"), NIGHT("at night"), RAIN("in the rain"), FULL_MOON("on a full moon"),
-        UNDERGROUND("underground"), JUNGLE("in jungles"), OCEAN("in oceans"), SWAMP("in swamps"),
+        DAY("by day"), NIGHT("at night"), DAWN_DUSK("at dawn and dusk"), RAIN("in the rain"), THUNDER("in a thunderstorm"),
+        FULL_MOON("on a full moon"), NEW_MOON("on a new moon"),
+        UNDERGROUND("underground"), NETHER("in the Nether"), END("in the End"),
+        OCEAN("in oceans"), RIVER("in rivers"), SWAMP("in swamps"), JUNGLE("in jungles"),
         COLD("in cold places"), DRY("in deserts and badlands"), BEACH("on beaches"), MUSHROOM("on mushroom islands");
 
         public final String text;
@@ -134,6 +154,16 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             boolean sky = level.dimensionType().hasSkyLight();
             return switch (this) {
                 case DAY -> sky && level.isBrightOutside();
+                case DAWN_DUSK -> {
+                    if (!(level instanceof net.minecraft.server.level.ServerLevel server)) yield false;
+                    long t = com.li64.tide.util.TideUtils.getTimeOfDay(server);
+                    yield sky && (t >= 22500 || t < 1000 || (t >= 11500 && t < 13500));
+                }
+                case THUNDER -> level.isThundering() && level.canSeeSky(pos.above());
+                case NEW_MOON -> sky && level.isDarkOutside() && com.li64.tide.util.Mc26.moonPhase(level, pos) == 4;
+                case NETHER -> level.dimension() == net.minecraft.world.level.Level.NETHER;
+                case END -> level.dimension() == net.minecraft.world.level.Level.END;
+                case RIVER -> biome.is(net.minecraft.tags.BiomeTags.IS_RIVER);
                 case NIGHT -> sky && level.isDarkOutside();
                 case RAIN -> level.isRaining() && level.canSeeSky(pos.above());
                 case FULL_MOON -> sky && level.isDarkOutside() && com.li64.tide.util.Mc26.moonPhase(level, pos) == 0;
@@ -151,30 +181,57 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     public record Perk(When when, RodEffects fx) {}
 
-    /** Perks that only count in a place or at a time, by item path (rods, lines, hooks, bobbers, lures). */
-    private static final Map<String, Perk> SITUATIONAL = Map.ofEntries(
-            Map.entry("bamboo_fishing_rod", new Perk(When.JUNGLE, new RodEffects(0, 0.25, 0, 0, 1, 0, 0, 0))),
-            Map.entry("bone_fishing_rod", new Perk(When.NIGHT, bite(0.25))),
-            Map.entry("copper_fishing_rod", new Perk(When.RAIN, new RodEffects(0, 0.20, 0, 0, 0, 0.10, 0, 0))),
-            Map.entry("echo_fishing_rod", new Perk(When.UNDERGROUND, quality(0.15))),
-            Map.entry("prismarine_fishing_rod", new Perk(When.OCEAN, bite(0.20))),
-            Map.entry("sunflower_fishing_rod", new Perk(When.DAY, bite(0.15))),
-            Map.entry("slime_line", new Perk(When.UNDERGROUND, new RodEffects(0, 0.20, 0.05, 0, 1, 0, 0, 0))),
-            Map.entry("kelp_line", new Perk(When.OCEAN, bite(0.15))),
-            Map.entry("vine_line", new Perk(When.JUNGLE, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0))),
-            Map.entry("spider_line", new Perk(When.NIGHT, window(0.10))),
-            Map.entry("lucky_hook", new Perk(When.FULL_MOON, luck(1))),
-            Map.entry("glow_berry_bobber", new Perk(When.NIGHT, bite(0.15))),
-            Map.entry("pumpkin_bobber", new Perk(When.NIGHT, xp(0.15))),
-            Map.entry("lily_pad_bobber", new Perk(When.SWAMP, bite(0.20))),
-            Map.entry("copper_bobber", new Perk(When.RAIN, bite(0.15))),
-            Map.entry("sculk_bobber", new Perk(When.UNDERGROUND, quality(0.15))),
-            Map.entry("prismarine_bobber", new Perk(When.OCEAN, luck(1))),
-            Map.entry("snowball_bobber", new Perk(When.COLD, bite(0.20))),
-            Map.entry("cactus_bobber", new Perk(When.DRY, bite(0.20))),
-            Map.entry("turtle_bobber", new Perk(When.BEACH, new RodEffects(0, 0.15, 0, 0, 1, 0, 0, 0))),
-            Map.entry("mushroom_bobber", new Perk(When.MUSHROOM, new RodEffects(0, 0.10, 0, 0, 1, 0, 0, 0))),
-            Map.entry("popper_lure", new Perk(When.DAY, new RodEffects(0, 0.15, 0, 0, 0, 0, 0, 0.05))));
+    /** Perks that only count in a place or at a time, by item path (rods, lines, hooks, bobbers, lures, bait). */
+    private static final Map<String, List<Perk>> SITUATIONAL = Map.ofEntries(
+            // rods (prismarine and sunflower: original Tide's rain and sunlight perks)
+            Map.entry("bamboo_fishing_rod", List.of(new Perk(When.JUNGLE, new RodEffects(0, 0.25, 0, 0, 1, 0, 0, 0)))),
+            Map.entry("bone_fishing_rod", List.of(new Perk(When.NIGHT, bite(0.25)))),
+            Map.entry("copper_fishing_rod", List.of(new Perk(When.RAIN, new RodEffects(0, 0.20, 0, 0, 0, 0.10, 0, 0)),
+                    new Perk(When.THUNDER, new RodEffects(0, 0.10, 0, 0, 1, 0.10, 0, 0)))),
+            Map.entry("echo_fishing_rod", List.of(new Perk(When.UNDERGROUND, quality(0.15)))),
+            Map.entry("prismarine_fishing_rod", List.of(new Perk(When.RAIN, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0)),
+                    new Perk(When.OCEAN, bite(0.20)))),
+            Map.entry("sunflower_fishing_rod", List.of(new Perk(When.DAY, new RodEffects(0, 0.15, 0, 0, 1, 0, 0, 0)))),
+            Map.entry("blazing_fishing_rod", List.of(new Perk(When.NETHER, bite(0.20)))),
+            // lines
+            Map.entry("slime_line", List.of(new Perk(When.UNDERGROUND, new RodEffects(0, 0.20, 0.05, 0, 1, 0, 0, 0)))),
+            Map.entry("kelp_line", List.of(new Perk(When.OCEAN, bite(0.15)))),
+            Map.entry("vine_line", List.of(new Perk(When.JUNGLE, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)))),
+            Map.entry("spider_line", List.of(new Perk(When.NIGHT, window(0.10)))),
+            // hooks
+            Map.entry("lucky_hook", List.of(new Perk(When.FULL_MOON, luck(1)))),
+            Map.entry("lavaproof_hook", List.of(new Perk(When.NETHER, fight(-0.10)))),
+            Map.entry("void_hook", List.of(new Perk(When.END, luck(1)))),
+            // bobbers
+            Map.entry("glow_berry_bobber", List.of(new Perk(When.NIGHT, bite(0.15)))),
+            Map.entry("pumpkin_bobber", List.of(new Perk(When.NIGHT, xp(0.15)))),
+            Map.entry("lily_pad_bobber", List.of(new Perk(When.SWAMP, bite(0.20)))),
+            Map.entry("copper_bobber", List.of(new Perk(When.RAIN, bite(0.15)))),
+            Map.entry("sculk_bobber", List.of(new Perk(When.UNDERGROUND, quality(0.15)))),
+            Map.entry("prismarine_bobber", List.of(new Perk(When.OCEAN, luck(1)))),
+            Map.entry("snowball_bobber", List.of(new Perk(When.COLD, bite(0.20)))),
+            Map.entry("cactus_bobber", List.of(new Perk(When.DRY, bite(0.20)))),
+            Map.entry("turtle_bobber", List.of(new Perk(When.BEACH, new RodEffects(0, 0.15, 0, 0, 1, 0, 0, 0)))),
+            Map.entry("mushroom_bobber", List.of(new Perk(When.MUSHROOM, new RodEffects(0, 0.10, 0, 0, 1, 0, 0, 0)))),
+            Map.entry("chorus_bobber", List.of(new Perk(When.END, bite(0.20)))),
+            Map.entry("nautilus_bobber", List.of(new Perk(When.OCEAN, bite(0.10)))),
+            Map.entry("echo_bobber", List.of(new Perk(When.UNDERGROUND, quality(0.10)))),
+            // lures
+            Map.entry("popper_lure", List.of(new Perk(When.DAWN_DUSK, new RodEffects(0, 0.25, 0, 0, 0, 0, 0, 0.10)))),
+            Map.entry("fly_lure", List.of(new Perk(When.RIVER, bite(0.15)))),
+            Map.entry("jig_lure", List.of(new Perk(When.UNDERGROUND, bite(0.15)))),
+            Map.entry("glow_lure", List.of(new Perk(When.NIGHT, bite(0.15)))),
+            Map.entry("magma_lure", List.of(new Perk(When.NETHER, new RodEffects(0, 0.25, 0, -0.10, 0, 0.10, 0, 0)))),
+            Map.entry("chorus_lure", List.of(new Perk(When.END, new RodEffects(0, 0.25, 0, 0, 1, 0, 0, 0)))),
+            Map.entry("storm_lure", List.of(new Perk(When.RAIN, bite(0.15)),
+                    new Perk(When.THUNDER, new RodEffects(0, 0.10, 0, 0, 2, 0.15, 0, 0)))),
+            Map.entry("ink_lure", List.of(new Perk(When.NIGHT, window(0.10)), new Perk(When.NEW_MOON, luck(1)))),
+            Map.entry("frog_lure", List.of(new Perk(When.SWAMP, bite(0.20)))),
+            Map.entry("squid_lure", List.of(new Perk(When.OCEAN, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)))),
+            Map.entry("ice_jig_lure", List.of(new Perk(When.COLD, new RodEffects(0, 0.20, 0, 0, 0, 0.10, 0, 0)))),
+            // bait
+            Map.entry("glow_worms", List.of(new Perk(When.NIGHT, bite(0.15)))),
+            Map.entry("cave_grubs", List.of(new Perk(When.UNDERGROUND, bite(0.15)))));
 
     // ------------------------------------------------------------------ gear
 
@@ -197,10 +254,12 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     private static RodEffects quality(double v) { return new RodEffects(0, 0, 0, 0, 0, v, 0, 0); }
     private static RodEffects land(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, v, 0); }
     private static RodEffects xp(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, v); }
+    private static RodEffects speed(int v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v, 0); }
+    private static RodEffects ease(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v); }
 
     public RodEffects plus(RodEffects o) {
         return new RodEffects(cast + o.cast, bite + o.bite, window + o.window, fight + o.fight, luck + o.luck,
-                quality + o.quality, land + o.land, xp + o.xp, twin + o.twin, cook + o.cook);
+                quality + o.quality, land + o.land, xp + o.xp, twin + o.twin, cook + o.cook, speed + o.speed, ease + o.ease);
     }
 
     public boolean isEmpty() {
@@ -223,6 +282,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (accessory.getItem() instanceof FishingLineItem) return LINES.containsKey(path) ? ANY_LINE.plus(LINES.get(path)) : ANY_LINE;
         if (accessory.getItem() instanceof FishingHookItem) return HOOKS.containsKey(path) ? ANY_HOOK.plus(HOOKS.get(path)) : ANY_HOOK;
         if (accessory.getItem() instanceof FishingLureItem) return LURES.getOrDefault(path, NONE);
+        if (BAITS.containsKey(path) && isTide(accessory)) return BAITS.get(path);
         if (accessory.getItem() instanceof FishingBobberItem || path.endsWith("_bobber")) {
             if (BOBBERS.containsKey(path)) return BOBBERS.get(path);
             return SITUATIONAL.containsKey(path) ? NONE : DYED_BOBBER;
@@ -237,6 +297,9 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (CustomRodManager.hasHook(rod)) parts.add(CustomRodManager.getHook(rod));
         if (CustomRodManager.hasBobber(rod)) parts.add(CustomRodManager.getBobber(rod));
         if (CustomRodManager.hasLure(rod)) parts.add(CustomRodManager.getLure(rod));
+        java.util.Set<net.minecraft.world.item.Item> baits = new java.util.HashSet<>();
+        for (ItemStack bait : com.li64.tide.util.BaitUtils.getBaitItems(rod))
+            if (baits.add(bait.getItem())) parts.add(bait);       // each kind of bait once
         return parts;
     }
 
@@ -254,10 +317,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return RODS.getOrDefault(path(rod), NONE).plus(accessories(rod));
     }
 
-    /** This item's situational perk, if it has one. */
-    public static Perk situational(ItemStack stack) {
-        if (stack == null || stack.isEmpty()) return null;
-        return SITUATIONAL.get(path(stack));
+    /** This item's situational perks (empty if none). */
+    public static List<Perk> situational(ItemStack stack) {
+        if (stack == null || stack.isEmpty()) return List.of();
+        return SITUATIONAL.getOrDefault(path(stack), List.of());
     }
 
     /** Situational perks of the rod and what's on it that apply where the player is now. */
@@ -266,18 +329,16 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         RodEffects e = NONE;
         List<ItemStack> all = new ArrayList<>(List.of(rod));
         all.addAll(parts(rod));
-        for (ItemStack part : all) {
-            Perk perk = situational(part);
-            if (perk != null && perk.when().test(player)) e = e.plus(perk.fx());
-        }
+        for (ItemStack part : all)
+            for (Perk perk : situational(part))
+                if (perk.when().test(player)) e = e.plus(perk.fx());
         return e;
     }
 
     /** A rod's own perk lines (the rod item, not what's attached). */
     public static List<Component> describeRod(ItemStack rod) {
         List<Component> out = new ArrayList<>(RODS.getOrDefault(path(rod), NONE).describe(ChatFormatting.DARK_AQUA));
-        Perk perk = situational(rod);
-        if (perk != null) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
+        for (Perk perk : situational(rod)) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
         return out;
     }
 
@@ -285,8 +346,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     public static List<Component> describeItem(ItemStack stack) {
         List<Component> out = new ArrayList<>(Lures.describe(stack));
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
-        Perk perk = situational(stack);
-        if (perk != null) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
+        for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
         if (path(stack).equals("bell_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Rings when a fish bites"));
         if (path(stack).equals("ender_pearl_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Shows what's on the hook when it bites"));
         return out;
@@ -343,6 +403,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (xp != 0) out.add(line(color, pct(xp) + " fishing XP"));
         if (twin != 0) out.add(line(color, Math.round(twin * 100) + "% chance of a second fish"));
         if (cook != 0) out.add(line(color, Math.round(cook * 100) + "% chance the fish comes up cooked"));
+        if (speed != 0) out.add(line(color, String.format("%+d fishing speed (bites about %d s sooner)", speed, speed * 5)));
+        if (ease != 0) out.add(line(color, "-" + Math.round(ease * 100) + "% catch difficulty"));
         if (!when.isEmpty()) out.replaceAll(c -> line(color, c.getString() + when));
         return out;
     }

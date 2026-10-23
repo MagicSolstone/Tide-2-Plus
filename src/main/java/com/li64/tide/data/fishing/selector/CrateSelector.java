@@ -18,7 +18,8 @@ public class CrateSelector implements FishingEntry {
     @Override
     public double weight(FishingContext context) {
         boolean hasMagneticBait = context.rod() != null && BaitUtils.hasBait(TideItems.MAGNETIC_BAIT, context.rod());
-        double weight = Tide.SERVER_CONFIG.general.crateWeight * (hasMagneticBait ? MAGNETIC_BAIT_BONUS : 1.0);
+        double weight = Tide.SERVER_CONFIG.general.crateWeight * (hasMagneticBait ? MAGNETIC_BAIT_BONUS : 1.0)
+                * com.li64.tide.data.rods.Lures.crateFactor(context);
         return FishingEntry.modifyWeight(weight, Tide.SERVER_CONFIG.general.crateQuality, context);
     }
 

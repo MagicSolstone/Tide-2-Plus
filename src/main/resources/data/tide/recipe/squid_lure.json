@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:ink_sac",
+    "#c:dyes/white"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:squid_lure"
+  }
+}

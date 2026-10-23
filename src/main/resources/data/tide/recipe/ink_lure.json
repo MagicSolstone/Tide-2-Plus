@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:ink_sac",
+    "minecraft:feather"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:ink_lure"
+  }
+}

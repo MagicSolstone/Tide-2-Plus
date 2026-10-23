@@ -111,14 +111,11 @@ public class TideFishingRodItem extends FishingRodItem {
             builder.add(Component.empty());
         }
 
-        if (stack.is(TideTags.Items.LUCK_BOOSTING_RODS)) builder.add(Component.translatable("text.tide.rod_tooltip.gold_bonus").withStyle(ChatFormatting.GOLD));
         if (stack.is(TideTags.Items.LAVA_FISHING_RODS)) builder.add(Component.translatable("text.tide.rod_tooltip.netherite_bonus").withStyle(ChatFormatting.GOLD));
         if (stack.is(TideItems.CRYSTAL_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.crystal_bonus").withStyle(ChatFormatting.GOLD));
         if (stack.is(TideItems.DIAMOND_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.diamond_bonus").withStyle(ChatFormatting.GOLD));
         if (stack.is(TideItems.MIDAS_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.midas_bonus").withStyle(ChatFormatting.GOLD));
         if (stack.is(TideItems.ECHO_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.echo_bonus").withStyle(ChatFormatting.GOLD));
-        if (stack.is(TideItems.PRISMARINE_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.prismarine_bonus").withStyle(ChatFormatting.GOLD));
-        if (stack.is(TideItems.SUNFLOWER_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.sunflower_bonus").withStyle(ChatFormatting.GOLD));
         if (stack.is(TideItems.VILLAGE_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.village_bonus").withStyle(ChatFormatting.GOLD));
         if (stack.is(TideItems.BLAZING_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.blazing_bonus").withStyle(ChatFormatting.GOLD));
 
@@ -312,24 +309,6 @@ public class TideFishingRodItem extends FishingRodItem {
                     luck += BaitUtils.getCombinedLuck(rod);
                 }
 
-                // golden and midas rod perk
-                if (rod.is(TideTags.Items.LUCK_BOOSTING_RODS)) luck += 1;
-
-                // prismarine rod perk
-                if (rod.is(TideItems.PRISMARINE_FISHING_ROD)) {
-                    if (level.isRainingAt(player.blockPosition())) {
-                        speed += 1;
-                        luck += 1;
-                    }
-                }
-
-                // sunflower rod perk
-                if (rod.is(TideItems.SUNFLOWER_FISHING_ROD)) {
-                    boolean canSeeSky = level.canSeeSky(player.blockPosition());
-                    boolean isSunny = level.isBrightOutside() && level.dimensionType().hasSkyLight() && !level.isRaining();
-                    if (canSeeSky && isSunny) luck += 1;
-                }
-
                 // hybrid aquatic hook perks
                 if (CompatHelper.isHybridAquaticLoaded()) {
                     if (CustomRodManager.getHook(rod).getItem().toString().matches("barbed_hook") && level.isBrightOutside()) speed += 1;
@@ -340,6 +319,7 @@ public class TideFishingRodItem extends FishingRodItem {
                 // fishing level and the rod's line, hook and bobber: cast distance and luck
                 com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.of(player, rod);
                 luck += gear.luck();
+                speed += gear.speed();
                 charge *= (float) (1.0 + gear.cast());
                 if (player instanceof ServerPlayer angler) {
                     com.li64.tide.data.angler.Angler.Stats stats = com.li64.tide.data.angler.Angler.stats(angler);

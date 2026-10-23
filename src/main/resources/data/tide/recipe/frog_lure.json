@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:lily_pad",
+    "#c:slime_balls"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:frog_lure"
+  }
+}

@@ -7,6 +7,13 @@
     "tide:fly_lure",
     "tide:jig_lure",
     "tide:popper_lure",
-    "tide:magnet_lure"
+    "tide:magnet_lure",
+    "tide:magma_lure",
+    "tide:chorus_lure",
+    "tide:storm_lure",
+    "tide:ink_lure",
+    "tide:frog_lure",
+    "tide:squid_lure",
+    "tide:ice_jig_lure"
   ]
 }

@@ -108,7 +108,7 @@ public class TideFishingHook extends Projectile {
         super(entityType, level);
         this.rod = rod;
         this.entityData.set(DATA_ROD_ITEM, rod);
-        this.luck = luck + (getLine().is(TideItems.GOLDEN_LINE) ? 1 : 0);
+        this.luck = luck;
         this.lureSpeed = lureSpeed;
     }
 

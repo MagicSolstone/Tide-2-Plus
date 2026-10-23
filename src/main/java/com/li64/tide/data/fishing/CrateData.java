@@ -49,7 +49,7 @@ public record CrateData(BlockStateProvider blockProvider,
 
     @Override
     public double weight(FishingContext context) {
-        return this.modifyWeight(weight, quality, modifiers, context) * com.li64.tide.data.rods.Lures.crateFactor(context);
+        return this.modifyWeight(weight, quality, modifiers, context);
     }
 
     @Override

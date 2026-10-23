@@ -65,10 +65,8 @@ public class FishCatchMinigame {
         float fishStrength = data.map(FishData::strength).orElse(0.2f); // miss area percentage
         float fishSpeed = data.map(FishData::speed).orElse(0.5f); // movements per second
 
-        if (hook.getLine().is(TideItems.COPPER_LINE)) fishSpeed *= 0.9f;
-        if (hook.getLine().is(TideItems.IRON_LINE)) fishStrength *= 0.86f;
-        if (hook.getLine().is(TideItems.GOLDEN_LINE)) fishSpeed *= 0.95f;
-        if (hook.getLine().is(TideItems.DIAMOND_LINE)) fishStrength *= 0.75f;
+        // lines and the rest of the gear: copper/golden lines slow the fish (gear.fight below), iron/diamond ease it
+        fishStrength *= (float) Math.max(0.1, 1.0 - com.li64.tide.data.rods.RodEffects.of(player, hook.getRod()).ease());
 
         float area = Mth.clamp(1 - fishStrength, 0.05f, 1.0f);
         float speed = Math.max(fishSpeed / 20f * Tide.SERVER_CONFIG.minigame.minigameDifficultyMultiplier, 0.05f);

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "tide:bait",
+    "tide:bait",
+    "tide:bait",
+    "tide:bait",
+    "minecraft:gold_ingot"
+  ],
+  "result": {
+    "count": 4,
+    "id": "tide:golden_bait"
+  }
+}

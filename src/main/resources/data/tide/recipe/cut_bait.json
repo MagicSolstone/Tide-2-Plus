@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#tide:fish"
+  ],
+  "result": {
+    "count": 4,
+    "id": "tide:cut_bait"
+  }
+}

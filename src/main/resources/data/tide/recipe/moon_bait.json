@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "tide:bait",
+    "tide:bait",
+    "minecraft:glowstone_dust",
+    "minecraft:phantom_membrane"
+  ],
+  "result": {
+    "count": 4,
+    "id": "tide:moon_bait"
+  }
+}

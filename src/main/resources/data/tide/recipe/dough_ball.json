@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:wheat",
+    "minecraft:wheat",
+    "minecraft:egg"
+  ],
+  "result": {
+    "count": 6,
+    "id": "tide:dough_ball"
+  }
+}

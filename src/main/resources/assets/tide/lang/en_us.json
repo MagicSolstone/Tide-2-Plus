@@ -867,5 +867,9 @@
   "journal.info.stats.best_quality": "Best: %s",
   "journal.info.stats.heaviest": "Heaviest: %s",
   "text.autoconfig.tide.option.client.journal.useImperial": "Use US units",
-  "text.autoconfig.tide.option.client.journal.useImperial.@Tooltip": "Inches, pounds, feet and °F instead of centimetres, kilograms, metres and °C"
+  "text.autoconfig.tide.option.client.journal.useImperial.@Tooltip": "Inches, pounds, feet and °F instead of centimetres, kilograms, metres and °C",
+  "item.tide.angler_hat": "Angler's Bucket Hat",
+  "item.tide.fishing_vest": "Fishing Vest",
+  "item.tide.waders": "Waders",
+  "item.tide.wading_boots": "Wading Boots"
 }

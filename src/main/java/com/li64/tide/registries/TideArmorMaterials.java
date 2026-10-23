@@ -23,5 +23,10 @@ public class TideArmorMaterials {
             ArmorType.BOOTS, 5, ArmorType.LEGGINGS, 6, ArmorType.CHESTPLATE, 8, ArmorType.HELMET, 3, ArmorType.BODY, 11)),
             12, SoundEvents.ARMOR_EQUIP_NETHERITE, 3.0f, 0.1f, REPAIRS_DRAGONFIN, DRAGONFIN_ASSET);
 
+    /** Fishing gear: leather-strength, worn with the game's own leather look in fishing colours (re-dyeable). */
+    public static final ArmorMaterial ANGLER = new ArmorMaterial(8, new EnumMap<>(Map.of(
+            ArmorType.BOOTS, 1, ArmorType.LEGGINGS, 2, ArmorType.CHESTPLATE, 3, ArmorType.HELMET, 1, ArmorType.BODY, 3)),
+            15, SoundEvents.ARMOR_EQUIP_LEATHER, 0.0f, 0.0f, net.minecraft.tags.ItemTags.REPAIRS_LEATHER_ARMOR, EquipmentAssets.LEATHER);
+
     public static void init() {}
 }

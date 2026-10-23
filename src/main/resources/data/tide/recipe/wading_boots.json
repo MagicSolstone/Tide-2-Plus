@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "L": "minecraft:leather",
+    "S": "tide:fishing_line"
+  },
+  "pattern": [
+    "S S",
+    "L L"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:wading_boots"
+  }
+}

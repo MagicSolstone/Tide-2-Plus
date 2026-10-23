@@ -76,7 +76,7 @@ public class FishCatchMinigame {
         // fishing level: how wide the good zones are, and how hard this fish fights for this angler
         int level = Angler.effectiveLevel(player);
         FishRarity rarity = data.map(d -> d.profile().rarity()).orElse(FishRarity.COMMON);
-        com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.ofRod(hook.getRod());
+        com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.of(player, hook.getRod());
         this.gear = gear;
         double zoneScale = Angler.Stats.of(level).hookZones() * (1.0 + gear.window());
         speed *= (float) (Angler.fightSpeed(level, rarity) * (1.0 + gear.fight()));

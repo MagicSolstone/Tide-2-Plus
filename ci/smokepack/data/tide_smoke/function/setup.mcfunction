@@ -30,3 +30,7 @@ item replace entity @s hotbar.6 with tide:cooked_fish
 item replace entity @s hotbar.7 with tide:pocket_watch
 item replace entity @s hotbar.8 with tide:angling_table
 fishinglevel set @s 28
+item replace entity @s armor.head with tide:angler_hat
+item replace entity @s armor.chest with tide:fishing_vest
+item replace entity @s armor.legs with tide:waders
+item replace entity @s armor.feet with tide:wading_boots

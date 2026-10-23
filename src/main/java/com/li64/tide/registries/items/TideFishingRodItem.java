@@ -334,7 +334,7 @@ public class TideFishingRodItem extends FishingRodItem {
                 }
 
                 // fishing level and the rod's line, hook and bobber: cast distance and luck
-                com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.ofRod(rod);
+                com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.of(player, rod);
                 luck += gear.luck();
                 charge *= (float) (1.0 + gear.cast());
                 if (player instanceof ServerPlayer angler) {

@@ -510,7 +510,7 @@ public class TideFishingHook extends Projectile {
             // fishing level: patience (how long until a bite)
             if (this.getPlayerOwner() instanceof ServerPlayer angler)
                 this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.angler.Angler.stats(angler).biteWait()
-                        * com.li64.tide.data.rods.RodEffects.ofRod(this.rod).biteWaitFactor());
+                        * com.li64.tide.data.rods.RodEffects.of(angler, this.rod).biteWaitFactor());
             this.timeUntilLured = Math.max((int) (this.timeUntilLured * globalBiteTimeMultiplier), 10);
         }
     }
@@ -662,7 +662,7 @@ public class TideFishingHook extends Projectile {
                             boolean newSpecies = TidePlayerData.getOrCreate(serverPlayer).getDataFor(stack.getItem())
                                     .flatMap(f -> f.stats).map(st -> st.getAmountCaught() == 0).orElse(true);
                             long gained = com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack, this.wasPerfectCatch,
-                                    com.li64.tide.data.rods.RodEffects.ofRod(this.rod).xp());
+                                    com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod).xp());
                             TideUtils.tryLogCatch(stack, serverPlayer);
                             com.li64.tide.data.angler.Angler.logCatch(serverPlayer, stack, this.hookResult, gained, newSpecies);
                         }

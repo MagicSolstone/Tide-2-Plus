@@ -22,7 +22,11 @@ public class TideClientEventHandler {
         if (BaitUtils.isBait(stack)) lines.addAll(BaitUtils.getDescriptionLines(stack));
 
         if (stack.is(TideTags.Items.FISHING_RODS)) lines.addAll(TideFishingRodItem.getDescriptionLines(stack));
-        else lines.addAll(com.li64.tide.data.rods.RodEffects.of(stack).describe(ChatFormatting.DARK_AQUA));   // a line, hook or bobber
+        else lines.addAll(com.li64.tide.data.rods.RodEffects.of(stack).describe(ChatFormatting.DARK_AQUA));   // a line, hook, bobber or gear
+        if (com.li64.tide.data.rods.RodEffects.isGear(stack)) {
+            lines.add(Component.literal("Full fishing set:").withStyle(ChatFormatting.GRAY));
+            lines.addAll(com.li64.tide.data.rods.RodEffects.FULL_SET.describe(ChatFormatting.GOLD));
+        }
 
         if (Minecraft.getInstance().level != null
                 && TideItemData.IS_BUCKETABLE.getOrDefault(stack, false)

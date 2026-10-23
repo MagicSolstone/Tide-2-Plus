@@ -804,5 +804,9 @@
   "item.tide.fish_satchel.fullness": "%s/%s",
   "item.tide.quality_name": "%s %s",
   "journal.info.stats.best_quality": "Best: %s",
-  "journal.info.stats.heaviest": "Heaviest: %s"
+  "journal.info.stats.heaviest": "Heaviest: %s",
+  "item.tide.angler_hat": "Angler's Bucket Hat",
+  "item.tide.fishing_vest": "Fishing Vest",
+  "item.tide.waders": "Waders",
+  "item.tide.wading_boots": "Wading Boots"
 }

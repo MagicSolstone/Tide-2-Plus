@@ -48,6 +48,17 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("grassy_bobber", bite(0.08)),
             Map.entry("duck_bobber", xp(0.10)));
 
+    /** Fishing gear, worn (and the full set on top). */
+    private static final Map<String, RodEffects> GEAR = Map.of(
+            "angler_hat", bite(0.10),
+            "fishing_vest", new RodEffects(0, 0, 0, 0, 1, 0, 0, 0),
+            "waders", window(0.05),
+            "wading_boots", cast(0.10));
+    public static final RodEffects FULL_SET = new RodEffects(0, 0, 0, 0, 0, 0.10, 0, 0.10);
+    private static final net.minecraft.world.entity.EquipmentSlot[] SLOTS = {
+            net.minecraft.world.entity.EquipmentSlot.HEAD, net.minecraft.world.entity.EquipmentSlot.CHEST,
+            net.minecraft.world.entity.EquipmentSlot.LEGS, net.minecraft.world.entity.EquipmentSlot.FEET};
+
     private static RodEffects cast(double v) { return new RodEffects(v, 0, 0, 0, 0, 0, 0, 0); }
     private static RodEffects bite(double v) { return new RodEffects(0, v, 0, 0, 0, 0, 0, 0); }
     private static RodEffects window(double v) { return new RodEffects(0, 0, v, 0, 0, 0, 0, 0); }
@@ -67,6 +78,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     public static RodEffects of(ItemStack accessory) {
         if (accessory == null || accessory.isEmpty()) return NONE;
         String path = BuiltInRegistries.ITEM.getKey(accessory.getItem()).getPath();
+        if (GEAR.containsKey(path) && BuiltInRegistries.ITEM.getKey(accessory.getItem()).getNamespace().equals("tide")) return GEAR.get(path);
         if (accessory.getItem() instanceof FishingLineItem) return ANY_LINE;
         if (accessory.getItem() instanceof FishingHookItem) return ANY_HOOK;
         if (accessory.getItem() instanceof FishingBobberItem || path.endsWith("_bobber"))
@@ -82,6 +94,32 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (CustomRodManager.hasHook(rod)) e = e.plus(of(CustomRodManager.getHook(rod)));
         if (CustomRodManager.hasBobber(rod)) e = e.plus(of(CustomRodManager.getBobber(rod)));
         return e;
+    }
+
+    /** Fishing gear the player is wearing, plus the full-set bonus. */
+    public static RodEffects worn(net.minecraft.world.entity.player.Player player) {
+        if (player == null) return NONE;
+        RodEffects e = NONE;
+        int pieces = 0;
+        for (net.minecraft.world.entity.EquipmentSlot slot : SLOTS) {
+            ItemStack worn = player.getItemBySlot(slot);
+            String path = BuiltInRegistries.ITEM.getKey(worn.getItem()).getPath();
+            if (!worn.isEmpty() && GEAR.containsKey(path) && BuiltInRegistries.ITEM.getKey(worn.getItem()).getNamespace().equals("tide")) {
+                e = e.plus(GEAR.get(path));
+                pieces++;
+            }
+        }
+        return pieces == SLOTS.length ? e.plus(FULL_SET) : e;
+    }
+
+    /** Everything that helps this cast: the rod's line, hook and bobber, and what the angler's wearing. */
+    public static RodEffects of(net.minecraft.world.entity.player.Player player, ItemStack rod) {
+        return ofRod(rod).plus(worn(player));
+    }
+
+    public static boolean isGear(ItemStack stack) {
+        return !stack.isEmpty() && GEAR.containsKey(BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath())
+                && BuiltInRegistries.ITEM.getKey(stack.getItem()).getNamespace().equals("tide");
     }
 
     /** Multiply the bite wait by this (bite speed +10% -> waits 1/1.1 as long). */

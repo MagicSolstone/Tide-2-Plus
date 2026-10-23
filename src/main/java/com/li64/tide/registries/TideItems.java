@@ -116,6 +116,25 @@ public class TideItems {
             .humanoidArmor(TideArmorMaterials.DRAGONFIN, net.minecraft.world.item.equipment.ArmorType.BOOTS)
             .rarity(Rarity.EPIC).fireResistant());
 
+    // fishing gear (see RodEffects for what each piece does)
+    public static final Item ANGLER_HAT = register("angler_hat", Item::new, new Item.Properties()
+            .humanoidArmor(TideArmorMaterials.ANGLER, net.minecraft.world.item.equipment.ArmorType.HELMET)
+            .component(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(0xC8B48A)));
+    public static final Item FISHING_VEST = register("fishing_vest", Item::new, new Item.Properties()
+            .humanoidArmor(TideArmorMaterials.ANGLER, net.minecraft.world.item.equipment.ArmorType.CHESTPLATE)
+            .component(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(0x6B7A3A)));
+    public static final Item WADERS = register("waders", Item::new, new Item.Properties()
+            .humanoidArmor(TideArmorMaterials.ANGLER, net.minecraft.world.item.equipment.ArmorType.LEGGINGS)
+            .attributes(TideArmorMaterials.ANGLER.createAttributes(net.minecraft.world.item.equipment.ArmorType.LEGGINGS).withModifierAdded(
+                    net.minecraft.world.entity.ai.attributes.Attributes.WATER_MOVEMENT_EFFICIENCY,
+                    new net.minecraft.world.entity.ai.attributes.AttributeModifier(Tide.resource("waders"), 0.33,
+                            net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE),
+                    net.minecraft.world.entity.EquipmentSlotGroup.LEGS))
+            .component(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(0x4F5A3C)));
+    public static final Item WADING_BOOTS = register("wading_boots", Item::new, new Item.Properties()
+            .humanoidArmor(TideArmorMaterials.ANGLER, net.minecraft.world.item.equipment.ArmorType.BOOTS)
+            .component(DataComponents.DYED_COLOR, new net.minecraft.world.item.component.DyedItemColor(0x5C4033)));
+
     public static final Item ANGLING_TABLE = register("angling_table", properties -> new BlockItem(TideBlocks.ANGLING_TABLE, properties.useBlockDescriptionPrefix()));
     public static final Item FISH_DISPLAY = register("fish_display", properties -> new BlockItem(TideBlocks.FISH_DISPLAY, properties.useBlockDescriptionPrefix()));
 
@@ -174,6 +193,7 @@ public class TideItems {
                     DEPTH_METER, WEATHER_RADIO, FISH_FINDER,
 
                     ENCHANTED_POCKET_WATCH, STARLIGHT_BOW, DRAGONFIN_BOOTS,
+                    ANGLER_HAT, FISHING_VEST, WADERS, WADING_BOOTS,
 
                     ANGLING_TABLE, FISH_DISPLAY,
                     WOODEN_CRATE, OBSIDIAN_CRATE, PURPUR_CRATE,

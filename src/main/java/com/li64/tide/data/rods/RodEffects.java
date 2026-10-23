@@ -172,7 +172,11 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     /** Bait's extra perks, on top of the speed and luck in its bait data (counted once per kind of bait loaded). */
     private static final Map<String, RodEffects> BAITS = Map.ofEntries(
             Map.entry("golden_bait", new RodEffects(0, 0, 0, 0, 0, 0.20, 0, 0, 0, 0, 0, 0, 0.05)),
-            Map.entry("chum", luck(-1)));
+            Map.entry("chum", luck(-1)),
+            // the session baits: XP for levelling, an easier landing (and so more perfect hooks), a second fish
+            Map.entry("glistering_bait", xp(0.25)),
+            Map.entry("shiner_bait", new RodEffects(0, 0, 0.10, 0, 0, 0, 0.15, 0)),
+            Map.entry("feast_bait", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0.10, 0)));
 
     // ------------------------------------------------------------------ situational
 

@@ -899,5 +899,8 @@
   "item.tide.sickle_fishing_rod": "Sickle Fishing Rod",
   "item.tide.grove_fishing_rod": "Grove Fishing Rod",
   "item.tide.drowned_fishing_rod": "Drowned Fishing Rod",
-  "item.tide.hex_fishing_rod": "Hex Fishing Rod"
+  "item.tide.hex_fishing_rod": "Hex Fishing Rod",
+  "item.tide.glistering_bait": "Glistering Bait",
+  "item.tide.shiner_bait": "Shiner Bait",
+  "item.tide.feast_bait": "Feast Bait"
 }

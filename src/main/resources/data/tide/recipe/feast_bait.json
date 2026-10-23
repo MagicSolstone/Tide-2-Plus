@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "tide:bait",
+    "tide:bait",
+    "#tide:cooked_fish",
+    "minecraft:honey_bottle"
+  ],
+  "result": {
+    "count": 3,
+    "id": "tide:feast_bait"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:seeds",
+    "#c:seeds",
+    "#tide:bait_plants",
+    "minecraft:dirt"
+  ],
+  "result": {
+    "count": 2,
+    "id": "tide:bait"
+  }
+}

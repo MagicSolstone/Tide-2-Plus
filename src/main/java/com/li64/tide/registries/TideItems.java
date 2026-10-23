@@ -119,6 +119,9 @@ public class TideItems {
     public static final Item GLOW_WORMS = register("glow_worms", Item::new);
     public static final Item CHUM = register("chum", Item::new);
     public static final Item GOLDEN_BAIT = register("golden_bait", Item::new);
+    public static final Item GLISTERING_BAIT = register("glistering_bait", Item::new);
+    public static final Item SHINER_BAIT = register("shiner_bait", Item::new);
+    public static final Item FEAST_BAIT = register("feast_bait", Item::new);
     public static final Item CAVE_GRUBS = register("cave_grubs", Item::new);
     public static final Item MOON_BAIT = register("moon_bait", Item::new);
     public static final Item JUNGLE_BAIT = register("jungle_bait", Item::new);
@@ -271,7 +274,7 @@ public class TideItems {
                     KIDS_FISHING_POLE, BAMBOO_FISHING_ROD, BONE_FISHING_ROD, COPPER_FISHING_ROD, AMETHYST_FISHING_ROD, MANGROVE_FISHING_ROD, CHERRY_FISHING_ROD, FROST_FISHING_ROD, CACTUS_FISHING_ROD, CONDUIT_FISHING_ROD, CLOCKWORK_FISHING_ROD, WAYFINDER_FISHING_ROD,
                     ROTTEN_FISHING_ROD, WIDOW_FISHING_ROD, SICKLE_FISHING_ROD, GROVE_FISHING_ROD, DROWNED_FISHING_ROD, HEX_FISHING_ROD,
 
-                    BAIT, LUCKY_BAIT, MAGNETIC_BAIT, INCANDESCENT_BAIT, ABYSS_BAIT, CUT_BAIT, DOUGH_BALL, GLOW_WORMS, CHUM, GOLDEN_BAIT, CAVE_GRUBS, MOON_BAIT, JUNGLE_BAIT, SWAMP_BAIT, DESERT_BAIT, FROST_BAIT, SPORE_BAIT, BLOSSOM_BAIT, COASTAL_BAIT, DRIPSTONE_BAIT, SCULK_BAIT, BRINE_SHRIMP,
+                    BAIT, LUCKY_BAIT, MAGNETIC_BAIT, INCANDESCENT_BAIT, ABYSS_BAIT, CUT_BAIT, DOUGH_BALL, GLOW_WORMS, CHUM, GOLDEN_BAIT, GLISTERING_BAIT, SHINER_BAIT, FEAST_BAIT, CAVE_GRUBS, MOON_BAIT, JUNGLE_BAIT, SWAMP_BAIT, DESERT_BAIT, FROST_BAIT, SPORE_BAIT, BLOSSOM_BAIT, COASTAL_BAIT, DRIPSTONE_BAIT, SCULK_BAIT, BRINE_SHRIMP,
 
                     POCKET_WATCH, LUNAR_CALENDAR, CLIMATE_GAUGE,
                     DEPTH_METER, WEATHER_RADIO, FISH_FINDER,

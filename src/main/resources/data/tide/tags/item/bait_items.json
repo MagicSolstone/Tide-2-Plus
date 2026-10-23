@@ -21,6 +21,9 @@
     "tide:moon_bait",
     "tide:sculk_bait",
     "tide:spore_bait",
-    "tide:swamp_bait"
+    "tide:swamp_bait",
+    "tide:glistering_bait",
+    "tide:shiner_bait",
+    "tide:feast_bait"
   ]
 }

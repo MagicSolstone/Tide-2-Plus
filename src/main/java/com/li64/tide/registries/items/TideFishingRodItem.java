@@ -55,6 +55,9 @@ import net.minecraft.core.component.DataComponents;
 public class TideFishingRodItem extends FishingRodItem {
     private final int baitSlots;
 
+    /** Bait's fishing speed adds up across slots, to at most this (about 15 seconds sooner). */
+    public static final int BAIT_SPEED_CAP = 3;
+
     public TideFishingRodItem(int baitSlots, double baseDurability, Properties properties) {
         super(properties
                 .durability((int) (baseDurability * (Tide.SERVER_CONFIG == null ? 1.0 : Tide.SERVER_CONFIG.general.rodDurabilityMultiplier)))
@@ -305,7 +308,7 @@ public class TideFishingRodItem extends FishingRodItem {
                 int luck = EnchantmentHelper.getFishingLuckBonus((ServerLevel) level, rod, player);
 
                 if (BaitUtils.hasBait(rod)) {
-                    speed += BaitUtils.getCombinedSpeed(rod);
+                    speed += Math.min(BaitUtils.getCombinedSpeed(rod), BAIT_SPEED_CAP);
                     luck += BaitUtils.getCombinedLuck(rod);
                 }
 

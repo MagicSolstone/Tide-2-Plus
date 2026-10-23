@@ -32,6 +32,7 @@ public class TimeOfDayCondition extends FishingCondition {
 
     @Override
     public boolean test(FishingContext context) {
+        if (com.li64.tide.data.rods.Unlocks.has(context, "time")) return true;
         long time = TideUtils.getTimeOfDay(context.level());
         if (context.hook() != null && context.hook().getHook().is(TideItems.TWILIGHT_HOOK)) {
             return ranges.stream().anyMatch(tr -> tr.contains((time + 12000) % 24000));

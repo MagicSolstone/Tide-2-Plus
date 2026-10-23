@@ -25,6 +25,7 @@
       "MobMixin",
       "PlayerMixin",
       "ProjectileWeaponItemMixin",
+      "ShapelessRecipeMixin",
       "SingleItemRecipeMixin",
       "TidePlayerMixin"
    ]

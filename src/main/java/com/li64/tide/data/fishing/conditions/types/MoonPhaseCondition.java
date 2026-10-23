@@ -36,6 +36,6 @@ public class MoonPhaseCondition extends FishingCondition {
 
     @Override
     public boolean test(FishingContext context) {
-        return phases.contains(context.moonPhase());
+        return phases.contains(context.moonPhase()) || com.li64.tide.data.rods.Unlocks.has(context, "moon");
     }
 }

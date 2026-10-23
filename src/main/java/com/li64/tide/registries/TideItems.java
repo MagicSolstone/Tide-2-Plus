@@ -42,6 +42,14 @@ public class TideItems {
     public static final Item BAMBOO_FISHING_ROD = register("bamboo_fishing_rod", properties -> new TideFishingRodItem(1, 64, properties));
     public static final Item BONE_FISHING_ROD = register("bone_fishing_rod", properties -> new TideFishingRodItem(1, 96, properties));
     public static final Item COPPER_FISHING_ROD = register("copper_fishing_rod", properties -> new TideFishingRodItem(1, 80, properties));
+    public static final Item AMETHYST_FISHING_ROD = register("amethyst_fishing_rod", properties -> new TideFishingRodItem(2, 128, properties));
+    public static final Item MANGROVE_FISHING_ROD = register("mangrove_fishing_rod", properties -> new TideFishingRodItem(1, 80, properties));
+    public static final Item CHERRY_FISHING_ROD = register("cherry_fishing_rod", properties -> new TideFishingRodItem(1, 80, properties));
+    public static final Item FROST_FISHING_ROD = register("frost_fishing_rod", properties -> new TideFishingRodItem(1, 96, properties));
+    public static final Item CACTUS_FISHING_ROD = register("cactus_fishing_rod", properties -> new TideFishingRodItem(1, 64, properties));
+    public static final Item CONDUIT_FISHING_ROD = register("conduit_fishing_rod", properties -> new TideFishingRodItem(3, 384, properties));
+    public static final Item CLOCKWORK_FISHING_ROD = register("clockwork_fishing_rod", properties -> new TideFishingRodItem(2, 256, properties));
+    public static final Item WAYFINDER_FISHING_ROD = register("wayfinder_fishing_rod", properties -> new TideFishingRodItem(3, 768, properties));
 
     public static final Item BAIT = register("bait", Item::new);
     public static final Item LUCKY_BAIT = register("lucky_bait", Item::new);
@@ -121,6 +129,18 @@ public class TideItems {
     public static final Item GOLDEN_BAIT = register("golden_bait", Item::new);
     public static final Item CAVE_GRUBS = register("cave_grubs", Item::new);
     public static final Item MOON_BAIT = register("moon_bait", Item::new);
+    public static final Item JUNGLE_BAIT = register("jungle_bait", Item::new);
+    public static final Item SWAMP_BAIT = register("swamp_bait", Item::new);
+    public static final Item DESERT_BAIT = register("desert_bait", Item::new);
+    public static final Item FROST_BAIT = register("frost_bait", Item::new);
+    public static final Item SPORE_BAIT = register("spore_bait", Item::new);
+    public static final Item BLOSSOM_BAIT = register("blossom_bait", Item::new);
+    public static final Item COASTAL_BAIT = register("coastal_bait", Item::new);
+    public static final Item MEADOW_BAIT = register("meadow_bait", Item::new);
+    public static final Item ROCK_BAIT = register("rock_bait", Item::new);
+    public static final Item DRIPSTONE_BAIT = register("dripstone_bait", Item::new);
+    public static final Item SCULK_BAIT = register("sculk_bait", Item::new);
+    public static final Item BRINE_SHRIMP = register("brine_shrimp", Item::new);
 
     public static final Item FISHING_HOOK = register("fishing_hook", FishingHookItem::new);
     public static final Item FIERY_HOOK = register("fiery_hook", properties -> new FishingHookItem(properties, "item.tide.fiery_hook.desc"));
@@ -270,9 +290,9 @@ public class TideItems {
                     ECHO_FISHING_ROD, PRISMARINE_FISHING_ROD, SUNFLOWER_FISHING_ROD,
                     VILLAGE_FISHING_ROD, BLAZING_FISHING_ROD, HONEYCOMB_FISHING_ROD,
                     MIDAS_FISHING_ROD,
-                    KIDS_FISHING_POLE, BAMBOO_FISHING_ROD, BONE_FISHING_ROD, COPPER_FISHING_ROD,
+                    KIDS_FISHING_POLE, BAMBOO_FISHING_ROD, BONE_FISHING_ROD, COPPER_FISHING_ROD, AMETHYST_FISHING_ROD, MANGROVE_FISHING_ROD, CHERRY_FISHING_ROD, FROST_FISHING_ROD, CACTUS_FISHING_ROD, CONDUIT_FISHING_ROD, CLOCKWORK_FISHING_ROD, WAYFINDER_FISHING_ROD,
 
-                    BAIT, LUCKY_BAIT, MAGNETIC_BAIT, INCANDESCENT_BAIT, ABYSS_BAIT, CUT_BAIT, DOUGH_BALL, GLOW_WORMS, CHUM, GOLDEN_BAIT, CAVE_GRUBS, MOON_BAIT,
+                    BAIT, LUCKY_BAIT, MAGNETIC_BAIT, INCANDESCENT_BAIT, ABYSS_BAIT, CUT_BAIT, DOUGH_BALL, GLOW_WORMS, CHUM, GOLDEN_BAIT, CAVE_GRUBS, MOON_BAIT, JUNGLE_BAIT, SWAMP_BAIT, DESERT_BAIT, FROST_BAIT, SPORE_BAIT, BLOSSOM_BAIT, COASTAL_BAIT, MEADOW_BAIT, ROCK_BAIT, DRIPSTONE_BAIT, SCULK_BAIT, BRINE_SHRIMP,
 
                     POCKET_WATCH, LUNAR_CALENDAR, CLIMATE_GAUGE,
                     DEPTH_METER, WEATHER_RADIO, FISH_FINDER,

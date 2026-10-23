@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:heart_of_the_sea",
+  "base": "tide:diamond_fishing_rod",
+  "result": {
+    "count": 1,
+    "id": "tide:conduit_fishing_rod"
+  },
+  "template": "#c:strings"
+}

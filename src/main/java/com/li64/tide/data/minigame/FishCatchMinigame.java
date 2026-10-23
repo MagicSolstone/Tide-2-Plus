@@ -82,7 +82,10 @@ public class FishCatchMinigame {
         // catch quality is decided at the bite, so a bigger fish fights harder: faster, smaller zones
         hook.pendingQuality = null;
         if (data.isPresent() && com.li64.tide.data.angler.CatchQuality.enabled()) {
-            com.li64.tide.data.angler.CatchQuality q = com.li64.tide.data.angler.CatchQuality.roll(player.getRandom(), level, gear.quality());
+            com.li64.tide.data.angler.CatchQuality rolled = com.li64.tide.data.angler.CatchQuality.roll(player.getRandom(), level, gear.quality());
+            if (gear.upgrade() > 0 && rolled != com.li64.tide.data.angler.CatchQuality.MYTHIC && player.getRandom().nextDouble() < gear.upgrade())
+                rolled = com.li64.tide.data.angler.CatchQuality.values()[rolled.ordinal() + 1];   // amethyst rod, golden bait
+            final com.li64.tide.data.angler.CatchQuality q = rolled;
             hook.pendingQuality = q;
             speed *= (float) q.fightSpeed();
             zoneScale *= q.zoneScale();

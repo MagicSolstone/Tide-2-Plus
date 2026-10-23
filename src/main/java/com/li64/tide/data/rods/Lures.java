@@ -45,6 +45,17 @@ public final class Lures {
             Map.entry("frog_lure", List.of(new Pull("Attracts big fish", Lures::big, 2.0, RodEffects.When.SWAMP))),
             Map.entry("squid_lure", List.of(new Pull("Attracts saltwater fish", d -> d.profile().group() == JournalGroup.SALTWATER, 2.0, null))),
             Map.entry("ice_jig_lure", List.of(new Pull("Attracts uncommon and rarer fish", d -> atLeast(d, FishRarity.UNCOMMON), 1.5, RodEffects.When.COLD))),
+            // rods, hooks, bobbers
+            Map.entry("wayfinder_fishing_rod", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.3, null))),
+            Map.entry("conduit_fishing_rod", List.of(new Pull("Attracts saltwater fish", d -> d.profile().group() == JournalGroup.SALTWATER, 1.5, null))),
+            Map.entry("wooden_hook", List.of(new Pull("Attracts small fish", Lures::small, 1.5, RodEffects.When.RIVER))),
+            Map.entry("golden_hook", List.of(new Pull("Attracts uncommon and rarer fish", d -> atLeast(d, FishRarity.UNCOMMON), 1.2, null))),
+            Map.entry("amethyst_hook", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.2, null))),
+            Map.entry("prismarine_hook", List.of(new Pull("Attracts saltwater fish", d -> d.profile().group() == JournalGroup.SALTWATER, 1.5, null))),
+            Map.entry("netherite_hook", List.of(new Pull("Attracts big fish", Lures::big, 1.3, null))),
+            Map.entry("echo_bobber", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.5, RodEffects.When.NEW_MOON))),
+            Map.entry("iron_bobber", List.of(new Pull("Attracts big fish", Lures::big, 1.2, null))),
+            Map.entry("golden_bait", List.of(new Pull("Attracts uncommon and rarer fish", d -> atLeast(d, FishRarity.UNCOMMON), 1.5, null))),
             // bait
             Map.entry("cut_bait", List.of(new Pull("Attracts big fish", Lures::big, 2.0, null))),
             Map.entry("dough_ball", List.of(new Pull("Attracts small fish", Lures::small, 2.0, null))),
@@ -65,10 +76,12 @@ public final class Lures {
     private static java.util.Set<String> pullers(FishingContext context) {
         java.util.Set<String> out = new java.util.LinkedHashSet<>();
         if (context == null || context.rod() == null) return out;
-        String lure = lure(context);
-        if (lure != null) out.add(lure);
-        for (ItemStack bait : com.li64.tide.util.BaitUtils.getBaitItems(context.rod()))
-            out.add(BuiltInRegistries.ITEM.getKey(bait.getItem()).getPath());
+        out.add(BuiltInRegistries.ITEM.getKey(context.rod().getItem()).getPath());
+        for (ItemStack part : RodEffects.parts(context.rod())) {
+            out.add(BuiltInRegistries.ITEM.getKey(part.getItem()).getPath());
+            String base = RodEffects.baseHook(part);
+            if (base != null) out.add(base);
+        }
         return out;
     }
 

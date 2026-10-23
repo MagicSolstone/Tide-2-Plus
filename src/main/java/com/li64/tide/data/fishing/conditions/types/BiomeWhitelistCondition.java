@@ -61,6 +61,7 @@ public class BiomeWhitelistCondition extends FishingCondition {
 
     @Override
     public boolean test(FishingContext context) {
+        if (com.li64.tide.data.rods.Unlocks.biome(context, tags)) return true;
         return tags.stream().anyMatch(tag -> context.nearestBiome().is(tag) || context.exactBiome().is(tag))
                 || biomes.stream().anyMatch(id -> context.nearestBiome().is(id) || context.exactBiome().is(id));
     }

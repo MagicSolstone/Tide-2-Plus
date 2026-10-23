@@ -21,6 +21,12 @@ public class TideDataComponents {
                     .persistent(Codec.DOUBLE)
                     .networkSynchronized(ByteBufCodecs.DOUBLE).build());
 
+    /** An upgraded hook's base (e.g. "bone_hook" for an amethyst hook made on a bone hook): its perks carry over. */
+    public static final DataComponentType<String> BASE_HOOK = register(
+            "base_hook", DataComponentType.<String>builder()
+                    .persistent(com.mojang.serialization.Codec.STRING)
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8).build());
+
     public static final DataComponentType<Integer> FISH_QUALITY = register(
             "fish_quality", DataComponentType.<Integer>builder()
                     .persistent(Codec.INT)

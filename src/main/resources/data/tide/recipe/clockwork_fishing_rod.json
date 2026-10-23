@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:clock",
+  "base": "tide:golden_fishing_rod",
+  "result": {
+    "count": 1,
+    "id": "tide:clockwork_fishing_rod"
+  },
+  "template": "#c:strings"
+}

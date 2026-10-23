@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld_rod",
+  "textures": {
+    "layer0": "tide:item/amethyst_fishing_rod_cast"
+  }
+}

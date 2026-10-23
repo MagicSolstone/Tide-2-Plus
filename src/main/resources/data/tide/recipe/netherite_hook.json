@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "equipment",
   "ingredients": [
-    "tide:fishing_hook",
+    "#tide:base_hooks",
     "minecraft:netherite_scrap"
   ],
   "result": {

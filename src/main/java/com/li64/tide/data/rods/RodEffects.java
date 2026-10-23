@@ -23,16 +23,21 @@ import java.util.Map;
  * chance that a Good or Bad hook still lands the fish; {@code twin} is the chance of a second fish of
  * the same kind; {@code cook} the chance the fish comes up already cooked; {@code speed} is original Tide's
  * whole-number fishing speed (like the Lure enchantment: each point bites about 5 seconds sooner) and
- * {@code ease} lowers catch difficulty (a bigger catch area in the minigame).
+ * {@code ease} lowers catch difficulty (a bigger catch area in the minigame); {@code upgrade} is the chance a
+ * hooked fish's quality goes up one tier.
  */
 public record RodEffects(double cast, double bite, double window, double fight, int luck, double quality,
-                         double land, double xp, double twin, double cook, int speed, double ease) {
+                         double land, double xp, double twin, double cook, int speed, double ease, double upgrade) {
     public RodEffects(double cast, double bite, double window, double fight, int luck, double quality, double land, double xp) {
-        this(cast, bite, window, fight, luck, quality, land, xp, 0, 0, 0, 0);
+        this(cast, bite, window, fight, luck, quality, land, xp, 0, 0, 0, 0, 0);
     }
 
     public RodEffects(double cast, double bite, double window, double fight, int luck, double quality, double land, double xp, double twin, double cook) {
-        this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, 0, 0);
+        this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, 0, 0, 0);
+    }
+
+    public RodEffects(double cast, double bite, double window, double fight, int luck, double quality, double land, double xp, double twin, double cook, int speed, double ease) {
+        this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, speed, ease, 0);
     }
 
     public static final RodEffects NONE = new RodEffects(0, 0, 0, 0, 0, 0, 0, 0);
@@ -57,7 +62,12 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("honeycomb_fishing_rod", land(0.15)),
             Map.entry("midas_fishing_rod", new RodEffects(0, 0, 0, 0, 1, 0.10, 0, 0.10)),
             Map.entry("kids_fishing_pole", new RodEffects(0, 0.10, 0.15, -0.20, -1, -0.30, 0.10, 0)),
-            Map.entry("bamboo_fishing_rod", cast(0.05)));
+            Map.entry("bamboo_fishing_rod", cast(0.05)),
+            Map.entry("amethyst_fishing_rod", new RodEffects(0, 0, 0, 0, 0, 0.05, 0, 0, 0, 0, 0, 0, 0.15)),
+            Map.entry("cherry_fishing_rod", xp(0.15)),
+            Map.entry("conduit_fishing_rod", new RodEffects(0, 0, 0.10, -0.05, 0, 0.05, 0, 0)),
+            Map.entry("clockwork_fishing_rod", new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0.10)),
+            Map.entry("wayfinder_fishing_rod", new RodEffects(0.10, 0, 0.10, -0.10, 1, 0.10, 0.05, 0.05)));
 
     // ------------------------------------------------------------------ hooks, lines, bobbers, lures
 
@@ -79,6 +89,29 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("circle_hook", land(0.25)),
             Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.08)),
             Map.entry("lucky_hook", new RodEffects(0, 0, 0, 0, 1, 0, 0, 0)));
+
+    /** Hooks made from raw materials: an upgrade made on one of these keeps its perks (iron is the plain one). */
+    public static final java.util.Set<String> BASE_HOOKS = java.util.Set.of(
+            "fishing_hook", "wooden_hook", "stone_hook", "copper_hook", "golden_hook", "bone_hook", "fish_bone_hook");
+    /** Hooks made by adding something to a base hook. */
+    public static final java.util.Set<String> UPGRADED_HOOKS = java.util.Set.of(
+            "diamond_hook", "emerald_hook", "amethyst_hook", "netherite_hook", "prismarine_hook", "glow_hook",
+            "feathered_hook", "barbed_hook", "circle_hook", "lucky_hook");
+
+    /** Called when a shapeless recipe makes something: an upgraded hook remembers the base hook it was made on. */
+    public static void onHookCrafted(List<ItemStack> inputs, ItemStack result) {
+        if (result == null || result.isEmpty() || !isTide(result) || !UPGRADED_HOOKS.contains(path(result))) return;
+        for (ItemStack in : inputs)
+            if (!in.isEmpty() && isTide(in) && BASE_HOOKS.contains(path(in)) && !path(in).equals("fishing_hook")) {
+                result.set(com.li64.tide.data.item.TideDataComponents.BASE_HOOK, path(in));
+                return;
+            }
+    }
+
+    /** The base hook an upgraded hook was made on, or null. */
+    public static String baseHook(ItemStack hook) {
+        return hook == null || hook.isEmpty() ? null : hook.get(com.li64.tide.data.item.TideDataComponents.BASE_HOOK);
+    }
 
     /** Lines with their own perk, on top of every line's casting range. */
     private static final Map<String, RodEffects> LINES = Map.ofEntries(
@@ -129,7 +162,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     /** Bait's extra perks, on top of the speed and luck in its bait data (counted once per kind of bait loaded). */
     private static final Map<String, RodEffects> BAITS = Map.ofEntries(
-            Map.entry("golden_bait", quality(0.10)),
+            Map.entry("golden_bait", new RodEffects(0, 0, 0, 0, 0, 0.20, 0, 0, 0, 0, 0, 0, 0.05)),
             Map.entry("chum", luck(-1)));
 
     // ------------------------------------------------------------------ situational
@@ -193,20 +226,38 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                     new Perk(When.OCEAN, bite(0.20)))),
             Map.entry("sunflower_fishing_rod", List.of(new Perk(When.DAY, new RodEffects(0, 0.15, 0, 0, 1, 0, 0, 0)))),
             Map.entry("blazing_fishing_rod", List.of(new Perk(When.NETHER, bite(0.20)))),
+            Map.entry("mangrove_fishing_rod", List.of(new Perk(When.SWAMP, new RodEffects(0, 0.20, 0, 0, 1, 0, 0, 0)))),
+            Map.entry("cherry_fishing_rod", List.of(new Perk(When.DAWN_DUSK, new RodEffects(0, 0.25, 0, 0, 0, 0.10, 0, 0)))),
+            Map.entry("frost_fishing_rod", List.of(new Perk(When.COLD, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0, 0.15, 0)))),
+            Map.entry("cactus_fishing_rod", List.of(new Perk(When.DRY, new RodEffects(0, 0.25, 0, 0, 1, 0, 0, 0)))),
+            Map.entry("conduit_fishing_rod", List.of(new Perk(When.OCEAN, new RodEffects(0, 0.15, 0, 0, 2, 0, 0, 0)))),
             // lines
             Map.entry("slime_line", List.of(new Perk(When.UNDERGROUND, new RodEffects(0, 0.20, 0.05, 0, 1, 0, 0, 0)))),
             Map.entry("kelp_line", List.of(new Perk(When.OCEAN, bite(0.15)))),
             Map.entry("vine_line", List.of(new Perk(When.JUNGLE, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)))),
-            Map.entry("spider_line", List.of(new Perk(When.NIGHT, window(0.10)))),
+            Map.entry("spider_line", List.of(new Perk(When.NIGHT, window(0.10)), new Perk(When.NEW_MOON, luck(1)))),
             // hooks
             Map.entry("lucky_hook", List.of(new Perk(When.FULL_MOON, luck(1)))),
             Map.entry("lavaproof_hook", List.of(new Perk(When.NETHER, fight(-0.10)))),
             Map.entry("void_hook", List.of(new Perk(When.END, luck(1)))),
+            Map.entry("fiery_hook", List.of(new Perk(When.NETHER, bite(0.15)))),
+            Map.entry("permafrost_hook", List.of(new Perk(When.COLD, bite(0.15)))),
+            Map.entry("feathered_hook", List.of(new Perk(When.DAWN_DUSK, quality(0.10)))),
+            Map.entry("golden_hook", List.of(new Perk(When.DRY, luck(1)))),
+            Map.entry("bone_hook", List.of(new Perk(When.DRY, bite(0.15)))),
             // bobbers
             Map.entry("glow_berry_bobber", List.of(new Perk(When.NIGHT, bite(0.15)))),
             Map.entry("pumpkin_bobber", List.of(new Perk(When.NIGHT, xp(0.15)))),
             Map.entry("lily_pad_bobber", List.of(new Perk(When.SWAMP, bite(0.20)))),
-            Map.entry("copper_bobber", List.of(new Perk(When.RAIN, bite(0.15)))),
+            Map.entry("copper_bobber", List.of(new Perk(When.RAIN, bite(0.15)), new Perk(When.THUNDER, luck(1)))),
+            Map.entry("feather_bobber", List.of(new Perk(When.RIVER, bite(0.15)))),
+            Map.entry("grassy_bobber", List.of(new Perk(When.DAWN_DUSK, bite(0.15)))),
+            Map.entry("cherry_bobber", List.of(new Perk(When.DAWN_DUSK, xp(0.15)))),
+            Map.entry("pearl_bobber", List.of(new Perk(When.BEACH, luck(1)), new Perk(When.FULL_MOON, quality(0.15)))),
+            Map.entry("slime_bobber", List.of(new Perk(When.SWAMP, bite(0.15)))),
+            Map.entry("apple_bobber", List.of(new Perk(When.JUNGLE, bite(0.15)))),
+            Map.entry("golden_bobber", List.of(new Perk(When.DAY, xp(0.10)))),
+            Map.entry("honey_bobber", List.of(new Perk(When.DAY, bite(0.10)))),
             Map.entry("sculk_bobber", List.of(new Perk(When.UNDERGROUND, quality(0.15)))),
             Map.entry("prismarine_bobber", List.of(new Perk(When.OCEAN, luck(1)))),
             Map.entry("snowball_bobber", List.of(new Perk(When.COLD, bite(0.20)))),
@@ -227,11 +278,29 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                     new Perk(When.THUNDER, new RodEffects(0, 0.10, 0, 0, 2, 0.15, 0, 0)))),
             Map.entry("ink_lure", List.of(new Perk(When.NIGHT, window(0.10)), new Perk(When.NEW_MOON, luck(1)))),
             Map.entry("frog_lure", List.of(new Perk(When.SWAMP, bite(0.20)))),
-            Map.entry("squid_lure", List.of(new Perk(When.OCEAN, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)))),
+            Map.entry("squid_lure", List.of(new Perk(When.OCEAN, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)), new Perk(When.BEACH, bite(0.15)))),
             Map.entry("ice_jig_lure", List.of(new Perk(When.COLD, new RodEffects(0, 0.20, 0, 0, 0, 0.10, 0, 0)))),
             // bait
             Map.entry("glow_worms", List.of(new Perk(When.NIGHT, bite(0.15)))),
-            Map.entry("cave_grubs", List.of(new Perk(When.UNDERGROUND, bite(0.15)))));
+            Map.entry("cave_grubs", List.of(new Perk(When.UNDERGROUND, bite(0.15)))),
+            Map.entry("dough_ball", List.of(new Perk(When.RIVER, bite(0.10)))),
+            Map.entry("moon_bait", List.of(new Perk(When.FULL_MOON, luck(1)))));
+
+    // ------------------------------------------------------------------ bonus drops
+
+    /** Something extra that sometimes comes up with a fish, from a rod. */
+    public record Drop(String item, double chance, int minQuality, String text) {}
+
+    private static final Map<String, List<Drop>> DROPS = Map.of(
+            "honeycomb_fishing_rod", List.of(new Drop("minecraft:honey_bottle", 0.5, 3, "50% chance of a honey bottle with Prime or better fish"),
+                    new Drop("minecraft:honeycomb", 0.10, 0, "10% chance of a honeycomb with any fish")),
+            "mangrove_fishing_rod", List.of(new Drop("minecraft:slime_ball", 0.20, 0, "20% chance of a slime ball with any fish")),
+            "cherry_fishing_rod", List.of(new Drop("minecraft:pink_petals", 0.25, 0, "25% chance of pink petals with any fish")));
+
+    /** Bonus drops from this rod. */
+    public static List<Drop> drops(ItemStack rod) {
+        return rod == null || rod.isEmpty() ? List.of() : DROPS.getOrDefault(path(rod), List.of());
+    }
 
     // ------------------------------------------------------------------ gear
 
@@ -256,10 +325,11 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     private static RodEffects xp(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, v); }
     private static RodEffects speed(int v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v, 0); }
     private static RodEffects ease(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v); }
+    private static RodEffects upgrade(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v); }
 
     public RodEffects plus(RodEffects o) {
         return new RodEffects(cast + o.cast, bite + o.bite, window + o.window, fight + o.fight, luck + o.luck,
-                quality + o.quality, land + o.land, xp + o.xp, twin + o.twin, cook + o.cook, speed + o.speed, ease + o.ease);
+                quality + o.quality, land + o.land, xp + o.xp, twin + o.twin, cook + o.cook, speed + o.speed, ease + o.ease, upgrade + o.upgrade);
     }
 
     public boolean isEmpty() {
@@ -280,7 +350,11 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         String path = path(accessory);
         if (GEAR.containsKey(path) && isTide(accessory)) return GEAR.get(path);
         if (accessory.getItem() instanceof FishingLineItem) return LINES.containsKey(path) ? ANY_LINE.plus(LINES.get(path)) : ANY_LINE;
-        if (accessory.getItem() instanceof FishingHookItem) return HOOKS.containsKey(path) ? ANY_HOOK.plus(HOOKS.get(path)) : ANY_HOOK;
+        if (accessory.getItem() instanceof FishingHookItem) {
+            RodEffects e = HOOKS.containsKey(path) ? ANY_HOOK.plus(HOOKS.get(path)) : ANY_HOOK;
+            String base = baseHook(accessory);
+            return base != null ? e.plus(HOOKS.getOrDefault(base, NONE)) : e;
+        }
         if (accessory.getItem() instanceof FishingLureItem) return LURES.getOrDefault(path, NONE);
         if (BAITS.containsKey(path) && isTide(accessory)) return BAITS.get(path);
         if (accessory.getItem() instanceof FishingBobberItem || path.endsWith("_bobber")) {
@@ -320,7 +394,12 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     /** This item's situational perks (empty if none). */
     public static List<Perk> situational(ItemStack stack) {
         if (stack == null || stack.isEmpty()) return List.of();
-        return SITUATIONAL.getOrDefault(path(stack), List.of());
+        List<Perk> own = SITUATIONAL.getOrDefault(path(stack), List.of());
+        String base = baseHook(stack);
+        if (base == null || !SITUATIONAL.containsKey(base)) return own;
+        List<Perk> both = new ArrayList<>(own);
+        both.addAll(SITUATIONAL.get(base));
+        return both;
     }
 
     /** Situational perks of the rod and what's on it that apply where the player is now. */
@@ -337,16 +416,24 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     /** A rod's own perk lines (the rod item, not what's attached). */
     public static List<Component> describeRod(ItemStack rod) {
-        List<Component> out = new ArrayList<>(RODS.getOrDefault(path(rod), NONE).describe(ChatFormatting.DARK_AQUA));
+        List<Component> out = new ArrayList<>(Lures.describe(rod));
+        out.addAll(RODS.getOrDefault(path(rod), NONE).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(rod)) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
+        for (Drop d : drops(rod)) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
+        out.addAll(Unlocks.describe(rod));
         return out;
     }
 
     /** Tooltip for a line, hook, bobber, lure or gear piece: always-on perks, then situational ones. */
     public static List<Component> describeItem(ItemStack stack) {
-        List<Component> out = new ArrayList<>(Lures.describe(stack));
+        List<Component> out = new ArrayList<>();
+        String base = baseHook(stack);
+        if (base != null) out.add(Component.translatable("item.tide." + base).withStyle(ChatFormatting.GRAY)
+                .append(Component.literal(" underneath (its perks count too)").withStyle(ChatFormatting.GRAY)));
+        out.addAll(Lures.describe(stack));
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
+        out.addAll(Unlocks.describe(stack));
         if (path(stack).equals("bell_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Rings when a fish bites"));
         if (path(stack).equals("ender_pearl_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Shows what's on the hook when it bites"));
         return out;
@@ -405,6 +492,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (cook != 0) out.add(line(color, Math.round(cook * 100) + "% chance the fish comes up cooked"));
         if (speed != 0) out.add(line(color, String.format("%+d fishing speed (bites about %d s sooner)", speed, speed * 5)));
         if (ease != 0) out.add(line(color, "-" + Math.round(ease * 100) + "% catch difficulty"));
+        if (upgrade != 0) out.add(line(color, Math.round(upgrade * 100) + "% chance to raise the catch's quality a tier"));
         if (!when.isEmpty()) out.replaceAll(c -> line(color, c.getString() + when));
         return out;
     }

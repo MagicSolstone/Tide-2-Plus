@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": "minecraft:recovery_compass",
+  "base": "tide:netherite_fishing_rod",
+  "result": {
+    "count": 1,
+    "id": "tide:wayfinder_fishing_rod"
+  },
+  "template": "#c:strings"
+}

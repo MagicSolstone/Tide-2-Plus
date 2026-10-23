@@ -36,6 +36,7 @@ public class WeatherCondition extends FishingCondition {
 
     @Override
     public boolean test(FishingContext context) {
+        if (com.li64.tide.data.rods.Unlocks.has(context, "weather")) return true;
         if (weatherTypes.contains(WeatherType.CLEAR) && !context.level().isRaining()) return true;
         if (weatherTypes.contains(WeatherType.RAIN) && context.level().isRaining()) return true;
         return weatherTypes.contains(WeatherType.STORM) && context.level().isThundering();

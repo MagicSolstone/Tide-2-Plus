@@ -691,6 +691,19 @@ public class TideFishingHook extends Projectile {
                             if (stack.is(ItemTags.FISHES)) player.awardStat(Stats.FISH_CAUGHT, 1);
                         }
                         }
+                        // the rod's bonus drops (honeycomb rod's honey...)
+                        if (catchType == CatchType.FISH) {
+                            int q = TideItemData.FISH_QUALITY.getOrDefault(stack, 1);
+                            for (com.li64.tide.data.rods.RodEffects.Drop d : com.li64.tide.data.rods.RodEffects.drops(this.rod)) {
+                                if (q < d.minQuality() || this.random.nextDouble() >= d.chance()) continue;
+                                net.minecraft.world.item.Item extraItem = net.minecraft.core.registries.BuiltInRegistries.ITEM
+                                        .getValue(net.minecraft.resources.Identifier.parse(d.item()));
+                                ItemEntity extra = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), new ItemStack(extraItem));
+                                double ex = player.getX() - this.getX(), ey = player.getY() - this.getY(), ez = player.getZ() - this.getZ();
+                                extra.setDeltaMovement(ex * 0.1, ey * 0.11 + Math.sqrt(Math.sqrt(ex * ex + ey * ey + ez * ez)) * 0.08, ez * 0.1);
+                                this.level().addFreshEntity(extra);
+                            }
+                        }
 
                         player.level().addFreshEntity(new ExperienceOrb(
                                 player.level(), player.getX(), player.getY() + 0.5, player.getZ() + 0.5,

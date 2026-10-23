@@ -18,6 +18,6 @@ public class FreshwaterCondition extends FishingCondition {
 
     @Override
     public boolean test(FishingContext context) {
-        return !context.exactBiome().is(TideTags.Biomes.IS_SALTWATER);
+        return !context.exactBiome().is(TideTags.Biomes.IS_SALTWATER) || com.li64.tide.data.rods.Unlocks.has(context, "water");
     }
 }

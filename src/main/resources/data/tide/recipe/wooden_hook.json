@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "minecraft:stick",
+    "C": "#minecraft:planks"
+  },
+  "pattern": [
+    "#",
+    "C",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:wooden_hook"
+  }
+}

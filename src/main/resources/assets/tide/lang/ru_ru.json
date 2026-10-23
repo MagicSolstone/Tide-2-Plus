@@ -843,5 +843,18 @@
   "item.tide.waders": "Waders",
   "item.tide.wading_boots": "Wading Boots",
   "item.tide.cooked_name": "Cooked %s",
-  "item.tide.cooked_quality_name": "Cooked %s %s"
+  "item.tide.cooked_quality_name": "Cooked %s %s",
+  "item.tide.wooden_hook": "Wooden Hook",
+  "item.tide.stone_hook": "Stone Hook",
+  "item.tide.copper_hook": "Copper Hook",
+  "item.tide.golden_hook": "Golden Hook",
+  "item.tide.diamond_hook": "Diamond Hook",
+  "item.tide.emerald_hook": "Emerald Hook",
+  "item.tide.amethyst_hook": "Amethyst Hook",
+  "item.tide.netherite_hook": "Netherite Hook",
+  "item.tide.bone_hook": "Bone Hook",
+  "item.tide.prismarine_hook": "Prismarine Hook",
+  "item.tide.glow_hook": "Glow Hook",
+  "item.tide.feathered_hook": "Feathered Hook",
+  "item.tide.barbed_hook": "Barbed Hook"
 }

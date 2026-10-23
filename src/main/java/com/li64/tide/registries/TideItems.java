@@ -87,6 +87,19 @@ public class TideItems {
     public static final Item TWILIGHT_HOOK = register("twilight_hook", properties -> new FishingHookItem(properties, "item.tide.twilight_hook.desc"));
     public static final Item LAVAPROOF_HOOK = register("lavaproof_hook", properties -> new FishingHookItem(properties, "item.tide.lavaproof_hook.desc"));
     public static final Item VOID_HOOK = register("void_hook", properties -> new FishingHookItem(properties, "item.tide.void_hook.desc"));
+    public static final Item WOODEN_HOOK = register("wooden_hook", FishingHookItem::new);
+    public static final Item STONE_HOOK = register("stone_hook", FishingHookItem::new);
+    public static final Item COPPER_HOOK = register("copper_hook", FishingHookItem::new);
+    public static final Item GOLDEN_HOOK = register("golden_hook", FishingHookItem::new);
+    public static final Item DIAMOND_HOOK = register("diamond_hook", FishingHookItem::new);
+    public static final Item EMERALD_HOOK = register("emerald_hook", FishingHookItem::new);
+    public static final Item AMETHYST_HOOK = register("amethyst_hook", FishingHookItem::new);
+    public static final Item NETHERITE_HOOK = register("netherite_hook", FishingHookItem::new);
+    public static final Item BONE_HOOK = register("bone_hook", FishingHookItem::new);
+    public static final Item PRISMARINE_HOOK = register("prismarine_hook", FishingHookItem::new);
+    public static final Item GLOW_HOOK = register("glow_hook", FishingHookItem::new);
+    public static final Item FEATHERED_HOOK = register("feathered_hook", FishingHookItem::new);
+    public static final Item BARBED_HOOK = register("barbed_hook", FishingHookItem::new);
 
     public static final Item FISHING_LINE = register("fishing_line", FishingLineItem::new);
     public static final Item COPPER_LINE = register("copper_line", properties -> new FishingLineItem(properties, "item.tide.copper_line.desc"));
@@ -206,6 +219,7 @@ public class TideItems {
 
                     FISHING_HOOK, FIERY_HOOK, PERMAFROST_HOOK,
                     TWILIGHT_HOOK, LAVAPROOF_HOOK, VOID_HOOK,
+                    WOODEN_HOOK, STONE_HOOK, COPPER_HOOK, GOLDEN_HOOK, DIAMOND_HOOK, EMERALD_HOOK, AMETHYST_HOOK, NETHERITE_HOOK, BONE_HOOK, PRISMARINE_HOOK, GLOW_HOOK, FEATHERED_HOOK, BARBED_HOOK,
 
                     FISHING_LINE, COPPER_LINE, IRON_LINE, GOLDEN_LINE, DIAMOND_LINE,
 

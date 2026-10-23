@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:netherite_scrap"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:netherite_hook"
+  }
+}

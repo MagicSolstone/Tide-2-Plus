@@ -49,9 +49,11 @@ public final class CookedFish {
 
         FoodProperties food = cooked.get(DataComponents.FOOD);
         if (food != null) {
-            int extra = foodBonus(q) + (rarity == FishRarity.LEGENDARY ? 2 : rarity == FishRarity.VERY_RARE ? 1 : 0);
-            cooked.set(DataComponents.FOOD, new FoodProperties(Math.max(1, food.nutrition() + extra),
-                    Math.max(0.5f, food.saturation() + extra * 1.2f), food.canAlwaysEat() || q.ordinal() >= CatchQuality.TROPHY.ordinal()));
+            // Quality scales the food: a plain cooked fish (6) is Poor 1, Average 3, Fine 4, Prime 6, Trophy 8, Mythic 11
+            double f = foodFactor(q);
+            int extra = rarity == FishRarity.LEGENDARY ? 2 : rarity == FishRarity.VERY_RARE ? 1 : 0;
+            cooked.set(DataComponents.FOOD, new FoodProperties(Math.max(1, (int) Math.round(food.nutrition() * f) + extra),
+                    Math.max(0.2f, (float) (food.saturation() * f) + extra * 1.2f), food.canAlwaysEat() || q.ordinal() >= CatchQuality.TROPHY.ordinal()));
         }
         double longer = rarity == FishRarity.LEGENDARY ? 1.5 : rarity == FishRarity.VERY_RARE ? 1.25 : 1.0;
         List<MobEffectInstance> buffs = buffs(q, longer);
@@ -64,14 +66,14 @@ public final class CookedFish {
         return cooked;
     }
 
-    private static int foodBonus(CatchQuality q) {
+    private static double foodFactor(CatchQuality q) {
         return switch (q) {
-            case POOR -> -1;
-            case AVERAGE -> 0;
-            case FINE -> 1;
-            case PRIME -> 2;
-            case TROPHY -> 3;
-            case MYTHIC -> 5;
+            case POOR -> 0.2;
+            case AVERAGE -> 0.5;
+            case FINE -> 0.7;
+            case PRIME -> 1.0;
+            case TROPHY -> 1.3;
+            case MYTHIC -> 1.8;
         };
     }
 

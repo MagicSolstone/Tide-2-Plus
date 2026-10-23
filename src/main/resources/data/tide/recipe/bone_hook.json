@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "minecraft:bone_meal",
+    "C": "minecraft:bone"
+  },
+  "pattern": [
+    "#",
+    "C",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:bone_hook"
+  }
+}

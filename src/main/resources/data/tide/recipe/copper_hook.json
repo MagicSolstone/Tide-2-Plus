@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "minecraft:copper_nugget",
+    "C": "#c:cobblestones"
+  },
+  "pattern": [
+    "#",
+    "C",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:copper_hook"
+  }
+}

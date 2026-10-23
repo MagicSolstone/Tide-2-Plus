@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:prismarine_shard"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:prismarine_hook"
+  }
+}

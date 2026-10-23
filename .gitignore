@@ -49,3 +49,4 @@ bin/
 /src/generated-1.20.1/forge-resources/.cache/
 # Fork: no Stonecutter/versions any more
 /versions/
+tools/rod_art_preview.png

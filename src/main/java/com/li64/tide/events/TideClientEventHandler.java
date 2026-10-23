@@ -33,7 +33,12 @@ public class TideClientEventHandler {
                 && Tide.SERVER_CONFIG.items.bucketableFishItems == TideServerConfig.Items.BucketableMode.WHEN_LIVING)
             lines.add(Component.translatable("text.tide.fish.alive").withStyle(ChatFormatting.GRAY));
 
-        if (TideItemData.FISH_LENGTH.isPresent(stack) || TideItemData.FISH_QUALITY.isPresent(stack)) {
+        if (TideItemData.FISH_QUALITY.isPresent(stack) && stack.has(DataComponents.CONSUMABLE) && !TideItemData.FISH_LENGTH.isPresent(stack)
+                && !com.li64.tide.data.fishing.FishData.get(stack).isPresent()) {           // a cooked graded fish
+            lines.add(com.li64.tide.data.angler.CatchQuality.byId(TideItemData.FISH_QUALITY.getOrDefault(stack, 1)).describe());
+            lines.addAll(com.li64.tide.data.angler.CookedFish.describe(stack));
+        }
+        else if (TideItemData.FISH_LENGTH.isPresent(stack) || TideItemData.FISH_QUALITY.isPresent(stack)) {
             addFishLines(lines, TideItemData.FISH_QUALITY.getOrDefault(stack, -1),
                     TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0), TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0));
         }

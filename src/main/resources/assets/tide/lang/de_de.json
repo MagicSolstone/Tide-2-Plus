@@ -803,5 +803,7 @@
   "item.tide.angler_hat": "Angler's Bucket Hat",
   "item.tide.fishing_vest": "Fishing Vest",
   "item.tide.waders": "Waders",
-  "item.tide.wading_boots": "Wading Boots"
+  "item.tide.wading_boots": "Wading Boots",
+  "item.tide.cooked_name": "Cooked %s",
+  "item.tide.cooked_quality_name": "Cooked %s %s"
 }

@@ -17,14 +17,15 @@
       "HookPredicateMixin",
       "InventoryMixin",
       "ItemMixin",
-      "ItemsMixin",
       "ItemStackMixin",
+      "ItemsMixin",
       "LecternBlockMixin",
       "LootContextParamSetsMixin",
       "MobBucketItemMixin",
       "MobMixin",
       "PlayerMixin",
       "ProjectileWeaponItemMixin",
+      "SingleItemRecipeMixin",
       "TidePlayerMixin"
    ]
 }

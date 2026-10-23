@@ -238,6 +238,7 @@ public class TideFishingHook extends Projectile {
         this.syncedRandom.setSeed(this.getUUID().getLeastSignificantBits() ^ this.level().getGameTime());
         super.tick();
         if (this.level().isClientSide()) lineParticles();
+        else glow();
 
         // Particle effects
         if (BaitUtils.hasBait(TideItems.LUCKY_BAIT, rod) && this.currentState == FishHookState.BOBBING) {
@@ -611,6 +612,38 @@ public class TideFishingHook extends Projectile {
                 .orElse(raw);
     }
 
+    // ------------------------------------------------------------------ the glow hook lights the water around it
+
+    private static final int GLOW_LIGHT = 8;
+    private net.minecraft.core.BlockPos glowPos = null;
+
+    /** A faint light where a glow hook sits (an invisible light block, waterlogged in water), taken away when it moves or is reeled in. */
+    private void glow() {
+        if (!(this.level() instanceof ServerLevel server)) return;
+        boolean wants = this.getHook().is(TideItems.GLOW_HOOK) && !this.isRemoved()
+                && (this.getCurrentMedium() == FishingMedium.WATER || this.onGround());
+        net.minecraft.core.BlockPos at = wants ? this.blockPosition() : null;
+        if (java.util.Objects.equals(at, glowPos)) return;
+        clearGlow();
+        if (at == null) return;
+        net.minecraft.world.level.block.state.BlockState here = server.getBlockState(at);
+        boolean water = here.is(net.minecraft.world.level.block.Blocks.WATER) && here.getFluidState().isSource();
+        if (!water && !here.isAir()) return;
+        server.setBlock(at, net.minecraft.world.level.block.Blocks.LIGHT.defaultBlockState()
+                .setValue(net.minecraft.world.level.block.LightBlock.LEVEL, GLOW_LIGHT)
+                .setValue(net.minecraft.world.level.block.LightBlock.WATERLOGGED, water), 3);
+        glowPos = at.immutable();
+    }
+
+    private void clearGlow() {
+        if (glowPos == null || !(this.level() instanceof ServerLevel server)) return;
+        net.minecraft.world.level.block.state.BlockState there = server.getBlockState(glowPos);
+        if (there.is(net.minecraft.world.level.block.Blocks.LIGHT) && there.getValue(net.minecraft.world.level.block.LightBlock.LEVEL) == GLOW_LIGHT)
+            server.setBlock(glowPos, there.getValue(net.minecraft.world.level.block.LightBlock.WATERLOGGED)
+                    ? net.minecraft.world.level.block.Blocks.WATER.defaultBlockState() : net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+        glowPos = null;
+    }
+
     /** Some lines give off particles along their length while cast (golden sparkles, redstone sparks...). */
     private void lineParticles() {
         Player owner = getPlayerOwner();
@@ -892,6 +925,7 @@ public class TideFishingHook extends Projectile {
     }
 
     public void remove(@NotNull RemovalReason reason) {
+        clearGlow();
         this.updateOwnerInfo(null);
         super.remove(reason);
     }

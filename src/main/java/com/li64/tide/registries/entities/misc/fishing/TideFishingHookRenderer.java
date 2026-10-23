@@ -75,6 +75,12 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook, Tid
     }
 
     @Override
+    protected int getBlockLightLevel(TideFishingHook hook, net.minecraft.core.BlockPos pos) {
+        // the glow hook (and its bobber) glow in the dark, like a glow squid
+        return hook.getHook().is(com.li64.tide.registries.TideItems.GLOW_HOOK) ? 15 : super.getBlockLightLevel(hook, pos);
+    }
+
+    @Override
     public void extractRenderState(TideFishingHook hook, TideHookRenderState state, float partialTick) {
         super.extractRenderState(hook, state, partialTick);
         Player player = hook.getPlayerOwner();

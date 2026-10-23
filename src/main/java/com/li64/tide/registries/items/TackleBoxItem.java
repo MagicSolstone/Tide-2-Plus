@@ -25,6 +25,7 @@ import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -50,6 +51,27 @@ public class TackleBoxItem extends AbstractTooltipItem {
     public static void open(Player player, ItemStack box, boolean rig) {
         if (rig) player.openMenu(new SimpleMenuProvider((id, inv, p) -> new RigMenu(id, inv, box), Component.translatable("block.tide.angling_table")));
         else player.openMenu(new SimpleMenuProvider((id, inv, p) -> new Menu(id, inv, box), box.getHoverName()));
+    }
+
+    public static final int MAX_RODS = 3;
+
+    /** A box slot: any tackle, or a fishing rod while the box holds fewer than three. */
+    static Slot tackleSlot(net.minecraft.world.Container box, int index, int x, int y) {
+        return new Slot(box, index, x, y) {
+            @Override
+            public boolean mayPlace(@NotNull ItemStack stack) {
+                if (TackleLog.fitsTackleBox(stack)) return true;
+                if (!isRod(stack)) return false;
+                int rods = 0;
+                for (int i = 0; i < box.getContainerSize(); i++)
+                    if (i != this.getContainerSlot() && isRod(box.getItem(i))) rods++;
+                return rods < MAX_RODS;
+            }
+        };
+    }
+
+    static boolean isRod(ItemStack s) {
+        return s.getItem() instanceof TideFishingRodItem || s.is(net.minecraft.world.item.Items.FISHING_ROD);
     }
 
     /** The tackle box the player is holding, if any (main hand first). */
@@ -78,9 +100,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
             int first = this.slots.size() - 36;        // the inventory rows come before the hotbar
             for (int i = 0; i < SIZE; i++) {
                 Slot old = this.slots.get(first + i);
-                Slot only = new Slot(tackle, i, old.x, old.y) {
-                    @Override public boolean mayPlace(@NotNull ItemStack stack) { return TackleLog.fitsTackleBox(stack); }
-                };
+                Slot only = tackleSlot(tackle, i, old.x, old.y);
                 only.index = first + i;
                 this.slots.set(first + i, only);
             }
@@ -114,8 +134,17 @@ public class TackleBoxItem extends AbstractTooltipItem {
     @Override
     public void addTooltip(ItemStack stack, Consumer<Component> tooltip) {
         ItemContainerContents contents = stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
-        long used = contents.nonEmptyItemCopyStream().count();
-        tooltip.accept(Component.literal(used + " / " + SIZE + " slots used").withStyle(ChatFormatting.GRAY));
+        List<ItemStack> items = contents.nonEmptyItemCopyStream().toList();
+        tooltip.accept(Component.literal(items.size() + " / " + SIZE + " slots used").withStyle(ChatFormatting.GRAY));
+        // the rods by name, then how much of each kind of tackle
+        for (ItemStack s : items) if (isRod(s)) tooltip.accept(Component.literal("  ").append(s.getHoverName()).withStyle(ChatFormatting.GOLD));
+        java.util.Map<TackleLog.Category, Integer> counts = new java.util.EnumMap<>(TackleLog.Category.class);
+        for (ItemStack s : items) {
+            TackleLog.Category c = isRod(s) ? null : TackleLog.category(s.getItem());
+            if (c != null) counts.merge(c, s.getCount(), Integer::sum);
+        }
+        if (!counts.isEmpty()) tooltip.accept(Component.literal("  " + counts.entrySet().stream()
+                .map(e -> e.getValue() + " " + e.getKey().label.toLowerCase()).collect(java.util.stream.Collectors.joining(", "))).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("Right-click to open").withStyle(ChatFormatting.DARK_GRAY));
         tooltip.accept(Component.literal("Sneak + right-click: rig a rod from the box").withStyle(ChatFormatting.DARK_GRAY));
     }
@@ -135,9 +164,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
             SimpleContainer container = (SimpleContainer) this.getContainer();
             for (int i = 0; i < SIZE; i++) {           // swap in slots that only take tackle
                 Slot old = this.slots.get(i);
-                Slot only = new Slot(container, old.getContainerSlot(), old.x, old.y) {
-                    @Override public boolean mayPlace(@NotNull ItemStack stack) { return TackleLog.fitsTackleBox(stack); }
-                };
+                Slot only = tackleSlot(container, old.getContainerSlot(), old.x, old.y);
                 only.index = i;
                 this.slots.set(i, only);
             }

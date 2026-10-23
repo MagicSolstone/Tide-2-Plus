@@ -184,8 +184,11 @@ final class TackleCard {
         g.pose().scale(scale, scale);
         int ly = 0;
         for (Component c : lines) {
+            // place-, time- and weather-bound perks in purple, like the tooltip
+            var tc = c.getStyle().getColor();
+            int color = tc != null && tc.getValue() == 0xFF55FF ? 0xFF8A3FA8 : INK;
             for (FormattedCharSequence line : font.split(Component.literal("- " + c.getString()), (int) (150 / scale))) {
-                Gui26.text(g, font, line, 0, ly, INK, false);
+                Gui26.text(g, font, line, 0, ly, color, false);
                 ly += 10;
             }
             ly += 2;

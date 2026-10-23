@@ -4,7 +4,8 @@
   "ingredients": [
     "tide:fishing_hook",
     "tide:fishing_hook",
-    "tide:fishing_hook"
+    "tide:fishing_hook",
+    "#c:ingots/iron"
   ],
   "result": {
     "count": 1,

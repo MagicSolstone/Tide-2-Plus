@@ -243,11 +243,11 @@ public final class Angler {
         }
         if (xpBoost > 0) {
             xp *= 1.0 + xpBoost;
-            parts.add("bobber x" + String.format("%.2f", 1.0 + xpBoost).replaceAll("0+$", ""));
         }
         long total = Math.round(xp);
         addXp(player, total, extra);
-        player.sendSystemMessage(Component.literal("+" + total + " fishing XP: " + String.join(" · ", parts))
+        // just the total (gear bonuses are already in it), and whether the hook was perfect
+        player.sendSystemMessage(Component.literal("+" + total + " fishing XP" + (perfect ? " · perfect hook!" : ""))
                 .withStyle(ChatFormatting.DARK_GRAY));
         return total;
     }

@@ -114,7 +114,7 @@ public final class Lures {
         List<Component> out = new java.util.ArrayList<>();
         for (Pull pull : FISH.getOrDefault(path, List.of()))
             out.add(Component.literal(pull.text() + " (x" + trim(pull.factor()) + ")" + (pull.when() == null ? "" : " " + pull.when().text))
-                    .withStyle(ChatFormatting.DARK_AQUA));
+                    .withStyle(pull.when() == null ? ChatFormatting.DARK_AQUA : ChatFormatting.LIGHT_PURPLE));
         if (CRATES.containsKey(path))
             out.add(Component.literal("Pulls up crates (x" + trim(CRATES.get(path)) + ")").withStyle(ChatFormatting.DARK_AQUA));
         return out;

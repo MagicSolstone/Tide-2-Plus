@@ -1,5 +1,5 @@
 """Hand-tuned 16x16 rod textures (uncast + cast) from a shared layout, each with its own details.
-Run: python3 tools/rod_art.py src/main/resources/assets/tide/textures/item  (writes the PNGs and a preview sheet.png)."""
+Run: python3 tools/rod_art.py src/main/resources/assets/tide/textures/item  then  python3 tools/rod_sway.py  (re-adds the swaying line)."""
 from PIL import Image
 import sys
 OUT = sys.argv[1] if len(sys.argv) > 1 else 'out'

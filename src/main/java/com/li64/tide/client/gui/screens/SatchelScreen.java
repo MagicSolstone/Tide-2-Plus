@@ -15,8 +15,9 @@ public class SatchelScreen extends AbstractContainerScreen<FishSatchelItem.Menu>
     private static final int GRID_BOTTOM = FishSatchelItem.Menu.TOP + FishSatchelItem.Menu.ROWS * 18;
 
     public SatchelScreen(FishSatchelItem.Menu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title, 176, GRID_BOTTOM + 14 + 76 + 6);
+        super(menu, inventory, title, FishSatchelItem.Menu.WIDTH, GRID_BOTTOM + 14 + 76 + 6);
         this.inventoryLabelY = GRID_BOTTOM + 3;
+        this.inventoryLabelX = (FishSatchelItem.Menu.WIDTH - 162) / 2;
     }
 
     @Override

@@ -159,7 +159,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
 
     /** The box's screen: 27 slots of tackle, a rack of 3 for rods beside them, then your inventory. */
     public static class Menu extends HeldStorageMenu {
-        public static final int RACK_X = 182;
+        public static final int RACK_X = 181;
 
         /** The client's copy (the box itself stays on the server). */
         public Menu(int id, Inventory inventory) {

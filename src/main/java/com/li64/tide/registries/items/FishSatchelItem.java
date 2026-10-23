@@ -178,14 +178,14 @@ public class FishSatchelItem extends AbstractTooltipItem {
 
     /** Inside the satchel: all 64 places, so any fish can be taken out directly. */
     public static class Menu extends HeldStorageMenu {
-        public static final int COLS = 8, ROWS = SatchelContents.MAX_STACKS / COLS, LEFT = 16, TOP = 18;
+        public static final int COLS = 11, ROWS = (SatchelContents.MAX_STACKS + COLS - 1) / COLS, LEFT = 8, TOP = 18, WIDTH = LEFT * 2 + COLS * 18;
 
         public Menu(int id, net.minecraft.world.entity.player.Inventory inventory) {
             this(id, inventory, ItemStack.EMPTY);
         }
 
         public Menu(int id, net.minecraft.world.entity.player.Inventory inventory, ItemStack satchel) {
-            super(com.li64.tide.client.gui.TideMenuTypes.FISH_SATCHEL, id, inventory, satchel, SatchelContents.MAX_STACKS, 8, TOP + ROWS * 18 + 14);
+            super(com.li64.tide.client.gui.TideMenuTypes.FISH_SATCHEL, id, inventory, satchel, SatchelContents.MAX_STACKS, (WIDTH - 162) / 2, TOP + ROWS * 18 + 14);
         }
 
         @Override

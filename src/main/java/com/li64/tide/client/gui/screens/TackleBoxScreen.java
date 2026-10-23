@@ -65,7 +65,7 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
     @Override
     protected void extractLabels(@NotNull GuiGraphicsExtractor g, int xm, int ym) {
         g.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF14281A, false);
-        g.text(this.font, Component.literal("Rods"), TackleBoxItem.Menu.RACK_X - 2, this.titleLabelY, 0xFF14281A, false);
+        g.text(this.font, Component.literal("Rods"), TackleBoxItem.Menu.RACK_X - 5, this.titleLabelY, 0xFF14281A, false);
         g.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, BAND_TEXT, false);
     }
 }

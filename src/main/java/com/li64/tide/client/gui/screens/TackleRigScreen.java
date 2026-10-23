@@ -54,6 +54,6 @@ public class TackleRigScreen extends AnglingTableScreen {
     protected void extractLabels(@NotNull GuiGraphicsExtractor g, int xm, int ym) {
         g.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF404040, false);
         g.text(this.font, BOX, this.inventoryLabelX, this.inventoryLabelY, 0xFF1F5A28, false);
-        g.text(this.font, Component.literal("Rods"), com.li64.tide.registries.items.TackleBoxItem.Menu.RACK_X - 2, 72, 0xFF14281A, false);
+        g.text(this.font, Component.literal("Rods"), com.li64.tide.registries.items.TackleBoxItem.Menu.RACK_X - 4, 72, 0xFF14281A, false);
     }
 }

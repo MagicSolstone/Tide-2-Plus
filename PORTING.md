@@ -100,7 +100,7 @@ Solstone reads Tide's data; it never writes to the server folder. If any of thes
   - `TideAngler = {xp, fair, backfilled, version}`
 - **The XP curve**, mirrored in Solstone: XP to the next level = `xpPerLevel + xpGrowth × level²`
   (`config/tide.json`, `server.leveling`), titles every 10 levels, Legendary at 99.
-- **Commands**, run over RCON: `/fishinglevel fair <player> true|false`.
+- **Commands**, run over RCON: `/fishinglevel fair <player> true|false`, `/fishinglevel reset <player> [everything]`.
 - **Scoreboards:** `tide_level`, `tide_xp`.
 - **Quality numbers:** 0 Poor, 1 Average, 2 Fine, 3 Prime, 4 Trophy, 5 Mythic.
 - **The mod id** `tide` in `fabric.mod.json` (that's how Solstone finds the jar and its fish list:

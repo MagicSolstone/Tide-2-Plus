@@ -67,6 +67,11 @@ public final class TackleLog {
         Tide.PLATFORM.getPlayerData(player).put(TAG, tag);
     }
 
+    public static void clear(ServerPlayer player) {
+        Tide.PLATFORM.getPlayerData(player).remove(TAG);
+        sync(player);
+    }
+
     public static void sync(ServerPlayer player) {
         Tide.NETWORK.sendToPlayer(new TackleSyncMsg(new ArrayList<>(found(player))), player);
     }

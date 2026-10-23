@@ -46,6 +46,21 @@ public class FishingLevelCommand {
                                             + " for " + players.size() + " player(s)"), true);
                                     return players.size();
                                 }))))
+                .then(Commands.literal("reset").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+                        .then(Commands.argument("players", EntityArgument.players()).executes(ctx -> {
+                                    Collection<ServerPlayer> players = EntityArgument.getPlayers(ctx, "players");
+                                    for (ServerPlayer p : players) Angler.reset(p, false);
+                                    ctx.getSource().sendSuccess(() -> Component.literal("Reset the fishing level of " + players.size()
+                                            + " player(s) to 1 (journal kept)"), true);
+                                    return players.size();
+                                })
+                                .then(Commands.literal("everything").executes(ctx -> {
+                                    Collection<ServerPlayer> players = EntityArgument.getPlayers(ctx, "players");
+                                    for (ServerPlayer p : players) Angler.reset(p, true);
+                                    ctx.getSource().sendSuccess(() -> Component.literal("Reset " + players.size()
+                                            + " player(s) to a fresh start: level 1, empty fish journal and tackle log"), true);
+                                    return players.size();
+                                }))))
                 .then(Commands.literal("addxp").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                         .then(Commands.argument("players", EntityArgument.players())
                                 .then(Commands.argument("xp", LongArgumentType.longArg(-100_000_000L, 100_000_000L)).executes(ctx -> {

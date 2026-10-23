@@ -343,6 +343,25 @@ public final class Angler {
         sync(player);
     }
 
+    /** Back to a brand-new angler: level 1, no XP, fair play off. With {@code everything}, also an empty fish
+     * journal (catches, records, quality counts) and tackle log. Kept "backfilled" so XP isn't recounted. */
+    public static void reset(ServerPlayer player, boolean everything) {
+        Data d = Data.of(player);
+        d.xp = 0;
+        d.fair = false;
+        d.backfilled = true;
+        d.version = XP_VERSION;
+        d.save(player);
+        if (everything) {
+            com.li64.tide.data.player.TidePlayerData data = com.li64.tide.data.player.TidePlayerData.getOrCreate(player);
+            data.fishPlayerData.clear();
+            data.syncTo(player);
+            com.li64.tide.data.tackle.TackleLog.clear(player);
+        }
+        sync(player);
+        Tide.LOG.info("[Tide reset] {} {}", player.getScoreboardName(), everything ? "everything" : "level");
+    }
+
     public static void setFair(ServerPlayer player, boolean fair) {
         Data d = Data.of(player);
         d.fair = fair;

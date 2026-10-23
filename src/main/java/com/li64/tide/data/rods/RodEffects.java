@@ -115,14 +115,14 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     /** Lines with their own perk, on top of every line's casting range. */
     private static final Map<String, RodEffects> LINES = Map.ofEntries(
-            Map.entry("copper_line", fight(-0.10)),
+            Map.entry("copper_line", fight(-0.05)),
             Map.entry("iron_line", ease(0.14)),
             Map.entry("golden_line", new RodEffects(0, 0, 0, -0.05, 1, 0, 0, 0)),
             Map.entry("diamond_line", ease(0.25)),
             Map.entry("coal_line", window(0.10)),
             Map.entry("honey_line", land(0.10)),
             Map.entry("silk_line", bite(0.08)),
-            Map.entry("phantom_line", cast(0.15)),
+            Map.entry("phantom_line", new RodEffects(0.10, 0, 0.05, 0, 0, 0, 0, 0)),
             Map.entry("amethyst_line", quality(0.08)),
             Map.entry("netherite_line", new RodEffects(0, 0, 0, -0.08, 0, 0, 0.05, 0)),
             Map.entry("braided_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.10, 0)),
@@ -158,7 +158,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("spinner_lure", cast(0.10)),
             Map.entry("golden_spoon_lure", xp(0.10)),
             Map.entry("fly_lure", bite(0.20)),
-            Map.entry("jig_lure", fight(-0.10)),
+            Map.entry("jig_lure", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.08, 0)),
             Map.entry("echo_lure", bite(-0.10)),
             Map.entry("magnet_lure", luck(1)));
 
@@ -175,7 +175,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         FULL_MOON("on a full moon"), NEW_MOON("on a new moon"),
         UNDERGROUND("underground"), NETHER("in the Nether"), END("in the End"),
         OCEAN("in oceans"), RIVER("in rivers"), SWAMP("in swamps"), JUNGLE("in jungles"),
-        COLD("in cold places"), DRY("in deserts and badlands"), BEACH("on beaches"), MUSHROOM("on mushroom islands");
+        COLD("in cold places"), DRY("in deserts and badlands"), BEACH("on beaches"), MUSHROOM("on mushroom islands"),
+        LAVA("when fishing in lava");
 
         public final String text;
 
@@ -210,6 +211,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                 case DRY -> name.contains("desert") || biome.is(net.minecraft.tags.BiomeTags.IS_BADLANDS);
                 case BEACH -> biome.is(net.minecraft.tags.BiomeTags.IS_BEACH);
                 case MUSHROOM -> name.contains("mushroom");
+                case LAVA -> {      // judged by where the angler's hook is, not where they stand
+                    var hook = com.li64.tide.registries.entities.misc.fishing.HookAccessor.getHook(player);
+                    yield hook != null && hook.getCurrentMedium() == com.li64.tide.data.fishing.mediums.FishingMedium.LAVA;
+                }
             };
         }
     }
@@ -227,7 +232,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("prismarine_fishing_rod", List.of(new Perk(When.RAIN, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0)),
                     new Perk(When.OCEAN, bite(0.20)))),
             Map.entry("sunflower_fishing_rod", List.of(new Perk(When.DAY, new RodEffects(0, 0.15, 0, 0, 1, 0, 0, 0)))),
-            Map.entry("blazing_fishing_rod", List.of(new Perk(When.NETHER, bite(0.20)))),
+            Map.entry("blazing_fishing_rod", List.of(new Perk(When.NETHER, bite(0.20)), new Perk(When.LAVA, quality(0.10)))),
+            Map.entry("netherite_fishing_rod", List.of(new Perk(When.LAVA, new RodEffects(0, 0.10, 0, 0, 1, 0, 0, 0)))),
             Map.entry("mangrove_fishing_rod", List.of(new Perk(When.SWAMP, new RodEffects(0, 0.20, 0, 0, 1, 0, 0, 0)))),
             Map.entry("cherry_fishing_rod", List.of(new Perk(When.DAWN_DUSK, new RodEffects(0, 0.25, 0, 0, 0, 0.10, 0, 0)))),
             Map.entry("frost_fishing_rod", List.of(new Perk(When.COLD, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0, 0.15, 0)))),
@@ -237,14 +243,16 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("slime_line", List.of(new Perk(When.UNDERGROUND, new RodEffects(0, 0.20, 0.05, 0, 1, 0, 0, 0)))),
             Map.entry("kelp_line", List.of(new Perk(When.OCEAN, bite(0.15)))),
             Map.entry("vine_line", List.of(new Perk(When.JUNGLE, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)))),
-            Map.entry("netherite_line", List.of(new Perk(When.NETHER, bite(0.15)))),
+            Map.entry("netherite_line", List.of(new Perk(When.NETHER, bite(0.15)), new Perk(When.LAVA, window(0.10)))),
+            Map.entry("copper_line", List.of(new Perk(When.RAIN, bite(0.10)), new Perk(When.THUNDER, luck(1)))),
+            Map.entry("phantom_line", List.of(new Perk(When.NIGHT, bite(0.15)))),
             Map.entry("prismarine_line", List.of(new Perk(When.OCEAN, luck(1)))),
             Map.entry("spider_line", List.of(new Perk(When.NIGHT, window(0.10)), new Perk(When.NEW_MOON, luck(1)))),
             // hooks
             Map.entry("lucky_hook", List.of(new Perk(When.FULL_MOON, luck(1)))),
-            Map.entry("lavaproof_hook", List.of(new Perk(When.NETHER, fight(-0.10)))),
+            Map.entry("lavaproof_hook", List.of(new Perk(When.LAVA, new RodEffects(0, 0.20, 0, -0.10, 1, 0, 0, 0.15)))),
             Map.entry("void_hook", List.of(new Perk(When.END, luck(1)))),
-            Map.entry("fiery_hook", List.of(new Perk(When.NETHER, bite(0.15)))),
+            Map.entry("fiery_hook", List.of(new Perk(When.NETHER, bite(0.15)), new Perk(When.LAVA, quality(0.10)))),
             Map.entry("permafrost_hook", List.of(new Perk(When.COLD, bite(0.15)))),
             Map.entry("feathered_hook", List.of(new Perk(When.DAWN_DUSK, quality(0.10)))),
             Map.entry("golden_hook", List.of(new Perk(When.DRY, luck(1)))),
@@ -271,12 +279,15 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("chorus_bobber", List.of(new Perk(When.END, bite(0.20)))),
             Map.entry("nautilus_bobber", List.of(new Perk(When.OCEAN, bite(0.10)))),
             Map.entry("echo_bobber", List.of(new Perk(When.UNDERGROUND, quality(0.10)))),
+            Map.entry("netherite_bobber", List.of(new Perk(When.LAVA, bite(0.15)))),
             // lures
             Map.entry("popper_lure", List.of(new Perk(When.DAWN_DUSK, new RodEffects(0, 0.25, 0, 0, 0, 0, 0, 0.10)))),
             Map.entry("fly_lure", List.of(new Perk(When.RIVER, bite(0.15)))),
             Map.entry("jig_lure", List.of(new Perk(When.UNDERGROUND, bite(0.15)))),
             Map.entry("glow_lure", List.of(new Perk(When.NIGHT, bite(0.15)))),
-            Map.entry("magma_lure", List.of(new Perk(When.NETHER, new RodEffects(0, 0.25, 0, -0.10, 0, 0.10, 0, 0)))),
+            Map.entry("magma_lure", List.of(new Perk(When.NETHER, new RodEffects(0, 0.25, 0, -0.10, 0, 0.10, 0, 0)),
+                    new Perk(When.LAVA, new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0.10, 0)))),
+            Map.entry("spinner_lure", List.of(new Perk(When.DAY, bite(0.10)))),
             Map.entry("chorus_lure", List.of(new Perk(When.END, new RodEffects(0, 0.25, 0, 0, 1, 0, 0, 0)))),
             Map.entry("storm_lure", List.of(new Perk(When.RAIN, bite(0.15)),
                     new Perk(When.THUNDER, new RodEffects(0, 0.10, 0, 0, 2, 0.15, 0, 0)))),
@@ -438,6 +449,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
         out.addAll(Unlocks.describe(stack));
+        if (path(stack).equals("lavaproof_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in lava"));
+        if (path(stack).equals("void_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in the void"));
         if (path(stack).equals("bell_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Rings when a fish bites"));
         if (path(stack).equals("ender_eye_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Shows what's on the hook when it bites"));
         return out;

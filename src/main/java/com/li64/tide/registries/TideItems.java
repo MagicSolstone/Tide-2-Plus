@@ -144,8 +144,8 @@ public class TideItems {
     public static final Item FIERY_HOOK = register("fiery_hook", properties -> new FishingHookItem(properties, "item.tide.fiery_hook.desc"));
     public static final Item PERMAFROST_HOOK = register("permafrost_hook", properties -> new FishingHookItem(properties, "item.tide.permafrost_hook.desc"));
     public static final Item TWILIGHT_HOOK = register("twilight_hook", properties -> new FishingHookItem(properties, "item.tide.twilight_hook.desc"));
-    public static final Item LAVAPROOF_HOOK = register("lavaproof_hook", properties -> new FishingHookItem(properties, "item.tide.lavaproof_hook.desc"));
-    public static final Item VOID_HOOK = register("void_hook", properties -> new FishingHookItem(properties, "item.tide.void_hook.desc"));
+    public static final Item LAVAPROOF_HOOK = register("lavaproof_hook", properties -> new FishingHookItem(properties));
+    public static final Item VOID_HOOK = register("void_hook", properties -> new FishingHookItem(properties));
     public static final Item WOODEN_HOOK = register("wooden_hook", FishingHookItem::new);
     public static final Item STONE_HOOK = register("stone_hook", FishingHookItem::new);
     public static final Item COPPER_HOOK = register("copper_hook", FishingHookItem::new);

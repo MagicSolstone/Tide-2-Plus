@@ -41,16 +41,74 @@ public class TackleBoxItem extends AbstractTooltipItem {
     @Override
     public @NotNull InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack box = player.getItemInHand(hand);
-        if (!level.isClientSide()) {
-            if (player.isShiftKeyDown()) {
-                player.openMenu(new SimpleMenuProvider((id, inv, p) -> new AnglingTableMenu(id, inv, ContainerLevelAccess.NULL),
-                        Component.translatable("block.tide.angling_table")));
-            } else {
-                player.openMenu(new SimpleMenuProvider((id, inv, p) -> new Menu(id, inv, box), box.getHoverName()));
-            }
-        }
+        if (!level.isClientSide()) open(player, box, player.isShiftKeyDown());
         level.playSound(null, player.blockPosition(), SoundEvents.CHEST_OPEN, SoundSource.PLAYERS, 0.5f, 1.4f);
         return InteractionResult.SUCCESS;
+    }
+
+    /** Opens the box, or its rigging view (an angling table next to the box's tackle). */
+    public static void open(Player player, ItemStack box, boolean rig) {
+        if (rig) player.openMenu(new SimpleMenuProvider((id, inv, p) -> new RigMenu(id, inv, box), Component.translatable("block.tide.angling_table")));
+        else player.openMenu(new SimpleMenuProvider((id, inv, p) -> new Menu(id, inv, box), box.getHoverName()));
+    }
+
+    /** The tackle box the player is holding, if any (main hand first). */
+    public static ItemStack held(Player player) {
+        if (player.getMainHandItem().getItem() instanceof TackleBoxItem) return player.getMainHandItem();
+        if (player.getOffhandItem().getItem() instanceof TackleBoxItem) return player.getOffhandItem();
+        return ItemStack.EMPTY;
+    }
+
+    /**
+     * Rigging a rod from the box: an angling table where the box's 27 slots stand in for the player's inventory
+     * rows (the hotbar stays), so lines, lures and bait go straight from the box onto the rod and back.
+     */
+    public static class RigMenu extends AnglingTableMenu {
+        private final ItemStack box;
+        private final SimpleContainer tackle;
+
+        public RigMenu(int id, Inventory inventory) {
+            this(id, inventory, ItemStack.EMPTY);
+        }
+
+        public RigMenu(int id, Inventory inventory, ItemStack box) {
+            super(com.li64.tide.client.gui.TideMenuTypes.TACKLE_RIG, id, inventory, ContainerLevelAccess.NULL);
+            this.box = box;
+            this.tackle = Menu.load(box);
+            int first = this.slots.size() - 36;        // the inventory rows come before the hotbar
+            for (int i = 0; i < SIZE; i++) {
+                Slot old = this.slots.get(first + i);
+                Slot only = new Slot(tackle, i, old.x, old.y) {
+                    @Override public boolean mayPlace(@NotNull ItemStack stack) { return TackleLog.fitsTackleBox(stack); }
+                };
+                only.index = first + i;
+                this.slots.set(first + i, only);
+            }
+        }
+
+        @Override
+        public void removed(@NotNull Player player) {
+            // whatever is left on the table goes back in the box if it fits, else to the player
+            for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
+                ItemStack left = this.inputSlots.getItem(i);
+                if (!left.isEmpty() && TackleLog.fitsTackleBox(left)) this.inputSlots.setItem(i, tackle.addItem(left));
+            }
+            super.removed(player);
+            Menu.save(box, tackle);
+        }
+
+        @Override
+        public boolean stillValid(@NotNull Player player) {
+            return box.isEmpty() || player.getMainHandItem() == box || player.getOffhandItem() == box;
+        }
+
+        @Override
+        public void clicked(int slot, int button, @NotNull ContainerInput input, @NotNull Player player) {
+            if (!box.isEmpty() && slot >= 0 && slot < this.slots.size() && this.slots.get(slot).getItem() == box) return;
+            if (!box.isEmpty() && input == ContainerInput.SWAP && (player.getInventory().getItem(button) == box
+                    || (button == 40 && player.getOffhandItem() == box))) return;
+            super.clicked(slot, button, input, player);
+        }
     }
 
     @Override
@@ -59,7 +117,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
         long used = contents.nonEmptyItemCopyStream().count();
         tooltip.accept(Component.literal(used + " / " + SIZE + " slots used").withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("Right-click to open").withStyle(ChatFormatting.DARK_GRAY));
-        tooltip.accept(Component.literal("Sneak + right-click: portable angling table").withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.accept(Component.literal("Sneak + right-click: rig a rod from the box").withStyle(ChatFormatting.DARK_GRAY));
     }
 
     /** The box's chest screen (the vanilla 9x3 one, so no new client screen), only taking tackle. */
@@ -85,7 +143,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
             }
         }
 
-        private static SimpleContainer load(ItemStack box) {
+        static SimpleContainer load(ItemStack box) {
             SimpleContainer c = new SimpleContainer(SIZE) {
                 @Override
                 public void setChanged() {
@@ -99,7 +157,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
             return c;
         }
 
-        private static void save(ItemStack box, SimpleContainer c) {
+        static void save(ItemStack box, SimpleContainer c) {
             if (box.isEmpty()) return;
             box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(c.getItems()));
         }

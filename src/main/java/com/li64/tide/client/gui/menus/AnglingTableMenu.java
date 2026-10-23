@@ -24,7 +24,11 @@ public class AnglingTableMenu extends ItemCombinerMenu {
     }
 
     public AnglingTableMenu(int menuId, Inventory inventory, ContainerLevelAccess level) {
-        super(TideMenuTypes.ANGLING_TABLE, menuId, inventory, level, createInputSlotDefinitions());
+        this(TideMenuTypes.ANGLING_TABLE, menuId, inventory, level);
+    }
+
+    protected AnglingTableMenu(net.minecraft.world.inventory.MenuType<?> type, int menuId, Inventory inventory, ContainerLevelAccess level) {
+        super(type, menuId, inventory, level, createInputSlotDefinitions());
         this.level = inventory.player.level();
     }
 

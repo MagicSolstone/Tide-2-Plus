@@ -31,6 +31,8 @@ public class TideMessages {
         network.registerServerBoundPacket(MinigameServerMsg.class, MinigameServerMsg.ID, MinigameServerMsg::encode, MinigameServerMsg::new, MinigameServerMsg::handle);
         network.registerServerBoundPacket(com.li64.tide.network.messages.RecipeRequestMsg.class, com.li64.tide.network.messages.RecipeRequestMsg.ID,
                 com.li64.tide.network.messages.RecipeRequestMsg::encode, com.li64.tide.network.messages.RecipeRequestMsg::new, com.li64.tide.network.messages.RecipeRequestMsg::handle);
+        network.registerServerBoundPacket(com.li64.tide.network.messages.OpenTackleMsg.class, com.li64.tide.network.messages.OpenTackleMsg.ID,
+                com.li64.tide.network.messages.OpenTackleMsg::encode, com.li64.tide.network.messages.OpenTackleMsg::new, com.li64.tide.network.messages.OpenTackleMsg::handle);
         network.registerServerBoundPacket(ReadProfileMsg.class, ReadProfileMsg.ID, ReadProfileMsg::encode, ReadProfileMsg::new, ReadProfileMsg::handle);
     }
 }

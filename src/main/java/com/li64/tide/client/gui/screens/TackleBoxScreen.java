@@ -1,6 +1,9 @@
 package com.li64.tide.client.gui.screens;
 
+import com.li64.tide.Tide;
+import com.li64.tide.network.messages.OpenTackleMsg;
 import com.li64.tide.registries.items.TackleBoxItem;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -12,11 +15,18 @@ import org.jetbrains.annotations.NotNull;
 public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu> {
     private static final int OUTLINE = 0xFF1F3A24, BODY = 0xFF5FA05E, LIGHT = 0xFF93D08A, SHADE = 0xFF3B7440;
     private static final int SLOT_DARK = 0xFF2C5131, SLOT_FILL = 0xFF467C46, SLOT_LIGHT = 0xFF86BF7E;
-    private static final int METAL = 0xFFC9C9C9, METAL_DARK = 0xFF7E7E7E;
+    private static final int METAL = 0xFFC9C9C9, METAL_DARK = 0xFF7E7E7E, BAND = 0xFF2A5530, BAND_TEXT = 0xFFDDEFD8;
 
     public TackleBoxScreen(TackleBoxItem.Menu menu, Inventory inventory, Component title) {
         super(menu, inventory, title, 176, 114 + 3 * 18);
-        this.inventoryLabelY = this.imageHeight - 94;
+        this.inventoryLabelY = 17 + 3 * 18 + 3;     // inside the band
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        this.addRenderableWidget(Button.builder(Component.literal("Rig a rod"), b -> Tide.NETWORK.sendToServer(new OpenTackleMsg(true)))
+                .bounds(this.leftPos + this.imageWidth - 64, this.topPos - 16, 64, 14).build());
     }
 
     @Override
@@ -31,13 +41,13 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
         g.fill(x + 1, y + 1, x + 3, y + h - 1, LIGHT);
         g.fill(x + 1, y + h - 3, x + w - 1, y + h - 1, SHADE);
         g.fill(x + w - 3, y + 1, x + w - 1, y + h - 1, SHADE);
-        // the seam between the tray and your inventory, with two latches
-        int seam = y + 17 + 3 * 18 + 1;        // just under the tray, above the "Inventory" label
-        g.fill(x + 3, seam, x + w - 3, seam + 4, SHADE);
-        g.fill(x + 3, seam + 1, x + w - 3, seam + 2, OUTLINE);
-        for (int lx : new int[]{x + 80, x + w - 30}) {        // clear of the label
-            g.fill(lx, seam - 2, lx + 8, seam + 6, METAL_DARK);
-            g.fill(lx + 1, seam - 1, lx + 7, seam + 4, METAL);
+        // a dark band between the tray and your inventory, carrying the "Inventory" label, with a latch at each end
+        int band = y + 17 + 3 * 18 + 1;
+        g.fill(x + 3, band, x + w - 3, band + 12, OUTLINE);
+        g.fill(x + 3, band + 1, x + w - 3, band + 11, BAND);
+        for (int lx : new int[]{x + w - 26, x + w - 14}) {
+            g.fill(lx, band - 2, lx + 8, band + 13, METAL_DARK);
+            g.fill(lx + 1, band - 1, lx + 7, band + 11, METAL);
         }
         // a slot under every slot, sunk into the box
         for (Slot s : this.menu.slots) {
@@ -51,6 +61,6 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
     @Override
     protected void extractLabels(@NotNull GuiGraphicsExtractor g, int xm, int ym) {
         g.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF14281A, false);
-        g.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xFF14281A, false);
+        g.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, BAND_TEXT, false);
     }
 }

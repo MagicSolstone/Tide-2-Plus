@@ -3,7 +3,6 @@ name: Build
 on:
   push:
     branches: [main]
-    tags: ['v*']
   pull_request:
   workflow_dispatch:
 
@@ -237,12 +236,25 @@ jobs:
           body: "Built from ${{ github.sha }}. For testing only: Minecraft 26.3, Fabric Loader 0.19.5+, Fabric API."
           files: build/libs/tide-plus-*[!s].jar
 
-      # a version tag (v1.0.0...) publishes a real release, with the notes from RELEASE_NOTES.md
+      # a new mod_version in gradle.properties publishes a real release (tag v<version>) with RELEASE_NOTES.md
+      - name: Is this a new version?
+        id: version
+        if: success() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          v=$(grep '^mod_version=' gradle.properties | cut -d= -f2)
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          if gh release view "v$v" --repo "${{ github.repository }}" > /dev/null 2>&1; then echo "new=no" >> "$GITHUB_OUTPUT"; else echo "new=yes" >> "$GITHUB_OUTPUT"; fi
+
       - name: Release
-        if: success() && startsWith(github.ref, 'refs/tags/v')
+        if: success() && steps.version.outputs.new == 'yes'
         uses: softprops/action-gh-release@v2
         with:
-          name: Tide+ ${{ github.ref_name }}
+          tag_name: v${{ steps.version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: Tide+ ${{ steps.version.outputs.version }}
           prerelease: false
           make_latest: true
           body_path: RELEASE_NOTES.md

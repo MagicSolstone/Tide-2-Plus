@@ -140,12 +140,22 @@ public class FishCatchMinigame {
         onFinish();
     }
 
+    /** Chance a perfect hook raises the catch one quality tier. */
+    public static final double PERFECT_BUMP = 0.05;
+
     public void onWin(boolean perfectCatch) {
         if (cancelIfNecessary()) return;
         if (Tide.SERVER_CONFIG.minigame.doSuccessSound) hook.level().playSound(
                 null, hook.getPlayerOwner().blockPosition(),
                 SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.AMBIENT,
                 0.15f, 1.0f);
+        // a perfect hook sometimes brings the fish up a quality better than it bit
+        var q = hook.pendingQuality;
+        if (perfectCatch && q != null && q != com.li64.tide.data.angler.CatchQuality.MYTHIC && player.getRandom().nextDouble() < PERFECT_BUMP) {
+            hook.pendingQuality = com.li64.tide.data.angler.CatchQuality.values()[q.ordinal() + 1];
+            if (player instanceof net.minecraft.server.level.ServerPlayer sp)
+                com.li64.tide.data.angler.Angler.markEffect(sp, "Perfect hook: " + q.label + " to " + hook.pendingQuality.label + "!");
+        }
         if (CompatHelper.useStarcatcherMinigame())
             CompatHelper.starcatcherCompleteCatch(player, hook, perfectCatch);
         hook.retrieve(perfectCatch);

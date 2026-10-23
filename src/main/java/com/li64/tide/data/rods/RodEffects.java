@@ -500,6 +500,12 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         for (Drop d : drops(rod)) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
         Pick p = pick(rod);
         if (p != null) out.add(line(ChatFormatting.DARK_AQUA, p.text()));
+        // a rig this rod (with what's on it) already counts toward: "Jungle rig 2/3: +5% better catch quality in jungles"
+        for (RigSets.RigSet set : RigSets.SETS) {
+            int n = RigSets.pieces(set, rod);
+            if (n >= RigSets.HALF) out.add(line(ChatFormatting.LIGHT_PURPLE, set.name() + " " + Math.min(n, RigSets.PIECES) + "/" + RigSets.PIECES + ": "
+                    + (n >= RigSets.PIECES ? set.bonusText() : set.twoText())));
+        }
         if (isTide(rod)) for (String s : SPECIAL_TEXT.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, s));
         out.addAll(Unlocks.describe(rod));
         return out;

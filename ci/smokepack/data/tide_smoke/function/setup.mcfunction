@@ -25,7 +25,7 @@ item replace entity @s hotbar.1 with tide:fishing_journal
 item replace entity @s hotbar.2 with tide:largemouth_bass[tide:fish_quality=5,tide:fish_length=89.0,tide:fish_weight=10800.0,item_name={"translate":"item.tide.quality_name","with":["Mythic",{"translate":"item.tide.largemouth_bass"}],"color":"#FFB020","italic":false}]
 item replace entity @s hotbar.3 with tide:wooden_crate
 item replace entity @s hotbar.4 with tide:starlight_bow
-item replace entity @s hotbar.5 with tide:fish_satchel[tide:satchel_contents=[{id:"tide:bluegill",count:1},{id:"tide:largemouth_bass",count:1},{id:"tide:pike",count:1}]]
+item replace entity @s hotbar.5 with tide:fish_satchel
 item replace entity @s hotbar.6 with tide:cooked_fish
 item replace entity @s hotbar.7 with tide:tackle_box[container=[{slot:0,item:{id:"tide:glow_lure",count:1}},{slot:1,item:{id:"tide:amethyst_hook",count:1}},{slot:2,item:{id:"tide:chum",count:16}},{slot:3,item:{id:"tide:slime_line",count:1}},{slot:27,item:{id:"tide:bamboo_fishing_rod",count:1}}]]
 item replace entity @s hotbar.8 with tide:angling_table

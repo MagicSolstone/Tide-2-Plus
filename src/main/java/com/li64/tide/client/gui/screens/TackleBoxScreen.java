@@ -32,10 +32,10 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
         g.fill(x + 1, y + h - 3, x + w - 1, y + h - 1, SHADE);
         g.fill(x + w - 3, y + 1, x + w - 1, y + h - 1, SHADE);
         // the seam between the tray and your inventory, with two latches
-        int seam = y + 17 + 3 * 18 + 3;
+        int seam = y + 17 + 3 * 18 + 1;        // just under the tray, above the "Inventory" label
         g.fill(x + 3, seam, x + w - 3, seam + 4, SHADE);
         g.fill(x + 3, seam + 1, x + w - 3, seam + 2, OUTLINE);
-        for (int lx : new int[]{x + 40, x + w - 48}) {
+        for (int lx : new int[]{x + 80, x + w - 30}) {        // clear of the label
             g.fill(lx, seam - 2, lx + 8, seam + 6, METAL_DARK);
             g.fill(lx + 1, seam - 1, lx + 7, seam + 4, METAL);
         }

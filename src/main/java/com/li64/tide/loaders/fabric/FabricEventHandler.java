@@ -43,6 +43,7 @@ public class FabricEventHandler {
 
         ServerLifecycleEvents.SERVER_STARTED.register(server -> TideEventHandler.serverStarted());
         ServerLifecycleEvents.SERVER_STARTED.register(TideEventHandler::serverStartedCi);
+        ServerLifecycleEvents.SERVER_STARTED.register(com.li64.tide.data.rods.GlowLights::cleanUp);
 
         ServerTickEvents.END_SERVER_TICK.register(TideEventHandler::endServerTick);
 

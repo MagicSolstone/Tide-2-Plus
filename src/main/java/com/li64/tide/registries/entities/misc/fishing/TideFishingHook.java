@@ -298,6 +298,7 @@ public class TideFishingHook extends Projectile {
                 if (inMedium) {
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.3D, 0.2D, 0.3D));
                     this.currentState = FishHookState.BOBBING;
+                    lureHint();
                     return;
                 }
 
@@ -614,7 +615,6 @@ public class TideFishingHook extends Projectile {
 
     // ------------------------------------------------------------------ the glow hook lights the water around it
 
-    private static final int GLOW_LIGHT = 8;
     private net.minecraft.core.BlockPos glowPos = null;
 
     /** A faint light where a glow hook sits (an invisible light block, waterlogged in water), taken away when it moves or is reeled in. */
@@ -630,18 +630,32 @@ public class TideFishingHook extends Projectile {
         boolean water = here.is(net.minecraft.world.level.block.Blocks.WATER) && here.getFluidState().isSource();
         if (!water && !here.isAir()) return;
         server.setBlock(at, net.minecraft.world.level.block.Blocks.LIGHT.defaultBlockState()
-                .setValue(net.minecraft.world.level.block.LightBlock.LEVEL, GLOW_LIGHT)
+                .setValue(net.minecraft.world.level.block.LightBlock.LEVEL, com.li64.tide.data.rods.GlowLights.LEVEL)
                 .setValue(net.minecraft.world.level.block.LightBlock.WATERLOGGED, water), 3);
         glowPos = at.immutable();
+        com.li64.tide.data.rods.GlowLights.placed(server, glowPos);     // remembered with the world, in case the server stops mid-cast
     }
 
     private void clearGlow() {
         if (glowPos == null || !(this.level() instanceof ServerLevel server)) return;
-        net.minecraft.world.level.block.state.BlockState there = server.getBlockState(glowPos);
-        if (there.is(net.minecraft.world.level.block.Blocks.LIGHT) && there.getValue(net.minecraft.world.level.block.LightBlock.LEVEL) == GLOW_LIGHT)
-            server.setBlock(glowPos, there.getValue(net.minecraft.world.level.block.LightBlock.WATERLOGGED)
-                    ? net.minecraft.world.level.block.Blocks.WATER.defaultBlockState() : net.minecraft.world.level.block.Blocks.AIR.defaultBlockState(), 3);
+        com.li64.tide.data.rods.GlowLights.restore(server, glowPos);
+        com.li64.tide.data.rods.GlowLights.removed(server, glowPos);
         glowPos = null;
+    }
+
+    /** Once the hook settles: does anything that favors this lure live here? (A count, never names.) */
+    private void lureHint() {
+        if (!(this.getPlayerOwner() instanceof net.minecraft.server.level.ServerPlayer player) || !CustomRodManager.hasLure(rod)) return;
+        try {
+            ItemStack lure = CustomRodManager.getLure(rod);
+            int n = com.li64.tide.data.rods.FavoriteLures.here(getContext(), lure);
+            player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(n == 0
+                    ? "No fish here favor your " + lure.getHoverName().getString()
+                    : n + (n == 1 ? " fish here favors" : " fish here favor") + " your " + lure.getHoverName().getString())
+                    .withStyle(n == 0 ? net.minecraft.ChatFormatting.GRAY : net.minecraft.ChatFormatting.AQUA));
+        } catch (Exception e) {
+            Tide.LOG.debug("lure hint failed", e);
+        }
     }
 
     /** Some lines give off particles along their length while cast (golden sparkles, redstone sparks...). */

@@ -56,17 +56,33 @@ public final class FavoriteLures {
         return !lure.isEmpty() && BuiltInRegistries.ITEM.getKey(lure.getItem()).toString().equals(lureFor(fish));
     }
 
-    /** "Favorite of: Brook Trout, Bluegill, ..." for a lure's tooltip, a few names to a line. */
+    /**
+     * For a lure's tooltip: how many fish favor it, naming only the ones you've already caught (in your journal),
+     * so the rest are found by fishing with it.
+     */
     public static List<Component> describe(ItemStack lure) {
         List<String> fish = FISH_OF.get(BuiltInRegistries.ITEM.getKey(lure.getItem()).toString());
         if (fish == null || fish.isEmpty()) return List.of();
+        List<String> known = new ArrayList<>();
+        for (String id : fish)
+            BuiltInRegistries.ITEM.getOptional(Identifier.parse(id))
+                    .filter(i -> com.li64.tide.data.player.TidePlayerData.CLIENT_DATA.isFishUnlocked(BuiltInRegistries.ITEM.wrapAsHolder(i)))
+                    .ifPresent(i -> known.add(Component.translatable(i.getDescriptionId()).getString()));
         List<Component> out = new ArrayList<>();
-        out.add(Component.literal("Favorite lure of these fish (x" + trim(factor) + " likely to bite):").withStyle(ChatFormatting.DARK_AQUA));
-        List<String> names = fish.stream().map(id -> BuiltInRegistries.ITEM.getOptional(Identifier.parse(id))
-                .map(i -> Component.translatable(i.getDescriptionId()).getString()).orElse(id)).toList();
-        for (int i = 0; i < names.size(); i += 4)
-            out.add(Component.literal("  " + String.join(", ", names.subList(i, Math.min(names.size(), i + 4)))).withStyle(ChatFormatting.DARK_AQUA));
+        out.add(Component.literal("Favorite lure of " + fish.size() + " kinds of fish (x" + trim(factor) + " likely to bite)").withStyle(ChatFormatting.DARK_AQUA));
+        for (int i = 0; i < known.size(); i += 4)
+            out.add(Component.literal("  " + String.join(", ", known.subList(i, Math.min(known.size(), i + 4)))).withStyle(ChatFormatting.DARK_AQUA));
+        int hidden = fish.size() - known.size();
+        if (hidden > 0) out.add(Component.literal("  " + (known.isEmpty() ? "Catch them to find out which" : "and " + hidden + " you haven't caught yet")).withStyle(ChatFormatting.GRAY));
         return out;
+    }
+
+    /** How many fish that favor this lure could bite right here, right now. */
+    public static int here(com.li64.tide.data.fishing.FishingContext context, ItemStack lure) {
+        int n = 0;
+        for (com.li64.tide.data.fishing.FishData d : com.li64.tide.data.TideData.FISH.get().values())
+            if (isFavorite(d.fish().value(), lure) && d.shouldKeep(context)) n++;
+        return n;
     }
 
     private static String trim(double v) {

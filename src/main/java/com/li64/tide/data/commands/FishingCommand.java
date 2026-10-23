@@ -25,7 +25,43 @@ public class FishingCommand {
                 .then(Commands.literal("test")
                         .then(Commands.literal("loot").executes(ctx -> test(ctx.getSource(), TestType.LOOT)))
                         .then(Commands.literal("crate").executes(ctx -> test(ctx.getSource(), TestType.CRATES)))
-                        .then(Commands.literal("fish").executes(ctx -> test(ctx.getSource(), TestType.FISH)))));
+                        .then(Commands.literal("fish").executes(ctx -> test(ctx.getSource(), TestType.FISH))))
+                .then(Commands.literal("describe")
+                        .then(Commands.argument("item", net.minecraft.commands.arguments.item.ItemArgument.item(buildContext))
+                                .executes(ctx -> describe(ctx.getSource(),
+                                        net.minecraft.commands.arguments.item.ItemArgument.getItem(ctx, "item").createItemStack(1))))));
+    }
+
+    /**
+     * An item's tooltip (everything under its name), for Solstone's item picker. One message so RCON keeps the lines
+     * together: "tooltip <id>", then a line each as "RRGGBB<tab>text" in the line's main colour.
+     */
+    private int describe(CommandSourceStack source, net.minecraft.world.item.ItemStack stack) {
+        String out = tooltip(stack, source.getServer().registryAccess());
+        source.sendSuccess(() -> Component.literal(out), false);
+        return (int) out.chars().filter(ch -> ch == '\n').count();
+    }
+
+    public static String tooltip(net.minecraft.world.item.ItemStack stack, net.minecraft.core.HolderLookup.Provider registries) {
+        java.util.List<Component> lines = new java.util.ArrayList<>(stack.getTooltipLines(
+                net.minecraft.world.item.Item.TooltipContext.of(registries), null,
+                net.minecraft.world.item.TooltipFlag.NORMAL));
+        if (!lines.isEmpty()) lines.removeFirst();                      // the name
+        com.li64.tide.data.item.TideTooltips.add(stack, lines, false);
+        StringBuilder out = new StringBuilder("tooltip " + net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()));
+        java.util.Set<String> seen = new java.util.HashSet<>();
+        for (Component c : lines) {
+            String text = c.getString();
+            if (text.isBlank() || !seen.add(text)) continue;             // singleplayer also runs the client's tooltip hook
+            int[] colour = {0xAAAAAA};
+            c.visit((style, part) -> {
+                if (part.isBlank()) return java.util.Optional.empty();
+                if (style.getColor() != null) colour[0] = style.getColor().getValue();
+                return java.util.Optional.of(true);
+            }, net.minecraft.network.chat.Style.EMPTY);
+            out.append('\n').append(String.format("%06X", colour[0] & 0xFFFFFF)).append('\t').append(text.replace('\n', ' '));
+        }
+        return out.toString();
     }
 
     private int test(CommandSourceStack source, TestType type) {

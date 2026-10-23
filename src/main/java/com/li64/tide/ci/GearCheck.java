@@ -86,6 +86,12 @@ public final class GearCheck {
             notes.add(String.format("%d rods, %d lines, %d hooks, %d bobbers, %d lures, %d bait", rods.size(), lines.size(), hooks.size(),
                     bobbers.size(), lures.size(), baits.size()));
 
+            // what /fishing describe sends Solstone, for a few kinds of item
+            for (String id : List.of("tide:golden_hook", "tide:bamboo_fishing_rod", "tide:golden_bait", "minecraft:diamond_sword"))
+                notes.add("describe: " + com.li64.tide.data.commands.FishingCommand.tooltip(
+                        new ItemStack(BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(id))), server.registryAccess())
+                        .replace("\n", " | "));
+
             // every hook, and every upgraded hook on every base hook
             List<ItemStack> hookStacks = new ArrayList<>();
             for (Item h : hooks) {

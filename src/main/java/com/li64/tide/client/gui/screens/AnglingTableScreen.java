@@ -28,6 +28,8 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
      * Matched rigs for the rod on the table: a small card to the left for each rig it has a piece of, with how
      * many pieces it has, what kinds could still be added, and the bonus once it has three.
      */
+    private long ciLogged = 0;
+
     private void rigPanel(GuiGraphicsExtractor g) {
         if (this.menu.getSlot(0).getItem().isEmpty()) return;
         java.util.List<net.minecraft.world.item.ItemStack> pieces = new java.util.ArrayList<>();
@@ -37,8 +39,12 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         for (net.minecraft.world.item.ItemStack bait : com.li64.tide.util.BaitUtils.getBaitItems(rod))
             if (baits.add(bait.getItem())) pieces.add(bait);
         var rigs = com.li64.tide.data.rods.RigSets.progress(pieces);
-        if (rigs.isEmpty()) return;
         int w = 124, x = this.leftPos - w - 6, y = this.topPos;
+        if (Tide.CI && System.currentTimeMillis() - ciLogged > 1000) {
+            ciLogged = System.currentTimeMillis();
+            Tide.LOG.info("TIDE-CI rig card: {} rig(s) for {} at x={}", rigs.size(), pieces.stream().map(p -> p.getItem().toString()).toList(), x);
+        }
+        if (rigs.isEmpty()) return;
         if (x < 2) return;           // no room on a narrow screen
         float s = 0.75f;
         int need = com.li64.tide.data.rods.RigSets.PIECES;

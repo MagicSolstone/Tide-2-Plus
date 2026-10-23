@@ -31,8 +31,10 @@ public final class CatchBannerOverlay {
         float alpha = age < SHOW_MS - FADE_MS ? 1f : (SHOW_MS - age) / (float) FADE_MS;
         int a = Math.max(8, Math.round(alpha * 255));
         Font font = Minecraft.getInstance().font;
-        int textW = Math.max(font.width(title), Math.max(font.width(detail), font.width(footer)));
-        int w = textW + (icon.isEmpty() ? 12 : 32), h = 8 + 10 + (detail.isEmpty() ? 0 : 10) + (footer.isEmpty() ? 0 : 10);
+        String[] details = detail.isEmpty() ? new String[0] : detail.split("\n");
+        int textW = Math.max(font.width(title), font.width(footer));
+        for (String d : details) textW = Math.max(textW, font.width(d));
+        int w = textW + (icon.isEmpty() ? 12 : 32), h = 8 + 10 + details.length * 10 + (footer.isEmpty() ? 0 : 10);
         int x = (g.guiWidth() - w) / 2, y = g.guiHeight() - 72 - h;
         g.fill(x, y, x + w, y + h, (Math.round(alpha * 0xB0) << 24) | 0x101820);
         g.fill(x, y, x + 2, y + h, (a << 24) | (color & 0xFFFFFF));
@@ -41,7 +43,7 @@ public final class CatchBannerOverlay {
         int ty = y + 4;
         Gui26.text(g, font, title, tx, ty, (a << 24) | (color & 0xFFFFFF), true);
         ty += 10;
-        if (!detail.isEmpty()) { Gui26.text(g, font, detail, tx, ty, (a << 24) | 0xE8E8E8, true); ty += 10; }
+        for (int i = 0; i < details.length; i++) { Gui26.text(g, font, details[i], tx, ty, (a << 24) | (i == 0 ? 0xE8E8E8 : 0xFFE08A), true); ty += 10; }
         if (!footer.isEmpty()) Gui26.text(g, font, footer, tx, ty, (a << 24) | 0x7FD8FF, true);
     }
 }

@@ -330,6 +330,13 @@ public final class Angler {
 
     private static final java.util.Set<java.util.UUID> TWIN = java.util.concurrent.ConcurrentHashMap.newKeySet();
 
+    private static final java.util.Map<java.util.UUID, java.util.List<String>> EXTRAS = new java.util.concurrent.ConcurrentHashMap<>();
+
+    /** Something else that came up with the fish (a honeycomb, a sapling, cooked on the line...), for the catch card. */
+    public static void markExtra(ServerPlayer player, String what) {
+        EXTRAS.computeIfAbsent(player.getUUID(), k -> new java.util.ArrayList<>()).add(what);
+    }
+
     /** The hook says a second fish came up with this one (shown on the catch banner). */
     public static void markTwin(ServerPlayer player) {
         TWIN.add(player.getUUID());
@@ -349,11 +356,12 @@ public final class Angler {
         if (extra.contains("new record")) bits.add("New record!");
         if (TWIN.remove(player.getUUID())) bits.add("Two on the hook!");
         if (perfect) bits.add("Perfect hook");
+        java.util.List<String> extras = EXTRAS.remove(player.getUUID());
         String footer = "+" + xp + " fishing XP · Lv " + after + " (" + Math.round(progress(Data.of(player).xp) * 100) + "%)";
         if (after > before && title(after).equals(title(before))) footer = "+" + xp + " fishing XP · Level up! Fishing level " + after;
         Tide.NETWORK.sendToPlayer(new com.li64.tide.network.messages.CatchBannerMsg(
                 net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(), title,
-                q == null ? 0xFFFFFF : q.color, String.join(" · ", bits), footer, false), player);
+                q == null ? 0xFFFFFF : q.color, String.join(" · ", bits) + (extras == null ? "" : "\n" + String.join(" · ", extras)), footer, false), player);
     }
 
     private static void addXp(ServerPlayer player, long amount, String extra, boolean overlay) {

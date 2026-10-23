@@ -833,7 +833,7 @@
   "text.tide.bait_tooltip.prefix": "When used as bait:",
   "text.tide.bait_tooltip.speed": "%s fishing speed",
   "text.tide.bait_tooltip.unknown_effects": "Can be used as bait",
-  "text.tide.fish.alive": "Bucketable",
+  "text.tide.fish.alive": "Alive (can go in a bucket)",
   "text.tide.rod_tooltip.accessories_prefix": "Accessories:",
   "text.tide.rod_tooltip.bait_desc": "Bait slots (right click to fill)",
   "text.tide.rod_tooltip.blazing_bonus": "Can catch nether fish in any lava",

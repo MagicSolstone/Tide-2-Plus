@@ -705,7 +705,10 @@ public class TideFishingHook extends Projectile {
                         int copies = 1;
                         if (catchType == CatchType.FISH) {
                             com.li64.tide.data.rods.RodEffects extras = com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod);
-                            if (extras.cook() > 0 && (Tide.CI || this.random.nextDouble() < extras.cook())) drop = cookOnTheLine(level, stack);
+                            if (extras.cook() > 0 && (Tide.CI || this.random.nextDouble() < extras.cook())) {
+                                drop = cookOnTheLine(level, stack);
+                                if (drop != stack) com.li64.tide.data.angler.Angler.markExtra(serverPlayer, "Came up cooked");
+                            }
                             if (extras.twin() > 0 && (Tide.CI || this.random.nextDouble() < Math.min(extras.twin(), com.li64.tide.data.rods.RodEffects.TWIN_CAP))) {
                                 copies = 2;
                                 com.li64.tide.data.angler.Angler.markTwin(serverPlayer);
@@ -751,6 +754,7 @@ public class TideFishingHook extends Projectile {
                                 net.minecraft.world.item.Item extraItem = net.minecraft.core.registries.BuiltInRegistries.ITEM
                                         .getValue(net.minecraft.resources.Identifier.parse(d.item()));
                                 ItemEntity extra = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), new ItemStack(extraItem));
+                                com.li64.tide.data.angler.Angler.markExtra(serverPlayer, "+ " + new ItemStack(extraItem).getHoverName().getString());
                                 double ex = player.getX() - this.getX(), ey = player.getY() - this.getY(), ez = player.getZ() - this.getZ();
                                 extra.setDeltaMovement(ex * 0.1, ey * 0.11 + Math.sqrt(Math.sqrt(ex * ex + ey * ey + ez * ez)) * 0.08, ez * 0.1);
                                 this.level().addFreshEntity(extra);
@@ -760,6 +764,7 @@ public class TideFishingHook extends Projectile {
                                 ItemStack bonus = pick.roll(this.random);
                                 if (!bonus.isEmpty()) {
                                     ItemEntity extra = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), bonus);
+                                    com.li64.tide.data.angler.Angler.markExtra(serverPlayer, "+ " + bonus.getHoverName().getString());
                                     double ex = player.getX() - this.getX(), ey = player.getY() - this.getY(), ez = player.getZ() - this.getZ();
                                     extra.setDeltaMovement(ex * 0.1, ey * 0.11 + Math.sqrt(Math.sqrt(ex * ex + ey * ey + ez * ez)) * 0.08, ez * 0.1);
                                     this.level().addFreshEntity(extra);

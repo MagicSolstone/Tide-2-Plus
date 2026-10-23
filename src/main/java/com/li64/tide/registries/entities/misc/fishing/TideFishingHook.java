@@ -659,7 +659,7 @@ public class TideFishingHook extends Projectile {
                         if (catchType == CatchType.FISH) {
                             com.li64.tide.data.rods.RodEffects extras = com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod);
                             if (extras.cook() > 0 && (Tide.CI || this.random.nextDouble() < extras.cook())) drop = cookOnTheLine(level, stack);
-                            if (extras.twin() > 0 && (Tide.CI || this.random.nextDouble() < extras.twin())) {
+                            if (extras.twin() > 0 && (Tide.CI || this.random.nextDouble() < Math.min(extras.twin(), com.li64.tide.data.rods.RodEffects.TWIN_CAP))) {
                                 copies = 2;
                                 serverPlayer.sendOverlayMessage(net.minecraft.network.chat.Component.literal("Two on the hook!")
                                         .withStyle(net.minecraft.ChatFormatting.AQUA));
@@ -709,6 +709,18 @@ public class TideFishingHook extends Projectile {
                                 extra.setDeltaMovement(ex * 0.1, ey * 0.11 + Math.sqrt(Math.sqrt(ex * ex + ey * ey + ez * ez)) * 0.08, ez * 0.1);
                                 this.level().addFreshEntity(extra);
                             }
+                            com.li64.tide.data.rods.RodEffects.Pick pick = com.li64.tide.data.rods.RodEffects.pick(this.rod);
+                            if (pick != null && (Tide.CI || this.random.nextDouble() < pick.chance())) {
+                                ItemStack bonus = pick.roll(this.random);
+                                if (!bonus.isEmpty()) {
+                                    ItemEntity extra = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), bonus);
+                                    double ex = player.getX() - this.getX(), ey = player.getY() - this.getY(), ez = player.getZ() - this.getZ();
+                                    extra.setDeltaMovement(ex * 0.1, ey * 0.11 + Math.sqrt(Math.sqrt(ex * ex + ey * ey + ez * ez)) * 0.08, ez * 0.1);
+                                    this.level().addFreshEntity(extra);
+                                    if (Tide.CI) Tide.LOG.info("TIDE-CI pick: {}", bonus.getHoverName().getString());
+                                }
+                            }
+                            com.li64.tide.data.rods.FoundRodTricks.onCatch(serverPlayer, this.rod, this.random);
                         }
 
                         player.level().addFreshEntity(new ExperienceOrb(

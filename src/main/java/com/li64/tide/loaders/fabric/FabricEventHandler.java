@@ -99,6 +99,9 @@ public class FabricEventHandler {
                 );
             }
 
+            // the rare mob, crop and leaf rods (see TackleLog.FOUND for the odds in words)
+            com.li64.tide.loaders.fabric.FoundRodDrops.modify(key, tableBuilder, registries);
+
             if (EntityTypes.ELDER_GUARDIAN.getDefaultLootTable().map(key::equals).orElse(false)) {
                 tableBuilder.pool(new LootPool.Builder().setRolls(ContextIntProviders.exactly(1))
                         .add(LootItem.lootTableItem(TideItems.PRISMARINE_FISHING_ROD))

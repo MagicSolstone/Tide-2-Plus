@@ -67,7 +67,14 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("cherry_fishing_rod", xp(0.15)),
             Map.entry("conduit_fishing_rod", new RodEffects(0, 0, 0.10, -0.05, 0, 0.05, 0, 0)),
             Map.entry("clockwork_fishing_rod", new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0.10)),
-            Map.entry("wayfinder_fishing_rod", new RodEffects(0.10, 0, 0.10, -0.10, 1, 0.10, 0.05, 0.05)));
+            Map.entry("wayfinder_fishing_rod", new RodEffects(0.10, 0, 0.10, -0.10, 1, 0.10, 0.05, 0.05)),
+            // found rods: each one's real draw is its own trick (PICKS, Specials), the numbers stay modest
+            Map.entry("rotten_fishing_rod", xp(0.05)),
+            Map.entry("widow_fishing_rod", NONE),
+            Map.entry("sickle_fishing_rod", xp(0.10)),
+            Map.entry("grove_fishing_rod", window(0.05)),
+            Map.entry("drowned_fishing_rod", cast(0.05)),
+            Map.entry("hex_fishing_rod", xp(0.10)));
 
     // ------------------------------------------------------------------ hooks, lines, bobbers, lures
 
@@ -177,7 +184,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         UNDERGROUND("underground"), NETHER("in the Nether"), END("in the End"),
         OCEAN("in oceans"), RIVER("in rivers"), SWAMP("in swamps"), JUNGLE("in jungles"),
         COLD("in cold places"), DRY("in deserts and badlands"), BEACH("on beaches"), MUSHROOM("on mushroom islands"),
-        LAVA("when fishing in lava");
+        LAVA("when fishing in lava"), FOREST("in forests");
 
         public final String text;
 
@@ -211,6 +218,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                 case DRY -> name.contains("desert") || biome.is(net.minecraft.tags.BiomeTags.IS_BADLANDS);
                 case BEACH -> biome.is(net.minecraft.tags.BiomeTags.IS_BEACH);
                 case MUSHROOM -> name.contains("mushroom");
+                case FOREST -> biome.is(net.minecraft.tags.BiomeTags.IS_FOREST);
                 case LAVA -> {      // judged by where the angler's hook is, not where they stand
                     var hook = com.li64.tide.registries.entities.misc.fishing.HookAccessor.getHook(player);
                     yield hook != null && hook.getCurrentMedium() == com.li64.tide.data.fishing.mediums.FishingMedium.LAVA;
@@ -238,6 +246,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("cherry_fishing_rod", List.of(new Perk(When.DAWN_DUSK, new RodEffects(0, 0.25, 0, 0, 0, 0.10, 0, 0)))),
             Map.entry("frost_fishing_rod", List.of(new Perk(When.COLD, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0, 0.15, 0)))),
             Map.entry("cactus_fishing_rod", List.of(new Perk(When.DRY, new RodEffects(0, 0.25, 0, 0, 1, 0, 0, 0)))),
+            Map.entry("widow_fishing_rod", List.of(new Perk(When.NIGHT, new RodEffects(0, 0.25, 0, 0, 0, 0, 0, 0.20, 0.15, 0)),
+                    new Perk(When.DAY, bite(-0.15)))),
+            Map.entry("grove_fishing_rod", List.of(new Perk(When.FOREST, luck(1)))),
+            Map.entry("drowned_fishing_rod", List.of(new Perk(When.OCEAN, bite(0.10)))),
             Map.entry("conduit_fishing_rod", List.of(new Perk(When.OCEAN, new RodEffects(0, 0.15, 0, 0, 2, 0, 0, 0)))),
             // lines
             Map.entry("slime_line", List.of(new Perk(When.UNDERGROUND, new RodEffects(0, 0.20, 0.05, 0, 1, 0, 0, 0)))),
@@ -311,6 +323,55 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                     new Drop("minecraft:honeycomb", 0.10, 0, "10% chance of a honeycomb with any fish")),
             "mangrove_fishing_rod", List.of(new Drop("minecraft:slime_ball", 0.20, 0, "20% chance of a slime ball with any fish")),
             "cherry_fishing_rod", List.of(new Drop("minecraft:pink_petals", 0.25, 0, "25% chance of pink petals with any fish")));
+
+    /** One item picked by weight ("#tag" picks any item in the tag). */
+    public record Weighted(String item, int weight) {}
+
+    /** A chance, with each fish, of one extra item picked from a list. */
+    public record Pick(double chance, String text, List<Weighted> items) {
+        public ItemStack roll(net.minecraft.util.RandomSource random) {
+            int total = items.stream().mapToInt(Weighted::weight).sum(), r = random.nextInt(total);
+            for (Weighted w : items) {
+                if ((r -= w.weight()) >= 0) continue;
+                if (!w.item().startsWith("#")) return new ItemStack(net.minecraft.core.registries.BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(w.item())));
+                var tag = net.minecraft.tags.TagKey.create(net.minecraft.core.registries.Registries.ITEM, net.minecraft.resources.Identifier.parse(w.item().substring(1)));
+                List<net.minecraft.world.item.Item> all = new ArrayList<>();
+                net.minecraft.core.registries.BuiltInRegistries.ITEM.getTagOrEmpty(tag).forEach(h -> all.add(h.value()));
+                return all.isEmpty() ? ItemStack.EMPTY : new ItemStack(all.get(random.nextInt(all.size())));
+            }
+            return ItemStack.EMPTY;
+        }
+    }
+
+    private static List<Weighted> w(Object... pairs) {
+        List<Weighted> out = new ArrayList<>();
+        for (int i = 0; i < pairs.length; i += 2) out.add(new Weighted((String) pairs[i], (Integer) pairs[i + 1]));
+        return out;
+    }
+
+    private static final Map<String, Pick> PICKS = Map.of(
+            "rotten_fishing_rod", new Pick(0.35, "35% chance of a mob drop with each fish: rotten flesh, bones, string, arrows, spider eyes, gunpowder; now and then a carrot, potato or iron ingot",
+                    w("minecraft:rotten_flesh", 30, "minecraft:bone", 20, "minecraft:string", 18, "minecraft:arrow", 8, "minecraft:spider_eye", 10,
+                            "minecraft:gunpowder", 10, "minecraft:carrot", 4, "minecraft:potato", 4, "minecraft:iron_ingot", 3)),
+            "grove_fishing_rod", new Pick(0.35, "35% chance of something from the trees with each fish: a sapling, sticks or an apple; very rarely a golden apple",
+                    w("#minecraft:saplings", 35, "minecraft:stick", 35, "minecraft:apple", 25, "minecraft:golden_apple", 1)),
+            "drowned_fishing_rod", new Pick(0.35, "35% chance of sunken loot with each fish: kelp, copper, ink, prismarine, nautilus shells, sea pickles; very rarely a trident",
+                    w("minecraft:kelp", 50, "minecraft:copper_ingot", 40, "minecraft:ink_sac", 30, "minecraft:prismarine_shard", 20, "minecraft:prismarine_crystals", 16,
+                            "minecraft:nautilus_shell", 16, "minecraft:sea_pickle", 12, "minecraft:glow_ink_sac", 10, "minecraft:trident", 1)),
+            "sickle_fishing_rod", new Pick(0.25, "25% chance of seeds with each fish: wheat, beetroot, pumpkin or melon seeds",
+                    w("minecraft:wheat_seeds", 40, "minecraft:beetroot_seeds", 20, "minecraft:pumpkin_seeds", 15, "minecraft:melon_seeds", 15)));
+
+    /** This rod's pick-one bonus, if any. */
+    public static Pick pick(ItemStack rod) {
+        return rod == null || rod.isEmpty() || !isTide(rod) ? null : PICKS.get(path(rod));
+    }
+
+    /** What the sickle and hex rods do besides their numbers. */
+    public static final double SICKLE_GROW = 0.35, HEX_EFFECT = 0.20, TWIN_CAP = 0.35;
+    private static final Map<String, List<String>> SPECIAL_TEXT = Map.of(
+            "sickle_fishing_rod", List.of("35% chance each fish makes nearby crops grow, like bone meal (up to 4 crops within 8 blocks)"),
+            "hex_fishing_rod", List.of("20% chance each fish gives you a short potion effect: Night Vision, Water Breathing, Luck, Speed, Fire Resistance, Dolphin's Grace or Regeneration"),
+            "widow_fishing_rod", List.of("A night hunter: strong after dark, sluggish by day"));
 
     /** Bonus drops from this rod. */
     public static List<Drop> drops(ItemStack rod) {
@@ -435,6 +496,9 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(RODS.getOrDefault(path(rod), NONE).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(rod)) out.addAll(perk.fx().describe(ChatFormatting.DARK_AQUA, " " + perk.when().text));
         for (Drop d : drops(rod)) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
+        Pick p = pick(rod);
+        if (p != null) out.add(line(ChatFormatting.DARK_AQUA, p.text()));
+        if (isTide(rod)) for (String s : SPECIAL_TEXT.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, s));
         out.addAll(Unlocks.describe(rod));
         return out;
     }

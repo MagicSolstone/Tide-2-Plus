@@ -50,6 +50,13 @@ public class TideItems {
     public static final Item CONDUIT_FISHING_ROD = register("conduit_fishing_rod", properties -> new TideFishingRodItem(3, 384, properties));
     public static final Item CLOCKWORK_FISHING_ROD = register("clockwork_fishing_rod", properties -> new TideFishingRodItem(2, 256, properties));
     public static final Item WAYFINDER_FISHING_ROD = register("wayfinder_fishing_rod", properties -> new TideFishingRodItem(3, 768, properties));
+    // found, not crafted: rare drops from mobs, wheat and leaves (FoundRodDrops)
+    public static final Item ROTTEN_FISHING_ROD = register("rotten_fishing_rod", properties -> new TideFishingRodItem(2, 160, properties));
+    public static final Item WIDOW_FISHING_ROD = register("widow_fishing_rod", properties -> new TideFishingRodItem(2, 256, properties));
+    public static final Item SICKLE_FISHING_ROD = register("sickle_fishing_rod", properties -> new TideFishingRodItem(2, 200, properties));
+    public static final Item GROVE_FISHING_ROD = register("grove_fishing_rod", properties -> new TideFishingRodItem(2, 200, properties));
+    public static final Item DROWNED_FISHING_ROD = register("drowned_fishing_rod", properties -> new TideFishingRodItem(3, 256, properties));
+    public static final Item HEX_FISHING_ROD = register("hex_fishing_rod", properties -> new TideFishingRodItem(2, 256, properties));
 
     public static final Item BAIT = register("bait", Item::new);
     public static final Item LUCKY_BAIT = register("lucky_bait", Item::new);
@@ -293,6 +300,7 @@ public class TideItems {
                     VILLAGE_FISHING_ROD, BLAZING_FISHING_ROD, HONEYCOMB_FISHING_ROD,
                     MIDAS_FISHING_ROD,
                     KIDS_FISHING_POLE, BAMBOO_FISHING_ROD, BONE_FISHING_ROD, COPPER_FISHING_ROD, AMETHYST_FISHING_ROD, MANGROVE_FISHING_ROD, CHERRY_FISHING_ROD, FROST_FISHING_ROD, CACTUS_FISHING_ROD, CONDUIT_FISHING_ROD, CLOCKWORK_FISHING_ROD, WAYFINDER_FISHING_ROD,
+                    ROTTEN_FISHING_ROD, WIDOW_FISHING_ROD, SICKLE_FISHING_ROD, GROVE_FISHING_ROD, DROWNED_FISHING_ROD, HEX_FISHING_ROD,
 
                     BAIT, LUCKY_BAIT, MAGNETIC_BAIT, INCANDESCENT_BAIT, ABYSS_BAIT, CUT_BAIT, DOUGH_BALL, GLOW_WORMS, CHUM, GOLDEN_BAIT, CAVE_GRUBS, MOON_BAIT, JUNGLE_BAIT, SWAMP_BAIT, DESERT_BAIT, FROST_BAIT, SPORE_BAIT, BLOSSOM_BAIT, COASTAL_BAIT, DRIPSTONE_BAIT, SCULK_BAIT, BRINE_SHRIMP,
 

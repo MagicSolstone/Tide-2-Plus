@@ -911,5 +911,11 @@
   "item.tide.ender_eye_bobber": "Ender Eye Bobber",
   "item.tide.amethyst_line": "Amethyst Line",
   "item.tide.netherite_line": "Netherite Line",
-  "item.tide.prismarine_line": "Prismarine Line"
+  "item.tide.prismarine_line": "Prismarine Line",
+  "item.tide.rotten_fishing_rod": "Rotten Fishing Rod",
+  "item.tide.widow_fishing_rod": "Widow Fishing Rod",
+  "item.tide.sickle_fishing_rod": "Sickle Fishing Rod",
+  "item.tide.grove_fishing_rod": "Grove Fishing Rod",
+  "item.tide.drowned_fishing_rod": "Drowned Fishing Rod",
+  "item.tide.hex_fishing_rod": "Hex Fishing Rod"
 }

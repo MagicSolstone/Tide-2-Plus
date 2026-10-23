@@ -62,7 +62,7 @@ public final class RodStatsOverlay {
         if (e.ease() != 0) rows.add(new Row("Catch difficulty", "-" + Math.round(e.ease() * 100) + "%", GOOD));
         if (e.land() != 0) rows.add(pct("Land Good/Bad", e.land(), false));
         if (e.xp() != 0) rows.add(pct("Fishing XP", e.xp(), false));
-        if (e.twin() != 0) rows.add(new Row("Second fish", Math.round(e.twin() * 100) + "%", GOOD));
+        if (e.twin() != 0) rows.add(new Row("Second fish", Math.round(Math.min(e.twin(), RodEffects.TWIN_CAP) * 100) + "%" + (e.twin() > RodEffects.TWIN_CAP ? " (max)" : ""), GOOD));
         if (e.cook() != 0) rows.add(new Row("Comes up cooked", Math.round(e.cook() * 100) + "%", GOOD));
         if (e.upgrade() != 0) rows.add(new Row("Quality bump", Math.round(e.upgrade() * 100) + "%", GOOD));
 

@@ -25,6 +25,12 @@
     "tide:cactus_fishing_rod",
     "tide:conduit_fishing_rod",
     "tide:clockwork_fishing_rod",
-    "tide:wayfinder_fishing_rod"
+    "tide:wayfinder_fishing_rod",
+    "tide:rotten_fishing_rod",
+    "tide:widow_fishing_rod",
+    "tide:sickle_fishing_rod",
+    "tide:grove_fishing_rod",
+    "tide:drowned_fishing_rod",
+    "tide:hex_fishing_rod"
   ]
 }

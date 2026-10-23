@@ -18,7 +18,7 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
     private static final int METAL = 0xFFC9C9C9, METAL_DARK = 0xFF7E7E7E, BAND = 0xFF2A5530, BAND_TEXT = 0xFFDDEFD8;
 
     public TackleBoxScreen(TackleBoxItem.Menu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title, 176, 114 + 3 * 18);
+        super(menu, inventory, title, 204, 114 + 3 * 18);
         this.inventoryLabelY = 17 + 3 * 18 + 3;     // inside the band
     }
 
@@ -49,6 +49,10 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
             g.fill(lx, band - 2, lx + 8, band + 13, METAL_DARK);
             g.fill(lx + 1, band - 1, lx + 7, band + 11, METAL);
         }
+        // the rod rack: a darker strip down the right of the tray
+        int rx = x + TackleBoxItem.Menu.RACK_X - 4;
+        g.fill(rx, y + 14, rx + 26, y + 18 + 3 * 18 + 2, OUTLINE);
+        g.fill(rx + 1, y + 15, rx + 25, y + 18 + 3 * 18 + 1, SHADE);
         // a slot under every slot, sunk into the box
         for (Slot s : this.menu.slots) {
             int sx = x + s.x - 1, sy = y + s.y - 1;
@@ -61,6 +65,7 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
     @Override
     protected void extractLabels(@NotNull GuiGraphicsExtractor g, int xm, int ym) {
         g.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF14281A, false);
+        g.text(this.font, Component.literal("Rods"), TackleBoxItem.Menu.RACK_X - 2, this.titleLabelY, 0xFF14281A, false);
         g.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, BAND_TEXT, false);
     }
 }

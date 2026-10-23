@@ -117,6 +117,9 @@ jobs:
           xdotool key Escape; sleep 1
           xdotool keydown shift; sleep 0.3; xdotool click 3; sleep 0.5; xdotool keyup shift; sleep 2; import -window root shots/7b-portable-table.png
           xdotool key Escape; sleep 1
+          # the fish satchel (hotbar 6), opened with sneak + right-click
+          xdotool key 6; sleep 1; xdotool keydown shift; sleep 0.3; xdotool click 3; sleep 0.5; xdotool keyup shift; sleep 2; import -window root shots/7c-satchel.png
+          xdotool key Escape; sleep 1
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null; true
 
       # Multiplayer: a dedicated server and the client joining it over the network (single player

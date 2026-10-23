@@ -54,6 +54,11 @@ public class FishSatchelItem extends AbstractTooltipItem {
     @Override
     public @NotNull InteractionResult use(Level level, Player player, InteractionHand used) {
         ItemStack satchel = player.getItemInHand(used);
+        if (player.isShiftKeyDown()) {      // sneak: look inside and take out the fish you want
+            if (!level.isClientSide()) player.openMenu(new net.minecraft.world.SimpleMenuProvider((id, inv, p) -> new Menu(id, inv, satchel), satchel.getHoverName()));
+            player.playSound(SoundEvents.BUNDLE_REMOVE_ONE, 0.8f, 1.0f);
+            return InteractionResult.SUCCESS;
+        }
         TideItemData.FISH_SATCHEL_OPENED.set(satchel, !TideItemData.FISH_SATCHEL_OPENED.getOrDefault(satchel, false));
         player.playSound(SoundEvents.ARMOR_EQUIP_LEATHER.value(), 0.8f, 0.8f + player.level().getRandom().nextFloat() * 0.4f);
         return InteractionResult.SUCCESS;
@@ -169,5 +174,43 @@ public class FishSatchelItem extends AbstractTooltipItem {
                 contents.size(), SatchelContents.MAX_STACKS).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.translatable("item.tide.fish_satchel.desc_0").setStyle(gray));
         tooltip.accept(Component.translatable("item.tide.fish_satchel.desc_1").setStyle(gray));
+    }
+
+    /** Inside the satchel: all 64 places, so any fish can be taken out directly. */
+    public static class Menu extends HeldStorageMenu {
+        public static final int COLS = 8, ROWS = SatchelContents.MAX_STACKS / COLS, LEFT = 16, TOP = 18;
+
+        public Menu(int id, net.minecraft.world.entity.player.Inventory inventory) {
+            this(id, inventory, ItemStack.EMPTY);
+        }
+
+        public Menu(int id, net.minecraft.world.entity.player.Inventory inventory, ItemStack satchel) {
+            super(com.li64.tide.client.gui.TideMenuTypes.FISH_SATCHEL, id, inventory, satchel, SatchelContents.MAX_STACKS, 8, TOP + ROWS * 18 + 14);
+        }
+
+        @Override
+        protected void addStorageSlots(net.minecraft.world.SimpleContainer satchel) {
+            for (int i = 0; i < SatchelContents.MAX_STACKS; i++)
+                this.addSlot(new Slot(satchel, i, LEFT + (i % COLS) * 18, TOP + (i / COLS) * 18) {
+                    @Override
+                    public boolean mayPlace(@NotNull ItemStack stack) {
+                        return canPutInSatchel(stack) && stack.getItem().canFitInsideContainerItems();
+                    }
+                });
+        }
+
+        @Override
+        protected void load(ItemStack satchel, net.minecraft.world.SimpleContainer into) {
+            List<ItemStack> items = TideItemData.SATCHEL_CONTENTS.getOrDefault(satchel, new SatchelContents()).items();
+            for (int i = 0; i < items.size() && i < into.getContainerSize(); i++) into.setItem(i, items.get(i).copy());
+        }
+
+        @Override
+        protected void save(ItemStack satchel, net.minecraft.world.SimpleContainer from) {
+            if (satchel.isEmpty()) return;
+            List<ItemStack> kept = new java.util.ArrayList<>();
+            for (ItemStack s : from.getItems()) if (!s.isEmpty()) kept.add(s.copy());
+            TideItemData.SATCHEL_CONTENTS.set(satchel, new SatchelContents(kept));
+        }
     }
 }

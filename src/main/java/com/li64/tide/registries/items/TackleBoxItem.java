@@ -14,7 +14,6 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ContainerInput;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
@@ -55,18 +54,18 @@ public class TackleBoxItem extends AbstractTooltipItem {
 
     public static final int MAX_RODS = 3;
 
-    /** A box slot: any tackle, or a fishing rod while the box holds fewer than three. */
+    /** A tackle slot: lines, hooks, bobbers, lures and bait. */
     static Slot tackleSlot(net.minecraft.world.Container box, int index, int x, int y) {
         return new Slot(box, index, x, y) {
-            @Override
-            public boolean mayPlace(@NotNull ItemStack stack) {
-                if (TackleLog.fitsTackleBox(stack)) return true;
-                if (!isRod(stack)) return false;
-                int rods = 0;
-                for (int i = 0; i < box.getContainerSize(); i++)
-                    if (i != this.getContainerSlot() && isRod(box.getItem(i))) rods++;
-                return rods < MAX_RODS;
-            }
+            @Override public boolean mayPlace(@NotNull ItemStack stack) { return TackleLog.fitsTackleBox(stack); }
+        };
+    }
+
+    /** A slot in the rod rack. */
+    static Slot rodSlot(net.minecraft.world.Container box, int index, int x, int y) {
+        return new Slot(box, index, x, y) {
+            @Override public boolean mayPlace(@NotNull ItemStack stack) { return isRod(stack); }
+            @Override public int getMaxStackSize() { return 1; }
         };
     }
 
@@ -104,6 +103,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
                 only.index = first + i;
                 this.slots.set(first + i, only);
             }
+            for (int i = 0; i < MAX_RODS; i++) this.addSlot(rodSlot(tackle, SIZE + i, Menu.RACK_X, 84 + i * 18));
         }
 
         @Override
@@ -111,10 +111,17 @@ public class TackleBoxItem extends AbstractTooltipItem {
             // whatever is left on the table goes back in the box if it fits, else to the player
             for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
                 ItemStack left = this.inputSlots.getItem(i);
-                if (!left.isEmpty() && TackleLog.fitsTackleBox(left)) this.inputSlots.setItem(i, tackle.addItem(left));
+                if (left.isEmpty()) continue;
+                for (int j = 0; j < tackle.getContainerSize() && !left.isEmpty(); j++)       // tackle to tackle slots, a rod to the rack
+                    if ((j < SIZE ? TackleLog.fitsTackleBox(left) : isRod(left)) && tackle.getItem(j).isEmpty()) { tackle.setItem(j, left); left = ItemStack.EMPTY; }
+                    else if (j < SIZE && ItemStack.isSameItemSameComponents(tackle.getItem(j), left) && tackle.getItem(j).getCount() < tackle.getItem(j).getMaxStackSize()) {
+                        int move = Math.min(left.getCount(), tackle.getItem(j).getMaxStackSize() - tackle.getItem(j).getCount());
+                        tackle.getItem(j).grow(move); left.shrink(move);
+                    }
+                this.inputSlots.setItem(i, left);
             }
             super.removed(player);
-            Menu.save(box, tackle);
+            Menu.write(box, tackle);
         }
 
         @Override
@@ -135,7 +142,8 @@ public class TackleBoxItem extends AbstractTooltipItem {
     public void addTooltip(ItemStack stack, Consumer<Component> tooltip) {
         ItemContainerContents contents = stack.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY);
         List<ItemStack> items = contents.nonEmptyItemCopyStream().toList();
-        tooltip.accept(Component.literal(items.size() + " / " + SIZE + " slots used").withStyle(ChatFormatting.GRAY));
+        long rods = items.stream().filter(TackleBoxItem::isRod).count();
+        tooltip.accept(Component.literal((items.size() - rods) + " / " + SIZE + " tackle slots used · " + rods + " / " + MAX_RODS + " rods").withStyle(ChatFormatting.GRAY));
         // the rods by name, then how much of each kind of tackle
         for (ItemStack s : items) if (isRod(s)) tooltip.accept(Component.literal("  ").append(s.getHoverName()).withStyle(ChatFormatting.GOLD));
         java.util.Map<TackleLog.Category, Integer> counts = new java.util.EnumMap<>(TackleLog.Category.class);
@@ -149,9 +157,9 @@ public class TackleBoxItem extends AbstractTooltipItem {
         tooltip.accept(Component.literal("Sneak + right-click: rig a rod from the box").withStyle(ChatFormatting.DARK_GRAY));
     }
 
-    /** The box's chest screen (the vanilla 9x3 one, so no new client screen), only taking tackle. */
-    public static class Menu extends ChestMenu {
-        private final ItemStack box;
+    /** The box's screen: 27 slots of tackle, a rack of 3 for rods beside them, then your inventory. */
+    public static class Menu extends HeldStorageMenu {
+        public static final int RACK_X = 182;
 
         /** The client's copy (the box itself stays on the server). */
         public Menu(int id, Inventory inventory) {
@@ -159,54 +167,46 @@ public class TackleBoxItem extends AbstractTooltipItem {
         }
 
         public Menu(int id, Inventory inventory, ItemStack box) {
-            super(com.li64.tide.client.gui.TideMenuTypes.TACKLE_BOX, id, inventory, load(box), 3);
-            this.box = box;
-            SimpleContainer container = (SimpleContainer) this.getContainer();
-            for (int i = 0; i < SIZE; i++) {           // swap in slots that only take tackle
-                Slot old = this.slots.get(i);
-                Slot only = tackleSlot(container, old.getContainerSlot(), old.x, old.y);
-                only.index = i;
-                this.slots.set(i, only);
-            }
+            super(com.li64.tide.client.gui.TideMenuTypes.TACKLE_BOX, id, inventory, box, SIZE + MAX_RODS, 8, 85);
+        }
+
+        @Override
+        protected void addStorageSlots(SimpleContainer box) {
+            for (int i = 0; i < SIZE; i++) this.addSlot(tackleSlot(box, i, 8 + (i % 9) * 18, 18 + (i / 9) * 18));
+            for (int i = 0; i < MAX_RODS; i++) this.addSlot(rodSlot(box, SIZE + i, RACK_X, 18 + i * 18));
+        }
+
+        @Override
+        protected void load(ItemStack box, SimpleContainer into) {
+            Menu.loadInto(box, into);
+        }
+
+        @Override
+        protected void save(ItemStack box, SimpleContainer from) {
+            Menu.write(box, from);
+        }
+
+        static void loadInto(ItemStack box, SimpleContainer c) {
+            NonNullList<ItemStack> items = NonNullList.withSize(c.getContainerSize(), ItemStack.EMPTY);
+            box.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(items);
+            for (int i = 0; i < c.getContainerSize(); i++) c.setItem(i, items.get(i));
         }
 
         static SimpleContainer load(ItemStack box) {
-            SimpleContainer c = new SimpleContainer(SIZE) {
+            SimpleContainer c = new SimpleContainer(SIZE + MAX_RODS) {
                 @Override
                 public void setChanged() {
                     super.setChanged();
-                    save(box, this);       // every change goes straight into the box item
+                    write(box, this);
                 }
             };
-            NonNullList<ItemStack> items = NonNullList.withSize(SIZE, ItemStack.EMPTY);
-            box.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(items);
-            for (int i = 0; i < SIZE; i++) c.setItem(i, items.get(i));
+            loadInto(box, c);
             return c;
         }
 
-        static void save(ItemStack box, SimpleContainer c) {
+        static void write(ItemStack box, SimpleContainer c) {
             if (box.isEmpty()) return;
             box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(c.getItems()));
-        }
-
-        @Override
-        public void removed(@NotNull Player player) {
-            super.removed(player);
-            save(box, (SimpleContainer) this.getContainer());
-        }
-
-        @Override
-        public boolean stillValid(@NotNull Player player) {
-            return box.isEmpty() || player.getMainHandItem() == box || player.getOffhandItem() == box;
-        }
-
-        @Override
-        public void clicked(int slot, int button, @NotNull ContainerInput input, @NotNull Player player) {
-            // the open box itself can't be moved (or it could be emptied twice)
-            if (!box.isEmpty() && slot >= 0 && slot < this.slots.size() && this.slots.get(slot).getItem() == box) return;
-            if (!box.isEmpty() && input == ContainerInput.SWAP && (player.getInventory().getItem(button) == box
-                    || (button == 40 && player.getOffhandItem() == box))) return;
-            super.clicked(slot, button, input, player);
         }
     }
 }

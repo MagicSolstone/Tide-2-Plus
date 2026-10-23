@@ -21,6 +21,9 @@ public class TideMenuTypes {
     public static final MenuType<com.li64.tide.registries.items.TackleBoxItem.RigMenu> TACKLE_RIG = register("tackle_rig",
             Tide.PLATFORM.createMenuType(com.li64.tide.registries.items.TackleBoxItem.RigMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
+    public static final MenuType<com.li64.tide.registries.items.FishSatchelItem.Menu> FISH_SATCHEL = register("fish_satchel",
+            Tide.PLATFORM.createMenuType(com.li64.tide.registries.items.FishSatchelItem.Menu::new, FeatureFlags.DEFAULT_FLAGS));
+
     public static <T extends AbstractContainerMenu> MenuType<T> register(String key, MenuType<T> menuType) {
         MENU_TYPES.put(key, menuType);
         return Tide.PLATFORM.register(BuiltInRegistries.MENU, Tide.resource(key), menuType);

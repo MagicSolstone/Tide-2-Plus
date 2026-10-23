@@ -708,8 +708,7 @@ public class TideFishingHook extends Projectile {
                             if (extras.cook() > 0 && (Tide.CI || this.random.nextDouble() < extras.cook())) drop = cookOnTheLine(level, stack);
                             if (extras.twin() > 0 && (Tide.CI || this.random.nextDouble() < Math.min(extras.twin(), com.li64.tide.data.rods.RodEffects.TWIN_CAP))) {
                                 copies = 2;
-                                serverPlayer.sendOverlayMessage(net.minecraft.network.chat.Component.literal("Two on the hook!")
-                                        .withStyle(net.minecraft.ChatFormatting.AQUA));
+                                com.li64.tide.data.angler.Angler.markTwin(serverPlayer);
                             }
                         }
                         if (Tide.CI && catchType == CatchType.FISH)

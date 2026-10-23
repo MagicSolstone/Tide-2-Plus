@@ -245,7 +245,10 @@ public final class Angler {
             xp *= 1.0 + xpBoost;
         }
         long total = Math.round(xp);
-        addXp(player, total, extra);
+        int levelBefore = levelForXp(Data.of(player).xp);
+        addXp(player, total, extra, false);
+        int levelAfter = levelForXp(Data.of(player).xp);
+        banner(player, stack, total, perfect, extra, levelBefore, levelAfter);
         // just the total (gear bonuses are already in it), and whether the hook was perfect
         player.sendSystemMessage(Component.literal("+" + total + " fishing XP" + (perfect ? " · perfect hook!" : ""))
                 .withStyle(ChatFormatting.DARK_GRAY));
@@ -322,17 +325,49 @@ public final class Angler {
     }
 
     public static void addXp(ServerPlayer player, long amount, String extra) {
+        addXp(player, amount, extra, true);
+    }
+
+    private static final java.util.Set<java.util.UUID> TWIN = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** The hook says a second fish came up with this one (shown on the catch banner). */
+    public static void markTwin(ServerPlayer player) {
+        TWIN.add(player.getUUID());
+    }
+
+    /** The card above the hotbar for a catch: what it was, how big, what was special, the XP (and a small level-up). */
+    private static void banner(ServerPlayer player, ItemStack stack, long xp, boolean perfect, String extra, int before, int after) {
+        Integer qi = com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(stack, null);
+        CatchQuality q = qi == null ? null : CatchQuality.byId(qi);
+        String name = Component.translatable(stack.getItem().getDescriptionId()).getString();
+        String title = q == null || q == CatchQuality.AVERAGE ? name : q.label + " " + name;
+        java.util.List<String> bits = new java.util.ArrayList<>();
+        double len = com.li64.tide.data.item.TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0);
+        double grams = com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0);
+        if (len > 0) bits.add(FishWeight.imperialLength(len) + (grams > 0 ? " · " + FishWeight.imperial(grams) : ""));
+        if (extra.contains("new species")) bits.add("New species!");
+        if (extra.contains("new record")) bits.add("New record!");
+        if (TWIN.remove(player.getUUID())) bits.add("Two on the hook!");
+        if (perfect) bits.add("Perfect hook");
+        String footer = "+" + xp + " fishing XP · Lv " + after + " (" + Math.round(progress(Data.of(player).xp) * 100) + "%)";
+        if (after > before && title(after).equals(title(before))) footer = "+" + xp + " fishing XP · Level up! Fishing level " + after;
+        Tide.NETWORK.sendToPlayer(new com.li64.tide.network.messages.CatchBannerMsg(
+                net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(), title,
+                q == null ? 0xFFFFFF : q.color, String.join(" · ", bits), footer, false), player);
+    }
+
+    private static void addXp(ServerPlayer player, long amount, String extra, boolean overlay) {
         Data d = Data.of(player);
         int before = levelForXp(d.xp);
         d.xp = Math.max(0, d.xp + amount);
         d.save(player);
         int after = levelForXp(d.xp);
 
-        if (amount > 0) player.sendOverlayMessage(Component.literal("+" + amount + " Fishing XP")
+        if (overlay && amount > 0) player.sendOverlayMessage(Component.literal("+" + amount + " Fishing XP")
                 .withStyle(ChatFormatting.AQUA)
                 .append(Component.literal("  Lv " + after + " · " + Math.round(progress(d.xp) * 100) + "%" + extra)
                         .withStyle(ChatFormatting.GRAY)));
-        if (after > before) levelUp(player, after);
+        if (after > before) levelUp(player, after, overlay);
         sync(player);
     }
 
@@ -369,14 +404,19 @@ public final class Angler {
         sync(player);
     }
 
-    private static void levelUp(ServerPlayer player, int level) {
+    private static void levelUp(ServerPlayer player, int level, boolean bannerIfSmall) {
         String title = title(level);
         boolean newTitle = !title.equals(title(level - 1));
-        player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 60, 20));
-        player.connection.send(new ClientboundSetTitleTextPacket(
-                Component.literal("Fishing level " + level).withStyle(ChatFormatting.AQUA)));
-        player.connection.send(new ClientboundSetSubtitleTextPacket(
-                Component.literal(newTitle ? "You are now a " + title + "!" : title).withStyle(ChatFormatting.GOLD)));
+        if (newTitle) {     // the big on-screen title is saved for a new fishing title
+            player.connection.send(new ClientboundSetTitlesAnimationPacket(10, 70, 20));
+            player.connection.send(new ClientboundSetTitleTextPacket(
+                    Component.literal("Fishing level " + level).withStyle(ChatFormatting.AQUA)));
+            player.connection.send(new ClientboundSetSubtitleTextPacket(
+                    Component.literal("You are now a " + title + "!").withStyle(ChatFormatting.GOLD)));
+        } else if (bannerIfSmall) {   // a plain level-up gets the small card (on a catch, the catch card says it)
+            Tide.NETWORK.sendToPlayer(new com.li64.tide.network.messages.CatchBannerMsg("tide:fishing_journal",
+                    "Level up! Fishing level " + level, 0x7FE0FF, title, "", false), player);
+        }
         player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 1.0f, 1.2f);
         if (newTitle || level % 10 == 0) firework(player, level >= 90);
 

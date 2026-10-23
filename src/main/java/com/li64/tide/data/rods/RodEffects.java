@@ -502,7 +502,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (p != null) out.add(line(ChatFormatting.DARK_AQUA, p.text()));
         if (isTide(rod)) for (String s : SPECIAL_TEXT.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, s));
         out.addAll(Unlocks.describe(rod));
-        out.addAll(RigSets.describe(rod));
         return out;
     }
 
@@ -516,7 +515,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.LIGHT_PURPLE, " " + perk.when().text));
         out.addAll(Unlocks.describe(stack));
-        out.addAll(RigSets.describe(stack));
         if (path(stack).equals("lavaproof_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in lava"));
         if (path(stack).equals("void_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in the void"));
         if (path(stack).equals("glow_hook") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Glows, lighting the water around it"));

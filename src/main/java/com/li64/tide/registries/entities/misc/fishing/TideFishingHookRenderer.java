@@ -96,7 +96,7 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook, Tid
         Vec3 handPos = this.getPlayerHandPos(player, swing2, partialTick);
         Vec3 hookPos = hook.getPosition(partialTick).add(0.0, 0.25, 0.0);
         state.lineOriginOffset = handPos.subtract(hookPos);
-        state.lineColor = lineColor(player, FishingLineItem.getColor(hook.getLine()));
+        state.lineColor = lineColor(player, FishingLineItem.getColor(hook.getLine()), FishingLineItem.glows(hook.getLine()));
     }
 
     @Override
@@ -142,9 +142,9 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook, Tid
     }
 
     /** The line's colour, dimmed by how dark it is where the player stands (unless the config says not to). */
-    private static int lineColor(Player player, String colorHex) {
+    private static int lineColor(Player player, String colorHex, boolean glows) {
         Color color = Color.decode(colorHex);
-        float brightness = Tide.CLIENT_CONFIG.general.defaultLineColor ? 0.0f : Mth.clamp(
+        float brightness = Tide.CLIENT_CONFIG.general.defaultLineColor ? 0.0f : glows ? 1.0f : Mth.clamp(
                 player.level().getMaxLocalRawBrightness(player.blockPosition().above()) / 15f,
                 player.level().dimensionType().ambientLight(), 1f);
         return ARGB.color(255, (int) (color.getRed() * brightness), (int) (color.getGreen() * brightness), (int) (color.getBlue() * brightness));

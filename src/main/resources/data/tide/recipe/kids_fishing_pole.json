@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "minecraft:stick",
+    "S": "#c:strings"
+  },
+  "pattern": [
+    " S",
+    "#S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:kids_fishing_pole"
+  }
+}

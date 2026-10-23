@@ -21,8 +21,11 @@ public class TideClientEventHandler {
     public static void onTooltipRender(ItemStack stack, List<Component> lines) {
         if (BaitUtils.isBait(stack)) lines.addAll(BaitUtils.getDescriptionLines(stack));
 
-        if (stack.is(TideTags.Items.FISHING_RODS)) lines.addAll(TideFishingRodItem.getDescriptionLines(stack));
-        else lines.addAll(com.li64.tide.data.rods.RodEffects.of(stack).describe(ChatFormatting.DARK_AQUA));   // a line, hook, bobber or gear
+        if (stack.is(TideTags.Items.FISHING_RODS)) {
+            lines.addAll(com.li64.tide.data.rods.RodEffects.describeRod(stack));
+            lines.addAll(TideFishingRodItem.getDescriptionLines(stack));
+        }
+        else lines.addAll(com.li64.tide.data.rods.RodEffects.describeItem(stack));   // a line, hook, bobber or gear
         if (com.li64.tide.data.rods.RodEffects.isGear(stack)) {
             lines.add(Component.literal("Full fishing set:").withStyle(ChatFormatting.GRAY));
             lines.addAll(com.li64.tide.data.rods.RodEffects.FULL_SET.describe(ChatFormatting.GOLD));

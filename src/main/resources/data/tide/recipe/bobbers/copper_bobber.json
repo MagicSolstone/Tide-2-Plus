@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:slime_balls",
+    "#minecraft:planks",
+    "#c:ingots/copper"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:copper_bobber"
+  }
+}

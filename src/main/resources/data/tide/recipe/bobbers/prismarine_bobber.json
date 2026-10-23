@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:slime_balls",
+    "#minecraft:planks",
+    "minecraft:prismarine_shard"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:prismarine_bobber"
+  }
+}

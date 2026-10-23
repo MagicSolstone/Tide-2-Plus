@@ -26,6 +26,12 @@ public class FishingLineItem extends AbstractTooltipItem {
         return data.color().get();
     }
 
+    /** A glowing line (slime) stays bright in the dark instead of dimming with the light. */
+    public static boolean glows(ItemStack stack) {
+        AccessoryData data = AccessoryData.get(stack);
+        return data != null && data.glow().orElse(false);
+    }
+
     @Override
     public void addTooltip(ItemStack stack, Consumer<Component> tooltip) {
         if (description.isEmpty()) return;

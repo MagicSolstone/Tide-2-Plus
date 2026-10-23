@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "minecraft:phantom_membrane",
+    "L": "tide:fishing_line"
+  },
+  "pattern": [
+    "#",
+    "L",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:phantom_line"
+  }
+}

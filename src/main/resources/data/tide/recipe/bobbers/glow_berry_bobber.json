@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:slime_balls",
+    "#minecraft:planks",
+    "minecraft:glow_berries"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:glow_berry_bobber"
+  }
+}

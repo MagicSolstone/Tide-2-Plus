@@ -4,6 +4,12 @@
     "tide:copper_line",
     "tide:iron_line",
     "tide:golden_line",
-    "tide:diamond_line"
+    "tide:diamond_line",
+    "tide:slime_line",
+    "tide:coal_line",
+    "tide:kelp_line",
+    "tide:honey_line",
+    "tide:silk_line",
+    "tide:phantom_line"
   ]
 }

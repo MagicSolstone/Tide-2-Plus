@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:slime_balls",
+    "#minecraft:planks",
+    "minecraft:sculk"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:sculk_bobber"
+  }
+}

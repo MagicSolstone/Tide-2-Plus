@@ -99,7 +99,7 @@ public class TideFishingRodItem extends FishingRodItem {
         if (!builder.isEmpty()) {
             builder.add(0, Component.translatable("text.tide.rod_tooltip.accessories_prefix").withStyle(ChatFormatting.GRAY));
             builder.add(0, Component.empty());
-            List<Component> perks = com.li64.tide.data.rods.RodEffects.ofRod(stack).describe(ChatFormatting.DARK_AQUA);
+            List<Component> perks = com.li64.tide.data.rods.RodEffects.accessories(stack).describe(ChatFormatting.DARK_AQUA);
             if (!perks.isEmpty()) {
                 builder.add(Component.literal("Gear bonuses:").withStyle(ChatFormatting.GRAY));
                 builder.addAll(perks);

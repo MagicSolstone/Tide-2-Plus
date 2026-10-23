@@ -1,49 +1,26 @@
-# Tide+ 1.0.0
+# Tide+ 1.0.1
 
-The first full release of **Tide+**, a Fabric fork of [Tide 2](https://github.com/Lightning-64/Tide-2) (2.1.1) by Lightning64 for **Minecraft 26.3**. Everything Tide does is still here; Tide+ adds a fishing level, catch quality, and a whole tackle system on top.
-
-**Install:** put the jar in `mods/` on the server and every player's client, with Fabric Loader 0.19.5+ and Fabric API for 26.3. It replaces Tide (same mod ID, so worlds and items carry over); don't install both.
-
-## Fishing levels
-- Levels 1 to 99 from fishing XP, with a new title every 10 levels. Level raises cast distance, bite speed, hook zones, luck and makes fish fight a bit easier; level 40 fishes like original Tide.
-- A new title gets the big on-screen announcement and a firework; ordinary level-ups show on the catch card. Level-ups are announced in chat.
-- `/fishinglevel get | set | addxp | reset [everything] | fair` for ops. *Fair play* puts everyone at level 40 for contests.
+Fixes and polish after 1.0.0, mostly from the first round of family testing. Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.0).
 
 ## Catches
-- **Catch quality**: Poor, Average, Fine, Prime, Trophy, Mythic, decided at the bite. Better fish are bigger, heavier and fight harder; Trophy and Mythic catches are announced to everyone. Fish from crates get a quality too.
-- **Hook zones** in the minigame: perfect, great, good, bad, miss, each with its own chance to land the fish. A perfect hook gives extra XP.
-- Every fish has a length and a weight (US units by default, `useImperial` in the client config).
-- **Catch card** above the hotbar for five seconds: the fish in its quality colour, size, anything special (new species, new record, two on the hook, perfect hook) and anything else that came up with it, plus the XP. Chat keeps just the XP line.
-- **Favorite lures**: every fish has one, and it's twice as likely to bite on it. The lure's tooltip names the ones you've caught; the rest you find by fishing. Each cast tells you how many fish there favor your lure.
-- The journal records best quality, heaviest, longest and shortest of each fish, and shows each fish's favorite lure.
+- **The catch card** puts the weight first, in gold, right after the fish's name (length is next, as "35 in long"). Fish tooltips and big-catch announcements lead with the weight too.
+- The card lists anything else that came up with the fish (honeycomb, saplings, cooked on the line) and, in purple, what your rod did: the hex rod's potion effect and how many crops the sickle rod grew.
+- **Fish from crates** now get a quality and size, like any catch.
+- Each fish's save now remembers the quality of its heaviest catch (Solstone shows it next to family records).
 
-## Tackle
-Rods hold a line, hook, bobber and lure, plus bait. Each piece does something, and many work best in a place, time or weather (shown in purple).
-- **31 rods**: Tide's 13 plus a kid's rod, bamboo, bone, copper, amethyst, mangrove, cherry, frost, cactus, conduit, clockwork and wayfinder rods, and six rare **found rods**:
-  - Rotten (zombies and husks): fishes up mob drops
-  - Widow (spiders): strong at night, sluggish by day
-  - Drowned (drowned): fishes up sunken loot
-  - Hex (witches): a chance of a helpful potion effect
-  - Sickle (harvested wheat): makes nearby crops grow
-  - Grove (leaves): fishes up saplings, sticks and apples
-- **18 lines** (any line can be dyed any colour: line + dye), **23 hooks** (upgrades made on a base hook keep its perks), **33 bobbers** (made from sticks, a plank and the item that gives them their look), **15 lures**, and **22 baits** including region baits.
-- **Lava fishing**: the lavaproof hook, blazing and netherite rods, netherite line and bobber, fiery hook and magma lure all have lava perks.
-- **Matched rigs**: three or more pieces of one family (ocean, river, night, twilight, storm, swamp, jungle, desert, frost, cave, fire, void) add a bonus where that family is made for.
-- **Rod stats panel** at the right edge while a rod is in hand: everything your rod, tackle, gear and level add up to, and which perks are working right now.
-- **Angler's gear** (bucket hat, vest, waders, wading boots) with a full-set bonus.
-- Breaking a rod drops what was on it. Rods' hanging lines sway in the hand and inventory, and the glow hook lights the water around it.
+## Rigs
+- **Two pieces** of a rig now give a small bonus; **three or more** give the full bonus, which is bigger than before (e.g. jungle: +5% quality at 2, +1 luck and +15% quality at 3). Pairs from different rigs both count.
+- **The angling table** (and the tackle box's rig view) shows a card beside the rod for each rig it has pieces of: what it gives now, what the next piece adds, and which kinds of piece could still go on.
+- Rig details moved off the item tooltips (they're in the journal and on the rig card), so rod tooltips stay short. The stats panel shows 2-piece rigs too.
 
-## Storage
-- **Tackle box**: 27 slots of tackle plus a rack for 3 rods. A *Rig a rod* button (or sneak + right-click) opens an angling table that uses the box's tackle directly.
-- **Fish satchel**: right-click it in your inventory (or sneak + right-click in hand) to see all 64 places and take out the fish you want. Right-click in hand still turns fish collecting on and off.
+## Crates
+- Luck helps crates only up to luck 10 (about 1 catch in 10 at most), and crate-hunting gear (magnet lure, magnetic bait) is capped at about 1 in 5, so crates stay a treat.
 
-## Journal
-- A **Tackle** section: every piece of tackle, blacked out until you find it, with what it does and its recipe. Recipes appear in the recipe book once you hold a related item.
-- An **Angler** page with your level, title and stats.
+## Storage and items
+- **Fish satchel:** right-click it in your inventory to open it (taking fish out one at a time with right-click is gone).
+- Found-rod tooltips are one short line each.
+- "Bucketable" now reads "Alive (can go in a bucket)".
 
-## For server admins
-- A `[Tide catch]` line in the server log for every fish (Solstone reads it for contests and the Fishing tab).
-- Settings are plain JSON in `config/tide.json`; no Cloth Config or Mod Menu needed.
-- Fabric only, 26.x only; third-party compat from Tide (Stardew Fishing, Starcatcher, seasons mods) isn't included.
-
-Licensed MPL-2.0, like Tide. Credit for Tide itself, its fish, art and mechanics goes to Lightning64.
+## Looks
+- Rods' swaying lines no longer show a one-pixel gap.
+- Blacked-out rods in the journal show one clean silhouette instead of a squashed animation strip.

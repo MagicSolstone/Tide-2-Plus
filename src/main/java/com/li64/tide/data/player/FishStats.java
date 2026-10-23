@@ -17,7 +17,8 @@ public class FishStats {
             Codec.DOUBLE.fieldOf("smallest_catch").forGetter(FishStats::getSmallestCatch),
             Codec.INT.optionalFieldOf("best_quality", -1).forGetter(FishStats::getBestQuality),
             Codec.DOUBLE.optionalFieldOf("heaviest_catch", 0.0).forGetter(FishStats::getHeaviestCatch),
-            Codec.INT.listOf().optionalFieldOf("quality_counts", List.of()).forGetter(FishStats::getQualityCounts)
+            Codec.INT.listOf().optionalFieldOf("quality_counts", List.of()).forGetter(FishStats::getQualityCounts),
+            Codec.INT.optionalFieldOf("heaviest_quality", -1).forGetter(FishStats::getHeaviestQuality)
     ).apply(instance, FishStats::new));
 
     private int amountCaught;
@@ -26,18 +27,20 @@ public class FishStats {
     private double smallestCatch;
     private int bestQuality;
     private double heaviestCatch;
+    private int heaviestQuality;
     private final int[] qualityCounts = new int[CatchQuality.values().length];
 
     public FishStats() {
-        this(0, Optional.empty(), 0, Double.POSITIVE_INFINITY, -1, 0.0, List.of());
+        this(0, Optional.empty(), 0, Double.POSITIVE_INFINITY, -1, 0.0, List.of(), -1);
     }
 
     public FishStats(int amountCaught, Optional<CatchTimestamp> initialCatchDate, double largestCatch, double smallestCatch) {
-        this(amountCaught, initialCatchDate, largestCatch, smallestCatch, -1, 0.0, List.of());
+        this(amountCaught, initialCatchDate, largestCatch, smallestCatch, -1, 0.0, List.of(), -1);
     }
 
     public FishStats(int amountCaught, Optional<CatchTimestamp> initialCatchDate, double largestCatch, double smallestCatch,
-                     int bestQuality, double heaviestCatch, List<Integer> qualityCounts) {
+                     int bestQuality, double heaviestCatch, List<Integer> qualityCounts, int heaviestQuality) {
+        this.heaviestQuality = heaviestQuality;
         this.amountCaught = amountCaught;
         this.initialCatchDate = initialCatchDate;
         this.largestCatch = largestCatch;
@@ -74,6 +77,11 @@ public class FishStats {
         return heaviestCatch;
     }
 
+    /** The quality of the heaviest fish (-1 if unknown, e.g. it was caught before this was recorded). */
+    public int getHeaviestQuality() {
+        return heaviestQuality;
+    }
+
     public List<Integer> getQualityCounts() {
         List<Integer> list = new ArrayList<>();
         for (int c : qualityCounts) list.add(c);
@@ -103,6 +111,9 @@ public class FishStats {
             qualityCounts[quality]++;
             if (quality > bestQuality) bestQuality = quality;
         }
-        if (grams > heaviestCatch) heaviestCatch = grams;
+        if (grams > heaviestCatch) {
+            heaviestCatch = grams;
+            heaviestQuality = quality;
+        }
     }
 }

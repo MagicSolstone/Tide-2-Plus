@@ -4,7 +4,7 @@
 **Minecraft 26.3**, made for a family server run alongside [Solstone](https://github.com/TJusczak/Solstone).
 It keeps everything Tide does and adds fishing levels, catch quality, and a full tackle system: rods,
 lines, hooks, bobbers, lures and bait that each matter, matched rigs, favorite lures, rare found rods,
-a tackle box and a better fish satchel. See **[RELEASE_NOTES.md](RELEASE_NOTES.md)** for everything in 1.0.0,
+a tackle box and a better fish satchel. See the **[CHANGELOG](CHANGELOG.md)** for everything in each version,
 and the [releases](https://github.com/TJusczak/Tide-2-Plus/releases) for the jar.
 
 **Install:** the jar in `mods/` on the server and every client, with Fabric Loader 0.19.5+ and Fabric API

@@ -117,7 +117,6 @@ public final class Lures {
                     .withStyle(ChatFormatting.DARK_AQUA));
         if (CRATES.containsKey(path))
             out.add(Component.literal("Pulls up crates (x" + trim(CRATES.get(path)) + ")").withStyle(ChatFormatting.DARK_AQUA));
-        if (!out.isEmpty() && path.endsWith("_lure")) out.add(Component.literal("Never wears out").withStyle(ChatFormatting.GRAY));
         return out;
     }
 

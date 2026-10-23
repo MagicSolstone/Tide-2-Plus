@@ -1,10 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "#c:slime_balls",
-    "#minecraft:planks",
-    "minecraft:cactus"
+  "key": {
+    "S": "minecraft:stick",
+    "#": "minecraft:cactus",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "S#S",
+    " P "
   ],
   "result": {
     "count": 1,

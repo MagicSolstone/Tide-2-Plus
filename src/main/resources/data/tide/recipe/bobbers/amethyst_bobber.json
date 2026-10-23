@@ -1,10 +1,14 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "minecraft:crafting_shaped",
   "category": "misc",
-  "ingredients": [
-    "#c:slime_balls",
-    "#minecraft:planks",
-    "minecraft:amethyst_shard"
+  "key": {
+    "S": "minecraft:stick",
+    "#": "minecraft:amethyst_shard",
+    "P": "#minecraft:planks"
+  },
+  "pattern": [
+    "S#S",
+    " P "
   ],
   "result": {
     "count": 1,

@@ -1,14 +1,11 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "equipment",
-  "key": {
-    "#": "minecraft:crying_obsidian",
-    "D": "minecraft:dragon_breath"
-  },
-  "pattern": [
-    "  #",
-    "#D#",
-    " # "
+  "ingredients": [
+    "#tide:base_hooks",
+    "minecraft:crying_obsidian",
+    "minecraft:crying_obsidian",
+    "minecraft:dragon_breath"
   ],
   "result": {
     "count": 1,

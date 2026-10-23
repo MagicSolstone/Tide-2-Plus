@@ -29,7 +29,7 @@ import java.util.Set;
 public final class RodStatsOverlay {
     private RodStatsOverlay() {}
 
-    private static final int GOOD = 0xFF7FE07F, BAD = 0xFFFF8A7A, TEXT = 0xFFE8E8E8, DIM = 0xFFA8B4BC, HEAD = 0xFFFFD27F;
+    private static final int GOOD = 0xFF7FE07F, BAD = 0xFFFF8A7A, TEXT = 0xFFE8E8E8, DIM = 0xFFA8B4BC, HEAD = 0xFFFFD27F, OFF = 0xFFA87070;
 
     private record Row(String label, String value, int color) {}
 
@@ -66,12 +66,13 @@ public final class RodStatsOverlay {
         if (e.cook() != 0) rows.add(new Row("Comes up cooked", Math.round(e.cook() * 100) + "%", GOOD));
         if (e.upgrade() != 0) rows.add(new Row("Quality bump", Math.round(e.upgrade() * 100) + "%", GOOD));
 
-        Set<String> active = new LinkedHashSet<>();
+        Set<String> active = new LinkedHashSet<>(), idle = new LinkedHashSet<>();
         List<ItemStack> all = new ArrayList<>(List.of(rod));
         all.addAll(RodEffects.parts(rod));
         for (ItemStack part : all)
             for (RodEffects.Perk p : RodEffects.situational(part))
-                if (p.when().test(player)) active.add(p.when().text.replaceFirst("^(in|on|at|by) (the |a )?", ""));
+                (p.when().test(player) ? active : idle).add(p.when().text.replaceFirst("^(in|on|at|by|when) (the |a )?", ""));
+        idle.removeAll(active);
 
         Font font = mc.font;
         float s = 0.75f;
@@ -79,9 +80,11 @@ public final class RodStatsOverlay {
         int valueW = rows.stream().mapToInt(r -> font.width(r.value())).max().orElse(0);
         String title = "Fishing Lv " + level + (ClientAngler.fair && ClientAngler.enabled ? " (fair play)" : "");
         String on = active.isEmpty() ? null : "Active: " + String.join(", ", active);
-        int w = Math.max(labelW + 10 + valueW, Math.max(font.width(title), on == null ? 0 : Math.min(font.width(on), 170)));
+        String off = idle.isEmpty() ? null : "Not now: " + String.join(", ", idle);
+        int w = Math.max(labelW + 10 + valueW, Math.max(font.width(title), Math.max(on == null ? 0 : Math.min(font.width(on), 170), off == null ? 0 : Math.min(font.width(off), 170))));
         List<net.minecraft.util.FormattedCharSequence> onLines = on == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(on), Math.max(w, 120));
-        int h = 12 + rows.size() * 10 + onLines.size() * 10 + (onLines.isEmpty() ? 0 : 3);
+        List<net.minecraft.util.FormattedCharSequence> offLines = off == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(off), Math.max(w, 120));
+        int h = 12 + rows.size() * 10 + (onLines.size() + offLines.size()) * 10 + (onLines.isEmpty() && offLines.isEmpty() ? 0 : 3);
         int sw = g.guiWidth(), sh = g.guiHeight();
         float px = sw - (w + 10) * s - 4, py = (sh - (h + 8) * s) / 2f;
 
@@ -101,6 +104,10 @@ public final class RodStatsOverlay {
         if (!onLines.isEmpty()) {
             y += 3;
             for (var line : onLines) { Gui26.text(g, font, line, 6, y, DIM, true); y += 10; }
+        }
+        if (!offLines.isEmpty()) {
+            if (onLines.isEmpty()) y += 3;
+            for (var line : offLines) { Gui26.text(g, font, line, 6, y, OFF, true); y += 10; }
         }
         g.pose().popMatrix();
     }

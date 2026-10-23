@@ -6,7 +6,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#c:slime_balls"
+            "items": "minecraft:stick"
           }
         ]
       }
@@ -16,7 +16,7 @@
       "conditions": {
         "items": [
           {
-            "items": "#minecraft:planks"
+            "items": "#c:slime_balls"
           }
         ]
       }
@@ -26,7 +26,27 @@
       "conditions": {
         "items": [
           {
+            "items": "#minecraft:planks"
+          }
+        ]
+      }
+    },
+    "has_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
             "items": "#tide:bobbers"
+          }
+        ]
+      }
+    },
+    "has_4": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#tide:fishing_rods"
           }
         ]
       }
@@ -43,6 +63,8 @@
       "has_0",
       "has_1",
       "has_2",
+      "has_3",
+      "has_4",
       "has_the_recipe"
     ]
   ],

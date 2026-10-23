@@ -1,14 +1,11 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "equipment",
-  "key": {
-    "#": "#c:ingots/gold",
-    "O": "#c:obsidians"
-  },
-  "pattern": [
-    "  #",
-    "O O",
-    " O "
+  "ingredients": [
+    "#tide:base_hooks",
+    "#c:obsidians",
+    "#c:obsidians",
+    "#c:ingots/gold"
   ],
   "result": {
     "count": 1,

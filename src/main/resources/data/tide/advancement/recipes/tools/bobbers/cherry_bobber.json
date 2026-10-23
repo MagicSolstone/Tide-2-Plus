@@ -21,6 +21,16 @@
         ]
       }
     },
+    "has_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#tide:fishing_rods"
+          }
+        ]
+      }
+    },
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
@@ -32,6 +42,7 @@
     [
       "has_0",
       "has_1",
+      "has_2",
       "has_the_recipe"
     ]
   ],

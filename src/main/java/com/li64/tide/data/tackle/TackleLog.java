@@ -154,7 +154,7 @@ public final class TackleLog {
         sync(player);
         // the client translates the item name (the toast message sends text it looks up)
         for (ItemStack s : newOnes.subList(0, Math.min(3, newOnes.size())))
-            Tide.NETWORK.sendToPlayer(new ShowToastMsg(Component.literal("New tackle in your journal"),
+            Tide.NETWORK.sendToPlayer(new ShowToastMsg(Component.literal("New tackle found!"),
                     Component.literal(s.getItem().getDescriptionId()), s), player);
     }
 

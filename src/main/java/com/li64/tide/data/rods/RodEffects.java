@@ -96,7 +96,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     /** Hooks made by adding something to a base hook. */
     public static final java.util.Set<String> UPGRADED_HOOKS = java.util.Set.of(
             "diamond_hook", "emerald_hook", "amethyst_hook", "netherite_hook", "prismarine_hook", "glow_hook",
-            "feathered_hook", "barbed_hook", "circle_hook", "lucky_hook");
+            "feathered_hook", "barbed_hook", "circle_hook", "lucky_hook",
+            "fiery_hook", "permafrost_hook", "twilight_hook", "lavaproof_hook", "void_hook");
 
     /** Called when a shapeless recipe makes something: an upgraded hook remembers the base hook it was made on. */
     public static void onHookCrafted(List<ItemStack> inputs, ItemStack result) {
@@ -190,9 +191,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             boolean sky = level.dimensionType().hasSkyLight();
             return switch (this) {
                 case DAY -> sky && level.isBrightOutside();
-                case DAWN_DUSK -> {
-                    if (!(level instanceof net.minecraft.server.level.ServerLevel server)) yield false;
-                    long t = com.li64.tide.util.TideUtils.getTimeOfDay(server);
+                case DAWN_DUSK -> {      // the clock is synced, so the client's stats panel agrees with the server
+                    long t = level.getOverworldClockTime() % 24000;
                     yield sky && (t >= 22500 || t < 1000 || (t >= 11500 && t < 13500));
                 }
                 case THUNDER -> level.isThundering() && level.canSeeSky(pos.above());

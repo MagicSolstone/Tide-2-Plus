@@ -15,7 +15,7 @@ def tag(name):
 
 
 KINDS = [("hooks", ["#tide:hooks"]), ("lures", ["#tide:hooks", "#tide:lures"]), ("lines", ["#tide:lines"]),
-         ("bobbers", ["#tide:bobbers"]), ("fishing_rods", ["#tide:fishing_rods"]), ("bait_items", ["#tide:bait_items"])]
+         ("bobbers", ["#tide:bobbers", "#tide:fishing_rods"]), ("fishing_rods", ["#tide:fishing_rods"]), ("bait_items", ["#tide:bait_items"])]
 members = {k: tag(k) for k, _ in KINDS}
 
 

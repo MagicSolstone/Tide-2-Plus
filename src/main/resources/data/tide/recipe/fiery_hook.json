@@ -1,14 +1,9 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "equipment",
-  "key": {
-    "#": "minecraft:blaze_rod",
-    "I": "#c:ingots/iron"
-  },
-  "pattern": [
-    "  #",
-    "I I",
-    " I "
+  "ingredients": [
+    "#tide:base_hooks",
+    "minecraft:blaze_rod"
   ],
   "result": {
     "count": 1,

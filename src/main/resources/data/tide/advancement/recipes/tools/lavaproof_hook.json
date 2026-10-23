@@ -1,38 +1,60 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_gold_ingot": {
+    "has_0": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
-            "items": "#c:ingots/gold"
+            "items": "#tide:base_hooks"
           }
         ]
-      },
-      "trigger": "minecraft:inventory_changed"
+      }
     },
-    "has_obsidian": {
+    "has_1": {
+      "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
           {
             "items": "#c:obsidians"
           }
         ]
-      },
-      "trigger": "minecraft:inventory_changed"
+      }
+    },
+    "has_2": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:ingots/gold"
+          }
+        ]
+      }
+    },
+    "has_3": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "#tide:hooks"
+          }
+        ]
+      }
     },
     "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipes": "tide:lavaproof_hook"
-      },
-      "trigger": "minecraft:recipe_unlocked"
+      }
     }
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "has_obsidian",
-      "has_gold_ingot"
+      "has_0",
+      "has_1",
+      "has_2",
+      "has_3",
+      "has_the_recipe"
     ]
   ],
   "rewards": {

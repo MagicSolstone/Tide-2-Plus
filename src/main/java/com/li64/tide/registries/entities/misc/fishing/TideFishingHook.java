@@ -254,7 +254,7 @@ public class TideFishingHook extends Projectile {
 
         if (BaitUtils.hasBait(TideItems.MAGNETIC_BAIT, rod) && this.currentState == FishHookState.BOBBING) {
             particleTimer++;
-            if (particleTimer >= 3) {
+            if (particleTimer >= 8) {
                 Vec3 pos = this.position();
                 Vec3 randomPos = new Vec3(
                         this.getX() + 0.5 * (this.random.nextGaussian() - this.random.nextGaussian()),
@@ -614,11 +614,15 @@ public class TideFishingHook extends Projectile {
     /** Some lines give off particles along their length while cast (golden sparkles, redstone sparks...). */
     private void lineParticles() {
         Player owner = getPlayerOwner();
-        if (owner == null || this.random.nextInt(3) != 0) return;
+        if (owner == null) return;
         net.minecraft.core.particles.ParticleOptions particle = com.li64.tide.registries.items.FishingLineItem.particle(getLine());
         if (particle == null) return;
+        // a hint, not a light show: about one every second or two (long-lived glowing ones even fewer),
+        // and never right at the hook, so the bobber stays easy to watch
+        boolean lingers = particle == ParticleTypes.END_ROD || particle == ParticleTypes.GLOW;
+        if (this.random.nextInt(lingers ? 60 : 25) != 0) return;
         net.minecraft.world.phys.Vec3 hand = owner.position().add(0, owner.getEyeHeight() * 0.75, 0);
-        double t = this.random.nextDouble();
+        double t = 0.1 + this.random.nextDouble() * 0.6;
         net.minecraft.world.phys.Vec3 at = hand.lerp(this.position().add(0, 0.25, 0), t);
         this.level().addParticle(particle, at.x, at.y - Math.sin(t * Math.PI) * 0.3, at.z, 0, 0.01, 0);
     }

@@ -21,45 +21,66 @@ import java.util.Set;
 public final class RigSets {
     private RigSets() {}
 
-    public static final int PIECES = 3;
+    /** Two pieces of a family give its small bonus; three or more, its full bonus. */
+    public static final int HALF = 2, PIECES = 3;
 
-    public record RigSet(String name, When when, RodEffects bonus, Set<String> members) {
+    public record RigSet(String name, When when, RodEffects two, RodEffects full, Set<String> members) {
+        /** The full (3-piece) bonus in words, with where it works. */
         public String bonusText() {
-            return String.join(", ", bonus.describe(ChatFormatting.WHITE).stream().map(Component::getString).toList()).toLowerCase() + " " + when.text;
+            return text(full);
+        }
+
+        /** The 2-piece bonus in words, with where it works. */
+        public String twoText() {
+            return text(two);
+        }
+
+        private String text(RodEffects fx) {
+            return String.join(", ", fx.describe(ChatFormatting.WHITE).stream().map(Component::getString).toList()).toLowerCase() + " " + when.text;
+        }
+
+        /** What this many pieces give (nothing below two). */
+        public RodEffects bonus(int pieces) {
+            return pieces >= PIECES ? full : pieces >= HALF ? two : RodEffects.NONE;
         }
     }
 
-    private static RigSet set(String name, When when, RodEffects bonus, String... members) {
-        return new RigSet(name, when, bonus, Set.of(members));
+    private static RigSet set(String name, When when, RodEffects two, RodEffects full, String... members) {
+        return new RigSet(name, when, two, full, Set.of(members));
     }
 
-    private static final RodEffects LUCK_QUALITY = new RodEffects(0, 0, 0, 0, 1, 0.10, 0, 0);
-    private static final RodEffects LUCK_BITE = new RodEffects(0, 0.10, 0, 0, 1, 0, 0, 0);
+    private static RodEffects fx(double bite, int luck, double quality, double xp) {
+        return new RodEffects(0, bite, 0, 0, luck, quality, 0, xp);
+    }
+
+    // the usual shapes: a little of one thing at two pieces, more of it plus a second thing at three
+    private static final RodEffects QUALITY_2 = fx(0, 0, 0.05, 0), LUCK_QUALITY_3 = fx(0, 1, 0.15, 0);
+    private static final RodEffects BITE_2 = fx(0.08, 0, 0, 0), LUCK_BITE_3 = fx(0.15, 1, 0, 0);
 
     public static final List<RigSet> SETS = List.of(
-            set("Ocean rig", When.OCEAN, LUCK_QUALITY, "prismarine_fishing_rod", "conduit_fishing_rod", "drowned_fishing_rod",
+            set("Ocean rig", When.OCEAN, QUALITY_2, LUCK_QUALITY_3, "prismarine_fishing_rod", "conduit_fishing_rod", "drowned_fishing_rod",
                     "kelp_line", "prismarine_line", "prismarine_hook", "nautilus_bobber", "prismarine_bobber", "turtle_bobber",
                     "squid_lure", "coastal_bait", "brine_shrimp"),
-            set("River rig", When.RIVER, new RodEffects(0, 0.15, 0, 0, 0, 0, 0, 0.10), "silk_line", "wooden_hook",
+            set("River rig", When.RIVER, BITE_2, fx(0.20, 0, 0, 0.10), "silk_line", "wooden_hook",
                     "feather_bobber", "duck_bobber", "fly_lure", "dough_ball"),
-            set("Night rig", When.NIGHT, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0.15), "bone_fishing_rod", "widow_fishing_rod",
+            set("Night rig", When.NIGHT, fx(0, 0, 0, 0.08), fx(0, 1, 0, 0.20), "bone_fishing_rod", "widow_fishing_rod",
                     "phantom_line", "spider_line", "glow_hook", "glow_berry_bobber", "pumpkin_bobber", "glow_lure", "ink_lure",
                     "glow_worms", "moon_bait"),
-            set("Twilight rig", When.DAWN_DUSK, new RodEffects(0, 0, 0, 0, 0, 0.10, 0, 0.20), "cherry_fishing_rod",
+            set("Twilight rig", When.DAWN_DUSK, fx(0, 0, 0, 0.10), fx(0, 0, 0.10, 0.25), "cherry_fishing_rod",
                     "feathered_hook", "twilight_hook", "cherry_bobber", "grassy_bobber", "popper_lure", "blossom_bait"),
-            set("Storm rig", When.RAIN, LUCK_QUALITY, "copper_fishing_rod", "copper_line", "copper_hook", "copper_bobber", "storm_lure"),
-            set("Swamp rig", When.SWAMP, LUCK_BITE, "mangrove_fishing_rod", "slime_line", "lily_pad_bobber", "slime_bobber",
+            set("Storm rig", When.RAIN, QUALITY_2, LUCK_QUALITY_3, "copper_fishing_rod", "copper_line", "copper_hook", "copper_bobber", "storm_lure"),
+            set("Swamp rig", When.SWAMP, BITE_2, LUCK_BITE_3, "mangrove_fishing_rod", "slime_line", "lily_pad_bobber", "slime_bobber",
                     "frog_lure", "swamp_bait"),
-            set("Jungle rig", When.JUNGLE, LUCK_QUALITY, "bamboo_fishing_rod", "vine_line", "apple_bobber", "jungle_bait"),
-            set("Desert rig", When.DRY, LUCK_BITE, "cactus_fishing_rod", "golden_line", "golden_hook", "bone_hook",
+            set("Jungle rig", When.JUNGLE, QUALITY_2, LUCK_QUALITY_3, "bamboo_fishing_rod", "vine_line", "apple_bobber", "jungle_bait"),
+            set("Desert rig", When.DRY, BITE_2, LUCK_BITE_3, "cactus_fishing_rod", "golden_line", "golden_hook", "bone_hook",
                     "cactus_bobber", "desert_bait"),
-            set("Frost rig", When.COLD, new RodEffects(0, 0.15, 0, 0, 0, 0.10, 0, 0), "frost_fishing_rod", "permafrost_hook",
+            set("Frost rig", When.COLD, BITE_2, fx(0.15, 0, 0.10, 0), "frost_fishing_rod", "permafrost_hook",
                     "snowball_bobber", "ice_jig_lure", "frost_bait"),
-            set("Cave rig", When.UNDERGROUND, LUCK_QUALITY, "echo_fishing_rod", "slime_line", "echo_bobber", "sculk_bobber",
+            set("Cave rig", When.UNDERGROUND, QUALITY_2, LUCK_QUALITY_3, "echo_fishing_rod", "slime_line", "echo_bobber", "sculk_bobber",
                     "jig_lure", "echo_lure", "cave_grubs", "dripstone_bait", "sculk_bait"),
-            set("Fire rig", When.LAVA, LUCK_QUALITY, "blazing_fishing_rod", "netherite_fishing_rod", "netherite_line",
+            set("Fire rig", When.LAVA, QUALITY_2, LUCK_QUALITY_3, "blazing_fishing_rod", "netherite_fishing_rod", "netherite_line",
                     "lavaproof_hook", "fiery_hook", "netherite_bobber", "magma_lure"),
-            set("Void rig", When.END, LUCK_BITE, "void_hook", "chorus_bobber", "chorus_lure"));
+            set("Void rig", When.END, BITE_2, LUCK_BITE_3, "void_hook", "chorus_bobber", "chorus_lure"));
 
     private static String path(ItemStack s) {
         return BuiltInRegistries.ITEM.getKey(s.getItem()).getPath();
@@ -105,7 +126,7 @@ public final class RigSets {
     public static RodEffects active(Player player, ItemStack rod) {
         RodEffects e = RodEffects.NONE;
         for (RigSet set : SETS)
-            if (pieces(set, rod) >= PIECES && set.when().test(player)) e = e.plus(set.bonus());
+            if (set.when().test(player)) e = e.plus(set.bonus(pieces(set, rod)));
         return e;
     }
 
@@ -114,7 +135,7 @@ public final class RigSets {
         List<Component> out = new ArrayList<>();
         for (RigSet set : SETS)
             if (set.members().contains(path(stack)))
-                out.add(Component.literal(set.name() + " piece: " + PIECES + "+ pieces give " + set.bonusText()).withStyle(ChatFormatting.LIGHT_PURPLE));
+                out.add(Component.literal(set.name() + " piece: 2 pieces give " + set.twoText() + "; 3 or more give " + set.bonusText()).withStyle(ChatFormatting.LIGHT_PURPLE));
         return out;
     }
 }

@@ -76,8 +76,8 @@ public final class RodStatsOverlay {
         // matched rigs: complete ones show as on or off like any perk; one piece short gets a hint
         for (com.li64.tide.data.rods.RigSets.RigSet set : com.li64.tide.data.rods.RigSets.SETS) {
             int n = com.li64.tide.data.rods.RigSets.pieces(set, rod);
-            if (n >= com.li64.tide.data.rods.RigSets.PIECES) (set.when().test(player) ? active : idle).add(set.name().toLowerCase());
-            else if (n == com.li64.tide.data.rods.RigSets.PIECES - 1) idle.add(set.name().toLowerCase() + " (1 piece short)");
+            if (n >= com.li64.tide.data.rods.RigSets.HALF)
+                (set.when().test(player) ? active : idle).add(set.name().toLowerCase() + (n >= com.li64.tide.data.rods.RigSets.PIECES ? "" : " (2 of 3)"));
         }
 
         Font font = mc.font;

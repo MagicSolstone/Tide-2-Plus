@@ -62,12 +62,12 @@ jobs:
       # a fish tank in front of the player and fills the hotbar with Tide items) and take screenshots.
       - name: Client smoke test
         if: steps.build.outcome == 'success'
-        timeout-minutes: 12
+        timeout-minutes: 30
         shell: bash
         run: |
           set +e
-          timeout 180 sudo apt-get update -q > /dev/null 2>&1
-          timeout 300 sudo apt-get install -y -q xvfb imagemagick xdotool libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-utils mesa-vulkan-drivers 2>&1 | tail -3
+          timeout 420 sudo apt-get update -q -o Acquire::Retries=3 > /dev/null 2>&1
+          timeout 600 sudo apt-get install -y -q -o Acquire::Retries=3 xvfb imagemagick xdotool libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-utils mesa-vulkan-drivers 2>&1 | tail -3
           export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
           mkdir -p run/saves shots
           rm -rf run/saves/smoke && cp -r run/world run/saves/smoke

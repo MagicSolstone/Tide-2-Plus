@@ -432,8 +432,9 @@ public final class GearCheck {
             }
         }
         // every tackle item can be made or found
-        Set<String> found = Set.of("echo_fishing_rod", "blazing_fishing_rod", "prismarine_fishing_rod", "honeycomb_fishing_rod", "sunflower_fishing_rod",
-                "village_fishing_rod", "fish_satchel", "magnetic_bait", "abyss_bait", "incandescent_bait", "enchanted_golden_apple_bobber");
+        Set<String> found = new java.util.HashSet<>(com.li64.tide.data.tackle.TackleLog.FOUND.keySet());
+        found.addAll(Set.of("echo_fishing_rod", "blazing_fishing_rod", "prismarine_fishing_rod", "honeycomb_fishing_rod", "sunflower_fishing_rod",
+                "village_fishing_rod", "fish_satchel", "magnetic_bait", "abyss_bait", "incandescent_bait", "enchanted_golden_apple_bobber"));
         for (RecipeHolder<?> h : server.getRecipeManager().getRecipes())
             if (h.value() instanceof net.minecraft.world.item.crafting.SmithingTransformRecipe s) {
                 List<Ingredient> ing = s.placementInfo().ingredients();

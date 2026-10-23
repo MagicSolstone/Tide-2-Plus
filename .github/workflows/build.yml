@@ -66,8 +66,8 @@ jobs:
         shell: bash
         run: |
           set +e
-          sudo apt-get update -q > /dev/null 2>&1
-          sudo apt-get install -y -q xvfb imagemagick xdotool libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-utils mesa-vulkan-drivers 2>&1 | tail -3
+          timeout 180 sudo apt-get update -q > /dev/null 2>&1
+          timeout 300 sudo apt-get install -y -q xvfb imagemagick xdotool libgl1-mesa-dri libglx-mesa0 libegl-mesa0 mesa-utils mesa-vulkan-drivers 2>&1 | tail -3
           export LIBGL_ALWAYS_SOFTWARE=1 GALLIUM_DRIVER=llvmpipe
           mkdir -p run/saves shots
           rm -rf run/saves/smoke && cp -r run/world run/saves/smoke
@@ -75,7 +75,8 @@ jobs:
           printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\ntutorialStep:none\nrenderDistance:4\nsimulationDistance:5\nsoundCategory_master:0.0\npauseOnLostFocus:false\n' > run/options.txt
           Xvfb :99 -screen 0 1280x720x24 +extension GLX +render -nolisten tcp > xvfb.log 2>&1 &
           export DISPLAY=:99
-          sleep 3; glxinfo -B 2>&1 | head -12 | tee glx.txt; cat xvfb.log | head -5
+          sleep 3; timeout 20 glxinfo -B 2>&1 | head -12 | tee glx.txt; cat xvfb.log | head -5
+          echo "client step: tools ready $(date +%T)" | tee -a glx.txt
           ./gradlew runSmokeClient --no-daemon > client.log 2>&1 &
           pid=$!
           for i in $(seq 1 60); do

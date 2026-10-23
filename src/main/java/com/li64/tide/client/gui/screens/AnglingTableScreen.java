@@ -30,6 +30,11 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
      */
     private long ciLogged = 0;
 
+    /** Room taken up just right of the table (the tackle box's rod rack). */
+    protected int rightReserve() {
+        return 4;
+    }
+
     private void rigPanel(GuiGraphicsExtractor g) {
         if (this.menu.getSlot(0).getItem().isEmpty()) return;
         java.util.List<net.minecraft.world.item.ItemStack> pieces = new java.util.ArrayList<>();
@@ -39,13 +44,18 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         for (net.minecraft.world.item.ItemStack bait : com.li64.tide.util.BaitUtils.getBaitItems(rod))
             if (baits.add(bait.getItem())) pieces.add(bait);
         var rigs = com.li64.tide.data.rods.RigSets.progress(pieces);
-        int w = 124, x = this.leftPos - w - 6, y = this.topPos;
+        // to the left of the table if there's room, else to the right (past the tackle box's rod rack)
+        int y = this.topPos, w = Math.min(124, this.leftPos - 6), x = this.leftPos - w - 4;
+        if (w < 90) {
+            int right = this.leftPos + this.imageWidth + rightReserve();
+            w = Math.min(124, this.width - right - 4);
+            x = right;
+        }
         if (Tide.CI && System.currentTimeMillis() - ciLogged > 1000) {
             ciLogged = System.currentTimeMillis();
             Tide.LOG.info("TIDE-CI rig card: {} rig(s) for {} at x={}", rigs.size(), pieces.stream().map(p -> p.getItem().toString()).toList(), x);
         }
-        if (rigs.isEmpty()) return;
-        if (x < 2) return;           // no room on a narrow screen
+        if (rigs.isEmpty() || w < 90) return;
         float s = 0.75f;
         int need = com.li64.tide.data.rods.RigSets.PIECES;
         // a dark card, then each rig: name and count, the bonus (wrapped), what kinds of piece could still go on

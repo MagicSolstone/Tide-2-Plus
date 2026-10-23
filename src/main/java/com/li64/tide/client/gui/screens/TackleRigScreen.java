@@ -44,6 +44,11 @@ public class TackleRigScreen extends AnglingTableScreen {
     }
 
     @Override
+    protected int rightReserve() {
+        return 32;
+    }
+
+    @Override
     protected boolean hasClickedOutside(double mx, double my, int xo, int yo) {
         int rx = xo + com.li64.tide.registries.items.TackleBoxItem.Menu.RACK_X - 4;
         if (mx >= rx && mx < rx + 26 && my >= yo + 70 && my < yo + 142) return false;      // the rod rack

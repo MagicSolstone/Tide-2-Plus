@@ -58,6 +58,12 @@ public final class FoundRodDrops {
                     .when(LootItemRandomChanceCondition.randomChance(WHEAT))
                     .build());
         }
+        // a little spare tackle in fishermen's chests and shipwrecks (a 1 in 4 chance of one piece)
+        if (key == net.minecraft.world.level.storage.loot.BuiltInLootTables.VILLAGE_FISHER)
+            table.pool(tacklePool(0.25f, "silk_line", "braided_line", "wooden_hook", "copper_hook", "barbed_hook", "feather_bobber",
+                    "duck_bobber", "fly_lure", "spinner_lure", "popper_lure"));
+        if (key == net.minecraft.world.level.storage.loot.BuiltInLootTables.SHIPWRECK_SUPPLY)
+            table.pool(tacklePool(0.25f, "kelp_line", "prismarine_hook", "nautilus_bobber", "turtle_bobber", "squid_lure"));
         if (isLeaves(key)) {
             table.pool(LootPool.lootPool().setRolls(ContextIntProviders.exactly(1))
                     .add(LootItem.lootTableItem(TideItems.GROVE_FISHING_ROD))
@@ -70,6 +76,12 @@ public final class FoundRodDrops {
                     .when(LootItemRandomChanceCondition.randomChance(LEAVES_DECAY))
                     .build());
         }
+    }
+
+    private static LootPool tacklePool(float chance, String... items) {
+        LootPool.Builder pool = LootPool.lootPool().setRolls(ContextIntProviders.exactly(1)).when(LootItemRandomChanceCondition.randomChance(chance));
+        for (String id : items) pool.add(LootItem.lootTableItem(BuiltInRegistries.ITEM.getValue(com.li64.tide.Tide.resource(id))));
+        return pool.build();
     }
 
     private static void mob(ResourceKey<LootTable> key, LootTable.Builder table, EntityType<?> type, Item rod, float chance,

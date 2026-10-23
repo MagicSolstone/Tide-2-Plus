@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "tide:golden_spoon_lure"
+  },
+  "max_uses": 3,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": 14,
+    "id": "minecraft:emerald"
+  },
+  "xp": 25
+}

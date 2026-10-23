@@ -1,0 +1,12 @@
+{
+  "gives": {
+    "id": "tide:feather_bobber"
+  },
+  "max_uses": 4,
+  "reputation_discount": 0.05,
+  "wants": {
+    "count": 5,
+    "id": "minecraft:emerald"
+  },
+  "xp": 10
+}

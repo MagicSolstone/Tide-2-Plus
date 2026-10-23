@@ -121,6 +121,123 @@
         }
       ],
       "rolls": 1
+    },
+    {
+      "rolls": 1,
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:random_chance",
+          "chance": 0.15
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "tide:silk_line",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:vine_line",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:braided_line",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:honey_line",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:wooden_hook",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:copper_hook",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:barbed_hook",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:feathered_hook",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:feather_bobber",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:duck_bobber",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:lily_pad_bobber",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:grassy_bobber",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:fly_lure",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:popper_lure",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:spinner_lure",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:dough_ball",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:glow_worms",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "type": "minecraft:uniform",
+                "min": 2,
+                "max": 5
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }

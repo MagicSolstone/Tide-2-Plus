@@ -1,0 +1,7 @@
+{
+  "replace": false,
+  "values": [
+    "tide:fisherman/bait",
+    "tide:fisherman/silk_line"
+  ]
+}

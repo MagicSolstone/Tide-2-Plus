@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "tide:fisherman/village_fishing_rod"
+    "tide:fisherman/village_fishing_rod",
+    "tide:fisherman/popper_lure"
   ]
 }

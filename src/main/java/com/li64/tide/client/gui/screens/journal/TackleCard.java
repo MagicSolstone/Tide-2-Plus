@@ -168,7 +168,8 @@ final class TackleCard {
         Gui26.text(g, font, "What it does", x, y, DARK, false);
         y += 14;
         List<Component> lines = new ArrayList<>(kind == TackleLog.Category.RODS ? RodEffects.describeRod(stack) : RodEffects.describeItem(stack));
-        lines.addAll(com.li64.tide.data.rods.RigSets.describe(stack));     // rig membership lives here, not on tooltips
+        lines.removeIf(c -> c.getString().startsWith("Part of: "));        // the full rig lines below say it
+        lines.addAll(com.li64.tide.data.rods.RigSets.describe(stack));
         if (kind == TackleLog.Category.BAIT)
             BaitUtils.getDescriptionLines(stack).stream().filter(c -> !c.getString().isBlank() && !c.getString().endsWith(":")).forEach(lines::add);
         if (lines.isEmpty()) lines.add(Component.literal("No special perks: good for looks and the basics."));

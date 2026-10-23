@@ -500,7 +500,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         for (Drop d : drops(rod)) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
         Pick p = pick(rod);
         if (p != null) out.add(line(ChatFormatting.DARK_AQUA, p.text()));
-        // a rig this rod (with what's on it) already counts toward: "Jungle rig 2/3: +5% better catch quality in jungles"
+        // which rigs the rod itself belongs to, then any rig it (with what's on it) already counts toward:
+        // "Jungle rig 2/3: +5% better catch quality in jungles"
+        Component member = RigSets.memberLine(rod);
+        if (member != null && isTide(rod)) out.add(member);
         for (RigSets.RigSet set : RigSets.SETS) {
             int n = RigSets.pieces(set, rod);
             if (n >= RigSets.HALF) out.add(line(ChatFormatting.LIGHT_PURPLE, set.name() + " " + Math.min(n, RigSets.PIECES) + "/" + RigSets.PIECES + ": "
@@ -521,6 +524,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.LIGHT_PURPLE, " " + perk.when().text));
         out.addAll(Unlocks.describe(stack));
+        Component rigs = RigSets.memberLine(stack);
+        if (rigs != null && isTide(stack)) out.add(rigs);
         if (path(stack).equals("lavaproof_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in lava"));
         if (path(stack).equals("void_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in the void"));
         if (path(stack).equals("glow_hook") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Glows, lighting the water around it"));

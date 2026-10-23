@@ -130,6 +130,13 @@ public final class RigSets {
         return e;
     }
 
+    /** One short tooltip line naming the rigs a piece belongs to ("Part of: Storm rig"), or null. */
+    public static Component memberLine(ItemStack stack) {
+        List<String> names = new ArrayList<>();
+        for (RigSet set : SETS) if (set.members().contains(path(stack))) names.add(set.name());
+        return names.isEmpty() ? null : Component.literal("Part of: " + String.join(", ", names)).withStyle(ChatFormatting.LIGHT_PURPLE);
+    }
+
     /** Tooltip lines for a piece that belongs to one or more rigs. */
     public static List<Component> describe(ItemStack stack) {
         List<Component> out = new ArrayList<>();

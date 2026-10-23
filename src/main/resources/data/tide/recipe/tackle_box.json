@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": "#c:ingots/iron",
+    "C": "minecraft:chest",
+    "#": "#c:ingots/copper"
+  },
+  "pattern": [
+    " I ",
+    "#C#",
+    "###"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:tackle_box"
+  }
+}

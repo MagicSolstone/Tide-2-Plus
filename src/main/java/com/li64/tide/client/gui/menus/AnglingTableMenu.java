@@ -45,6 +45,9 @@ public class AnglingTableMenu extends ItemCombinerMenu {
     @Override
     public void removed(@NotNull Player player) {
         super.removed(player);
+        // opened from a tackle box: no block, so hand back whatever is still in the slots
+        if (this.access == ContainerLevelAccess.NULL && player instanceof net.minecraft.server.level.ServerPlayer)
+            this.clearContainer(player, this.inputSlots);
     }
 
     @Override

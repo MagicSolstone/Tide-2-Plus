@@ -166,6 +166,7 @@ public class TideItems {
     public static final Item FISH_BONE_HOOK = register("fish_bone_hook", FishingHookItem::new);
     public static final Item LUCKY_HOOK = register("lucky_hook", FishingHookItem::new);
 
+    public static final Item TACKLE_BOX = register("tackle_box", com.li64.tide.registries.items.TackleBoxItem::new);
     public static final Item FISHING_LINE = register("fishing_line", FishingLineItem::new);
     public static final Item COPPER_LINE = register("copper_line", FishingLineItem::new);
     public static final Item IRON_LINE = register("iron_line", FishingLineItem::new);
@@ -309,6 +310,7 @@ public class TideItems {
 
                     JELLY_TORCH,
 
+                    TACKLE_BOX,
                     FISHING_HOOK, FIERY_HOOK, PERMAFROST_HOOK,
                     TWILIGHT_HOOK, LAVAPROOF_HOOK, VOID_HOOK,
                     WOODEN_HOOK, STONE_HOOK, COPPER_HOOK, GOLDEN_HOOK, DIAMOND_HOOK, EMERALD_HOOK, AMETHYST_HOOK, NETHERITE_HOOK, BONE_HOOK, PRISMARINE_HOOK, GLOW_HOOK, FEATHERED_HOOK, BARBED_HOOK, TREBLE_HOOK, CIRCLE_HOOK, FISH_BONE_HOOK, LUCKY_HOOK,

@@ -19,6 +19,8 @@ public class TideMessages {
         network.registerClientBoundPacket(InfoDataMsg.class, InfoDataMsg.ID, InfoDataMsg::encode, InfoDataMsg::new, InfoDataMsg::handle);
         network.registerClientBoundPacket(SyncPlayerDataMsg.class, SyncPlayerDataMsg.ID, SyncPlayerDataMsg::encode, SyncPlayerDataMsg::new, SyncPlayerDataMsg::handle);
         network.registerClientBoundPacket(ShowToastMsg.class, ShowToastMsg.ID, ShowToastMsg::encode, ShowToastMsg::new, ShowToastMsg::handle);
+        network.registerClientBoundPacket(com.li64.tide.network.messages.TackleSyncMsg.class, com.li64.tide.network.messages.TackleSyncMsg.ID,
+                com.li64.tide.network.messages.TackleSyncMsg::encode, com.li64.tide.network.messages.TackleSyncMsg::new, com.li64.tide.network.messages.TackleSyncMsg::handle);
         network.registerClientBoundPacket(AnglerSyncMsg.class, AnglerSyncMsg.ID, AnglerSyncMsg::encode, AnglerSyncMsg::new, AnglerSyncMsg::handle);
         network.registerClientBoundPacket(SyncDataMsg.class, SyncDataMsg.ID, SyncDataMsg::encode, SyncDataMsg::new, SyncDataMsg::handle);
 

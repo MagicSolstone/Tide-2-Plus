@@ -95,9 +95,18 @@ jobs:
           sleep 4; import -window root shots/4-journal.png
           xdotool mousemove 340 140; sleep 0.5; xdotool click 1; sleep 2; import -window root shots/4b-angler.png
           xdotool key Escape; sleep 1
+          # the tackle section, and the diamond rod's page (5th in the rods row)
+          xdotool mousemove 430 140; sleep 0.5; xdotool click 1; sleep 2; import -window root shots/4c-tackle.png
+          xdotool mousemove 520 212; sleep 0.5; xdotool click 1; sleep 2; import -window root shots/4d-tackle-item.png
+          xdotool key Escape; sleep 1; xdotool key Escape; sleep 1
           xdotool key Escape; sleep 2; import -window root shots/5-after.png
           # inventory, hovering the graded bass in hotbar slot 3 (tooltip: quality, length, weight)
           xdotool key e; sleep 2; xdotool mousemove 568 494; sleep 1.5; import -window root shots/6-tooltip.png
+          xdotool key Escape; sleep 1
+          # tackle box (hotbar 8): open it, then sneak + right-click for the portable angling table
+          xdotool key 8; sleep 1; xdotool click 3; sleep 2; import -window root shots/7-tackle-box.png
+          xdotool key Escape; sleep 1
+          xdotool keydown shift; sleep 0.3; xdotool click 3; sleep 0.5; xdotool keyup shift; sleep 2; import -window root shots/7b-portable-table.png
           xdotool key Escape; sleep 1
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null; true
 

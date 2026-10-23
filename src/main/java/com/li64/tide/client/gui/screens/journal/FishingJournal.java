@@ -63,6 +63,9 @@ public class FishingJournal extends Screen {
     private @Nullable Button rightButton = null;
     private @Nullable Button anglerButton = null;
     private boolean showAngler = false;
+    private boolean showTackle = false;
+    private @Nullable Button tackleButton = null;
+    private final TackleCard tackle = new TackleCard();
     private float yOffset = 3f;
     private boolean didClick;
 
@@ -135,6 +138,7 @@ public class FishingJournal extends Screen {
         this.leftButton = null;
         this.rightButton = null;
         this.anglerButton = null;
+        this.tackleButton = null;
         int xX = Math.min(this.width - 19, (width + BG_WIDTH) / 2 - 27);
         int xY = Math.max(3, (height - BG_HEIGHT) / 2 + 12);
         int leftX = Math.max(3, (width - BG_WIDTH) / 2 + 11);
@@ -156,6 +160,22 @@ public class FishingJournal extends Screen {
                 this.pageChanged();
             }).bounds(xX, xY, 16, 16).build();
         }
+        else if (showTackle) {
+            this.profile = null;
+            this.xButton = Button.builder(Component.literal("X"), button -> {
+                if (tackle.selected != null) tackle.selected = null;
+                else this.showTackle = false;
+                this.pageChanged();
+            }).bounds(xX, xY, 16, 16).build();
+            if (tackle.selected == null && tackle.pageCount() > 1) {
+                this.leftButton = Button.builder(Component.literal("<<"), button -> tacklePage(-1))
+                        .bounds(leftX, this.height / 2 - 8, 16, 16).build();
+                this.addWidget(leftButton);
+                this.rightButton = Button.builder(Component.literal(">>"), button -> tacklePage(1))
+                        .bounds(rightX, this.height / 2 - 8, 16, 16).build();
+                this.addWidget(rightButton);
+            }
+        }
         else if (showAngler) {
             this.profile = null;
             this.xButton = Button.builder(Component.literal("X"), button -> {
@@ -173,6 +193,11 @@ public class FishingJournal extends Screen {
                 this.pageChanged();
             }).bounds(Math.max(3, (width - BG_WIDTH) / 2 + 30), xY, 40, 16).build();
             this.addWidget(anglerButton);
+            this.tackleButton = Button.builder(Component.literal("Tackle"), button -> {
+                this.showTackle = true;
+                this.pageChanged();
+            }).bounds(Math.max(3, (width - BG_WIDTH) / 2 + 30) + 44, xY, 46, 16).build();
+            this.addWidget(tackleButton);
             if (page > 0) {
                 this.leftButton = Button.builder(Component.literal("<<"), button -> pageLeft())
                         .bounds(leftX, this.height / 2 - 8, 16, 16).build();
@@ -185,6 +210,12 @@ public class FishingJournal extends Screen {
             }
         }
         this.addWidget(xButton);
+    }
+
+    private void tacklePage(int by) {
+        int n = tackle.pageCount();
+        tackle.page = ((tackle.page + by) % n + n) % n;
+        this.pageChanged();
     }
 
     private void pageLeft() {
@@ -222,15 +253,22 @@ public class FishingJournal extends Screen {
                 this.showAngler = false;
                 this.pageChanged();
             }
+            else if (this.showTackle) {
+                if (tackle.selected != null) tackle.selected = null;
+                else this.showTackle = false;
+                this.pageChanged();
+            }
             else this.onClose();
             return true;
         }
         if (event.isRight()) {
-            if (this.activeFish == null && !showAngler) pageRight();
+            if (showTackle) { if (tackle.selected == null) tacklePage(1); }
+            else if (this.activeFish == null && !showAngler) pageRight();
             return true;
         }
         if (event.isLeft()) {
-            if (this.activeFish == null && !showAngler) pageLeft();
+            if (showTackle) { if (tackle.selected == null) tacklePage(-1); }
+            else if (this.activeFish == null && !showAngler) pageLeft();
             return true;
         }
         return super.keyPressed(event);
@@ -269,6 +307,7 @@ public class FishingJournal extends Screen {
         if (profile != null) profile.extractRenderState(graphics, mouseX, mouseY, partialTick);
         else if (activeNote != null) activeNote.extractRenderState(graphics, mouseX, mouseY, partialTick);
         else if (showAngler) AnglerCard.draw(graphics, font, player, tlX, tlY);
+        else if (showTackle) { if (tackle.draw(graphics, font, tlX, tlY, mouseX, mouseY, didClick)) updatePage = true; }
         else {
             // render fish grid
             final int hoverTolerance = 3;
@@ -361,6 +400,7 @@ public class FishingJournal extends Screen {
         if (leftButton != null) leftButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (rightButton != null) rightButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
         if (anglerButton != null) anglerButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
+        if (tackleButton != null) tackleButton.extractRenderState(graphics, mouseX, mouseY, partialTick);
         graphics.pose().popMatrix();
 
         if (updatePage) pageChanged();

@@ -27,7 +27,7 @@ item replace entity @s hotbar.3 with tide:wooden_crate
 item replace entity @s hotbar.4 with tide:starlight_bow
 item replace entity @s hotbar.5 with tide:fish_satchel
 item replace entity @s hotbar.6 with tide:cooked_fish
-item replace entity @s hotbar.7 with tide:pocket_watch
+item replace entity @s hotbar.7 with tide:tackle_box[container=[{slot:0,item:{id:"tide:glow_lure",count:1}},{slot:1,item:{id:"tide:amethyst_hook",count:1}},{slot:2,item:{id:"tide:chum",count:16}},{slot:3,item:{id:"tide:slime_line",count:1}}]]
 item replace entity @s hotbar.8 with tide:angling_table
 fishinglevel set @s 28
 item replace entity @s armor.head with tide:angler_hat

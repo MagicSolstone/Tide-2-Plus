@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:iron_nugget",
+    "minecraft:iron_nugget"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:circle_hook"
+  }
+}

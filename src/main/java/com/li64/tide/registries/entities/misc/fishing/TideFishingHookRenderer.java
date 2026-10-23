@@ -96,6 +96,7 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook, Tid
         Vec3 handPos = this.getPlayerHandPos(player, swing2, partialTick);
         Vec3 hookPos = hook.getPosition(partialTick).add(0.0, 0.25, 0.0);
         state.lineOriginOffset = handPos.subtract(hookPos);
+        state.lineWidth = FishingLineItem.width(hook.getLine());
         state.lineColor = lineColor(player, FishingLineItem.getColor(hook.getLine()), FishingLineItem.glows(hook.getLine()));
     }
 
@@ -128,7 +129,7 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook, Tid
         float xa = (float) state.lineOriginOffset.x;
         float ya = (float) state.lineOriginOffset.y;
         float za = (float) state.lineOriginOffset.z;
-        float width = Minecraft.getInstance().gameRenderer.gameRenderState().windowRenderState.appropriateLineWidth;
+        float width = Minecraft.getInstance().gameRenderer.gameRenderState().windowRenderState.appropriateLineWidth * state.lineWidth;
         int color = state.lineColor;
         collector.submitCustomGeometry(poseStack, RenderTypes.lines(), (pose, buffer) -> {
             for (int i = 0; i < 16; i++) {

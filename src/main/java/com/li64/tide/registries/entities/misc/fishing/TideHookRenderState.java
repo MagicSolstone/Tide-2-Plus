@@ -10,6 +10,7 @@ public class TideHookRenderState extends EntityRenderState {
     public boolean hasOwner;
     public Vec3 lineOriginOffset = Vec3.ZERO;
     public int lineColor = 0xFF000000;
+    public float lineWidth = 1f;
     public float initialYaw;
     public Identifier hookTexture;
     public Identifier bobberTexture;

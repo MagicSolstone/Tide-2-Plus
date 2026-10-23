@@ -10,6 +10,26 @@
     "tide:kelp_line",
     "tide:honey_line",
     "tide:silk_line",
-    "tide:phantom_line"
+    "tide:phantom_line",
+    "tide:braided_line",
+    "tide:vine_line",
+    "tide:spider_line",
+    "tide:redstone_line",
+    "tide:white_line",
+    "tide:orange_line",
+    "tide:magenta_line",
+    "tide:light_blue_line",
+    "tide:yellow_line",
+    "tide:lime_line",
+    "tide:pink_line",
+    "tide:gray_line",
+    "tide:light_gray_line",
+    "tide:cyan_line",
+    "tide:purple_line",
+    "tide:blue_line",
+    "tide:brown_line",
+    "tide:green_line",
+    "tide:red_line",
+    "tide:black_line"
   ]
 }

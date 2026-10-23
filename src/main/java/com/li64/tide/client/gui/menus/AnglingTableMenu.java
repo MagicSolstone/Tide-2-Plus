@@ -72,6 +72,14 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                 }
                 else inputSlots.setItem(2, bobber);
             }
+            if (CustomRodManager.hasLure(rod)) {
+                ItemStack lure = CustomRodManager.getLure(rod);
+                CustomRodManager.setLure(rod, null);
+                if (!inputSlots.getItem(4).isEmpty()) {
+                    if (!player.addItem(lure.copy())) player.drop(lure, true, net.minecraft.util.Prediction.SERVER_ONLY);
+                }
+                else inputSlots.setItem(4, lure);
+            }
             if (CustomRodManager.hasHook(rod)) {
                 ItemStack hook = CustomRodManager.getHook(rod);
                 CustomRodManager.setHook(rod, null);
@@ -85,15 +93,19 @@ public class AnglingTableMenu extends ItemCombinerMenu {
         if (inputSlots.getItem(0).isEmpty() ||
                 (inputSlots.getItem(1).isEmpty()
                 && inputSlots.getItem(2).isEmpty()
-                && inputSlots.getItem(3).isEmpty()))
+                && inputSlots.getItem(3).isEmpty()
+                && inputSlots.getItem(4).isEmpty()))
             this.resultSlots.setItem(0, ItemStack.EMPTY);
         else {
             ItemStack rod = inputSlots.getItem(0);
             ItemStack line = inputSlots.getItem(1);
             ItemStack bobber = inputSlots.getItem(2);
             ItemStack hook = inputSlots.getItem(3);
+            ItemStack lure = inputSlots.getItem(4);
 
-            this.resultSlots.setItem(0, getOutputRodFor(rod, bobber, hook, line));
+            ItemStack out = getOutputRodFor(rod, bobber, hook, line);
+            if (!lure.isEmpty()) CustomRodManager.setLure(out, lure);
+            this.resultSlots.setItem(0, out);
         }
     }
 
@@ -115,6 +127,8 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                     stack -> stack.is(TideTags.Items.BOBBERS))
             .withSlot(3, 134, 56,
                     stack -> stack.is(TideTags.Items.HOOKS))
-            .withResultSlot(4, 26, 49).build();
+            .withSlot(4, 110, 56,
+                    stack -> stack.is(TideTags.Items.LURES))
+            .withResultSlot(5, 26, 49).build();
     }
 }

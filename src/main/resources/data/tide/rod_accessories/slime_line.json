@@ -1,5 +1,6 @@
 {
   "item": "tide:slime_line",
   "color": "#7fd650",
-  "glow": true
+  "glow": true,
+  "width": 1.3
 }

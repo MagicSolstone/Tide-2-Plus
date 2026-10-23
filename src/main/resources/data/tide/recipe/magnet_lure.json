@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:iron_ingot",
+    "minecraft:redstone"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:magnet_lure"
+  }
+}

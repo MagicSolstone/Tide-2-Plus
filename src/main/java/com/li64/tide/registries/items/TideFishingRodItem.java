@@ -91,6 +91,10 @@ public class TideFishingRodItem extends FishingRodItem {
             builder.add(hookComponent.withStyle(ChatFormatting.BLUE));
         }
 
+        if (CustomRodManager.hasLure(stack)) {
+            builder.add(AccessoryData.getTranslation(CustomRodManager.getLure(stack)).withStyle(ChatFormatting.BLUE));
+        }
+
         if (CustomRodManager.hasLine(stack)) {
             MutableComponent lineComponent = AccessoryData.getTranslation(line);
             builder.add(lineComponent.withStyle(ChatFormatting.BLUE));

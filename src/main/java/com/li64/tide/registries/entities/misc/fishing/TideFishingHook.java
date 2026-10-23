@@ -237,6 +237,7 @@ public class TideFishingHook extends Projectile {
 
         this.syncedRandom.setSeed(this.getUUID().getLeastSignificantBits() ^ this.level().getGameTime());
         super.tick();
+        if (this.level().isClientSide()) lineParticles();
 
         // Particle effects
         if (BaitUtils.hasBait(TideItems.LUCKY_BAIT, rod) && this.currentState == FishHookState.BOBBING) {
@@ -462,6 +463,15 @@ public class TideFishingHook extends Projectile {
                 if (Tide.CI) Tide.LOG.info("TIDE-CI bite");
                 if (getPlayerOwner() != null) {
                     this.selectCatch(rod);
+                    String bobberPath = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(getBobber().getItem()).getPath();
+                    if (bobberPath.equals("bell_bobber"))
+                        this.level().playSound(null, getPlayerOwner().blockPosition(), SoundEvents.BELL_BLOCK, SoundSource.PLAYERS, 0.7f, 1.4f);
+                    if (bobberPath.equals("ender_pearl_bobber") && !rod.is(TideItems.ECHO_FISHING_ROD) && getPlayerOwner() instanceof ServerPlayer peeker) {
+                        if ((catchType == CatchType.ITEM || catchType == CatchType.FISH) && !hookedItems.isEmpty() && !hookedItems.get(0).isEmpty())
+                            Tide.NETWORK.sendToPlayer(new EchoRodHookedMsg(hookedItems.get(0)), peeker);
+                        else if (catchType == CatchType.CRATE && crateData != null)
+                            Tide.NETWORK.sendToPlayer(new EchoRodHookedMsg(new ItemStack(crateData.blockProvider().getState(level(), random, blockPosition()).getBlock().asItem())), peeker);
+                    }
                     if (rod.is(TideItems.ECHO_FISHING_ROD)) {
                         ServerPlayer serverPlayer = (ServerPlayer) getPlayerOwner();
                         if (catchType == CatchType.ITEM || catchType == CatchType.FISH) {
@@ -588,6 +598,31 @@ public class TideFishingHook extends Projectile {
         getRodItem().retrieveHook(rod, getPlayerOwner(), level());
     }
 
+    /** The fish as it would come out of a furnace (keeping its quality and species name), or as caught if it can't be cooked. */
+    private static ItemStack cookOnTheLine(ServerLevel level, ItemStack raw) {
+        net.minecraft.world.item.crafting.SingleRecipeInput input = new net.minecraft.world.item.crafting.SingleRecipeInput(raw);
+        return level.recipeAccess().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMELTING, input, level)
+                .map(r -> {
+                    ItemStack cooked = r.value().assemble(input);
+                    cooked.setCount(raw.getCount());
+                    return cooked;
+                })
+                .filter(s -> !s.isEmpty())
+                .orElse(raw);
+    }
+
+    /** Some lines give off particles along their length while cast (golden sparkles, redstone sparks...). */
+    private void lineParticles() {
+        Player owner = getPlayerOwner();
+        if (owner == null || this.random.nextInt(3) != 0) return;
+        net.minecraft.core.particles.ParticleOptions particle = com.li64.tide.registries.items.FishingLineItem.particle(getLine());
+        if (particle == null) return;
+        net.minecraft.world.phys.Vec3 hand = owner.position().add(0, owner.getEyeHeight() * 0.75, 0);
+        double t = this.random.nextDouble();
+        net.minecraft.world.phys.Vec3 at = hand.lerp(this.position().add(0, 0.25, 0), t);
+        this.level().addParticle(particle, at.x, at.y - Math.sin(t * Math.PI) * 0.3, at.z, 0, 0.01, 0);
+    }
+
     public int retrieve(ItemStack rod, ServerLevel level, Player player) {
         if (player == null || player.fishing == null || !(player instanceof ServerPlayer serverPlayer)) return 0;
         if (this.level().isClientSide() || !shouldKeepFishing(player)) return 0;
@@ -614,13 +649,27 @@ public class TideFishingHook extends Projectile {
                         if (catchType == CatchType.FISH)
                             com.li64.tide.data.angler.CatchQuality.apply(serverPlayer, stack, this.pendingQuality);
 
+                        // the rod's extras: a second fish (treble hook), or one cooked on the line (redstone line, blazing rod)
+                        ItemStack drop = stack;
+                        int copies = 1;
+                        if (catchType == CatchType.FISH) {
+                            com.li64.tide.data.rods.RodEffects extras = com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod);
+                            if (extras.cook() > 0 && this.random.nextDouble() < extras.cook()) drop = cookOnTheLine(level, stack);
+                            if (extras.twin() > 0 && this.random.nextDouble() < extras.twin()) {
+                                copies = 2;
+                                serverPlayer.sendOverlayMessage(net.minecraft.network.chat.Component.literal("Two on the hook!")
+                                        .withStyle(net.minecraft.ChatFormatting.AQUA));
+                            }
+                        }
+                        for (int copy = 0; copy < copies; copy++) {
+                        ItemStack thisDrop = copy == 0 ? drop : drop.copy();
                         Entity entity;
                         if (medium == FishingMedium.LAVA) {
-                            entity = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), stack) {
+                            entity = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), thisDrop) {
                                 public boolean displayFireAnimation() { return false; }
                                 public void lavaHurt() {}
                             };
-                        } else entity = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), stack);
+                        } else entity = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), thisDrop);
 
                         double dx = player.getX() - this.getX();
                         double dy = player.getY() - this.getY();
@@ -631,7 +680,7 @@ public class TideFishingHook extends Projectile {
                             entity = CompatHelper.hybridAquaticPullEntity(itemEntity, player, this);
                         }
                         if (Tide.PLATFORM.isModLoaded("fishingreal") && entity instanceof ItemEntity) {
-                            Entity converted = CompatHelper.fishingRealConvertItemStack(stack, player, position());
+                            Entity converted = CompatHelper.fishingRealConvertItemStack(thisDrop, player, position());
                             if (converted != null) {
                                 entity = converted;
                                 this.level().addFreshEntity(converted);
@@ -640,6 +689,7 @@ public class TideFishingHook extends Projectile {
                         if (entity instanceof ItemEntity) {
                             this.level().addFreshEntity(entity);
                             if (stack.is(ItemTags.FISHES)) player.awardStat(Stats.FISH_CAUGHT, 1);
+                        }
                         }
 
                         player.level().addFreshEntity(new ExperienceOrb(

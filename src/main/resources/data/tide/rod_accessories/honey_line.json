@@ -1,4 +1,6 @@
 {
   "item": "tide:honey_line",
-  "color": "#f0a52a"
+  "color": "#f0a52a",
+  "width": 1.2,
+  "particle": "minecraft:dripping_honey"
 }

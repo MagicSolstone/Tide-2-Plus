@@ -16,6 +16,7 @@ public final class TideItemData {
     public static final ItemDataKey<CompoundTag> FISHING_LINE = new ComponentItemDataKey<>(TideDataComponents.FISHING_LINE);
     public static final ItemDataKey<CompoundTag> FISHING_BOBBER = new ComponentItemDataKey<>(TideDataComponents.FISHING_BOBBER);
     public static final ItemDataKey<CompoundTag> FISHING_HOOK = new ComponentItemDataKey<>(TideDataComponents.FISHING_HOOK);
+    public static final ItemDataKey<CompoundTag> FISHING_LURE = new ComponentItemDataKey<>(TideDataComponents.FISHING_LURE);
     public static final ItemDataKey<BaitContents> BAIT_CONTENTS = new ComponentItemDataKey<>(TideDataComponents.BAIT_CONTENTS);
     public static final ItemDataKey<ResourceKey<Item>> FISHY_NOTE_VARIANT = new ComponentItemDataKey<>(TideDataComponents.FISHY_NOTE_VARIANT);
     public static final ItemDataKey<SatchelContents> SATCHEL_CONTENTS = new ComponentItemDataKey<>(TideDataComponents.SATCHEL_CONTENTS);

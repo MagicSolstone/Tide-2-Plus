@@ -32,6 +32,23 @@ public class FishingLineItem extends AbstractTooltipItem {
         return data != null && data.glow().orElse(false);
     }
 
+    /** How thick the line draws (1 = normal). */
+    public static float width(ItemStack stack) {
+        AccessoryData data = AccessoryData.get(stack);
+        return data == null ? 1f : data.width().orElse(1f);
+    }
+
+    /** The particle a line gives off while cast, if any (simple particles only, like "minecraft:wax_on"). */
+    public static net.minecraft.core.particles.ParticleOptions particle(ItemStack stack) {
+        AccessoryData data = AccessoryData.get(stack);
+        if (data == null || data.particle().isEmpty()) return null;
+        net.minecraft.resources.Identifier id = net.minecraft.resources.Identifier.tryParse(data.particle().get());
+        if (id == null) return null;
+        return net.minecraft.core.registries.BuiltInRegistries.PARTICLE_TYPE.getOptional(id)
+                .filter(t -> t instanceof net.minecraft.core.particles.SimpleParticleType)
+                .map(t -> (net.minecraft.core.particles.ParticleOptions) t).orElse(null);
+    }
+
     @Override
     public void addTooltip(ItemStack stack, Consumer<Component> tooltip) {
         if (description.isEmpty()) return;

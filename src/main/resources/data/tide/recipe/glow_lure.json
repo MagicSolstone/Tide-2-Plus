@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:glow_ink_sac",
+    "minecraft:glowstone_dust"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:glow_lure"
+  }
+}

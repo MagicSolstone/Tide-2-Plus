@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#c:slime_balls",
+    "#minecraft:planks",
+    "minecraft:red_mushroom"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:mushroom_bobber"
+  }
+}

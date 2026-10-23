@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "tide:fish_bone",
+    "S": "#c:strings"
+  },
+  "pattern": [
+    "#",
+    "S",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:fish_bone_hook"
+  }
+}

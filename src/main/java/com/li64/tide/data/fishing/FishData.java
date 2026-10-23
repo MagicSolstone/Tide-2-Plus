@@ -179,7 +179,7 @@ public record FishData( Holder<Item> fish,
 
     @Override
     public double weight(FishingContext context) {
-        return this.modifyWeight(weight, quality, modifiers, context);
+        return this.modifyWeight(weight, quality, modifiers, context) * com.li64.tide.data.rods.Lures.fishFactor(context, this);
     }
 
     @Override

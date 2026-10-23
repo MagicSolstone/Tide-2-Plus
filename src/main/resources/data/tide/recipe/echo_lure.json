@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:echo_shard",
+    "minecraft:amethyst_shard"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:echo_lure"
+  }
+}

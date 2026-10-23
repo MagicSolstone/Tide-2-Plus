@@ -40,6 +40,13 @@
     "tide:lily_pad_bobber",
     "tide:copper_bobber",
     "tide:sculk_bobber",
-    "tide:prismarine_bobber"
+    "tide:prismarine_bobber",
+    "tide:snowball_bobber",
+    "tide:cactus_bobber",
+    "tide:turtle_bobber",
+    "tide:mushroom_bobber",
+    "tide:honey_bobber",
+    "tide:bell_bobber",
+    "tide:ender_pearl_bobber"
   ]
 }

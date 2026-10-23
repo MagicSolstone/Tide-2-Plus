@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "minecraft:iron_ingot",
+    "#c:dyes/red"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:spinner_lure"
+  }
+}

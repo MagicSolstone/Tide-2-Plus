@@ -1,4 +1,6 @@
 {
-   "item": "tide:golden_line",
-   "color": "#fdf55f"
+  "item": "tide:golden_line",
+  "color": "#fdf55f",
+  "width": 1.1,
+  "particle": "minecraft:wax_on"
 }

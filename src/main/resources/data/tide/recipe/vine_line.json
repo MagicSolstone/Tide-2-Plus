@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "#": "minecraft:vine",
+    "L": "tide:fishing_line"
+  },
+  "pattern": [
+    "#",
+    "L",
+    "#"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:vine_line"
+  }
+}

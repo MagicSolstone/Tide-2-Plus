@@ -1,4 +1,6 @@
 {
   "item": "tide:phantom_line",
-  "color": "#b4bed8"
+  "color": "#b4bed8",
+  "width": 0.8,
+  "particle": "minecraft:white_ash"
 }

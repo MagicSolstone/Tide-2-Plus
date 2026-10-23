@@ -25,6 +25,19 @@ public class CustomRodManager {
         setAccessory(TideItemData.FISHING_HOOK, rod, hook);
     }
 
+    public static void setLure(ItemStack rod, ItemStack lure) {
+        setAccessory(TideItemData.FISHING_LURE, rod, lure);
+    }
+
+    /** The lure on a rod (empty if none: there's no default lure). */
+    public static ItemStack getLure(ItemStack rod) {
+        return getAccessory(TideItemData.FISHING_LURE, rod, ItemStack.EMPTY);
+    }
+
+    public static boolean hasLure(ItemStack rod) {
+        return getAccessory(TideItemData.FISHING_LURE, rod) != null;
+    }
+
     public static void setLine(ItemStack rod, ItemStack line) {
         setAccessory(TideItemData.FISHING_LINE, rod, line);
     }
@@ -78,6 +91,7 @@ public class CustomRodManager {
         if (hasBobber(stack)) builder.add(getBobber(stack));
         if (hasHook(stack)) builder.add(getHook(stack));
         if (hasLine(stack)) builder.add(getLine(stack));
+        if (hasLure(stack)) builder.add(getLure(stack));
         return builder.build();
     }
 

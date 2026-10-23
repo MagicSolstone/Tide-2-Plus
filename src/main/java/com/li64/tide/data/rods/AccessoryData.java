@@ -12,13 +12,15 @@ import net.minecraft.world.item.ItemStack;
 
 import java.util.Optional;
 
-public record AccessoryData(Holder<Item> item, Optional<String> modelPath, Optional<String> color, Optional<Boolean> renderItem, Optional<Boolean> glow) {
+public record AccessoryData(Holder<Item> item, Optional<String> modelPath, Optional<String> color, Optional<Boolean> renderItem, Optional<Boolean> glow, Optional<Float> width, Optional<String> particle) {
     public static final Codec<AccessoryData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             BuiltInRegistries.ITEM.holderByNameCodec().fieldOf("item").forGetter(AccessoryData::item),
             Codec.STRING.optionalFieldOf("model_path").forGetter(AccessoryData::modelPath),
             Codec.STRING.optionalFieldOf("color").forGetter(AccessoryData::color),
             Codec.BOOL.optionalFieldOf("render_item_model").forGetter(AccessoryData::renderItem),
-            Codec.BOOL.optionalFieldOf("glow").forGetter(AccessoryData::glow)
+            Codec.BOOL.optionalFieldOf("glow").forGetter(AccessoryData::glow),
+            Codec.FLOAT.optionalFieldOf("width").forGetter(AccessoryData::width),
+            Codec.STRING.optionalFieldOf("particle").forGetter(AccessoryData::particle)
     ).apply(instance, AccessoryData::new));
 
     public static AccessoryData get(ItemStack stack) {

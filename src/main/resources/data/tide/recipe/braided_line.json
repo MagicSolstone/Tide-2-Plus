@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_line",
+    "tide:fishing_line",
+    "tide:fishing_line"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:braided_line"
+  }
+}

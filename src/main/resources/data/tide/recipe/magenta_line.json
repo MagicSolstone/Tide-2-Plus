@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_line",
+    "#c:dyes/magenta"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:magenta_line"
+  }
+}

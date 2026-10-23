@@ -92,6 +92,21 @@ public class TideItems {
     public static final Item COPPER_BOBBER = register("copper_bobber", FishingBobberItem::new);
     public static final Item SCULK_BOBBER = register("sculk_bobber", FishingBobberItem::new);
     public static final Item PRISMARINE_BOBBER = register("prismarine_bobber", FishingBobberItem::new);
+    public static final Item SNOWBALL_BOBBER = register("snowball_bobber", FishingBobberItem::new);
+    public static final Item CACTUS_BOBBER = register("cactus_bobber", FishingBobberItem::new);
+    public static final Item TURTLE_BOBBER = register("turtle_bobber", FishingBobberItem::new);
+    public static final Item MUSHROOM_BOBBER = register("mushroom_bobber", FishingBobberItem::new);
+    public static final Item HONEY_BOBBER = register("honey_bobber", FishingBobberItem::new);
+    public static final Item BELL_BOBBER = register("bell_bobber", FishingBobberItem::new);
+    public static final Item ENDER_PEARL_BOBBER = register("ender_pearl_bobber", FishingBobberItem::new);
+    public static final Item SPINNER_LURE = register("spinner_lure", com.li64.tide.registries.items.FishingLureItem::new);
+    public static final Item GOLDEN_SPOON_LURE = register("golden_spoon_lure", com.li64.tide.registries.items.FishingLureItem::new);
+    public static final Item GLOW_LURE = register("glow_lure", com.li64.tide.registries.items.FishingLureItem::new);
+    public static final Item ECHO_LURE = register("echo_lure", com.li64.tide.registries.items.FishingLureItem::new);
+    public static final Item FLY_LURE = register("fly_lure", com.li64.tide.registries.items.FishingLureItem::new);
+    public static final Item JIG_LURE = register("jig_lure", com.li64.tide.registries.items.FishingLureItem::new);
+    public static final Item POPPER_LURE = register("popper_lure", com.li64.tide.registries.items.FishingLureItem::new);
+    public static final Item MAGNET_LURE = register("magnet_lure", com.li64.tide.registries.items.FishingLureItem::new);
 
     public static final Item FISHING_HOOK = register("fishing_hook", FishingHookItem::new);
     public static final Item FIERY_HOOK = register("fiery_hook", properties -> new FishingHookItem(properties, "item.tide.fiery_hook.desc"));
@@ -112,6 +127,10 @@ public class TideItems {
     public static final Item GLOW_HOOK = register("glow_hook", FishingHookItem::new);
     public static final Item FEATHERED_HOOK = register("feathered_hook", FishingHookItem::new);
     public static final Item BARBED_HOOK = register("barbed_hook", FishingHookItem::new);
+    public static final Item TREBLE_HOOK = register("treble_hook", FishingHookItem::new);
+    public static final Item CIRCLE_HOOK = register("circle_hook", FishingHookItem::new);
+    public static final Item FISH_BONE_HOOK = register("fish_bone_hook", FishingHookItem::new);
+    public static final Item LUCKY_HOOK = register("lucky_hook", FishingHookItem::new);
 
     public static final Item FISHING_LINE = register("fishing_line", FishingLineItem::new);
     public static final Item COPPER_LINE = register("copper_line", properties -> new FishingLineItem(properties, "item.tide.copper_line.desc"));
@@ -124,6 +143,26 @@ public class TideItems {
     public static final Item HONEY_LINE = register("honey_line", FishingLineItem::new);
     public static final Item SILK_LINE = register("silk_line", FishingLineItem::new);
     public static final Item PHANTOM_LINE = register("phantom_line", FishingLineItem::new);
+    public static final Item BRAIDED_LINE = register("braided_line", FishingLineItem::new);
+    public static final Item VINE_LINE = register("vine_line", FishingLineItem::new);
+    public static final Item SPIDER_LINE = register("spider_line", FishingLineItem::new);
+    public static final Item REDSTONE_LINE = register("redstone_line", FishingLineItem::new);
+    public static final Item WHITE_LINE = register("white_line", FishingLineItem::new);
+    public static final Item ORANGE_LINE = register("orange_line", FishingLineItem::new);
+    public static final Item MAGENTA_LINE = register("magenta_line", FishingLineItem::new);
+    public static final Item LIGHT_BLUE_LINE = register("light_blue_line", FishingLineItem::new);
+    public static final Item YELLOW_LINE = register("yellow_line", FishingLineItem::new);
+    public static final Item LIME_LINE = register("lime_line", FishingLineItem::new);
+    public static final Item PINK_LINE = register("pink_line", FishingLineItem::new);
+    public static final Item GRAY_LINE = register("gray_line", FishingLineItem::new);
+    public static final Item LIGHT_GRAY_LINE = register("light_gray_line", FishingLineItem::new);
+    public static final Item CYAN_LINE = register("cyan_line", FishingLineItem::new);
+    public static final Item PURPLE_LINE = register("purple_line", FishingLineItem::new);
+    public static final Item BLUE_LINE = register("blue_line", FishingLineItem::new);
+    public static final Item BROWN_LINE = register("brown_line", FishingLineItem::new);
+    public static final Item GREEN_LINE = register("green_line", FishingLineItem::new);
+    public static final Item RED_LINE = register("red_line", FishingLineItem::new);
+    public static final Item BLACK_LINE = register("black_line", FishingLineItem::new);
 
     public static final Item FISHING_JOURNAL = register("fishing_journal", FishingJournalItem::new);
     public static final Item FISHY_NOTE = register("fishy_note", FishyNoteItem::new, new Item.Properties().stacksTo(1));
@@ -238,9 +277,9 @@ public class TideItems {
 
                     FISHING_HOOK, FIERY_HOOK, PERMAFROST_HOOK,
                     TWILIGHT_HOOK, LAVAPROOF_HOOK, VOID_HOOK,
-                    WOODEN_HOOK, STONE_HOOK, COPPER_HOOK, GOLDEN_HOOK, DIAMOND_HOOK, EMERALD_HOOK, AMETHYST_HOOK, NETHERITE_HOOK, BONE_HOOK, PRISMARINE_HOOK, GLOW_HOOK, FEATHERED_HOOK, BARBED_HOOK,
+                    WOODEN_HOOK, STONE_HOOK, COPPER_HOOK, GOLDEN_HOOK, DIAMOND_HOOK, EMERALD_HOOK, AMETHYST_HOOK, NETHERITE_HOOK, BONE_HOOK, PRISMARINE_HOOK, GLOW_HOOK, FEATHERED_HOOK, BARBED_HOOK, TREBLE_HOOK, CIRCLE_HOOK, FISH_BONE_HOOK, LUCKY_HOOK,
 
-                    FISHING_LINE, COPPER_LINE, IRON_LINE, GOLDEN_LINE, DIAMOND_LINE, SLIME_LINE, COAL_LINE, KELP_LINE, HONEY_LINE, SILK_LINE, PHANTOM_LINE,
+                    FISHING_LINE, COPPER_LINE, IRON_LINE, GOLDEN_LINE, DIAMOND_LINE, SLIME_LINE, COAL_LINE, KELP_LINE, HONEY_LINE, SILK_LINE, PHANTOM_LINE, BRAIDED_LINE, VINE_LINE, SPIDER_LINE, REDSTONE_LINE, WHITE_LINE, ORANGE_LINE, MAGENTA_LINE, LIGHT_BLUE_LINE, YELLOW_LINE, LIME_LINE, PINK_LINE, GRAY_LINE, LIGHT_GRAY_LINE, CYAN_LINE, PURPLE_LINE, BLUE_LINE, BROWN_LINE, GREEN_LINE, RED_LINE, BLACK_LINE,
 
                     RED_BOBBER, ORANGE_BOBBER,
                     YELLOW_BOBBER, LIME_BOBBER,
@@ -258,7 +297,7 @@ public class TideItems {
                     FEATHER_BOBBER, LICHEN_BOBBER,
                     NAUTILUS_BOBBER, PEARL_BOBBER,
                     HEART_BOBBER, GRASSY_BOBBER,
-                    DUCK_BOBBER, SLIME_BOBBER, CHERRY_BOBBER, GLOW_BERRY_BOBBER, PUMPKIN_BOBBER, LILY_PAD_BOBBER, COPPER_BOBBER, SCULK_BOBBER, PRISMARINE_BOBBER
+                    DUCK_BOBBER, SLIME_BOBBER, CHERRY_BOBBER, GLOW_BERRY_BOBBER, PUMPKIN_BOBBER, LILY_PAD_BOBBER, COPPER_BOBBER, SCULK_BOBBER, PRISMARINE_BOBBER, SNOWBALL_BOBBER, CACTUS_BOBBER, TURTLE_BOBBER, MUSHROOM_BOBBER, HONEY_BOBBER, BELL_BOBBER, ENDER_PEARL_BOBBER, SPINNER_LURE, GOLDEN_SPOON_LURE, GLOW_LURE, ECHO_LURE, FLY_LURE, JIG_LURE, POPPER_LURE, MAGNET_LURE
             );
 
             TideFish.ORDERED.forEach(item -> {

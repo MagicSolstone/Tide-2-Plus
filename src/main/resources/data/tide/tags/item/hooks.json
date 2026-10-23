@@ -38,6 +38,10 @@
     {
       "id": "hybrid_aquatic:ominous_hook",
       "required": false
-    }
+    },
+    "tide:treble_hook",
+    "tide:circle_hook",
+    "tide:fish_bone_hook",
+    "tide:lucky_hook"
   ]
 }

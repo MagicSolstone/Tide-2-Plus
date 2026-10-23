@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "#minecraft:planks",
+    "#c:dyes/white",
+    "#c:dyes/red"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:popper_lure"
+  }
+}

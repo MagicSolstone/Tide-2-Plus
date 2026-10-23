@@ -52,6 +52,11 @@ public class TideDataComponents {
                     .persistent(CompoundTag.CODEC)
                     .networkSynchronized(ByteBufCodecs.COMPOUND_TAG).build());
 
+    public static final DataComponentType<CompoundTag> FISHING_LURE = register(
+            "fishing_lure", DataComponentType.<CompoundTag>builder()
+                    .persistent(CompoundTag.CODEC)
+                    .networkSynchronized(ByteBufCodecs.COMPOUND_TAG).build());
+
     public static final DataComponentType<BaitContents> BAIT_CONTENTS = register(
             "bait_contents", DataComponentType.<BaitContents>builder()
                     .persistent(BaitContents.CODEC)

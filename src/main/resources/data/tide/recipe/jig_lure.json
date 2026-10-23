@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:fishing_hook",
+    "#c:ingots/copper",
+    "#c:dyes/green"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:jig_lure"
+  }
+}

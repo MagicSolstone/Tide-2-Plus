@@ -1,4 +1,5 @@
 {
-   "item": "tide:copper_line",
-   "color": "#cc6e2b"
+  "item": "tide:copper_line",
+  "color": "#cc6e2b",
+  "width": 1.2
 }

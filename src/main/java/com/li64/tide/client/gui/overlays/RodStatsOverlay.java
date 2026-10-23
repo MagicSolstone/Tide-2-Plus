@@ -1,0 +1,114 @@
+package com.li64.tide.client.gui.overlays;
+
+import com.li64.tide.Tide;
+import com.li64.tide.client.ClientAngler;
+import com.li64.tide.client.Gui26;
+import com.li64.tide.data.angler.Angler;
+import com.li64.tide.data.rods.RodEffects;
+import com.li64.tide.registries.items.TideFishingRodItem;
+import com.li64.tide.util.BaitUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * While a rod is in hand: a small panel at the right edge with what the rod, everything on it, the outfit
+ * and the fishing level add up to, against a plain rod. The basics always; extras only when there are any;
+ * and which place-and-time perks are on right now. Off with "showRodStats": false in the client config.
+ */
+public final class RodStatsOverlay {
+    private RodStatsOverlay() {}
+
+    private static final int GOOD = 0xFF7FE07F, BAD = 0xFFFF8A7A, TEXT = 0xFFE8E8E8, DIM = 0xFFA8B4BC, HEAD = 0xFFFFD27F;
+
+    private record Row(String label, String value, int color) {}
+
+    public static void render(GuiGraphicsExtractor g, float dt) {
+        Minecraft mc = Minecraft.getInstance();
+        Player player = mc.player;
+        if (player == null || !Tide.CLIENT_CONFIG.general.showRodStats) return;      // the HUD already hides with F1
+        ItemStack rod = player.getMainHandItem().getItem() instanceof TideFishingRodItem ? player.getMainHandItem()
+                : player.getOffhandItem().getItem() instanceof TideFishingRodItem ? player.getOffhandItem() : ItemStack.EMPTY;
+        if (rod.isEmpty()) return;
+
+        int own = Angler.levelForXp(ClientAngler.xp);
+        int level = !ClientAngler.enabled || ClientAngler.fair ? ClientAngler.baseline : own;
+        Angler.Stats st = Angler.Stats.of(level);
+        RodEffects e = RodEffects.of(player, rod);
+        var enchants = player.level().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
+        int lure = EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(Enchantments.LURE), rod);
+        int sea = EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(Enchantments.LUCK_OF_THE_SEA), rod);
+        int speed = lure + Math.min(BaitUtils.getCombinedSpeed(rod), TideFishingRodItem.BAIT_SPEED_CAP) + e.speed();
+        int luck = e.luck() + BaitUtils.getCombinedLuck(rod) + st.luck() + sea;
+
+        List<Row> rows = new ArrayList<>();
+        rows.add(pct("Cast range", (1 + e.cast()) * st.castDistance() - 1, false));
+        rows.add(pct("Bite speed", 1 / (e.biteWaitFactor() * st.biteWait()) - 1, false));
+        if (speed != 0) rows.add(new Row("Lure and bait", String.format("%d s sooner", speed * 5), speed > 0 ? GOOD : BAD));
+        rows.add(pct("Hook window", (1 + e.window()) * st.hookZones() - 1, false));
+        rows.add(new Row("Luck", luck == 0 ? "None" : String.format("%+d", luck), luck > 0 ? GOOD : luck < 0 ? BAD : DIM));
+        if (e.quality() != 0) rows.add(pct("Catch quality", e.quality(), false));
+        if (e.fight() != 0) rows.add(new Row("Fish fight", Math.round(Math.abs(e.fight()) * 100) + "% " + (e.fight() < 0 ? "easier" : "harder"), e.fight() < 0 ? GOOD : BAD));
+        if (e.ease() != 0) rows.add(new Row("Catch difficulty", "-" + Math.round(e.ease() * 100) + "%", GOOD));
+        if (e.land() != 0) rows.add(pct("Land Good/Bad", e.land(), false));
+        if (e.xp() != 0) rows.add(pct("Fishing XP", e.xp(), false));
+        if (e.twin() != 0) rows.add(new Row("Second fish", Math.round(e.twin() * 100) + "%", GOOD));
+        if (e.cook() != 0) rows.add(new Row("Comes up cooked", Math.round(e.cook() * 100) + "%", GOOD));
+        if (e.upgrade() != 0) rows.add(new Row("Quality bump", Math.round(e.upgrade() * 100) + "%", GOOD));
+
+        Set<String> active = new LinkedHashSet<>();
+        List<ItemStack> all = new ArrayList<>(List.of(rod));
+        all.addAll(RodEffects.parts(rod));
+        for (ItemStack part : all)
+            for (RodEffects.Perk p : RodEffects.situational(part))
+                if (p.when().test(player)) active.add(p.when().text.replaceFirst("^(in|on|at|by) (the |a )?", ""));
+
+        Font font = mc.font;
+        float s = 0.75f;
+        int labelW = rows.stream().mapToInt(r -> font.width(r.label())).max().orElse(0);
+        int valueW = rows.stream().mapToInt(r -> font.width(r.value())).max().orElse(0);
+        String title = "Fishing Lv " + level + (ClientAngler.fair && ClientAngler.enabled ? " (fair play)" : "");
+        String on = active.isEmpty() ? null : "Active: " + String.join(", ", active);
+        int w = Math.max(labelW + 10 + valueW, Math.max(font.width(title), on == null ? 0 : Math.min(font.width(on), 170)));
+        List<net.minecraft.util.FormattedCharSequence> onLines = on == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(on), Math.max(w, 120));
+        int h = 12 + rows.size() * 10 + onLines.size() * 10 + (onLines.isEmpty() ? 0 : 3);
+        int sw = g.guiWidth(), sh = g.guiHeight();
+        float px = sw - (w + 10) * s - 4, py = (sh - (h + 8) * s) / 2f;
+
+        g.pose().pushMatrix();
+        g.pose().translate(px, py);
+        g.pose().scale(s, s);
+        g.fill(0, 0, w + 10, h + 8, 0x90101820);
+        g.fill(0, 0, 2, h + 8, 0xFF4FA3FF);
+        int y = 5;
+        Gui26.text(g, font, title, 6, y, HEAD, true);
+        y += 12;
+        for (Row r : rows) {
+            Gui26.text(g, font, r.label(), 6, y, TEXT, true);
+            Gui26.text(g, font, r.value(), 6 + w - font.width(r.value()), y, r.color(), true);
+            y += 10;
+        }
+        if (!onLines.isEmpty()) {
+            y += 3;
+            for (var line : onLines) { Gui26.text(g, font, line, 6, y, DIM, true); y += 10; }
+        }
+        g.pose().popMatrix();
+    }
+
+    private static Row pct(String label, double v, boolean lowerIsBetter) {
+        long n = Math.round(v * 100);
+        if (n == 0) return new Row(label, "Normal", DIM);
+        boolean good = lowerIsBetter ? n < 0 : n > 0;
+        return new Row(label, String.format("%+d%%", n), good ? GOOD : BAD);
+    }
+}

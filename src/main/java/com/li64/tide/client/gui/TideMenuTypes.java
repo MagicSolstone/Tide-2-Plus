@@ -15,6 +15,9 @@ public class TideMenuTypes {
     public static final MenuType<AnglingTableMenu> ANGLING_TABLE = register("angling_table",
             Tide.PLATFORM.createMenuType(AnglingTableMenu::new, FeatureFlags.DEFAULT_FLAGS));
 
+    public static final MenuType<com.li64.tide.registries.items.TackleBoxItem.Menu> TACKLE_BOX = register("tackle_box",
+            Tide.PLATFORM.createMenuType(com.li64.tide.registries.items.TackleBoxItem.Menu::new, FeatureFlags.DEFAULT_FLAGS));
+
     public static <T extends AbstractContainerMenu> MenuType<T> register(String key, MenuType<T> menuType) {
         MENU_TYPES.put(key, menuType);
         return Tide.PLATFORM.register(BuiltInRegistries.MENU, Tide.resource(key), menuType);

@@ -77,7 +77,7 @@ final class TackleCard {
     /** Draws the grid or the selected item's page. Returns true when a click changed what's shown. */
     boolean draw(GuiGraphicsExtractor g, Font font, int tlX, int tlY, int mouseX, int mouseY, boolean clicked) {
         if (selected != null) {
-            drawItemPage(g, font, tlX, tlY);
+            drawItemPage(g, font, tlX, tlY, mouseX, mouseY);
             return false;
         }
         long have = BuiltInRegistries.ITEM.stream().filter(i -> TackleLog.category(i) != null && found(i)).count();
@@ -118,27 +118,51 @@ final class TackleCard {
         return changed;
     }
 
-    private void drawItemPage(GuiGraphicsExtractor g, Font font, int tlX, int tlY) {
+    private final java.util.Set<String> asked = new java.util.HashSet<>();
+
+    private void drawItemPage(GuiGraphicsExtractor g, Font font, int tlX, int tlY, int mouseX, int mouseY) {
         ItemStack stack = selected;
         TackleLog.Category kind = TackleLog.category(stack.getItem());
+        String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
 
-        // left page: the item, big, with its name
+        // left page: name, the item, and how it's made
         int x = tlX + 40, y = tlY + 30;
         Gui26.text(g, font, stack.getHoverName().getString(), x, y, DARK, false);
         y += 11;
         Gui26.text(g, font, kind == null ? "" : kind.label.replaceAll("s$", ""), x, y, INK, false);
+        y += 14;
         g.pose().pushMatrix();
-        g.pose().translate(x + 35, y + 25);
-        g.pose().scale(5f, 5f);
+        g.pose().translate(x, y);
+        g.pose().scale(3f, 3f);
         g.item(stack, 0, 0);
         g.pose().popMatrix();
-        y += 120;
+
+        com.li64.tide.network.messages.RecipeViewMsg recipe = ClientTackle.recipes.get(id);
+        if (recipe == null && asked.add(id)) com.li64.tide.Tide.NETWORK.sendToServer(new com.li64.tide.network.messages.RecipeRequestMsg(id));
+        int gx = x + 62, gy = y - 4;
+        if (recipe == null) Gui26.text(g, font, "...", gx, gy + 20, INK, false);
+        else if (recipe.kind().equals("found")) {
+            int ty = gy + 4;
+            for (FormattedCharSequence line : font.split(Component.literal(recipe.note()), 88)) { Gui26.text(g, font, line, gx, ty, INK, false); ty += 10; }
+        } else {
+            String label = switch (recipe.kind()) { case "smithing" -> "Smithing table"; case "shapeless" -> "Any arrangement"; default -> "Crafting table"; };
+            Gui26.text(g, font, label, gx, gy - 6, DARK, false);
+            if (recipe.kind().equals("smithing")) {      // template + base + addition, in a row
+                for (int i = 0; i < recipe.slots().size(); i++) slot(g, font, recipe.slots().get(i), gx + i * 20, gy + 6, mouseX, mouseY);
+                Gui26.text(g, font, "template, rod, upgrade", gx, gy + 30, INK, false);
+            } else {
+                for (int r = 0; r < recipe.height(); r++)
+                    for (int c = 0; c < recipe.width(); c++)
+                        slot(g, font, recipe.slots().get(r * recipe.width() + c), gx + c * 20, gy + 6 + r * 20, mouseX, mouseY);
+            }
+        }
+        y += 66;
         for (FormattedCharSequence line : font.split(Component.literal(howToUse(kind)), 150)) {
             Gui26.text(g, font, line, x, y, INK, false);
             y += 10;
         }
 
-        // right page: what it does, in the same words as its tooltip
+        // right page: what it does, in the same words as its tooltip; smaller text if it's a long list
         x = tlX + 215;
         y = tlY + 30;
         Gui26.text(g, font, "What it does", x, y, DARK, false);
@@ -147,14 +171,38 @@ final class TackleCard {
         if (kind == TackleLog.Category.BAIT)
             BaitUtils.getDescriptionLines(stack).stream().filter(c -> !c.getString().isBlank() && !c.getString().endsWith(":")).forEach(lines::add);
         if (lines.isEmpty()) lines.add(Component.literal("No special perks: good for looks and the basics."));
-        for (Component c : lines) {
-            for (FormattedCharSequence line : font.split(Component.literal("- " + c.getString()), 150)) {
-                if (y > tlY + 220) break;
-                Gui26.text(g, font, line, x, y, INK, false);
-                y += 10;
-            }
-            y += 2;
+        int room = tlY + 226 - y;
+        float scale = 1f;
+        List<FormattedCharSequence> wrapped = new ArrayList<>();
+        for (; scale >= 0.6f; scale -= 0.1f) {
+            wrapped.clear();
+            for (Component c : lines) wrapped.addAll(font.split(Component.literal("- " + c.getString()), (int) (150 / scale)));
+            if (wrapped.size() * 10 * scale + lines.size() * 2 * scale <= room) break;
         }
+        g.pose().pushMatrix();
+        g.pose().translate(x, y);
+        g.pose().scale(scale, scale);
+        int ly = 0;
+        for (Component c : lines) {
+            for (FormattedCharSequence line : font.split(Component.literal("- " + c.getString()), (int) (150 / scale))) {
+                Gui26.text(g, font, line, 0, ly, INK, false);
+                ly += 10;
+            }
+            ly += 2;
+        }
+        g.pose().popMatrix();
+    }
+
+    /** One recipe slot: a tan square with the item (cycling through a tag's items), its name on hover. */
+    private static void slot(GuiGraphicsExtractor g, Font font, List<String> options, int x, int y, int mouseX, int mouseY) {
+        g.fill(x, y, x + 18, y + 18, 0xFFD7B594);
+        g.fill(x + 1, y + 1, x + 17, y + 17, 0xFFE8D2B4);
+        if (options.isEmpty()) return;
+        String id = options.get((int) ((System.currentTimeMillis() / 1000) % options.size()));
+        ItemStack stack = new ItemStack(BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(id)));
+        g.item(stack, x + 1, y + 1);
+        if (mouseX >= x && mouseX < x + 18 && mouseY >= y && mouseY < y + 18)
+            g.setTooltipForNextFrame(font, options.size() > 1 ? Component.literal(stack.getHoverName().getString() + " (or similar)") : stack.getHoverName(), mouseX, mouseY);
     }
 
     private static String howToUse(TackleLog.Category kind) {

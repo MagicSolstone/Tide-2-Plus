@@ -52,6 +52,7 @@ public final class Lures {
             Map.entry("golden_hook", List.of(new Pull("Attracts uncommon and rarer fish", d -> atLeast(d, FishRarity.UNCOMMON), 1.2, null))),
             Map.entry("amethyst_hook", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.2, null))),
             Map.entry("prismarine_hook", List.of(new Pull("Attracts saltwater fish", d -> d.profile().group() == JournalGroup.SALTWATER, 1.5, null))),
+            Map.entry("prismarine_line", List.of(new Pull("Attracts saltwater fish", d -> d.profile().group() == JournalGroup.SALTWATER, 1.3, null))),
             Map.entry("netherite_hook", List.of(new Pull("Attracts big fish", Lures::big, 1.3, null))),
             Map.entry("echo_bobber", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.5, RodEffects.When.NEW_MOON))),
             Map.entry("iron_bobber", List.of(new Pull("Attracts big fish", Lures::big, 1.2, null))),

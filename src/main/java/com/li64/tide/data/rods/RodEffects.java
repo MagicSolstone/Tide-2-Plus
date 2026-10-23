@@ -123,6 +123,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("honey_line", land(0.10)),
             Map.entry("silk_line", bite(0.08)),
             Map.entry("phantom_line", cast(0.15)),
+            Map.entry("amethyst_line", quality(0.08)),
+            Map.entry("netherite_line", new RodEffects(0, 0, 0, -0.08, 0, 0, 0.05, 0)),
             Map.entry("braided_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.10, 0)),
             Map.entry("redstone_line", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.20)));
 
@@ -235,6 +237,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("slime_line", List.of(new Perk(When.UNDERGROUND, new RodEffects(0, 0.20, 0.05, 0, 1, 0, 0, 0)))),
             Map.entry("kelp_line", List.of(new Perk(When.OCEAN, bite(0.15)))),
             Map.entry("vine_line", List.of(new Perk(When.JUNGLE, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)))),
+            Map.entry("netherite_line", List.of(new Perk(When.NETHER, bite(0.15)))),
+            Map.entry("prismarine_line", List.of(new Perk(When.OCEAN, luck(1)))),
             Map.entry("spider_line", List.of(new Perk(When.NIGHT, window(0.10)), new Perk(When.NEW_MOON, luck(1)))),
             // hooks
             Map.entry("lucky_hook", List.of(new Perk(When.FULL_MOON, luck(1)))),

@@ -33,7 +33,7 @@ jobs:
       - name: Asset check
         if: steps.build.outcome == 'success'
         shell: bash
-        run: python3 ci/check_assets.py
+        run: python3 ci/check_assets.py && python3 ci/recipe_unlocks.py --check
 
       # Boot a dedicated server with the mod for a couple of minutes and keep its log: data-pack
       # format errors, registry problems and crashes show up here without launching the game.

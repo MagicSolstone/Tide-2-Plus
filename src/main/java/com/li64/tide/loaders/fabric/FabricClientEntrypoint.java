@@ -36,6 +36,7 @@ public class FabricClientEntrypoint implements ClientModInitializer {
         Tide.NETWORK.registerHandlers();
 
         MenuScreens.register(TideMenuTypes.ANGLING_TABLE, AnglingTableScreen::new);
+        MenuScreens.register(TideMenuTypes.TACKLE_BOX, com.li64.tide.client.gui.screens.TackleBoxScreen::new);
 
         ParticleProviderRegistry.getInstance().register(TideParticleTypes.VOID_RIPPLE_LARGE, VoidRipple.LargeProvider::new);
         ParticleProviderRegistry.getInstance().register(TideParticleTypes.VOID_RIPPLE_SMALL, VoidRipple.SmallProvider::new);

@@ -30,6 +30,9 @@
     "tide:brown_line",
     "tide:green_line",
     "tide:red_line",
-    "tide:black_line"
+    "tide:black_line",
+    "tide:amethyst_line",
+    "tide:netherite_line",
+    "tide:prismarine_line"
   ]
 }

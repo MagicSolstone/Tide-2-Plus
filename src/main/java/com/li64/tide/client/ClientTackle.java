@@ -8,4 +8,7 @@ public final class ClientTackle {
     private ClientTackle() {}
 
     public static Set<String> found = new HashSet<>();
+
+    /** How each piece of tackle is made, as the server last answered (by item id). */
+    public static final java.util.Map<String, com.li64.tide.network.messages.RecipeViewMsg> recipes = new java.util.HashMap<>();
 }

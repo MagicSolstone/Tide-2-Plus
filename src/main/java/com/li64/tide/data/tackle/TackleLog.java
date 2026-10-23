@@ -55,6 +55,65 @@ public final class TackleLog {
         return c == Category.LINES || c == Category.HOOKS || c == Category.BOBBERS || c == Category.LURES || c == Category.BAIT;
     }
 
+    /** Tackle that isn't crafted, and where it comes from. */
+    public static final Map<String, String> FOUND = Map.ofEntries(
+            Map.entry("echo_fishing_rod", "Found in ancient city chests."),
+            Map.entry("blazing_fishing_rod", "Found in nether fortress chests."),
+            Map.entry("prismarine_fishing_rod", "Dropped by elder guardians."),
+            Map.entry("honeycomb_fishing_rod", "Sometimes drops when you harvest honeycomb from a hive."),
+            Map.entry("sunflower_fishing_rod", "Fished up in plains biomes (rare)."),
+            Map.entry("village_fishing_rod", "Bought from a fisherman villager."),
+            Map.entry("enchanted_golden_apple_bobber", "Found in treasure, like the enchanted golden apple."),
+            Map.entry("magnetic_bait", "Crafted, or found in fishing crates."),
+            Map.entry("abyss_bait", "Made from a pale clubfish."),
+            Map.entry("incandescent_bait", "Made from an incandescent larva."));
+
+    /** How a piece of tackle is made: its crafting grid, its smithing recipe, or where it's found. */
+    public static com.li64.tide.network.messages.RecipeViewMsg recipeFor(net.minecraft.server.MinecraftServer server, String itemId) {
+        Item target = BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(itemId));
+        net.minecraft.server.level.ServerLevel level = server.overworld();
+        for (var h : server.getRecipeManager().getRecipes()) {
+            var r = h.value();
+            try {
+                if (r instanceof net.minecraft.world.item.crafting.ShapedRecipe s) {
+                    List<List<String>> slots = s.getIngredients().stream().map(o -> o.map(TackleLog::options).orElse(List.of())).toList();
+                    if (makes(s, s.getWidth(), s.getHeight(), slots, target))
+                        return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "crafting", s.getWidth(), s.getHeight(), slots, "");
+                } else if (r instanceof net.minecraft.world.item.crafting.ShapelessRecipe s) {
+                    List<List<String>> slots = s.placementInfo().ingredients().stream().map(TackleLog::options).toList();
+                    int w = Math.min(3, slots.size()), hh = (slots.size() + 2) / 3;
+                    List<List<String>> padded = new ArrayList<>(slots);
+                    while (padded.size() < w * hh) padded.add(List.of());
+                    if (makes(s, w, hh, padded, target))
+                        return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "shapeless", w, hh, padded, "");
+                } else if (r instanceof net.minecraft.world.item.crafting.SmithingTransformRecipe s) {
+                    List<List<String>> slots = s.placementInfo().ingredients().stream().map(TackleLog::options).toList();
+                    if (slots.size() == 3) {
+                        ItemStack out = s.assemble(new net.minecraft.world.item.crafting.SmithingRecipeInput(first(slots.get(0)), first(slots.get(1)), first(slots.get(2))));
+                        if (out.is(target)) return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "smithing", 3, 1, slots, "");
+                    }
+                }
+            } catch (Throwable ignored) {
+            }
+        }
+        String path = BuiltInRegistries.ITEM.getKey(target).getPath();
+        return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "found", 0, 0, List.of(), FOUND.getOrDefault(path, "Found while fishing or exploring."));
+    }
+
+    private static List<String> options(net.minecraft.world.item.crafting.Ingredient ing) {
+        return ing.items().limit(8).map(h -> BuiltInRegistries.ITEM.getKey(h.value()).toString()).toList();
+    }
+
+    private static ItemStack first(List<String> ids) {
+        return ids.isEmpty() ? ItemStack.EMPTY : new ItemStack(BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(ids.get(0))));
+    }
+
+    private static boolean makes(net.minecraft.world.item.crafting.CraftingRecipe r, int w, int h, List<List<String>> slots, Item target) {
+        List<ItemStack> items = slots.stream().map(TackleLog::first).toList();
+        if (items.size() != w * h) return false;
+        return r.assemble(net.minecraft.world.item.crafting.CraftingInput.of(w, h, items)).is(target);
+    }
+
     public static Set<String> found(ServerPlayer player) {
         CompoundTag tag = Tide.PLATFORM.getPlayerData(player).getCompoundOrEmpty(TAG);
         String s = tag.getStringOr("found", "");

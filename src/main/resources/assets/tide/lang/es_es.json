@@ -880,5 +880,8 @@
   "item.tide.sculk_bait": "Sculk Bait",
   "item.tide.brine_shrimp": "Brine Shrimp",
   "item.tide.tackle_box": "Tackle Box",
-  "item.tide.ender_eye_bobber": "Ender Eye Bobber"
+  "item.tide.ender_eye_bobber": "Ender Eye Bobber",
+  "item.tide.amethyst_line": "Amethyst Line",
+  "item.tide.netherite_line": "Netherite Line",
+  "item.tide.prismarine_line": "Prismarine Line"
 }

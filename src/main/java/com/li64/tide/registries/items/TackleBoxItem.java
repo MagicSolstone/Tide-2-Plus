@@ -66,8 +66,13 @@ public class TackleBoxItem extends AbstractTooltipItem {
     public static class Menu extends ChestMenu {
         private final ItemStack box;
 
+        /** The client's copy (the box itself stays on the server). */
+        public Menu(int id, Inventory inventory) {
+            this(id, inventory, ItemStack.EMPTY);
+        }
+
         public Menu(int id, Inventory inventory, ItemStack box) {
-            super(MenuType.GENERIC_9x3, id, inventory, load(box), 3);
+            super(com.li64.tide.client.gui.TideMenuTypes.TACKLE_BOX, id, inventory, load(box), 3);
             this.box = box;
             SimpleContainer container = (SimpleContainer) this.getContainer();
             for (int i = 0; i < SIZE; i++) {           // swap in slots that only take tackle
@@ -95,6 +100,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
         }
 
         private static void save(ItemStack box, SimpleContainer c) {
+            if (box.isEmpty()) return;
             box.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(c.getItems()));
         }
 
@@ -106,14 +112,14 @@ public class TackleBoxItem extends AbstractTooltipItem {
 
         @Override
         public boolean stillValid(@NotNull Player player) {
-            return player.getMainHandItem() == box || player.getOffhandItem() == box;
+            return box.isEmpty() || player.getMainHandItem() == box || player.getOffhandItem() == box;
         }
 
         @Override
         public void clicked(int slot, int button, @NotNull ContainerInput input, @NotNull Player player) {
             // the open box itself can't be moved (or it could be emptied twice)
-            if (slot >= 0 && slot < this.slots.size() && this.slots.get(slot).getItem() == box) return;
-            if (input == ContainerInput.SWAP && (player.getInventory().getItem(button) == box
+            if (!box.isEmpty() && slot >= 0 && slot < this.slots.size() && this.slots.get(slot).getItem() == box) return;
+            if (!box.isEmpty() && input == ContainerInput.SWAP && (player.getInventory().getItem(button) == box
                     || (button == 40 && player.getOffhandItem() == box))) return;
             super.clicked(slot, button, input, player);
         }

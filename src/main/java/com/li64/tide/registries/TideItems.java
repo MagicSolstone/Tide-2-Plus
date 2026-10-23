@@ -176,6 +176,9 @@ public class TideItems {
     public static final Item HONEY_LINE = register("honey_line", FishingLineItem::new);
     public static final Item SILK_LINE = register("silk_line", FishingLineItem::new);
     public static final Item PHANTOM_LINE = register("phantom_line", FishingLineItem::new);
+    public static final Item AMETHYST_LINE = register("amethyst_line", FishingLineItem::new);
+    public static final Item NETHERITE_LINE = register("netherite_line", FishingLineItem::new, new Item.Properties().fireResistant());
+    public static final Item PRISMARINE_LINE = register("prismarine_line", FishingLineItem::new);
     public static final Item BRAIDED_LINE = register("braided_line", FishingLineItem::new);
     public static final Item VINE_LINE = register("vine_line", FishingLineItem::new);
     public static final Item SPIDER_LINE = register("spider_line", FishingLineItem::new);
@@ -313,7 +316,7 @@ public class TideItems {
                     TWILIGHT_HOOK, LAVAPROOF_HOOK, VOID_HOOK,
                     WOODEN_HOOK, STONE_HOOK, COPPER_HOOK, GOLDEN_HOOK, DIAMOND_HOOK, EMERALD_HOOK, AMETHYST_HOOK, NETHERITE_HOOK, BONE_HOOK, PRISMARINE_HOOK, GLOW_HOOK, FEATHERED_HOOK, BARBED_HOOK, TREBLE_HOOK, CIRCLE_HOOK, FISH_BONE_HOOK, LUCKY_HOOK,
 
-                    FISHING_LINE, COPPER_LINE, IRON_LINE, GOLDEN_LINE, DIAMOND_LINE, SLIME_LINE, COAL_LINE, KELP_LINE, HONEY_LINE, SILK_LINE, PHANTOM_LINE, BRAIDED_LINE, VINE_LINE, SPIDER_LINE, REDSTONE_LINE, WHITE_LINE, ORANGE_LINE, MAGENTA_LINE, LIGHT_BLUE_LINE, YELLOW_LINE, LIME_LINE, PINK_LINE, GRAY_LINE, LIGHT_GRAY_LINE, CYAN_LINE, PURPLE_LINE, BLUE_LINE, BROWN_LINE, GREEN_LINE, RED_LINE, BLACK_LINE,
+                    FISHING_LINE, COPPER_LINE, IRON_LINE, GOLDEN_LINE, DIAMOND_LINE, SLIME_LINE, COAL_LINE, KELP_LINE, HONEY_LINE, SILK_LINE, PHANTOM_LINE, AMETHYST_LINE, NETHERITE_LINE, PRISMARINE_LINE, BRAIDED_LINE, VINE_LINE, SPIDER_LINE, REDSTONE_LINE, WHITE_LINE, ORANGE_LINE, MAGENTA_LINE, LIGHT_BLUE_LINE, YELLOW_LINE, LIME_LINE, PINK_LINE, GRAY_LINE, LIGHT_GRAY_LINE, CYAN_LINE, PURPLE_LINE, BLUE_LINE, BROWN_LINE, GREEN_LINE, RED_LINE, BLACK_LINE,
 
                     RED_BOBBER, ORANGE_BOBBER,
                     YELLOW_BOBBER, LIME_BOBBER,

@@ -31,6 +31,8 @@ public final class TideClientConfig {
         public int infoOffsetY = 0;
         public boolean ambientVoidParticles = true;
         public boolean defaultLineColor = false;
+        /** The rod stats panel at the right edge while a rod is in hand. */
+        public boolean showRodStats = true;
     }
 
     public static class Journal {

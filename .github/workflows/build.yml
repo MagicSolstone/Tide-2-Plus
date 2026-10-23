@@ -116,6 +116,9 @@ jobs:
           xdotool key 8; sleep 1; xdotool click 3; sleep 2; import -window root shots/7-tackle-box.png
           xdotool key Escape; sleep 1
           xdotool keydown shift; sleep 0.3; xdotool click 3; sleep 0.5; xdotool keyup shift; sleep 2; import -window root shots/7b-portable-table.png
+          # put the bamboo rod from the box's rack on the table: the rig card shows beside it
+          xdotool mousemove 840 438; sleep 0.3; xdotool click 1; sleep 0.5; xdotool mousemove 530 290; sleep 0.3; xdotool click 1; sleep 1.5; import -window root shots/7b2-rig-card.png
+          xdotool mousemove 530 290; sleep 0.3; xdotool click 1; sleep 0.5; xdotool mousemove 840 438; sleep 0.3; xdotool click 1; sleep 0.5
           xdotool key Escape; sleep 1
           # the fish satchel (hotbar 6), opened with sneak + right-click
           xdotool key 6; sleep 1; xdotool keydown shift; sleep 0.3; xdotool click 3; sleep 0.5; xdotool keyup shift; sleep 2; import -window root shots/7c-satchel.png

@@ -26,9 +26,21 @@ def sway(name):
     for f, s in enumerate(SWING):
         im = up.copy()
         for (x, y) in hanging: im.putpixel((x, y), cast.getpixel((x, y)))       # take the line away
+        moved = {}
         for (x, y) in sorted(hanging, key=lambda p: p[1]):                         # and hang it back, swung
             dx = round(s * (y - 3) / 9)
-            if 0 <= x + dx < 16: im.putpixel((x + dx, y), up.getpixel((x, y)))
+            if 0 <= x + dx < 16:
+                im.putpixel((x + dx, y), up.getpixel((x, y)))
+                moved.setdefault(y, []).append((x + dx, up.getpixel((x, y))))
+        # where a swung row lands two pixels away from the row above, fill the step so the line stays unbroken
+        for y in sorted(moved):
+            if y - 1 not in moved: continue
+            above = [x for x, _ in moved[y - 1]]
+            for x, c in list(moved[y]):
+                near = min(above, key=lambda a: abs(a - x))
+                if abs(near - x) > 1:
+                    step = 1 if near > x else -1
+                    for fx in range(x + step, near, step): im.putpixel((fx, y), c)
         frames.paste(im, (0, 16 * f))
     frames.save(base)
     json.dump({"animation": {"frametime": TICKS, "interpolate": False}}, open(base + '.mcmeta', 'w'), indent=2)

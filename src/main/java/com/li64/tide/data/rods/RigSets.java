@@ -67,14 +67,38 @@ public final class RigSets {
 
     /** How many pieces of this family are on the rod (one per slot). */
     public static int pieces(RigSet set, ItemStack rod) {
-        EnumSet<TackleLog.Category> slots = EnumSet.noneOf(TackleLog.Category.class);
         List<ItemStack> all = new ArrayList<>(List.of(rod));
         all.addAll(RodEffects.parts(rod));
-        for (ItemStack s : all) {
+        return filled(set, all).size();
+    }
+
+    private static EnumSet<TackleLog.Category> filled(RigSet set, List<ItemStack> pieces) {
+        EnumSet<TackleLog.Category> slots = EnumSet.noneOf(TackleLog.Category.class);
+        for (ItemStack s : pieces) {
+            if (s.isEmpty()) continue;
             TackleLog.Category c = TackleLog.category(s.getItem());
             if (c != null && set.members().contains(path(s))) slots.add(c);
         }
-        return slots.size();
+        return slots;
+    }
+
+    /** A rig in progress on a rod being put together: how many pieces, and which kinds of piece could still be added. */
+    public record Progress(RigSet set, int have, List<String> canAdd) {}
+
+    /** Every rig with at least one piece among these (a rod and what's on it), most complete first. */
+    public static List<Progress> progress(List<ItemStack> pieces) {
+        List<Progress> out = new ArrayList<>();
+        for (RigSet set : SETS) {
+            EnumSet<TackleLog.Category> have = filled(set, pieces);
+            if (have.isEmpty()) continue;
+            EnumSet<TackleLog.Category> kinds = EnumSet.noneOf(TackleLog.Category.class);
+            for (String m : set.members())
+                BuiltInRegistries.ITEM.getOptional(com.li64.tide.Tide.resource(m)).map(TackleLog::category).ifPresent(kinds::add);
+            kinds.removeAll(have);
+            out.add(new Progress(set, have.size(), kinds.stream().map(k -> k.label.toLowerCase().replaceAll("s$", "")).toList()));
+        }
+        out.sort((a, b) -> b.have() - a.have());
+        return out;
     }
 
     /** The bonus from every complete rig that's working right now. */

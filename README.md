@@ -5,7 +5,7 @@
 It keeps everything Tide does and adds fishing levels, catch quality, and a full tackle system: rods,
 lines, hooks, bobbers, lures and bait that each matter, matched rigs, favorite lures, rare found rods,
 a tackle box and a better fish satchel. See **[RELEASE_NOTES.md](RELEASE_NOTES.md)** for everything in 1.0.0,
-and the [releases](https://github.com/TJusczak/Tide-2-fabric26plus-levels/releases) for the jar.
+and the [releases](https://github.com/TJusczak/Tide-2-Plus/releases) for the jar.
 
 **Install:** the jar in `mods/` on the server and every client, with Fabric Loader 0.19.5+ and Fabric API
 for 26.3. It uses Tide's mod ID, so it replaces Tide; don't install both.
@@ -20,7 +20,7 @@ Porting to a new Minecraft version: see [PORTING.md](PORTING.md).
 - **Builds and tests on GitHub Actions** (`.github/workflows/build.yml`). Each push builds the jar, boots
   a dedicated server with it, then the real client on a virtual screen (it loads a test world, casts the
   rod and opens the journal). Logs and screenshots go to the `ci-results` branch; a jar that builds goes
-  to the [`dev` release](https://github.com/TJusczak/Tide-2-fabric26plus-levels/releases/tag/dev).
+  to the [`dev` release](https://github.com/TJusczak/Tide-2-Plus/releases/tag/dev).
 
 **Install:** put the jar in `mods/` on the server and every client, with Fabric Loader 0.19.5+ and
 Fabric API for 26.3. Worlds/players that had Tide data from 1.21.1 aren't a goal of this fork.

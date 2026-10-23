@@ -6,9 +6,9 @@
   "icon": "tide.png",
   "description": "Tide 2 for Minecraft 26.x with fishing levels, catch quality and a full tackle system. A Fabric fork of Tide 2 by Lightning64.",
   "contact": {
-    "homepage": "https://github.com/TJusczak/Tide-2-fabric26plus-levels",
-    "sources": "https://github.com/TJusczak/Tide-2-fabric26plus-levels",
-    "issues": "https://github.com/TJusczak/Tide-2-fabric26plus-levels/issues"
+    "homepage": "https://github.com/TJusczak/Tide-2-Plus",
+    "sources": "https://github.com/TJusczak/Tide-2-Plus",
+    "issues": "https://github.com/TJusczak/Tide-2-Plus/issues"
   },
   "authors": ["Lightning64"],
   "contributors": ["TJusczak"],

@@ -217,7 +217,7 @@ jobs:
         run: |
           grep -q "TIDE-CI gear check done" server.log || { echo "the gear check didn't run"; exit 1; }
           if grep -q "TIDE-CI gear problem" server.log; then grep "TIDE-CI gear problem" server.log | sed 's/^.*problem: /::error::/'; exit 1; fi
-          grep -E "TIDE-CI extras" server-mp.log | tail -3
+          grep -E "TIDE-CI extras" server-mp.log | tail -3 || echo "(no multiplayer catch this run)"
 
       - name: Dev build download
         if: success() && github.event_name == 'push'

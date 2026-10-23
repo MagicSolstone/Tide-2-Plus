@@ -1,0 +1,138 @@
+{
+  "_comment": "Each fish's favorite lure: with that lure on the rod the fish is twice as likely to bite. Every fish can still be caught with any lure.",
+  "factor": 2.0,
+  "lures": {
+    "tide:fly_lure": [
+      "tide:brook_trout",
+      "tide:rainbow_trout",
+      "tide:bluegill",
+      "tide:guppy",
+      "tide:yellow_perch"
+    ],
+    "tide:popper_lure": [
+      "tide:largemouth_bass",
+      "tide:smallmouth_bass",
+      "tide:black_crappie",
+      "tide:white_crappie",
+      "tide:blossom_bass"
+    ],
+    "tide:spinner_lure": [
+      "tide:pike",
+      "tide:walleye",
+      "tide:sailfish",
+      "tide:swordfish"
+    ],
+    "tide:glow_lure": [
+      "tide:catfish",
+      "tide:mooneye",
+      "tide:mirage_catfish",
+      "tide:bull_shark",
+      "tide:shooting_starfish",
+      "tide:uranias_pisces",
+      "tide:glowfish",
+      "tide:luminescent_jellyfish",
+      "tide:lapis_lanternfish",
+      "tide:blue_neonfish",
+      "tide:incandescent_larva",
+      "tide:red_40",
+      "tide:deep_blue"
+    ],
+    "tide:frog_lure": [
+      "tide:slimy_salmon",
+      "tide:arapaima",
+      "tide:spore_stalker"
+    ],
+    "tide:ice_jig_lure": [
+      "tide:frostbite_flounder",
+      "tide:sturgeon"
+    ],
+    "tide:golden_spoon_lure": [
+      "tide:carp",
+      "tide:sand_tiger_shark",
+      "tide:angelfish",
+      "tide:flounder",
+      "tide:sun_emblem",
+      "tide:amber_rockfish",
+      "tide:dragon_fish"
+    ],
+    "tide:squid_lure": [
+      "tide:tuna",
+      "tide:mackerel",
+      "tide:anchovy",
+      "tide:red_snapper",
+      "tide:ocean_perch",
+      "tide:snook",
+      "tide:mahi_mahi"
+    ],
+    "tide:storm_lure": [
+      "tide:coelacanth",
+      "tide:great_white_shark",
+      "tide:manta_ray"
+    ],
+    "tide:ink_lure": [
+      "tide:neptune_koi",
+      "tide:saturn_cuttlefish",
+      "tide:pluto_snail",
+      "tide:marstilus",
+      "tide:darkness_eater",
+      "tide:shadow_shark",
+      "tide:snatcher_squid",
+      "tide:vengeance"
+    ],
+    "tide:echo_lure": [
+      "tide:aquathorn",
+      "tide:echo_snapper",
+      "tide:abyss_angler",
+      "tide:chasm_eel",
+      "tide:windbass",
+      "tide:devils_hole_pupfish",
+      "tide:voidseeker",
+      "tide:alpha_fish",
+      "tide:bedrock_bug"
+    ],
+    "tide:jig_lure": [
+      "tide:cave_crawler",
+      "tide:cave_eel",
+      "tide:deep_grouper",
+      "tide:shadow_snapper",
+      "tide:anglerfish",
+      "tide:crystal_shrimp",
+      "tide:dripstone_darter",
+      "tide:crystalline_carp"
+    ],
+    "tide:magnet_lure": [
+      "tide:iron_tetra",
+      "tide:gilded_minnow",
+      "tide:bedrock_tetra",
+      "tide:midas_fish"
+    ],
+    "tide:magma_lure": [
+      "tide:ash_perch",
+      "tide:blazing_swordfish",
+      "tide:crimson_fangjaw",
+      "tide:ember_koi",
+      "tide:inferno_guppy",
+      "tide:magma_mackerel",
+      "tide:obsidian_pike",
+      "tide:soulscale",
+      "tide:volcano_tuna",
+      "tide:warped_guppy",
+      "tide:witherfin"
+    ],
+    "tide:chorus_lure": [
+      "tide:chorus_cod",
+      "tide:enderfin",
+      "tide:ender_glider",
+      "tide:endergazer",
+      "tide:elytrout",
+      "tide:violet_carp",
+      "tide:sleepy_carp",
+      "tide:pale_clubfish",
+      "tide:judgment_fish",
+      "tide:nephrosilu",
+      "tide:pentapus",
+      "tide:dutchman_sock",
+      "tide:mantyvern"
+    ]
+  }
+}

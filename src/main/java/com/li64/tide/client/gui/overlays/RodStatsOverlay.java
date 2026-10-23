@@ -73,6 +73,12 @@ public final class RodStatsOverlay {
             for (RodEffects.Perk p : RodEffects.situational(part))
                 (p.when().test(player) ? active : idle).add(p.when().text.replaceFirst("^(in|on|at|by|when) (the |a )?", ""));
         idle.removeAll(active);
+        // matched rigs: complete ones show as on or off like any perk; one piece short gets a hint
+        for (com.li64.tide.data.rods.RigSets.RigSet set : com.li64.tide.data.rods.RigSets.SETS) {
+            int n = com.li64.tide.data.rods.RigSets.pieces(set, rod);
+            if (n >= com.li64.tide.data.rods.RigSets.PIECES) (set.when().test(player) ? active : idle).add(set.name().toLowerCase());
+            else if (n == com.li64.tide.data.rods.RigSets.PIECES - 1) idle.add(set.name().toLowerCase() + " (1 piece short)");
+        }
 
         Font font = mc.font;
         float s = 0.75f;

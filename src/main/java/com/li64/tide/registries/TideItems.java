@@ -65,21 +65,6 @@ public class TideItems {
     public static final Item ABYSS_BAIT = register("abyss_bait", Item::new);
 
     public static final Item RED_BOBBER = register("red_bobber", FishingBobberItem::new);
-    public static final Item ORANGE_BOBBER = register("orange_bobber", FishingBobberItem::new);
-    public static final Item YELLOW_BOBBER = register("yellow_bobber", FishingBobberItem::new);
-    public static final Item LIME_BOBBER = register("lime_bobber", FishingBobberItem::new);
-    public static final Item GREEN_BOBBER = register("green_bobber", FishingBobberItem::new);
-    public static final Item CYAN_BOBBER = register("cyan_bobber", FishingBobberItem::new);
-    public static final Item LIGHT_BLUE_BOBBER = register("light_blue_bobber", FishingBobberItem::new);
-    public static final Item BLUE_BOBBER = register("blue_bobber", FishingBobberItem::new);
-    public static final Item PURPLE_BOBBER = register("purple_bobber", FishingBobberItem::new);
-    public static final Item MAGENTA_BOBBER = register("magenta_bobber", FishingBobberItem::new);
-    public static final Item PINK_BOBBER = register("pink_bobber", FishingBobberItem::new);
-    public static final Item WHITE_BOBBER = register("white_bobber", FishingBobberItem::new);
-    public static final Item LIGHT_GRAY_BOBBER = register("light_gray_bobber", FishingBobberItem::new);
-    public static final Item GRAY_BOBBER = register("gray_bobber", FishingBobberItem::new);
-    public static final Item BLACK_BOBBER = register("black_bobber", FishingBobberItem::new);
-    public static final Item BROWN_BOBBER = register("brown_bobber", FishingBobberItem::new);
     public static final Item APPLE_BOBBER = register("apple_bobber", FishingBobberItem::new, new Item.Properties().food(Foods.APPLE));
     public static final Item GOLDEN_APPLE_BOBBER = register("golden_apple_bobber", FishingBobberItem::new, new Item.Properties().food(Foods.GOLDEN_APPLE, net.minecraft.world.item.component.Consumables.GOLDEN_APPLE));
     public static final Item ENCHANTED_GOLDEN_APPLE_BOBBER = register("enchanted_golden_apple_bobber", EnchantedFishingBobberItem::new, new Item.Properties()
@@ -190,22 +175,6 @@ public class TideItems {
     public static final Item VINE_LINE = register("vine_line", FishingLineItem::new);
     public static final Item SPIDER_LINE = register("spider_line", FishingLineItem::new);
     public static final Item REDSTONE_LINE = register("redstone_line", FishingLineItem::new);
-    public static final Item WHITE_LINE = register("white_line", FishingLineItem::new);
-    public static final Item ORANGE_LINE = register("orange_line", FishingLineItem::new);
-    public static final Item MAGENTA_LINE = register("magenta_line", FishingLineItem::new);
-    public static final Item LIGHT_BLUE_LINE = register("light_blue_line", FishingLineItem::new);
-    public static final Item YELLOW_LINE = register("yellow_line", FishingLineItem::new);
-    public static final Item LIME_LINE = register("lime_line", FishingLineItem::new);
-    public static final Item PINK_LINE = register("pink_line", FishingLineItem::new);
-    public static final Item GRAY_LINE = register("gray_line", FishingLineItem::new);
-    public static final Item LIGHT_GRAY_LINE = register("light_gray_line", FishingLineItem::new);
-    public static final Item CYAN_LINE = register("cyan_line", FishingLineItem::new);
-    public static final Item PURPLE_LINE = register("purple_line", FishingLineItem::new);
-    public static final Item BLUE_LINE = register("blue_line", FishingLineItem::new);
-    public static final Item BROWN_LINE = register("brown_line", FishingLineItem::new);
-    public static final Item GREEN_LINE = register("green_line", FishingLineItem::new);
-    public static final Item RED_LINE = register("red_line", FishingLineItem::new);
-    public static final Item BLACK_LINE = register("black_line", FishingLineItem::new);
 
     public static final Item FISHING_JOURNAL = register("fishing_journal", FishingJournalItem::new);
     public static final Item FISHY_NOTE = register("fishy_note", FishyNoteItem::new, new Item.Properties().stacksTo(1));
@@ -324,17 +293,7 @@ public class TideItems {
                     TWILIGHT_HOOK, LAVAPROOF_HOOK, VOID_HOOK,
                     WOODEN_HOOK, STONE_HOOK, COPPER_HOOK, GOLDEN_HOOK, DIAMOND_HOOK, EMERALD_HOOK, AMETHYST_HOOK, NETHERITE_HOOK, BONE_HOOK, PRISMARINE_HOOK, GLOW_HOOK, FEATHERED_HOOK, BARBED_HOOK, TREBLE_HOOK, CIRCLE_HOOK, FISH_BONE_HOOK, LUCKY_HOOK,
 
-                    FISHING_LINE, COPPER_LINE, IRON_LINE, GOLDEN_LINE, DIAMOND_LINE, SLIME_LINE, COAL_LINE, KELP_LINE, HONEY_LINE, SILK_LINE, PHANTOM_LINE, AMETHYST_LINE, NETHERITE_LINE, PRISMARINE_LINE, BRAIDED_LINE, VINE_LINE, SPIDER_LINE, REDSTONE_LINE, WHITE_LINE, ORANGE_LINE, MAGENTA_LINE, LIGHT_BLUE_LINE, YELLOW_LINE, LIME_LINE, PINK_LINE, GRAY_LINE, LIGHT_GRAY_LINE, CYAN_LINE, PURPLE_LINE, BLUE_LINE, BROWN_LINE, GREEN_LINE, RED_LINE, BLACK_LINE,
-
-                    RED_BOBBER, ORANGE_BOBBER,
-                    YELLOW_BOBBER, LIME_BOBBER,
-                    GREEN_BOBBER, CYAN_BOBBER,
-                    LIGHT_BLUE_BOBBER, BLUE_BOBBER,
-                    PURPLE_BOBBER, MAGENTA_BOBBER,
-                    PINK_BOBBER, WHITE_BOBBER,
-                    LIGHT_GRAY_BOBBER, GRAY_BOBBER,
-                    BLACK_BOBBER, BROWN_BOBBER,
-                    APPLE_BOBBER, GOLDEN_APPLE_BOBBER,
+                    FISHING_LINE, COPPER_LINE, IRON_LINE, GOLDEN_LINE, DIAMOND_LINE, SLIME_LINE, COAL_LINE, KELP_LINE, HONEY_LINE, SILK_LINE, PHANTOM_LINE, AMETHYST_LINE, NETHERITE_LINE, PRISMARINE_LINE, BRAIDED_LINE, VINE_LINE, SPIDER_LINE, REDSTONE_LINE, RED_BOBBER, APPLE_BOBBER, GOLDEN_APPLE_BOBBER,
                     ENCHANTED_GOLDEN_APPLE_BOBBER, IRON_BOBBER,
                     GOLDEN_BOBBER, DIAMOND_BOBBER,
                     NETHERITE_BOBBER, AMETHYST_BOBBER,

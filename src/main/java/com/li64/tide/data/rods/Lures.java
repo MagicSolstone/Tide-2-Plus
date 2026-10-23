@@ -99,6 +99,9 @@ public final class Lures {
                 if (pull.when() != null && (angler(context) == null || !pull.when().test(angler(context)))) continue;
                 if (pull.fish().test(data)) f *= pull.factor();
             }
+        // the fish's own favorite lure
+        if (context != null && context.rod() != null && CustomRodManager.hasLure(context.rod())
+                && FavoriteLures.isFavorite(data.fish().value(), CustomRodManager.getLure(context.rod()))) f *= FavoriteLures.factor();
         return f;
     }
 
@@ -115,6 +118,7 @@ public final class Lures {
         for (Pull pull : FISH.getOrDefault(path, List.of()))
             out.add(Component.literal(pull.text() + " (x" + trim(pull.factor()) + ")" + (pull.when() == null ? "" : " " + pull.when().text))
                     .withStyle(pull.when() == null ? ChatFormatting.DARK_AQUA : ChatFormatting.LIGHT_PURPLE));
+        out.addAll(FavoriteLures.describe(stack));
         if (CRATES.containsKey(path))
             out.add(Component.literal("Pulls up crates (x" + trim(CRATES.get(path)) + ")").withStyle(ChatFormatting.DARK_AQUA));
         return out;

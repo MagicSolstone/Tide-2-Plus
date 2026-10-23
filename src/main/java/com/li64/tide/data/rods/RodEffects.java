@@ -44,7 +44,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     private static final RodEffects ANY_LINE = cast(0.10);
     private static final RodEffects ANY_HOOK = window(0.05);
-    private static final RodEffects DYED_BOBBER = bite(0.05);
 
     // ------------------------------------------------------------------ rods
 
@@ -91,7 +90,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("prismarine_hook", bite(0.05)),
             Map.entry("glow_hook", bite(0.12)),
             Map.entry("feathered_hook", new RodEffects(0.05, 0.08, 0, 0, 0, 0, 0, 0)),
-            Map.entry("barbed_hook", land(0.10)),
+            Map.entry("barbed_hook", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.10)),   // holds on: a chance to bump the catch a tier (the circle hook is the landing one)
             Map.entry("treble_hook", new RodEffects(0, 0, 0, 0.05, 0, 0, 0, 0, 0.12, 0)),
             Map.entry("circle_hook", land(0.25)),
             Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.08)),
@@ -128,7 +127,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("golden_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.10)),
             Map.entry("diamond_line", ease(0.25)),
             Map.entry("coal_line", window(0.10)),
-            Map.entry("honey_line", land(0.10)),
+            Map.entry("honey_line", land(0.05)),
             Map.entry("silk_line", bite(0.08)),
             Map.entry("phantom_line", new RodEffects(0.10, 0, 0.05, 0, 0, 0, 0, 0)),
             Map.entry("amethyst_line", quality(0.08)),
@@ -136,7 +135,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("braided_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.10, 0)),
             Map.entry("redstone_line", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.20)));
 
-    /** Bobbers with their own always-on perk (dyed ones give a little bite speed). */
+    /** Bobbers with their own always-on perk (the plain one has none). */
     private static final Map<String, RodEffects> BOBBERS = Map.ofEntries(
             Map.entry("apple_bobber", bite(0.05)),
             Map.entry("golden_apple_bobber", luck(1)),
@@ -145,7 +144,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("golden_bobber", xp(0.10)),
             Map.entry("diamond_bobber", bite(0.12)),
             Map.entry("netherite_bobber", new RodEffects(0, 0, 0.05, -0.10, 0, 0, 0, 0)),
-            Map.entry("amethyst_bobber", quality(0.15)),
+            Map.entry("amethyst_bobber", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.08)),   // amethyst grows things: like the amethyst rod, a tier bump
             Map.entry("echo_bobber", xp(0.15)),
             Map.entry("chorus_bobber", cast(0.15)),
             Map.entry("feather_bobber", new RodEffects(0.10, 0.05, 0, 0, 0, 0, 0, 0)),
@@ -154,7 +153,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("pearl_bobber", quality(0.20)),
             Map.entry("heart_bobber", land(0.15)),
             Map.entry("grassy_bobber", bite(0.08)),
-            Map.entry("duck_bobber", xp(0.10)),
+            Map.entry("duck_bobber", xp(0.05)),
             Map.entry("slime_bobber", land(0.10)),
             Map.entry("cherry_bobber", new RodEffects(0, 0.05, 0, 0, 0, 0, 0, 0.05)),
             Map.entry("honey_bobber", xp(0.10)),
@@ -296,6 +295,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("popper_lure", List.of(new Perk(When.DAWN_DUSK, new RodEffects(0, 0.40, 0, 0, 0, 0, 0, 0.10)))),
             Map.entry("fly_lure", List.of(new Perk(When.RIVER, bite(0.25)))),
             Map.entry("prismarine_hook", List.of(new Perk(When.OCEAN, luck(1)), new Perk(When.RAIN, bite(0.10)))),
+            Map.entry("honey_line", List.of(new Perk(When.FOREST, bite(0.15)))),
+            Map.entry("duck_bobber", List.of(new Perk(When.RAIN, xp(0.20)))),
             Map.entry("golden_line", List.of(new Perk(When.DRY, luck(1)))),
             Map.entry("jig_lure", List.of(new Perk(When.UNDERGROUND, bite(0.15)))),
             Map.entry("glow_lure", List.of(new Perk(When.NIGHT, bite(0.15)))),
@@ -436,8 +437,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (accessory.getItem() instanceof FishingLureItem) return LURES.getOrDefault(path, NONE);
         if (BAITS.containsKey(path) && isTide(accessory)) return BAITS.get(path);
         if (accessory.getItem() instanceof FishingBobberItem || path.endsWith("_bobber")) {
-            if (BOBBERS.containsKey(path)) return BOBBERS.get(path);
-            return SITUATIONAL.containsKey(path) ? NONE : DYED_BOBBER;
+            return BOBBERS.getOrDefault(path, NONE);      // the plain bobber does nothing extra
         }
         return NONE;
     }
@@ -489,7 +489,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         for (ItemStack part : all)
             for (Perk perk : situational(part))
                 if (perk.when().test(player)) e = e.plus(perk.fx());
-        return e;
+        return e.plus(RigSets.active(player, rod));
     }
 
     /** A rod's own perk lines (the rod item, not what's attached). */
@@ -502,6 +502,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (p != null) out.add(line(ChatFormatting.DARK_AQUA, p.text()));
         if (isTide(rod)) for (String s : SPECIAL_TEXT.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, s));
         out.addAll(Unlocks.describe(rod));
+        out.addAll(RigSets.describe(rod));
         return out;
     }
 
@@ -515,6 +516,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.LIGHT_PURPLE, " " + perk.when().text));
         out.addAll(Unlocks.describe(stack));
+        out.addAll(RigSets.describe(stack));
         if (path(stack).equals("lavaproof_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in lava"));
         if (path(stack).equals("void_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in the void"));
         if (path(stack).equals("glow_hook") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Glows, lighting the water around it"));

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:crafting_dye",
+  "category": "equipment",
+  "dye": "#minecraft:dyes",
+  "group": "tide_dyed_line",
+  "result": {
+    "id": "tide:braided_line"
+  },
+  "target": "tide:braided_line"
+}

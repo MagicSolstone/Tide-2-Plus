@@ -79,6 +79,11 @@ public class FishProfile implements Renderable {
         data.profile().location().ifPresent(location -> {
             builder.add(new LocationComponent(Component.translatable(location)));
         });
+        // its favorite lure (twice as likely to bite with it)
+        String lure = com.li64.tide.data.rods.FavoriteLures.lureFor(data.fish().value());
+        if (lure != null) net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(net.minecraft.resources.Identifier.parse(lure))
+                .ifPresent(item -> builder.add(new LocationComponent(Component.literal("Favorite lure: ")
+                        .append(Component.translatable(item.getDescriptionId())), true)));
 
         // add luck info area
         Optional<LuckCondition> luckCondition = data.conditions().stream()

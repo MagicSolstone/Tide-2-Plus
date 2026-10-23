@@ -21,6 +21,9 @@ public class FishingLineItem extends AbstractTooltipItem {
     }
 
     public static String getColor(ItemStack stack) {
+        // any line can be dyed (line + dye in a crafting grid): the dye wins over the line's own colour
+        net.minecraft.world.item.component.DyedItemColor dyed = stack.get(net.minecraft.core.component.DataComponents.DYED_COLOR);
+        if (dyed != null) return String.format("#%06x", dyed.rgb() & 0xFFFFFF);
         AccessoryData data = AccessoryData.get(stack);
         if (data == null || data.color().isEmpty()) return "#d6d6d6";
         return data.color().get();

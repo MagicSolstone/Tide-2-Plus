@@ -432,6 +432,9 @@ public final class GearCheck {
             }
         }
         // every tackle item can be made or found
+        for (var set : com.li64.tide.data.rods.RigSets.SETS)
+            for (String m : set.members())
+                if (BuiltInRegistries.ITEM.getOptional(Tide.resource(m)).isEmpty()) problem(set.name() + " lists " + m + ", which isn't an item");
         Set<String> found = new java.util.HashSet<>(com.li64.tide.data.tackle.TackleLog.FOUND.keySet());
         found.addAll(Set.of("echo_fishing_rod", "blazing_fishing_rod", "prismarine_fishing_rod", "honeycomb_fishing_rod", "sunflower_fishing_rod",
                 "village_fishing_rod", "fish_satchel", "magnetic_bait", "abyss_bait", "incandescent_bait", "enchanted_golden_apple_bobber"));

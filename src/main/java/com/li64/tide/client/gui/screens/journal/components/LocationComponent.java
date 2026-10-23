@@ -14,6 +14,11 @@ public class LocationComponent extends ProfileComponent {
         this.text = Component.translatable("journal.info.location.title").append(": ").append(text);
     }
 
+    /** A plain centred line (no "Location:" in front). */
+    public LocationComponent(Component text, boolean plain) {
+        this.text = plain ? text : Component.translatable("journal.info.location.title").append(": ").append(text);
+    }
+
     @Override
     public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int center = x + AREA_WIDTH / 2;

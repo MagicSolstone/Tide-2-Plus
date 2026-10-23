@@ -25,6 +25,8 @@ def ingredients(r):
         vals = list(r["key"].values())
     elif t.endswith("crafting_shapeless"):
         vals = r["ingredients"]
+    elif t.endswith("crafting_dye"):
+        vals = [r["target"]]
     elif t.endswith("smithing_transform"):
         vals = [r["addition"]] + (r["base"] if isinstance(r["base"], list) else [r["base"]])
     else:

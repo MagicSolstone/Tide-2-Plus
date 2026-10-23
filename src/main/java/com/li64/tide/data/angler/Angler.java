@@ -204,6 +204,11 @@ public final class Angler {
 
     /** Call before the catch goes into the journal (so first catches and records can be spotted). */
     public static long onFishCaught(ServerPlayer player, ItemStack stack, boolean perfect) {
+        return onFishCaught(player, stack, perfect, 0.0);
+    }
+
+    /** {@code xpBoost}: from the rod's bobber (0.10 = +10%). */
+    public static long onFishCaught(ServerPlayer player, ItemStack stack, boolean perfect, double xpBoost) {
         if (!enabled()) return 0;
         FishData data = FishData.get(stack).orElse(null);
         if (data == null) return 0;
@@ -235,6 +240,10 @@ public final class Angler {
         if (perfect) {
             xp *= 1.25;
             parts.add("perfect hook x1.25");
+        }
+        if (xpBoost > 0) {
+            xp *= 1.0 + xpBoost;
+            parts.add("bobber x" + String.format("%.2f", 1.0 + xpBoost).replaceAll("0+$", ""));
         }
         long total = Math.round(xp);
         addXp(player, total, extra);

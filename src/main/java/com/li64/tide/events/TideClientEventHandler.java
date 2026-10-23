@@ -22,6 +22,7 @@ public class TideClientEventHandler {
         if (BaitUtils.isBait(stack)) lines.addAll(BaitUtils.getDescriptionLines(stack));
 
         if (stack.is(TideTags.Items.FISHING_RODS)) lines.addAll(TideFishingRodItem.getDescriptionLines(stack));
+        else lines.addAll(com.li64.tide.data.rods.RodEffects.of(stack).describe(ChatFormatting.DARK_AQUA));   // a line, hook or bobber
 
         if (Minecraft.getInstance().level != null
                 && TideItemData.IS_BUCKETABLE.getOrDefault(stack, false)

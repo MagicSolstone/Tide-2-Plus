@@ -70,7 +70,12 @@ public enum CatchQuality {
      * about 1 in 1,500 at level 1, 1 in 1,000 at the baseline, 1 in 700 at 99.
      */
     public static double[] odds(int level) {
-        double m = luck(level);
+        return odds(level, 0.0);
+    }
+
+    /** {@code boost}: from the rod's bobber (0.15 = 15% better odds of the good tiers). */
+    public static double[] odds(int level, double boost) {
+        double m = luck(level) * (1.0 + boost);
         double[] w = new double[values().length];
         double total = 0;
         for (CatchQuality q : values()) {
@@ -114,7 +119,11 @@ public enum CatchQuality {
     }
 
     public static CatchQuality roll(RandomSource rng, int level) {
-        double[] p = odds(level);
+        return roll(rng, level, 0.0);
+    }
+
+    public static CatchQuality roll(RandomSource rng, int level, double boost) {
+        double[] p = odds(level, boost);
         double r = rng.nextDouble();
         for (CatchQuality q : values()) {
             r -= p[q.ordinal()];

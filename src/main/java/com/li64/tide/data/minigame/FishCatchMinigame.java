@@ -28,6 +28,7 @@ public class FishCatchMinigame {
     private static final HashMap<ServerPlayer, Long> ACTIVE_DELAYS = new HashMap<>();
 
     private final TideFishingHook hook;
+    private com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.NONE;
     private final ServerPlayer player;
     private Angler.Zones zones;
 
@@ -75,13 +76,15 @@ public class FishCatchMinigame {
         // fishing level: how wide the good zones are, and how hard this fish fights for this angler
         int level = Angler.effectiveLevel(player);
         FishRarity rarity = data.map(d -> d.profile().rarity()).orElse(FishRarity.COMMON);
-        double zoneScale = Angler.Stats.of(level).hookZones();
-        speed *= (float) Angler.fightSpeed(level, rarity);
+        com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.ofRod(hook.getRod());
+        this.gear = gear;
+        double zoneScale = Angler.Stats.of(level).hookZones() * (1.0 + gear.window());
+        speed *= (float) (Angler.fightSpeed(level, rarity) * (1.0 + gear.fight()));
 
         // catch quality is decided at the bite, so a bigger fish fights harder: faster, smaller zones
         hook.pendingQuality = null;
         if (data.isPresent() && com.li64.tide.data.angler.CatchQuality.enabled()) {
-            com.li64.tide.data.angler.CatchQuality q = com.li64.tide.data.angler.CatchQuality.roll(player.getRandom(), level);
+            com.li64.tide.data.angler.CatchQuality q = com.li64.tide.data.angler.CatchQuality.roll(player.getRandom(), level, gear.quality());
             hook.pendingQuality = q;
             speed *= (float) q.fightSpeed();
             zoneScale *= q.zoneScale();
@@ -161,7 +164,8 @@ public class FishCatchMinigame {
         if (Tide.CI) Tide.LOG.info("TIDE-CI hook set, accuracy {}", accuracy);
         if (cancelIfNecessary()) return;
         Angler.Hook hook = Angler.Hook.of(Math.abs(accuracy), zones);
-        boolean landed = hook.landChance >= 1.0 || player.getRandom().nextDouble() < hook.landChance;
+        double chance = hook.landChance >= 1.0 || hook.landChance <= 0.0 ? hook.landChance : Math.min(1.0, hook.landChance + gear.land());
+        boolean landed = chance >= 1.0 || player.getRandom().nextDouble() < chance;
         if (!landed && hook != Angler.Hook.TERRIBLE)
             player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("The fish shook the hook loose!")
                     .withStyle(net.minecraft.ChatFormatting.RED));

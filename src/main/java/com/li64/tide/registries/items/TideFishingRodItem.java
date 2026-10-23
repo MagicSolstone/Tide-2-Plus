@@ -99,6 +99,11 @@ public class TideFishingRodItem extends FishingRodItem {
         if (!builder.isEmpty()) {
             builder.add(0, Component.translatable("text.tide.rod_tooltip.accessories_prefix").withStyle(ChatFormatting.GRAY));
             builder.add(0, Component.empty());
+            List<Component> perks = com.li64.tide.data.rods.RodEffects.ofRod(stack).describe(ChatFormatting.DARK_AQUA);
+            if (!perks.isEmpty()) {
+                builder.add(Component.literal("Gear bonuses:").withStyle(ChatFormatting.GRAY));
+                builder.addAll(perks);
+            }
             builder.add(Component.empty());
         }
 
@@ -328,7 +333,10 @@ public class TideFishingRodItem extends FishingRodItem {
                     if (CustomRodManager.getHook(rod).getItem().toString().matches("magnetic_hook")) luck += 1;
                 }
 
-                // fishing level: cast distance and angler's luck
+                // fishing level and the rod's line, hook and bobber: cast distance and luck
+                com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.ofRod(rod);
+                luck += gear.luck();
+                charge *= (float) (1.0 + gear.cast());
                 if (player instanceof ServerPlayer angler) {
                     com.li64.tide.data.angler.Angler.Stats stats = com.li64.tide.data.angler.Angler.stats(angler);
                     luck += stats.luck();

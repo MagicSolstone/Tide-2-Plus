@@ -509,7 +509,8 @@ public class TideFishingHook extends Projectile {
             double globalBiteTimeMultiplier = Tide.PLATFORM.isModLoaded("stardew_fishing") ? CompatHelper.stardewFishingBiteTimeMultiplier() : 1.0;
             // fishing level: patience (how long until a bite)
             if (this.getPlayerOwner() instanceof ServerPlayer angler)
-                this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.angler.Angler.stats(angler).biteWait());
+                this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.angler.Angler.stats(angler).biteWait()
+                        * com.li64.tide.data.rods.RodEffects.ofRod(this.rod).biteWaitFactor());
             this.timeUntilLured = Math.max((int) (this.timeUntilLured * globalBiteTimeMultiplier), 10);
         }
     }
@@ -660,7 +661,8 @@ public class TideFishingHook extends Projectile {
                             // fishing XP (before the journal, so first catches and records count), then the journal
                             boolean newSpecies = TidePlayerData.getOrCreate(serverPlayer).getDataFor(stack.getItem())
                                     .flatMap(f -> f.stats).map(st -> st.getAmountCaught() == 0).orElse(true);
-                            long gained = com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack, this.wasPerfectCatch);
+                            long gained = com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack, this.wasPerfectCatch,
+                                    com.li64.tide.data.rods.RodEffects.ofRod(this.rod).xp());
                             TideUtils.tryLogCatch(stack, serverPlayer);
                             com.li64.tide.data.angler.Angler.logCatch(serverPlayer, stack, this.hookResult, gained, newSpecies);
                         }

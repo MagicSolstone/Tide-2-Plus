@@ -1,6 +1,48 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "tide:item/cooked_fish"
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "tide:cooked_from",
+    "cases": [
+      {
+        "when": "angelfish",
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/cooked/angelfish"
+        }
+      },
+      {
+        "when": "anglerfish",
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/cooked/anglerfish"
+        }
+      },
+      {
+        "when": "arapaima",
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/cooked/arapaima"
+        }
+      },
+      {
+        "when": "bluegill",
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/cooked/bluegill"
+        }
+      },
+      {
+        "when": "largemouth_bass",
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/cooked/largemouth_bass"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "tide:item/cooked_fish"
+    }
   }
 }

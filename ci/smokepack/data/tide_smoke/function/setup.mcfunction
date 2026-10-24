@@ -28,7 +28,7 @@ item replace entity @s hotbar.2 with tide:largemouth_bass[tide:fish_quality=5,ti
 item replace entity @s hotbar.3 with tide:wooden_crate
 item replace entity @s hotbar.4 with tide:starlight_bow
 item replace entity @s hotbar.5 with tide:fish_satchel
-item replace entity @s hotbar.6 with tide:cooked_fish
+item replace entity @s hotbar.6 with tide:cooked_fish[tide:cooked_from="bluegill",tide:fish_quality=3]
 item replace entity @s hotbar.7 with tide:tackle_box[container=[{slot:0,item:{id:"tide:glow_lure",count:1}},{slot:1,item:{id:"tide:amethyst_hook",count:1}},{slot:2,item:{id:"tide:chum",count:16}},{slot:3,item:{id:"tide:slime_line",count:1}},{slot:27,item:{id:"tide:bamboo_fishing_rod",count:1}}]]
 item replace entity @s hotbar.8 with tide:angling_table
 fishinglevel set @s 28

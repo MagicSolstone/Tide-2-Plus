@@ -34,7 +34,11 @@ public final class CookedFish {
     /** The cooked result of a raw fish (furnace, smoker, campfire): quality, name, food and buffs carried over. */
     public static ItemStack cook(ItemStack raw, ItemStack cooked) {
         Integer qid = TideItemData.FISH_QUALITY.getOrDefault(raw, null);
-        if (qid == null || cooked.isEmpty()) return cooked;
+        if (cooked.isEmpty()) return cooked;
+        var rawId = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(raw.getItem());
+        if (rawId.getNamespace().equals("tide") && net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(cooked.getItem()).getNamespace().equals("tide"))
+            cooked.set(com.li64.tide.data.item.TideDataComponents.COOKED_FROM, rawId.getPath());   // looks like this fish, cooked
+        if (qid == null) return cooked;
         CatchQuality q = CatchQuality.byId(qid);
         FishRarity rarity = FishData.get(raw).map(d -> d.profile().rarity()).orElse(FishRarity.COMMON);
         TideItemData.FISH_QUALITY.set(cooked, q.ordinal());

@@ -27,6 +27,12 @@ public class TideDataComponents {
                     .persistent(com.mojang.serialization.Codec.STRING)
                     .networkSynchronized(ByteBufCodecs.STRING_UTF8).build());
 
+    /** A cooked fish's species ("bluegill"), so it can look like that fish, cooked. */
+    public static final DataComponentType<String> COOKED_FROM = register(
+            "cooked_from", DataComponentType.<String>builder()
+                    .persistent(com.mojang.serialization.Codec.STRING)
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8).build());
+
     public static final DataComponentType<Integer> FISH_QUALITY = register(
             "fish_quality", DataComponentType.<Integer>builder()
                     .persistent(Codec.INT)

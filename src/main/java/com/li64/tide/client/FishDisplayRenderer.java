@@ -79,6 +79,14 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
         state.roll = displayData.roll();
         state.pitch = displayData.pitch();
         state.yaw = displayData.yaw();
+        // a test hook: custom_data {tide_display:{roll:..,pitch:..,yaw:..}} on the fish turns it further (CI compares turns)
+        var custom = display.getDisplayStack().get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);
+        if (custom != null) {
+            var t = custom.copyTag().getCompoundOrEmpty("tide_display");
+            state.roll += t.getFloatOr("roll", 0f);
+            state.pitch += t.getFloatOr("pitch", 0f);
+            state.yaw += t.getFloatOr("yaw", 0f);
+        }
         state.scale = Mth.sqrt((float) (display.getFishLength() / display.getBaseLength()));
         // a frozen moment: no animation time, so fish hold their display pose
         state.fish = this.entityRenderer.extractEntity(entity, 0f);

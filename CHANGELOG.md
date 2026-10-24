@@ -1,4 +1,4 @@
-# Tide+ 1.0.16
+## Tide+ 1.0.16 - 10/24/26
 
 Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.15).
 

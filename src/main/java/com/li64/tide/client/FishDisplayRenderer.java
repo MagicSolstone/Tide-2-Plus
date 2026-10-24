@@ -69,7 +69,7 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
                 // Vanilla's fish are drawn "in water": out of it they flop, and animation resource packs (Fresh
                 // Animations) then wiggle them, turn them on their belly and make a tropical fish's pattern blink.
                 // In water and never ticked, they hold a still swimming pose; submit() turns them onto their side.
-                if (swimsOnDisplay(entity)) ((com.li64.tide.mixin.EntityWaterAccessor) entity).tide$setWasTouchingWater(true);
+                if (swimsOnDisplay(entity, display.getDisplayStack())) ((com.li64.tide.mixin.EntityWaterAccessor) entity).tide$setWasTouchingWater(true);
                 entity.xRotO = entity.getXRot();
                 entity.yRotO = entity.getYRot();
             }
@@ -77,7 +77,7 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
         }
         if (entity == null) return;
 
-        state.swimming = swimsOnDisplay(entity);
+        state.swimming = entity.isInWater();
         state.facing = display.getBlockState().getValue(FishDisplayBlock.FACING);
         state.x = displayData.x();
         state.y = displayData.y();
@@ -104,7 +104,10 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
      * white default, which reads as a silverfish. Use the pattern the item has if it came from a bucket; otherwise one of
      * the game's named varieties, picked from the fish's weight and length so the same fish always looks the same.
      */
-    private static boolean swimsOnDisplay(Entity entity) {
+    private static boolean swimsOnDisplay(Entity entity, net.minecraft.world.item.ItemStack stack) {
+        var custom = stack.get(net.minecraft.core.component.DataComponents.CUSTOM_DATA);       // CI compares both ways
+        if (custom != null && custom.copyTag().getCompoundOrEmpty("tide_display").contains("swim"))
+            return custom.copyTag().getCompoundOrEmpty("tide_display").getBooleanOr("swim", false);
         return entity instanceof net.minecraft.world.entity.animal.fish.Cod || entity instanceof net.minecraft.world.entity.animal.fish.Salmon
                 || entity instanceof net.minecraft.world.entity.animal.fish.TropicalFish;
     }

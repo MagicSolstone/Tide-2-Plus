@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/bedrock_tetra",
+    "layer1": "tide:item/shimmer/bedrock_tetra"
+  }
+}

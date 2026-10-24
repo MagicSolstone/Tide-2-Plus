@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/sun_emblem",
+    "layer1": "tide:item/shimmer/sun_emblem"
+  }
+}

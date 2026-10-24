@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/slimy_salmon",
+    "layer1": "tide:item/shimmer/slimy_salmon"
+  }
+}

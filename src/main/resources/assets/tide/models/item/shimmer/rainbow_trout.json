@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/rainbow_trout",
+    "layer1": "tide:item/shimmer/rainbow_trout"
+  }
+}

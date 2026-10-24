@@ -84,7 +84,7 @@ jobs:
             if grep -qiE "joined|logged in with entity|Started 'Integrated|Preparing spawn area: 100" client.log; then break; fi
             if ! kill -0 $pid 2>/dev/null; then break; fi
           done
-          sleep 25; import -window root shots/1-world.png
+          sleep 25; import -window root shots/1-world.png; for i in 1 2 3 4 5 6; do sleep 0.25; import -window root shots/1-world-$i.png; done
           # cast: hold right click to charge, then let go
           xdotool mousemove 640 360; xdotool mousedown 3; sleep 1.4; xdotool mouseup 3
           sleep 3; import -window root shots/2-cast.png

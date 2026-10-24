@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/cooked/mahi_mahi",
+    "layer1": "tide:item/shimmer/cooked/mahi_mahi"
+  }
+}

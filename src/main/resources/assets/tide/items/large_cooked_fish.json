@@ -619,6 +619,2978 @@
             "model": "tide:item/poor/large_cooked_fish"
           }
         }
+      },
+      {
+        "when": 4,
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:component",
+          "component": "tide:cooked_from",
+          "cases": [
+            {
+              "when": "abyss_angler",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/abyss_angler",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "alpha_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/alpha_fish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "amber_rockfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/amber_rockfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "anchovy",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/anchovy",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "angelfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/angelfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "anglerfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/anglerfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "arapaima",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/arapaima",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "bedrock_bug",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/bedrock_bug",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "bedrock_tetra",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/bedrock_tetra",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "black_crappie",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/black_crappie",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "blossom_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/blossom_bass",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "blue_neonfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/blue_neonfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "bluegill",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/bluegill",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "brook_trout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/brook_trout",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "bull_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/bull_shark",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/carp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "catfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/catfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "cave_crawler",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/cave_crawler",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "cave_eel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/cave_eel",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "chasm_eel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/chasm_eel",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "coelacanth",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/coelacanth",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "crystal_shrimp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/crystal_shrimp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "crystalline_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/crystalline_carp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "darkness_eater",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/darkness_eater",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "deep_blue",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/deep_blue",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "deep_grouper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/deep_grouper",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "devils_hole_pupfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/devils_hole_pupfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "dragon_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/dragon_fish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "dripstone_darter",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/dripstone_darter",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "dutchman_sock",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/dutchman_sock",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "echo_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/echo_snapper",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "elytrout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/elytrout",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "ender_glider",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/ender_glider",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "enderfin",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/enderfin",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "endergazer",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/endergazer",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "flounder",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/flounder",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "frostbite_flounder",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/frostbite_flounder",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "gilded_minnow",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/gilded_minnow",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "glowfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/glowfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "great_white_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/great_white_shark",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "guppy",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/guppy",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "incandescent_larva",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/incandescent_larva",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "iron_tetra",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/iron_tetra",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "judgment_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/judgment_fish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "lapis_lanternfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/lapis_lanternfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "largemouth_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/largemouth_bass",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "luminescent_jellyfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/luminescent_jellyfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mackerel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mackerel",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mahi_mahi",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mahi_mahi",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "manta_ray",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/manta_ray",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mantyvern",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mantyvern",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "marstilus",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/marstilus",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "midas_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/midas_fish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mirage_catfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mirage_catfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mooneye",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mooneye",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "nephrosilu",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/nephrosilu",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "neptune_koi",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/neptune_koi",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "ocean_perch",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/ocean_perch",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "pale_clubfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/pale_clubfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "pentapus",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/pentapus",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "pike",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/pike",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "pluto_snail",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/pluto_snail",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "rainbow_trout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/rainbow_trout",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "red_40",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/red_40",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "red_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/red_snapper",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sailfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sailfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sand_tiger_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sand_tiger_shark",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "saturn_cuttlefish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/saturn_cuttlefish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "shadow_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/shadow_shark",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "shadow_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/shadow_snapper",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sleepy_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sleepy_carp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "slimy_salmon",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/slimy_salmon",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "smallmouth_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/smallmouth_bass",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "snatcher_squid",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/snatcher_squid",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "snook",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/snook",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "spore_stalker",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/spore_stalker",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sturgeon",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sturgeon",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sun_emblem",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sun_emblem",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "swordfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/swordfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "uranias_pisces",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/uranias_pisces",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "vengeance",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/vengeance",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "violet_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/violet_carp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "walleye",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/walleye",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "white_crappie",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/white_crappie",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "windbass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/windbass",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            },
+            {
+              "when": "yellow_perch",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/yellow_perch",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -3118337
+                  }
+                ]
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "tide:item/shimmer/large_cooked_fish",
+            "tints": [
+              {
+                "type": "minecraft:constant",
+                "value": -1
+              },
+              {
+                "type": "minecraft:constant",
+                "value": -3118337
+              }
+            ]
+          }
+        }
+      },
+      {
+        "when": 5,
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:component",
+          "component": "tide:cooked_from",
+          "cases": [
+            {
+              "when": "abyss_angler",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/abyss_angler",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "alpha_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/alpha_fish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "amber_rockfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/amber_rockfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "anchovy",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/anchovy",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "angelfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/angelfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "anglerfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/anglerfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "arapaima",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/arapaima",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "bedrock_bug",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/bedrock_bug",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "bedrock_tetra",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/bedrock_tetra",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "black_crappie",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/black_crappie",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "blossom_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/blossom_bass",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "blue_neonfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/blue_neonfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "bluegill",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/bluegill",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "brook_trout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/brook_trout",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "bull_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/bull_shark",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/carp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "catfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/catfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "cave_crawler",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/cave_crawler",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "cave_eel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/cave_eel",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "chasm_eel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/chasm_eel",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "coelacanth",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/coelacanth",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "crystal_shrimp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/crystal_shrimp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "crystalline_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/crystalline_carp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "darkness_eater",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/darkness_eater",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "deep_blue",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/deep_blue",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "deep_grouper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/deep_grouper",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "devils_hole_pupfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/devils_hole_pupfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "dragon_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/dragon_fish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "dripstone_darter",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/dripstone_darter",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "dutchman_sock",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/dutchman_sock",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "echo_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/echo_snapper",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "elytrout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/elytrout",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "ender_glider",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/ender_glider",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "enderfin",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/enderfin",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "endergazer",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/endergazer",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "flounder",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/flounder",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "frostbite_flounder",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/frostbite_flounder",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "gilded_minnow",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/gilded_minnow",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "glowfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/glowfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "great_white_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/great_white_shark",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "guppy",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/guppy",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "incandescent_larva",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/incandescent_larva",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "iron_tetra",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/iron_tetra",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "judgment_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/judgment_fish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "lapis_lanternfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/lapis_lanternfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "largemouth_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/largemouth_bass",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "luminescent_jellyfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/luminescent_jellyfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mackerel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mackerel",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mahi_mahi",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mahi_mahi",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "manta_ray",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/manta_ray",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mantyvern",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mantyvern",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "marstilus",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/marstilus",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "midas_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/midas_fish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mirage_catfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mirage_catfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "mooneye",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/mooneye",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "nephrosilu",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/nephrosilu",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "neptune_koi",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/neptune_koi",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "ocean_perch",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/ocean_perch",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "pale_clubfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/pale_clubfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "pentapus",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/pentapus",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "pike",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/pike",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "pluto_snail",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/pluto_snail",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "rainbow_trout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/rainbow_trout",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "red_40",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/red_40",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "red_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/red_snapper",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sailfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sailfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sand_tiger_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sand_tiger_shark",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "saturn_cuttlefish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/saturn_cuttlefish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "shadow_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/shadow_shark",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "shadow_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/shadow_snapper",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sleepy_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sleepy_carp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "slimy_salmon",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/slimy_salmon",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "smallmouth_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/smallmouth_bass",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "snatcher_squid",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/snatcher_squid",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "snook",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/snook",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "spore_stalker",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/spore_stalker",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sturgeon",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sturgeon",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "sun_emblem",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/sun_emblem",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "swordfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/swordfish",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "uranias_pisces",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/uranias_pisces",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "vengeance",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/vengeance",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "violet_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/violet_carp",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "walleye",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/walleye",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "white_crappie",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/white_crappie",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "windbass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/windbass",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            },
+            {
+              "when": "yellow_perch",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/shimmer/cooked/yellow_perch",
+                "tints": [
+                  {
+                    "type": "minecraft:constant",
+                    "value": -1
+                  },
+                  {
+                    "type": "minecraft:constant",
+                    "value": -20448
+                  }
+                ]
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "tide:item/shimmer/large_cooked_fish",
+            "tints": [
+              {
+                "type": "minecraft:constant",
+                "value": -1
+              },
+              {
+                "type": "minecraft:constant",
+                "value": -20448
+              }
+            ]
+          }
+        }
       }
     ],
     "fallback": {

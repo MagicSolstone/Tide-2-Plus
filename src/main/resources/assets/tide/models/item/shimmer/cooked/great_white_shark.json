@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/cooked/great_white_shark",
+    "layer1": "tide:item/shimmer/cooked/great_white_shark"
+  }
+}

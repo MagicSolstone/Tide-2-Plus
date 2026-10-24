@@ -10,6 +10,40 @@
           "type": "minecraft:model",
           "model": "tide:item/poor/sand_tiger_shark"
         }
+      },
+      {
+        "when": 4,
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/shimmer/sand_tiger_shark",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "minecraft:constant",
+              "value": -3118337
+            }
+          ]
+        }
+      },
+      {
+        "when": 5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/shimmer/sand_tiger_shark",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "minecraft:constant",
+              "value": -20448
+            }
+          ]
+        }
       }
     ],
     "fallback": {

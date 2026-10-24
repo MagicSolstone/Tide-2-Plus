@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/cooked/frostbite_flounder",
+    "layer1": "tide:item/shimmer/cooked/frostbite_flounder"
+  }
+}

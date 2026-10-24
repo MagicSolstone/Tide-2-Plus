@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/devils_hole_pupfish",
+    "layer1": "tide:item/shimmer/devils_hole_pupfish"
+  }
+}

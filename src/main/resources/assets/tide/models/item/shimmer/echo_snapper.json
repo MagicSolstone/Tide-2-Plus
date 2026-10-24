@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/echo_snapper",
+    "layer1": "tide:item/shimmer/echo_snapper"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/violet_carp",
+    "layer1": "tide:item/shimmer/violet_carp"
+  }
+}

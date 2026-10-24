@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/largemouth_bass",
+    "layer1": "tide:item/shimmer/largemouth_bass"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/spore_stalker",
+    "layer1": "tide:item/shimmer/spore_stalker"
+  }
+}

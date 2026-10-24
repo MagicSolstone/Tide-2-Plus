@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/dutchman_sock",
+    "layer1": "tide:item/shimmer/dutchman_sock"
+  }
+}

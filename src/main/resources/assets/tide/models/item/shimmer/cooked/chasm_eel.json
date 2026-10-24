@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/cooked/chasm_eel",
+    "layer1": "tide:item/shimmer/cooked/chasm_eel"
+  }
+}

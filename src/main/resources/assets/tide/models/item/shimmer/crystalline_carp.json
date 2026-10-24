@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/crystalline_carp",
+    "layer1": "tide:item/shimmer/crystalline_carp"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/darkness_eater",
+    "layer1": "tide:item/shimmer/darkness_eater"
+  }
+}

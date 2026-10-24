@@ -216,7 +216,6 @@ public enum CatchQuality {
     /** Quality onto a fish item: the component, and the name ("Good Bluegill", coloured; Average keeps the plain name). */
     public static void mark(ItemStack stack, CatchQuality q) {
         TideItemData.FISH_QUALITY.set(stack, q.ordinal());
-        if (q == MYTHIC) stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);       // a Mythic shimmers
         if (q != AVERAGE) {
             stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tide.quality_name",
                     Component.literal(q.label), Component.translatable(stack.getItem().getDescriptionId()))

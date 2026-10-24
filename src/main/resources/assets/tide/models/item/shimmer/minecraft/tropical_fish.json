@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/tropical_fish",
+    "layer1": "tide:item/shimmer/minecraft/tropical_fish"
+  }
+}

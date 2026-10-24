@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/cooked/bull_shark",
+    "layer1": "tide:item/shimmer/cooked/bull_shark"
+  }
+}

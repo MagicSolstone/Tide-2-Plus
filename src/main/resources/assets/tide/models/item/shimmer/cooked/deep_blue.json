@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/cooked/deep_blue",
+    "layer1": "tide:item/shimmer/cooked/deep_blue"
+  }
+}

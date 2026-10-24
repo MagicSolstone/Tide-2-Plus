@@ -10,6 +10,40 @@
           "type": "minecraft:model",
           "model": "tide:item/poor/slimy_salmon"
         }
+      },
+      {
+        "when": 4,
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/shimmer/slimy_salmon",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "minecraft:constant",
+              "value": -3118337
+            }
+          ]
+        }
+      },
+      {
+        "when": 5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/shimmer/slimy_salmon",
+          "tints": [
+            {
+              "type": "minecraft:constant",
+              "value": -1
+            },
+            {
+              "type": "minecraft:constant",
+              "value": -20448
+            }
+          ]
+        }
       }
     ],
     "fallback": {

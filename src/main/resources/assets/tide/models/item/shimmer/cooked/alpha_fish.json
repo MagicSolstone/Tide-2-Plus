@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/cooked/alpha_fish",
+    "layer1": "tide:item/shimmer/cooked/alpha_fish"
+  }
+}

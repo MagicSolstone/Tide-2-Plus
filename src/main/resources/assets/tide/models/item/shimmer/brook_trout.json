@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/brook_trout",
+    "layer1": "tide:item/shimmer/brook_trout"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/deep_grouper",
+    "layer1": "tide:item/shimmer/deep_grouper"
+  }
+}

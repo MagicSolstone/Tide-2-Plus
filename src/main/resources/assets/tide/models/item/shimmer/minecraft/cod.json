@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "minecraft:item/cod",
+    "layer1": "tide:item/shimmer/minecraft/cod"
+  }
+}

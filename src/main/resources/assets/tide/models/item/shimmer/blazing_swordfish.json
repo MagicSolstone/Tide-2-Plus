@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/blazing_swordfish",
+    "layer1": "tide:item/shimmer/blazing_swordfish"
+  }
+}

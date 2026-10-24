@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/magma_mackerel",
+    "layer1": "tide:item/shimmer/magma_mackerel"
+  }
+}

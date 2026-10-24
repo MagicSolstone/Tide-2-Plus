@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/cooked/endergazer",
+    "layer1": "tide:item/shimmer/cooked/endergazer"
+  }
+}

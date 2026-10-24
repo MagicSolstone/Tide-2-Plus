@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "tide:item/pale_clubfish",
+    "layer1": "tide:item/shimmer/pale_clubfish"
+  }
+}

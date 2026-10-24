@@ -129,11 +129,13 @@ jobs:
           read hx hy rx ry ax ay < <(grep "TIDE-CI table px hooks" client.log | tail -1 | sed 's/.*hooks \([0-9]*\) \([0-9]*\) result \([0-9]*\) \([0-9]*\) assemble \([0-9]*\) \([0-9]*\).*/\1 \2 \3 \4 \5 \6/')
           echo "table at: hooks $hx,$hy result $rx,$ry assemble $ax,$ay"
           if [ -n "$hx" ]; then
-            xdotool mousemove $hx $hy; sleep 0.3; xdotool click 1; sleep 1; import -window root shots/9b-bench-hooks.png
+            # the coordinates are inside the game window; move relative to it
+            w=$(xdotool getactivewindow)
+            xdotool mousemove --window $w $hx $hy; sleep 0.3; xdotool click 1; sleep 1.5; import -window root shots/9b-bench-hooks.png
             read dx dy < <(grep "TIDE-CI table px diamond_hook" client.log | tail -1 | sed 's/.*diamond_hook \([0-9]*\) \([0-9]*\).*/\1 \2/')
-            if [ -n "$dx" ]; then xdotool mousemove $dx $dy; sleep 0.3; xdotool click 1; sleep 1.5; import -window root shots/9c-bench-filled.png; fi
-            xdotool mousemove $rx $ry; sleep 0.3; xdotool click 1; sleep 1; import -window root shots/9d-bench-taken.png
-            xdotool mousemove $ax $ay; sleep 0.3; xdotool click 1; sleep 2; import -window root shots/9e-bench-assemble.png
+            if [ -n "$dx" ]; then xdotool mousemove --window $w $dx $dy; sleep 0.3; xdotool click 1; sleep 1.5; import -window root shots/9c-bench-filled.png; fi
+            xdotool mousemove --window $w $rx $ry; sleep 0.3; xdotool click 1; sleep 1; import -window root shots/9d-bench-taken.png
+            xdotool mousemove --window $w $ax $ay; sleep 0.3; xdotool click 1; sleep 2; import -window root shots/9e-bench-assemble.png
           fi
           grep -h "TIDE-CI table" client.log | tail -12 | tee bench.txt
           xdotool key Escape; sleep 1

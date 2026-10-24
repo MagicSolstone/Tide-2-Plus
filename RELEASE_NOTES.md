@@ -1,6 +1,6 @@
-# Tide+ 1.0.5
+# Tide+ 1.0.6
 
-A small one for Solstone. Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.4).
+Another one for Solstone. Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.5).
 
 ## New
-- **`/fishing describe <item>`** (ops and RCON): sends an item's tooltip as text, the same lines you see in game, Tide's stats, perks and rigs included. Solstone uses it to show what an item does when you pick it to give to a player or as a challenge prize.
+- **`/fishing guide`** (ops and RCON): every piece of tackle in one reply: its name, kind, tooltip, the places and times its perks work, its rig, and its recipe or where it's found, plus all the rigs. Solstone uses it for the **Tackle guide** on the Fishing page.

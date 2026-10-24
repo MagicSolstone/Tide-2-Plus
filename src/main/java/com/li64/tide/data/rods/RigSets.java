@@ -60,19 +60,19 @@ public final class RigSets {
 
     // The usual shapes: a little of one thing at two pieces; at three, the best kit there is for that place or time
     // (it beats any always-on set there, so a trip is worth a change of tackle), but only there.
-    private static final RodEffects QUALITY_2 = fx(0, 0, 0.08, 0), LUCK_QUALITY_3 = rig(0, 2, 0.25, 0, 0.12);
-    private static final RodEffects BITE_2 = fx(0.10, 0, 0, 0), LUCK_BITE_3 = rig(0.25, 2, 0.15, 0, 0.08);
+    private static final RodEffects QUALITY_2 = fx(0, 0, 0.08, 0), LUCK_QUALITY_3 = rig(0, 2, 0.35, 0, 0.25);
+    private static final RodEffects BITE_2 = fx(0.10, 0, 0, 0), LUCK_BITE_3 = rig(0.25, 2, 0.25, 0, 0.18);
 
     public static final List<RigSet> SETS = List.of(
             set("Ocean rig", When.OCEAN, QUALITY_2, LUCK_QUALITY_3, "prismarine_fishing_rod", "conduit_fishing_rod", "drowned_fishing_rod",
                     "kelp_line", "prismarine_line", "prismarine_hook", "nautilus_bobber", "prismarine_bobber", "turtle_bobber",
                     "squid_lure", "coastal_bait", "brine_shrimp"),
-            set("River rig", When.RIVER, BITE_2, rig(0.25, 1, 0.15, 0.15, 0.08), "silk_line", "wooden_hook",
+            set("River rig", When.RIVER, BITE_2, rig(0.25, 1, 0.25, 0.15, 0.12), "silk_line", "wooden_hook",
                     "feather_bobber", "duck_bobber", "fly_lure", "dough_ball"),
-            set("Night rig", When.NIGHT, fx(0, 0, 0, 0.10), rig(0, 2, 0.15, 0.25, 0.08), "bone_fishing_rod", "widow_fishing_rod",
+            set("Night rig", When.NIGHT, fx(0, 0, 0, 0.10), rig(0, 2, 0.30, 0.25, 0.20), "bone_fishing_rod", "widow_fishing_rod",
                     "phantom_line", "spider_line", "glow_hook", "glow_berry_bobber", "pumpkin_bobber", "glow_lure", "ink_lure",
                     "glow_worms", "moon_bait"),
-            set("Twilight rig", When.DAWN_DUSK, fx(0, 0, 0, 0.10), rig(0, 1, 0.20, 0.30, 0.10), "cherry_fishing_rod",
+            set("Twilight rig", When.DAWN_DUSK, fx(0, 0, 0, 0.10), rig(0, 1, 0.30, 0.30, 0.20), "cherry_fishing_rod",
                     "feathered_hook", "twilight_hook", "cherry_bobber", "grassy_bobber", "popper_lure", "blossom_bait"),
             set("Storm rig", When.RAIN, QUALITY_2, LUCK_QUALITY_3, "copper_fishing_rod", "copper_line", "copper_hook", "copper_bobber", "storm_lure"),
             set("Swamp rig", When.SWAMP, BITE_2, LUCK_BITE_3, "mangrove_fishing_rod", "slime_line", "lily_pad_bobber", "slime_bobber",
@@ -80,7 +80,7 @@ public final class RigSets {
             set("Jungle rig", When.JUNGLE, QUALITY_2, LUCK_QUALITY_3, "bamboo_fishing_rod", "vine_line", "apple_bobber", "jungle_bait"),
             set("Desert rig", When.DRY, BITE_2, LUCK_BITE_3, "cactus_fishing_rod", "golden_line", "golden_hook", "bone_hook",
                     "cactus_bobber", "desert_bait"),
-            set("Frost rig", When.COLD, BITE_2, rig(0.20, 1, 0.20, 0, 0.10), "frost_fishing_rod", "permafrost_hook",
+            set("Frost rig", When.COLD, BITE_2, rig(0.20, 1, 0.30, 0, 0.20), "frost_fishing_rod", "permafrost_hook",
                     "snowball_bobber", "ice_jig_lure", "frost_bait"),
             set("Cave rig", When.UNDERGROUND, QUALITY_2, LUCK_QUALITY_3, "echo_fishing_rod", "slime_line", "echo_bobber", "sculk_bobber",
                     "jig_lure", "echo_lure", "cave_grubs", "dripstone_bait", "sculk_bait"),

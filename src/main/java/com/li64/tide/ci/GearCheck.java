@@ -377,7 +377,50 @@ public final class GearCheck {
      * The real chances for the family to look at: catch quality by level, and each legendary fish in the best
      * place for it (every biome, depth and dimension tried; time, weather and moon taken as right for it).
      */
+    /** A loadout in a place: what it adds up to (its own stats, the perks for those places and times, full rigs). */
+    private static RodEffects inPlace(ItemStack rod, java.util.Set<RodEffects.When> whens) {
+        RodEffects e = RodEffects.ofRod(rod);
+        List<ItemStack> all = new ArrayList<>(List.of(rod));
+        all.addAll(RodEffects.parts(rod));
+        for (ItemStack part : all)
+            for (RodEffects.Perk perk : RodEffects.situational(part))
+                if (whens.contains(perk.when())) e = e.plus(perk.fx());
+        for (var set : com.li64.tide.data.rods.RigSets.SETS)
+            if (whens.contains(set.when())) e = e.plus(set.bonus(com.li64.tide.data.rods.RigSets.pieces(set, rod)));
+        return e;
+    }
+
+    private static ItemStack kit(String rod, String line, String hook, String bobber, String lure) {
+        ItemStack r = new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource(rod)));
+        CustomRodManager.setLine(r, new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource(line))));
+        CustomRodManager.setHook(r, new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource(hook))));
+        CustomRodManager.setBobber(r, new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource(bobber))));
+        CustomRodManager.setLure(r, new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource(lure))));
+        return r;
+    }
+
+    /** Quality odds with the gear's tier-raising chance applied (what the minigame does). */
+    private static String qualityLine(String label, int lv, RodEffects e) {
+        double[] p = CatchQuality.odds(lv, e.quality()).clone();
+        for (int i = p.length - 2; i >= 0; i--) { double up = p[i] * Math.min(1, e.upgrade()); p[i] -= up; p[i + 1] += up; }
+        double good = p[2] + p[3] + p[4] + p[5], great = p[3] + p[4] + p[5];
+        return String.format("%s: luck %+d, bite %+.0f%%, quality %+.0f%%, tier up %.0f%% -> Good+ %s, Great+ %s, Trophy+ %s, Mythic 1 in %,d",
+                label, e.luck(), e.bite() * 100, e.quality() * 100, e.upgrade() * 100, pct(good), pct(great), pct(p[4] + p[5]), Math.round(1 / p[5]));
+    }
+
     private static void oddsReport(MinecraftServer server, Collection<FishData> fish) {
+        // the amethyst set against a place's rig, at the baseline level: the rig should win in its place, and only there
+        int base = Angler.baseline();
+        ItemStack amethyst = kit("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber", "spinner_lure");
+        ItemStack jungle = kit("bamboo_fishing_rod", "vine_line", "amethyst_hook", "apple_bobber", "spinner_lure");
+        ItemStack river = kit("amethyst_fishing_rod", "silk_line", "wooden_hook", "feather_bobber", "fly_lure");
+        var day = RodEffects.When.DAY;
+        notes.add("balance " + qualityLine("amethyst set, jungle by day", base, inPlace(amethyst, java.util.Set.of(RodEffects.When.JUNGLE, day))));
+        notes.add("balance " + qualityLine("jungle rig + amethyst hook, jungle by day", base, inPlace(jungle, java.util.Set.of(RodEffects.When.JUNGLE, day))));
+        notes.add("balance " + qualityLine("jungle rig + amethyst hook, plains by day", base, inPlace(jungle, java.util.Set.of(day))));
+        notes.add("balance " + qualityLine("amethyst set, river by day", base, inPlace(amethyst, java.util.Set.of(RodEffects.When.RIVER, day))));
+        notes.add("balance " + qualityLine("river rig (amethyst rod), river by day", base, inPlace(river, java.util.Set.of(RodEffects.When.RIVER, day))));
+
         for (int lv : new int[]{1, Angler.baseline(), Angler.MAX_LEVEL})
             for (double boost : new double[]{0, 0.95}) {
                 double[] p = CatchQuality.odds(lv, boost);

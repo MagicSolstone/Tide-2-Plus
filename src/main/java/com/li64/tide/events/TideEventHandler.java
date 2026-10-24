@@ -27,6 +27,7 @@ public class TideEventHandler {
         playerData.syncTo(player);
         com.li64.tide.data.angler.Angler.onJoin(player);
         com.li64.tide.data.tackle.TackleLog.sync(player);
+        com.li64.tide.data.tackle.TackleRecipes.sync(player);
     }
 
     public static void serverStarted() {

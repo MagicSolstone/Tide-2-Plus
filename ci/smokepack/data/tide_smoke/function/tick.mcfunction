@@ -6,3 +6,6 @@ scoreboard players enable @a tide_displays
 execute as @a[scores={tide_side=1..}] at @s run function tide_smoke:displays_side
 scoreboard players reset @a[scores={tide_side=1..}] tide_side
 scoreboard players enable @a tide_side
+execute as @a[scores={tide_bench=1..}] at @s run function tide_smoke:bench
+scoreboard players reset @a[scores={tide_bench=1..}] tide_bench
+scoreboard players enable @a tide_bench

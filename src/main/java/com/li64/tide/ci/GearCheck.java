@@ -86,6 +86,8 @@ public final class GearCheck {
             notes.add(String.format("%d rods, %d lines, %d hooks, %d bobbers, %d lures, %d bait", rods.size(), lines.size(), hooks.size(),
                     bobbers.size(), lures.size(), baits.size()));
 
+            benchCheck(server);
+
             String guide = com.li64.tide.data.commands.FishingCommand.guide(server);
             var parsed = com.google.gson.JsonParser.parseString(guide).getAsJsonObject();
             notes.add("guide: " + parsed.getAsJsonArray("items").size() + " items, " + parsed.getAsJsonArray("rigs").size()
@@ -479,13 +481,46 @@ public final class GearCheck {
         return total;
     }
 
+    // ------------------------------------------------------------------ the angling table's recipes
+
+    /** Fishing gear is made at the Angling Table only: none of it at the crafting or smithing table, all of it at the table. */
+    private static void benchCheck(MinecraftServer server) {
+        var entries = com.li64.tide.data.tackle.TackleRecipes.entries();
+        Map<com.li64.tide.data.tackle.TackleRecipes.Kind, Integer> byKind = new EnumMap<>(com.li64.tide.data.tackle.TackleRecipes.Kind.class);
+        for (var e : entries) byKind.merge(e.kind(), 1, Integer::sum);
+        notes.add("angling table: " + entries.size() + " recipes " + byKind + ", " + entries.stream().filter(e -> e.smithing()).count() + " of them rod upgrades");
+        int left = 0;
+        for (RecipeHolder<?> h : server.getRecipeManager().getRecipes()) {
+            if (!h.id().identifier().getNamespace().equals("tide")) continue;
+            if (!(h.value() instanceof CraftingRecipe) && !(h.value() instanceof net.minecraft.world.item.crafting.SmithingTransformRecipe)) continue;
+            for (var e : entries) if (e.holder().id().equals(h.id())) problem("recipe " + h.id().identifier() + " is still at the crafting table too");
+            left++;
+        }
+        notes.add("angling table: " + left + " tide recipes left at the crafting/smithing table");
+        for (String must : List.of("tide:diamond_hook", "tide:iron_fishing_rod", "tide:fishing_line", "tide:red_bobber", "tide:bait", "tide:tackle_box", "tide:spinner_lure"))
+            if (entries.stream().noneMatch(e -> BuiltInRegistries.ITEM.getKey(e.result()).toString().equals(must))) problem("the angling table can't make " + must);
+        for (String not : List.of("tide:angling_table", "minecraft:fishing_rod", "minecraft:raw_iron"))
+            if (entries.stream().anyMatch(e -> BuiltInRegistries.ITEM.getKey(e.result()).toString().equals(not))) problem("the angling table makes " + not + ", which belongs at the crafting table");
+        // a Tier 2 hook made at the table remembers its Tier 1 hook (the same path the Craft button takes)
+        var diamond = entries.stream().filter(e -> BuiltInRegistries.ITEM.getKey(e.result()).getPath().equals("diamond_hook")).findFirst().orElse(null);
+        if (diamond != null && diamond.holder().value() instanceof ShapelessRecipe r) {
+            List<ItemStack> in = new ArrayList<>();
+            for (Ingredient i : diamond.ingredients())
+                in.add(i.test(new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("bone_hook")))) ? new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("bone_hook")))
+                        : new ItemStack(i.items().findFirst().orElseThrow().value()));
+            ItemStack out = r.assemble(CraftingInput.of(in.size(), 1, in));
+            if (!"bone_hook".equals(RodEffects.baseHook(out))) problem("diamond hook made on a bone hook at the table forgot it: " + RodEffects.baseHook(out));
+            else notes.add("angling table: diamond hook on a bone hook keeps it");
+        }
+    }
+
     // ------------------------------------------------------------------ recipes
 
     /** Every tackle recipe makes what it says, no two recipes take the same items, and upgrades keep their base hook. */
     private static void checkRecipes(MinecraftServer server, Map<TackleLog.Category, List<Item>> kinds) {
         ServerLevel level = server.overworld();
         List<RecipeHolder<CraftingRecipe>> crafting = new ArrayList<>();
-        for (RecipeHolder<?> h : server.getRecipeManager().getRecipes())
+        for (RecipeHolder<?> h : com.li64.tide.data.tackle.TackleRecipes.withMoved(server.getRecipeManager().getRecipes()))
             if (h.value() instanceof CraftingRecipe) {
                 @SuppressWarnings("unchecked") RecipeHolder<CraftingRecipe> c = (RecipeHolder<CraftingRecipe>) h;
                 crafting.add(c);
@@ -525,7 +560,7 @@ public final class GearCheck {
         Set<String> found = new java.util.HashSet<>(com.li64.tide.data.tackle.TackleLog.FOUND.keySet());
         found.addAll(Set.of("echo_fishing_rod", "blazing_fishing_rod", "prismarine_fishing_rod", "honeycomb_fishing_rod", "sunflower_fishing_rod",
                 "village_fishing_rod", "fish_satchel", "magnetic_bait", "abyss_bait", "incandescent_bait", "enchanted_golden_apple_bobber"));
-        for (RecipeHolder<?> h : server.getRecipeManager().getRecipes())
+        for (RecipeHolder<?> h : com.li64.tide.data.tackle.TackleRecipes.withMoved(server.getRecipeManager().getRecipes()))
             if (h.value() instanceof net.minecraft.world.item.crafting.SmithingTransformRecipe s) {
                 List<Ingredient> ing = s.placementInfo().ingredients();
                 if (ing.size() < 3) continue;

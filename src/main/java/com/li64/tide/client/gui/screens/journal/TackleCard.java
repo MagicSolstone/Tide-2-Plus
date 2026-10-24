@@ -212,7 +212,8 @@ final class TackleCard {
             int ty = gy + 4;
             for (FormattedCharSequence line : font.split(Component.literal(recipe.note()), 88)) { Gui26.text(g, font, line, gx, ty, INK, false); ty += 10; }
         } else {
-            String label = switch (recipe.kind()) { case "smithing" -> "Smithing table"; case "shapeless" -> "Any arrangement"; default -> "Crafting table"; };
+            String label = !recipe.note().isEmpty() ? "Angling Table"
+                    : switch (recipe.kind()) { case "smithing" -> "Smithing table"; case "shapeless" -> "Any arrangement"; default -> "Crafting table"; };
             Gui26.text(g, font, label, gx, gy - 6, DARK, false);
             if (recipe.kind().equals("smithing")) {      // template + base + addition, in a row
                 for (int i = 0; i < recipe.slots().size(); i++) slot(g, font, recipe.slots().get(i), gx + i * 20, gy + 6, mouseX, mouseY);

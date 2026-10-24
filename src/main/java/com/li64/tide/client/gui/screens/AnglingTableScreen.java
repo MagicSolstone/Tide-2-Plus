@@ -18,6 +18,20 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         this.titleLabelY = 8;
     }
 
+    /** The table's tabs (not when rigging from a tackle box, which has no Craft tab). */
+    protected boolean showTabs() {
+        return true;
+    }
+
+    @Override
+    protected void subInit() {
+        super.subInit();
+        if (showTabs())
+            this.addRenderableWidget(net.minecraft.client.gui.components.Button.builder(Component.literal("Craft gear"),
+                            b -> Tide.NETWORK.sendToServer(new com.li64.tide.network.messages.BenchTabMsg(true)))
+                    .bounds(this.leftPos + this.imageWidth - 72, this.topPos - 17, 72, 16).build());
+    }
+
     @Override
     public void extractBackground(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
         super.extractBackground(g, mouseX, mouseY, a);

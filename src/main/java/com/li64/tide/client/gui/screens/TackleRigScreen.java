@@ -44,6 +44,11 @@ public class TackleRigScreen extends AnglingTableScreen {
     }
 
     @Override
+    protected boolean showTabs() {
+        return false;
+    }
+
+    @Override
     protected int rightReserve() {
         return 32;
     }

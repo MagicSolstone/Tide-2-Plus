@@ -123,6 +123,19 @@ jobs:
           # the fish satchel (hotbar 6), opened with sneak + right-click
           xdotool key 6; sleep 1; xdotool keydown shift; sleep 0.3; xdotool click 3; sleep 0.5; xdotool keyup shift; sleep 2; import -window root shots/7c-satchel.png
           xdotool key Escape; sleep 1; xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_displays"; sleep 0.5; xdotool key Return; sleep 4; import -window root shots/8-displays.png; xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_side"; sleep 0.5; xdotool key Return; sleep 3; import -window root shots/8b-displays-side.png
+          # the Angling Table: Craft tab, the Hooks filter, a diamond hook made on a bone hook, then the Assemble tab
+          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_bench"; sleep 0.5; xdotool key Return; sleep 2
+          xdotool key 4; sleep 0.5; xdotool click 3; sleep 2; import -window root shots/9-bench.png
+          read hx hy cx cy ax ay < <(grep "TIDE-CI bench px hooks" client.log | tail -1 | sed 's/.*hooks \([0-9]*\) \([0-9]*\) craft \([0-9]*\) \([0-9]*\) assemble \([0-9]*\) \([0-9]*\).*/\1 \2 \3 \4 \5 \6/')
+          echo "bench at: hooks $hx,$hy craft $cx,$cy assemble $ax,$ay"
+          if [ -n "$hx" ]; then
+            xdotool mousemove $hx $hy; sleep 0.3; xdotool click 1; sleep 1; import -window root shots/9b-bench-hooks.png
+            read dx dy < <(grep "TIDE-CI bench px diamond_hook" client.log | tail -1 | sed 's/.*diamond_hook \([0-9]*\) \([0-9]*\).*/\1 \2/')
+            if [ -n "$dx" ]; then xdotool mousemove $dx $dy; sleep 0.3; xdotool click 1; sleep 1; import -window root shots/9c-bench-diamond.png; fi
+            xdotool mousemove $cx $cy; sleep 0.3; xdotool click 1; sleep 1.5; import -window root shots/9d-bench-crafted.png
+            xdotool mousemove $ax $ay; sleep 0.3; xdotool click 1; sleep 2; import -window root shots/9e-bench-assemble.png
+          fi
+          grep -h "TIDE-CI bench" client.log | tail -8 | tee bench.txt
           xdotool key Escape; sleep 1
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null; true
 
@@ -244,7 +257,7 @@ jobs:
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/rcon.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/fa-probe.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/rcon.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/bench.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/fa-probe.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

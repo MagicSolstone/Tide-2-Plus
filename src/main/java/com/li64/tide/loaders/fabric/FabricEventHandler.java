@@ -46,6 +46,10 @@ public class FabricEventHandler {
         ServerLifecycleEvents.SERVER_STARTED.register(com.li64.tide.data.rods.GlowLights::cleanUp);
 
         ServerTickEvents.END_SERVER_TICK.register(TideEventHandler::endServerTick);
+        // the Angling Table's recipes can change with a /reload
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resources, ok) -> {
+            if (ok) for (var p : server.getPlayerList().getPlayers()) com.li64.tide.data.tackle.TackleRecipes.sync(p);
+        });
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) ->
                 TideEventHandler.onPlayerJoinWorld(handler.getPlayer()));

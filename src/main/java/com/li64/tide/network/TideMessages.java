@@ -27,6 +27,7 @@ public class TideMessages {
                 com.li64.tide.network.messages.CatchBannerMsg::encode, com.li64.tide.network.messages.CatchBannerMsg::new, com.li64.tide.network.messages.CatchBannerMsg::handle);
         network.registerClientBoundPacket(com.li64.tide.network.messages.RecordsSyncMsg.class, com.li64.tide.network.messages.RecordsSyncMsg.ID,
                 com.li64.tide.network.messages.RecordsSyncMsg::encode, com.li64.tide.network.messages.RecordsSyncMsg::new, com.li64.tide.network.messages.RecordsSyncMsg::handle);
+        network.registerClientBoundPacket(TackleRecipesMsg.class, TackleRecipesMsg.ID, TackleRecipesMsg::encode, TackleRecipesMsg::new, TackleRecipesMsg::handle);
         network.registerClientBoundPacket(AnglerSyncMsg.class, AnglerSyncMsg.ID, AnglerSyncMsg::encode, AnglerSyncMsg::new, AnglerSyncMsg::handle);
         network.registerClientBoundPacket(SyncDataMsg.class, SyncDataMsg.ID, SyncDataMsg::encode, SyncDataMsg::new, SyncDataMsg::handle);
 
@@ -37,6 +38,8 @@ public class TideMessages {
                 com.li64.tide.network.messages.RecipeRequestMsg::encode, com.li64.tide.network.messages.RecipeRequestMsg::new, com.li64.tide.network.messages.RecipeRequestMsg::handle);
         network.registerServerBoundPacket(com.li64.tide.network.messages.OpenTackleMsg.class, com.li64.tide.network.messages.OpenTackleMsg.ID,
                 com.li64.tide.network.messages.OpenTackleMsg::encode, com.li64.tide.network.messages.OpenTackleMsg::new, com.li64.tide.network.messages.OpenTackleMsg::handle);
+        network.registerServerBoundPacket(TackleCraftMsg.class, TackleCraftMsg.ID, TackleCraftMsg::encode, TackleCraftMsg::new, TackleCraftMsg::handle);
+        network.registerServerBoundPacket(BenchTabMsg.class, BenchTabMsg.ID, BenchTabMsg::encode, BenchTabMsg::new, BenchTabMsg::handle);
         network.registerServerBoundPacket(ReadProfileMsg.class, ReadProfileMsg.ID, ReadProfileMsg::encode, ReadProfileMsg::new, ReadProfileMsg::handle);
     }
 }

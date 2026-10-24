@@ -32,6 +32,10 @@ public class AnglingTableMenu extends ItemCombinerMenu {
         this.level = inventory.player.level();
     }
 
+    public net.minecraft.world.inventory.ContainerLevelAccess access() {
+        return this.access;
+    }
+
     @Override
     protected boolean mayPickup(@NotNull Player player, boolean hasItem) {
         return true;

@@ -78,25 +78,28 @@ public final class TackleLog {
     public static com.li64.tide.network.messages.RecipeViewMsg recipeFor(net.minecraft.server.MinecraftServer server, String itemId) {
         Item target = BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(itemId));
         net.minecraft.server.level.ServerLevel level = server.overworld();
-        for (var h : server.getRecipeManager().getRecipes()) {
+        java.util.Set<Object> atTable = new java.util.HashSet<>();
+        for (var e : TackleRecipes.entries()) atTable.add(e.holder().id());
+        for (var h : TackleRecipes.withMoved(server.getRecipeManager().getRecipes())) {
             var r = h.value();
+            String where = atTable.contains(h.id()) ? "Made at the Angling Table." : "";
             try {
                 if (r instanceof net.minecraft.world.item.crafting.ShapedRecipe s) {
                     List<List<String>> slots = s.getIngredients().stream().map(o -> o.map(TackleLog::options).orElse(List.of())).toList();
                     if (makes(s, s.getWidth(), s.getHeight(), slots, target))
-                        return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "crafting", s.getWidth(), s.getHeight(), slots, "");
+                        return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "crafting", s.getWidth(), s.getHeight(), slots, where);
                 } else if (r instanceof net.minecraft.world.item.crafting.ShapelessRecipe s) {
                     List<List<String>> slots = s.placementInfo().ingredients().stream().map(TackleLog::options).toList();
                     int w = Math.min(3, slots.size()), hh = (slots.size() + 2) / 3;
                     List<List<String>> padded = new ArrayList<>(slots);
                     while (padded.size() < w * hh) padded.add(List.of());
                     if (makes(s, w, hh, padded, target))
-                        return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "shapeless", w, hh, padded, "");
+                        return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "shapeless", w, hh, padded, where);
                 } else if (r instanceof net.minecraft.world.item.crafting.SmithingTransformRecipe s) {
                     List<List<String>> slots = s.placementInfo().ingredients().stream().map(TackleLog::options).toList();
                     if (slots.size() == 3) {
                         ItemStack out = s.assemble(new net.minecraft.world.item.crafting.SmithingRecipeInput(first(slots.get(0)), first(slots.get(1)), first(slots.get(2))));
-                        if (out.is(target)) return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "smithing", 3, 1, slots, "");
+                        if (out.is(target)) return new com.li64.tide.network.messages.RecipeViewMsg(itemId, "smithing", 3, 1, slots, where);
                     }
                 }
             } catch (Throwable ignored) {

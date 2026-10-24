@@ -30,7 +30,7 @@ public class AnglingTableBlock extends CraftingTableBlock {
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult pHitResult) {
         if (level.isClientSide()) return InteractionResult.SUCCESS;
-        player.openMenu(state.getMenuProvider(level, pos));
+        if (player instanceof net.minecraft.server.level.ServerPlayer sp) com.li64.tide.client.gui.menus.AnglingCraftMenu.openLast(sp, level, pos);
         return InteractionResult.CONSUME;
     }
 }

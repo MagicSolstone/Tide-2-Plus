@@ -86,6 +86,10 @@ public final class GearCheck {
             notes.add(String.format("%d rods, %d lines, %d hooks, %d bobbers, %d lures, %d bait", rods.size(), lines.size(), hooks.size(),
                     bobbers.size(), lures.size(), baits.size()));
 
+            String guide = com.li64.tide.data.commands.FishingCommand.guide(server);
+            var parsed = com.google.gson.JsonParser.parseString(guide).getAsJsonObject();
+            notes.add("guide: " + parsed.getAsJsonArray("items").size() + " items, " + parsed.getAsJsonArray("rigs").size()
+                    + " rigs, " + guide.length() + " characters; first item " + parsed.getAsJsonArray("items").get(0));
             // what /fishing describe sends Solstone, for a few kinds of item
             for (String id : List.of("tide:golden_hook", "tide:bamboo_fishing_rod", "tide:golden_bait", "minecraft:diamond_sword"))
                 notes.add("describe: " + com.li64.tide.data.commands.FishingCommand.tooltip(

@@ -142,11 +142,12 @@ jobs:
           sed -i -e 's/^fishinglevel set @s .*/fishinglevel set @s 2/' -e 's/^tp @s ~ ~ ~ 0 35$/tp @s ~ ~ ~2 0 40/' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
           # a complicated rod: bonus honey, a line that cooks, a treble hook on a bone hook, the bell bobber, a lure
           sed -i 's|^item replace entity @s hotbar.0 with .*|item replace entity @s hotbar.0 with tide:honeycomb_fishing_rod[enchantments={"minecraft:lure":5},tide:fishing_line={id:"tide:redstone_line",count:1},tide:fishing_hook={id:"tide:treble_hook",count:1,components:{"tide:base_hook":"bone_hook"}},tide:fishing_bobber={id:"tide:bell_bobber",count:1},tide:fishing_lure={id:"tide:glow_lure",count:1}]|' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
-          printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nenforce-secure-profile=false\nwhite-list=false\nenforce-whitelist=false\n' > run/server.properties
+          printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nenforce-secure-profile=false\nwhite-list=false\nenforce-whitelist=false\nenable-rcon=true\nrcon.password=ci\nrcon.port=25575\n' > run/server.properties
           ./gradlew runServer --no-daemon > server-mp.log 2>&1 &
           spid=$!
           for i in $(seq 1 84); do sleep 5; grep -q "Done (" server-mp.log && break; kill -0 $spid 2>/dev/null || break; done
           echo "server: $(grep -c 'Done (' server-mp.log)"
+          timeout 60 python3 ci/rcon_guide.py 2>&1 | tee rcon.txt || true
           # popular client mods that hook into every entity (they found the hook accessor bug):
           # LambDynamicLights and whatever it requires, latest for this Minecraft version, from Modrinth
           mkdir -p run/mods
@@ -214,7 +215,7 @@ jobs:
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/rcon.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

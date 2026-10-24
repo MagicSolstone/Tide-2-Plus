@@ -26,6 +26,11 @@ public class FishingCommand {
                         .then(Commands.literal("loot").executes(ctx -> test(ctx.getSource(), TestType.LOOT)))
                         .then(Commands.literal("crate").executes(ctx -> test(ctx.getSource(), TestType.CRATES)))
                         .then(Commands.literal("fish").executes(ctx -> test(ctx.getSource(), TestType.FISH))))
+                .then(Commands.literal("guide").executes(ctx -> {
+                    String out = "tackleguide " + guide(ctx.getSource().getServer());
+                    ctx.getSource().sendSuccess(() -> Component.literal(out), false);
+                    return 1;
+                }))
                 .then(Commands.literal("describe")
                         .then(Commands.argument("item", net.minecraft.commands.arguments.item.ItemArgument.item(buildContext))
                                 .executes(ctx -> describe(ctx.getSource(),
@@ -40,6 +45,79 @@ public class FishingCommand {
         String out = tooltip(stack, source.getServer().registryAccess());
         source.sendSuccess(() -> Component.literal(out), false);
         return (int) out.chars().filter(ch -> ch == '\n').count();
+    }
+
+    /**
+     * Every piece of tackle as one line of JSON, for Solstone's tackle guide: name, kind, tooltip lines (with colours),
+     * the places and times its perks work, its rig, and how it's made (the recipe the journal shows, or where it's found).
+     * Plus the rigs: name, where they work, both bonuses and their pieces.
+     */
+    public static String guide(net.minecraft.server.MinecraftServer server) {
+        var json = new com.google.gson.JsonObject();
+        var rigs = new com.google.gson.JsonArray();
+        for (var set : com.li64.tide.data.rods.RigSets.SETS) {
+            var r = new com.google.gson.JsonObject();
+            r.addProperty("name", set.name());
+            r.addProperty("when", set.when().name());
+            r.addProperty("when_text", set.when().text);
+            r.addProperty("two", set.twoText());
+            r.addProperty("full", set.bonusText());
+            var members = new com.google.gson.JsonArray();
+            set.members().stream().sorted().forEach(m -> members.add("tide:" + m));
+            r.add("members", members);
+            rigs.add(r);
+        }
+        json.add("rigs", rigs);
+        var whens = new com.google.gson.JsonObject();
+        for (var w : com.li64.tide.data.rods.RodEffects.When.values()) whens.addProperty(w.name(), w.text);
+        json.add("whens", whens);
+        var items = new com.google.gson.JsonArray();
+        for (net.minecraft.world.item.Item item : net.minecraft.core.registries.BuiltInRegistries.ITEM) {
+            var cat = com.li64.tide.data.tackle.TackleLog.category(item);
+            if (cat == null) continue;
+            var id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item);
+            var stack = new net.minecraft.world.item.ItemStack(item);
+            var o = new com.google.gson.JsonObject();
+            o.addProperty("id", id.toString());
+            o.addProperty("name", stack.getHoverName().getString());
+            o.addProperty("category", cat.label);
+            var lines = new com.google.gson.JsonArray();
+            String tip = tooltip(stack, server.registryAccess());
+            for (String row : tip.substring(tip.indexOf('\n') + 1).split("\n")) {
+                int tab = row.indexOf('\t');
+                if (tab < 0) continue;
+                var l = new com.google.gson.JsonArray();
+                l.add("#" + row.substring(0, tab));
+                l.add(row.substring(tab + 1));
+                lines.add(l);
+            }
+            o.add("lines", lines);
+            var when = new com.google.gson.JsonArray();
+            com.li64.tide.data.rods.RodEffects.situational(stack).stream().map(p -> p.when().name()).distinct().forEach(when::add);
+            o.add("when", when);
+            com.li64.tide.data.rods.RigSets.SETS.stream().filter(set -> set.members().contains(id.getPath())).findFirst()
+                    .ifPresent(set -> o.addProperty("rig", set.name()));
+            try {
+                var r = com.li64.tide.data.tackle.TackleLog.recipeFor(server, id.toString());
+                var rec = new com.google.gson.JsonObject();
+                rec.addProperty("kind", r.kind());
+                rec.addProperty("width", r.width());
+                rec.addProperty("height", r.height());
+                var slots = new com.google.gson.JsonArray();
+                for (var slot : r.slots()) {
+                    var a = new com.google.gson.JsonArray();
+                    slot.forEach(a::add);
+                    slots.add(a);
+                }
+                rec.add("slots", slots);
+                rec.addProperty("note", r.note());
+                o.add("recipe", rec);
+            } catch (Throwable ignored) {
+            }
+            items.add(o);
+        }
+        json.add("items", items);
+        return json.toString();
     }
 
     public static String tooltip(net.minecraft.world.item.ItemStack stack, net.minecraft.core.HolderLookup.Provider registries) {

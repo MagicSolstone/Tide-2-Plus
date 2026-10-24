@@ -71,9 +71,27 @@ public final class ServerRecords extends SavedData {
         if (old != null && grams <= old.grams()) return false;
         r.records.put(species, new Entry(player.getScoreboardName(), player.getStringUUID(), grams, quality));
         r.setDirty();
+        sendToEveryone(server);
         if (old == null) return false;
         announce(server, player, stack, grams, quality, old);
         return true;
+    }
+
+    /** The records as the journal shows them. */
+    private static com.li64.tide.network.messages.RecordsSyncMsg message(ServerRecords r) {
+        java.util.Map<String, com.li64.tide.network.messages.RecordsSyncMsg.Entry> out = new HashMap<>();
+        r.records.forEach((k, e) -> out.put(k, new com.li64.tide.network.messages.RecordsSyncMsg.Entry(e.player(), e.grams(), e.quality())));
+        return new com.li64.tide.network.messages.RecordsSyncMsg(out);
+    }
+
+    public static void sendTo(ServerPlayer player) {
+        MinecraftServer server = player.level().getServer();
+        if (server != null) Tide.NETWORK.sendToPlayer(message(of(server)), player);
+    }
+
+    private static void sendToEveryone(MinecraftServer server) {
+        var msg = message(of(server));
+        for (ServerPlayer p : server.getPlayerList().getPlayers()) Tide.NETWORK.sendToPlayer(msg, p);
     }
 
     /** Records from before this existed, from a player's journal (quietly). */
@@ -83,6 +101,7 @@ public final class ServerRecords extends SavedData {
         ServerRecords r = of(server);
         TidePlayerData journal = TidePlayerData.getOrCreate(player);
         if (journal.fishPlayerData == null) return;
+        boolean[] changed = {false};
         journal.fishPlayerData.forEach((holder, data) -> data.stats.ifPresent(st -> {
             if (st.getHeaviestCatch() <= 0) return;
             String species = holder.unwrapKey().map(k -> k.identifier().toString()).orElse(null);
@@ -90,8 +109,12 @@ public final class ServerRecords extends SavedData {
             Entry old = r.records.get(species);
             if (old != null && old.grams() >= st.getHeaviestCatch()) return;
             r.records.put(species, new Entry(player.getScoreboardName(), player.getStringUUID(), st.getHeaviestCatch(), st.getHeaviestQuality()));
-            r.setDirty();
+            changed[0] = true;
         }));
+        if (changed[0]) {
+            r.setDirty();
+            sendToEveryone(server);
+        }
     }
 
     /** A sound every player hears once, wherever they are. */

@@ -26,7 +26,7 @@ public class StatsComponent extends ProfileComponent {
 
     private final List<Component> lines;
 
-    public StatsComponent(FishStats stats) {
+    public StatsComponent(FishStats stats, String species) {
         ImmutableList.Builder<Component> builder = ImmutableList.builder();
         // add total caught
         builder.add(Component.translatable("journal.info.stats.total", stats.getAmountCaught()));
@@ -76,6 +76,17 @@ public class StatsComponent extends ProfileComponent {
                 }
                 builder.add(line);
             }
+        }
+        // the server's record for this fish, whoever holds it
+        var record = com.li64.tide.network.messages.RecordsSyncMsg.CLIENT.get(species);
+        if (record != null && record.grams() > 0) {
+            net.minecraft.network.chat.MutableComponent line = Component.literal("Server record: " + FishWeight.format(record.grams()));
+            if (record.quality() >= 0 && record.quality() != CatchQuality.AVERAGE.ordinal()) {
+                CatchQuality rq = CatchQuality.byId(record.quality());
+                line.append(Component.literal(" " + rq.label).withStyle(st -> st.withColor(net.minecraft.network.chat.TextColor.fromRgb(darken(rq.color)))));
+            }
+            line.append(Component.literal(" by " + record.player()));
+            builder.add(line);
         }
         this.lines = builder.build();
     }

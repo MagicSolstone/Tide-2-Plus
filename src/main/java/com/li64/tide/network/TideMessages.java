@@ -25,6 +25,8 @@ public class TideMessages {
                 com.li64.tide.network.messages.RecipeViewMsg::encode, com.li64.tide.network.messages.RecipeViewMsg::new, com.li64.tide.network.messages.RecipeViewMsg::handle);
         network.registerClientBoundPacket(com.li64.tide.network.messages.CatchBannerMsg.class, com.li64.tide.network.messages.CatchBannerMsg.ID,
                 com.li64.tide.network.messages.CatchBannerMsg::encode, com.li64.tide.network.messages.CatchBannerMsg::new, com.li64.tide.network.messages.CatchBannerMsg::handle);
+        network.registerClientBoundPacket(com.li64.tide.network.messages.RecordsSyncMsg.class, com.li64.tide.network.messages.RecordsSyncMsg.ID,
+                com.li64.tide.network.messages.RecordsSyncMsg::encode, com.li64.tide.network.messages.RecordsSyncMsg::new, com.li64.tide.network.messages.RecordsSyncMsg::handle);
         network.registerClientBoundPacket(AnglerSyncMsg.class, AnglerSyncMsg.ID, AnglerSyncMsg::encode, AnglerSyncMsg::new, AnglerSyncMsg::handle);
         network.registerClientBoundPacket(SyncDataMsg.class, SyncDataMsg.ID, SyncDataMsg::encode, SyncDataMsg::new, SyncDataMsg::handle);
 

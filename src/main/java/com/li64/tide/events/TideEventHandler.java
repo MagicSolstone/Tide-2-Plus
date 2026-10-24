@@ -11,7 +11,12 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class TideEventHandler {
     public static void onPlayerJoinWorld(ServerPlayer player) {
-        com.li64.tide.data.angler.ServerRecords.fillFromJournal(player);
+        try {
+            com.li64.tide.data.angler.ServerRecords.fillFromJournal(player);
+            com.li64.tide.data.angler.ServerRecords.sendTo(player);
+        } catch (RuntimeException e) {
+            Tide.LOG.error("Tide+: reading {}'s journal into the server records failed", player.getScoreboardName(), e);
+        }
         Tide.NETWORK.sendToPlayer(new SyncDataMsg(), player);
 
         TidePlayerData playerData = TidePlayerData.getOrCreate(player);

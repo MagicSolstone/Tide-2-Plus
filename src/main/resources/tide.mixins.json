@@ -8,6 +8,8 @@
    "compatibilityLevel": "JAVA_21",
    "client": [
       "EntityRenderDispatcherMixin",
+      "EntityWaterAccessor",
+      "GuiGraphicsQualityMixin",
       "RangeSelectItemModelPropertiesAccessor"
    ],
    "mixins": [

@@ -698,12 +698,12 @@ public class TideFishingHook extends Projectile {
                     for (ItemStack stack : hookedItems) {
                         if (stack.isEmpty()) continue;
                         if (catchType == CatchType.FISH)
-                            com.li64.tide.data.angler.CatchQuality.apply(serverPlayer, stack, this.pendingQuality);
+                            safely("grading the catch", () -> com.li64.tide.data.angler.CatchQuality.apply(serverPlayer, stack, this.pendingQuality));
 
                         // the rod's extras: a second fish (treble hook), or one cooked on the line (redstone line, blazing rod)
                         ItemStack drop = stack;
                         int copies = 1;
-                        if (catchType == CatchType.FISH) {
+                        if (catchType == CatchType.FISH) try {
                             com.li64.tide.data.rods.RodEffects extras = com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod);
                             if (extras.cook() > 0 && (Tide.CI || this.random.nextDouble() < extras.cook())) {
                                 drop = cookOnTheLine(level, stack);
@@ -713,6 +713,10 @@ public class TideFishingHook extends Projectile {
                                 copies = 2;
                                 com.li64.tide.data.angler.Angler.markTwin(serverPlayer);
                             }
+                        } catch (RuntimeException e) {
+                            Tide.LOG.error("Tide+: the rod's extras failed (the catch still lands)", e);
+                            drop = stack;
+                            copies = 1;
                         }
                         if (Tide.CI && catchType == CatchType.FISH)
                             Tide.LOG.info("TIDE-CI extras: drop {} x{}{}", drop.getHoverName().getString(), copies, drop == stack ? "" : " (cooked)");
@@ -747,7 +751,7 @@ public class TideFishingHook extends Projectile {
                         }
                         }
                         // the rod's bonus drops (honeycomb rod's honey...)
-                        if (catchType == CatchType.FISH) {
+                        if (catchType == CatchType.FISH) safely("the rod's bonus drops", () -> {
                             int q = TideItemData.FISH_QUALITY.getOrDefault(stack, 1);
                             for (com.li64.tide.data.rods.RodEffects.Drop d : com.li64.tide.data.rods.RodEffects.drops(this.rod)) {
                                 if (!Tide.CI && (q < d.minQuality() || this.random.nextDouble() >= d.chance())) continue;
@@ -772,7 +776,7 @@ public class TideFishingHook extends Projectile {
                                 }
                             }
                             com.li64.tide.data.rods.FoundRodTricks.onCatch(serverPlayer, this.rod, this.random);
-                        }
+                        });
 
                         player.level().addFreshEntity(new ExperienceOrb(
                                 player.level(), player.getX(), player.getY() + 0.5, player.getZ() + 0.5,
@@ -793,12 +797,16 @@ public class TideFishingHook extends Projectile {
                             // fishing XP (before the journal, so first catches and records count), then the journal
                             boolean newSpecies = TidePlayerData.getOrCreate(serverPlayer).getDataFor(stack.getItem())
                                     .flatMap(f -> f.stats).map(st -> st.getAmountCaught() == 0).orElse(true);
-                            if (com.li64.tide.data.angler.ServerRecords.onCatch(serverPlayer, stack))
-                                com.li64.tide.data.angler.Angler.markServerRecord(serverPlayer);
-                            long gained = com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack, this.wasPerfectCatch,
-                                    com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod).xp());
+                            // each extra on its own: one failing must never cost the journal entry (or the others)
+                            safely("the server record", () -> {
+                                if (com.li64.tide.data.angler.ServerRecords.onCatch(serverPlayer, stack))
+                                    com.li64.tide.data.angler.Angler.markServerRecord(serverPlayer);
+                            });
+                            long[] gained = {0};
+                            safely("fishing XP", () -> gained[0] = com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack,
+                                    this.wasPerfectCatch, com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod).xp()));
                             TideUtils.tryLogCatch(stack, serverPlayer);
-                            com.li64.tide.data.angler.Angler.logCatch(serverPlayer, stack, this.hookResult, gained, newSpecies);
+                            safely("the catch log", () -> com.li64.tide.data.angler.Angler.logCatch(serverPlayer, stack, this.hookResult, gained[0], newSpecies));
                         }
                     }
                     break;
@@ -1090,4 +1098,14 @@ public class TideFishingHook extends Projectile {
         INSIDE_WATER,
         INVALID
     }
+
+    /** Tide+'s extras around a catch: if one throws, log it and carry on, so the catch itself always lands. */
+    private static void safely(String what, Runnable r) {
+        try {
+            r.run();
+        } catch (RuntimeException e) {
+            Tide.LOG.error("Tide+: {} failed (the catch still counts)", what, e);
+        }
+    }
+
 }

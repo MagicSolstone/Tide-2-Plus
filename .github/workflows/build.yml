@@ -163,6 +163,13 @@ jobs:
             for dep in $(echo "$v" | jq -r '.dependencies[] | select(.dependency_type=="required") | .project_id'); do mr "$dep"; done
           }
           mr lambdynamiclights
+          # Fresh Animations (a popular resource pack, through Entity Model Features) to check fish displays under it
+          mr entity-model-features; mr entitytexturefeatures
+          mkdir -p run/resourcepacks
+          fa=$(curl -sf "https://api.modrinth.com/v2/project/fresh-animations/version" | jq -r '.[0] | ((.files[] | select(.primary) | .url) // .files[0].url)' | head -1)
+          [ -n "$fa" ] && curl -sfL "$fa" -o run/resourcepacks/FreshAnimations.zip && echo "fresh animations: $(basename "$fa")"
+          touch run/options.txt; sed -i '/^resourcePacks:/d' run/options.txt
+          echo 'resourcePacks:["vanilla","fabric","file/FreshAnimations.zip"]' >> run/options.txt
           ls run/mods
           ./gradlew runSmokeMp --no-daemon > client-mp.log 2>&1 &
           cpid=$!
@@ -178,9 +185,10 @@ jobs:
           xdotool click 3
           sleep 2; import -window root shots/m3-caught.png
           sleep 6; import -window root shots/m4-after.png
+          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_displays"; sleep 0.5; xdotool key Return; sleep 5; import -window root shots/m5-displays-fa.png
           echo "--- server"; grep -nE "TIDE-CI|\[Tide catch\]|reached fishing|lost connection|left the game|Exception|ERROR" server-mp.log | tail -20
           echo "--- client"; grep -nE "TIDE-CI|Exception|ERROR|Disconnect|disconnect|lost" client-mp.log | grep -v "OpenGL\|GLX\|flite\|narrator\|OpenAL\|SoundSystem\|Realms\|sessionserver" | tail -20
-          pkill -f 'net.fabricmc' ; sleep 3; kill $spid $cpid 2>/dev/null; rm -rf run/mods; true
+          pkill -f 'net.fabricmc' ; sleep 3; kill $spid $cpid 2>/dev/null; rm -rf run/mods run/resourcepacks; sed -i '/^resourcePacks:/d' run/options.txt; true
 
       # The full build output is hard to read from outside GitHub, so the errors (and the tail
       # of the log) are also written to the ci-results branch: one file per run, plus latest.

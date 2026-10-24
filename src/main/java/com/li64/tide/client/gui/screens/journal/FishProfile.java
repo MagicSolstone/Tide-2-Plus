@@ -67,7 +67,7 @@ public class FishProfile implements Renderable {
         // add fish player stats info area
         FishStats stats = TidePlayerData.CLIENT_DATA.getDataFor(fish.getItem())
                 .flatMap(d -> d.stats).orElse(new FishStats());
-        builder.add(new StatsComponent(stats));
+        builder.add(new StatsComponent(stats, net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(fish.getItem()).toString()));
 
         return builder;
     }

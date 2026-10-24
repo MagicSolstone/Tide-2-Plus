@@ -530,6 +530,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(Unlocks.describe(stack));
         Component rigs = RigSets.memberLine(stack);
         if (rigs != null && isTide(stack)) out.add(rigs);
+        if (isTide(stack) && BASE_HOOKS.contains(path(stack)) && !path(stack).equals("fishing_hook"))
+            out.add(line(ChatFormatting.GRAY, "Upgrade it (diamond, amethyst...) and it keeps these perks"));
+        if (isTide(stack) && UPGRADED_HOOKS.contains(path(stack)) && base == null)
+            out.add(line(ChatFormatting.GRAY, "Craft it on a bone, golden... hook to keep that hook's perks too"));
         if (path(stack).equals("lavaproof_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in lava"));
         if (path(stack).equals("void_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in the void"));
         if (path(stack).equals("glow_hook") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Glows, lighting the water around it"));

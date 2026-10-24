@@ -1,9 +1,7 @@
-# Tide+ 1.0.14
+# Tide+ 1.0.15
 
-Mythic and Trophy fish stand out. Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.13).
+Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.14).
 
 ## Changes
-- **Mythic fish shimmer** like an enchanted item, raw and cooked (fish caught or cooked from now on).
-- **Trophy and Mythic fish on a display sparkle**: the odd purple sparkle for a Trophy, gold ones for a Mythic.
-- **A caught tropical fish is one of the game's named kinds** (clownfish, blue tang, and so on), picked when you catch it, so it looks the same on a display every time.
-- Fish on displays each get their own identity for animation packs, which may stop the slight movement and blinking with Fresh Animations.
+- **Fish journal pages fit again.** The count of each quality caught is now one line of coloured diamonds with numbers (◆12 ◆3 ◆1) instead of words, the server record is shorter (Record ◆ 3.4 lb · name), and anything still too wide wraps instead of running off the page.
+- **Hook upgrades explain themselves.** Base hooks (bone, golden, copper...) say you can upgrade them and keep their perks; upgrade hooks (diamond, amethyst...) say to craft them on a base hook to keep that hook's perks too.

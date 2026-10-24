@@ -24,7 +24,7 @@ import java.util.List;
 public class StatsComponent extends ProfileComponent {
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT);
 
-    private final List<Component> lines;
+    private final List<net.minecraft.util.FormattedCharSequence> lines;
 
     public StatsComponent(FishStats stats, String species) {
         ImmutableList.Builder<Component> builder = ImmutableList.builder();
@@ -61,34 +61,35 @@ public class StatsComponent extends ProfileComponent {
                         TideUtils.getFormattedLength(stats.getSmallestCatch())));
             }
 
-            // how many of each quality, three to a line
-            List<Component> counts = new java.util.ArrayList<>();
+            // how many of each quality, on one line: a diamond in the quality's colour and the count
+            net.minecraft.network.chat.MutableComponent counts = Component.empty();
+            boolean any = false;
             for (CatchQuality q : CatchQuality.values()) {
                 int n = stats.getQualityCount(q);
-                if (n > 0) counts.add(Component.literal(n + " " + q.label)
-                        .withStyle(st -> st.withColor(net.minecraft.network.chat.TextColor.fromRgb(darken(q.color)))));
+                if (n <= 0) continue;
+                if (any) counts.append(Component.literal("  "));
+                counts.append(Component.literal("◆").withStyle(st -> st.withColor(net.minecraft.network.chat.TextColor.fromRgb(darken(q.color)))))
+                        .append(Component.literal(String.valueOf(n)));
+                any = true;
             }
-            for (int i = 0; i < counts.size(); i += 3) {
-                net.minecraft.network.chat.MutableComponent line = Component.empty();
-                for (int j = i; j < Math.min(i + 3, counts.size()); j++) {
-                    if (j > i) line.append(Component.literal(" · "));
-                    line.append(counts.get(j));
-                }
-                builder.add(line);
-            }
+            if (any) builder.add(counts);
         }
         // the server's record for this fish, whoever holds it
         var record = com.li64.tide.network.messages.RecordsSyncMsg.CLIENT.get(species);
         if (record != null && record.grams() > 0) {
-            net.minecraft.network.chat.MutableComponent line = Component.literal("Server record: " + FishWeight.format(record.grams()));
-            if (record.quality() >= 0 && record.quality() != CatchQuality.AVERAGE.ordinal()) {
+            net.minecraft.network.chat.MutableComponent line = Component.literal("Record ");
+            if (record.quality() >= 0) {
                 CatchQuality rq = CatchQuality.byId(record.quality());
-                line.append(Component.literal(" " + rq.label).withStyle(st -> st.withColor(net.minecraft.network.chat.TextColor.fromRgb(darken(rq.color)))));
+                line.append(Component.literal("◆").withStyle(st -> st.withColor(net.minecraft.network.chat.TextColor.fromRgb(darken(rq.color)))));
             }
-            line.append(Component.literal(" by " + record.player()));
+            line.append(Component.literal(FishWeight.format(record.grams()) + " · " + record.player()));
             builder.add(line);
         }
-        this.lines = builder.build();
+        // anything too wide for the page wraps instead of running off it
+        net.minecraft.client.gui.Font font = net.minecraft.client.Minecraft.getInstance().font;
+        ImmutableList.Builder<net.minecraft.util.FormattedCharSequence> split = ImmutableList.builder();
+        for (Component c : builder.build()) split.addAll(font.split(c, AREA_WIDTH - 4));
+        this.lines = split.build();
     }
 
     /** The quality colours are made for dark tooltips; deepen them for the paper page. */
@@ -102,7 +103,7 @@ public class StatsComponent extends ProfileComponent {
     public void render(@NotNull GuiGraphicsExtractor graphics, Font font, int x, int y, int mouseX, int mouseY, float partialTick) {
         int center = x + AREA_WIDTH / 2;
         int cursorY = 0;
-        for (Component line : lines) {
+        for (net.minecraft.util.FormattedCharSequence line : lines) {
             Gui26.text(graphics, font, line, center - font.width(line) / 2, y + cursorY, TEXT_COLOR, false);
             cursorY += 11;
         }

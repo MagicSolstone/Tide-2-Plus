@@ -184,6 +184,25 @@ jobs:
 
       # The full build output is hard to read from outside GitHub, so the errors (and the tail
       # of the log) are also written to the ci-results branch: one file per run, plus latest.
+      - name: Fresh Animations probe
+        continue-on-error: true
+        timeout-minutes: 3
+        shell: bash
+        run: |
+          # what the Fresh Animations resource pack has for fish, so Tide's display compatibility matches it
+          {
+            v=$(curl -sf "https://api.modrinth.com/v2/project/fresh-animations/version" | jq -c '.[0]')
+            echo "version: $(echo "$v" | jq -r '.version_number') for $(echo "$v" | jq -c '.game_versions[-3:]')"
+            url=$(echo "$v" | jq -r '(.files[] | select(.primary) | .url) // .files[0].url' | head -1)
+            curl -sfL "$url" -o fa.zip && mkdir -p fa && unzip -q -o fa.zip -d fa
+            echo "--- fish files"; (cd fa && find . -iname '*fish*' -o -iname '*cod*' -o -iname '*salmon*' | sort)
+            for f in $(cd fa && find . \( -iname 'tropical_fish*' \) -type f | sort); do echo "=== $f"; head -c 6000 "fa/$f"; echo; done
+            for p in entity-model-features entitytexturefeatures; do
+              echo "--- $p for 26.3: $(curl -sf "https://api.modrinth.com/v2/project/$p/version?game_versions=%5B%2226.3%22%5D&loaders=%5B%22fabric%22%5D" | jq -r '.[0].version_number // "none"')"
+            done
+          } > fa-probe.txt 2>&1 || true
+          wc -c fa-probe.txt
+
       - name: Publish results to the ci-results branch
         if: always() && github.event_name == 'push'
         shell: bash
@@ -216,7 +235,7 @@ jobs:
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/rcon.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/rcon.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/fa-probe.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

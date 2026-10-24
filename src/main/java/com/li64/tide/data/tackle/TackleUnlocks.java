@@ -28,7 +28,9 @@ public final class TackleUnlocks {
     private static final String TAG = "tide_table_recipes";
 
     private static boolean basic(Ingredient ing) {
-        return ing.items().anyMatch(h -> h.value() == Items.STICK || h.value() == Items.STRING || h.value().builtInRegistryHolder().is(ItemTags.PLANKS));
+        // sticks, string, and "any planks" (but cherry planks on their own are special: they make the cherry rod)
+        if (ing.items().anyMatch(h -> h.value() == Items.STICK || h.value() == Items.STRING)) return true;
+        return ing.items().filter(h -> h.value().builtInRegistryHolder().is(ItemTags.PLANKS)).limit(2).count() >= 2;
     }
 
     /** For each recipe: the ingredient groups to have had (any item of each). Empty groups list = any one ingredient will do. */

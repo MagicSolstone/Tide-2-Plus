@@ -64,7 +64,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     private Set<String> seenUnlocks = Set.of();
 
     public AnglingCraftScreen(AnglingCraftMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title);
+        super(menu, inventory, Component.literal("Angling Table"));
         this.titleLabelX = 29;
     }
 
@@ -85,12 +85,13 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
                 .bounds(this.leftPos + this.imageWidth - 80, this.topPos - 17, 80, 16).build());
         seenUnlocks = TackleUnlocksMsg.CLIENT;
         rebuild();
-        if (Tide.CI) ciLog();
     }
+
+    private boolean ciPending = false;
 
     /** CI: where things are on screen (window pixels), so the smoke test can click them. */
     private void ciLog() {
-        double k = this.minecraft.getWindow().getGuiScale();
+        double k = (double) this.minecraft.getWindow().getScreenWidth() / this.width;
         Tide.LOG.info("TIDE-CI table {} recipes, {} discovered, filter {}, {} shown, {} to discover, book {}", TackleRecipesMsg.CLIENT.size(),
                 TackleUnlocksMsg.CLIENT.size(), filter, cells.size(), lockedHere, bookOpen);
         Tide.LOG.info("TIDE-CI table px hooks {} {} result {} {} assemble {} {}",
@@ -170,6 +171,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
         if (onlyMakeable) out.removeIf(c -> c.row == null || c.locked || !canMake(c.row));
         cells = out;
         page = Math.max(0, Math.min(page, pages() - 1));
+        ciPending = Tide.CI;
     }
 
     private RigSets.RigSet rig() {
@@ -253,14 +255,6 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
             Gui26.text(g, this.font, name, x + 10 + (98 - this.font.width(name)) / 2, hy + 4, 0xFFFFD27F, true);
         } else {
             Gui26.text(g, this.font, FILTER_NAMES[filter], x + 10, hy + 4, 0xFFFFFFFF, true);
-            if (lockedHere > 0) {
-                String more = lockedHere + " to discover";
-                g.pose().pushMatrix();
-                g.pose().translate(x + 13 + this.font.width(FILTER_NAMES[filter]), hy + 5.5f);
-                g.pose().scale(0.75f, 0.75f);
-                Gui26.text(g, this.font, more, 0, 0, 0xFF9AA8B4, false);
-                g.pose().popMatrix();
-            }
         }
         int tx = x + 113, ty = hy + 1;
         boolean overToggle = mouseX >= tx && mouseX < tx + 26 && mouseY >= ty && mouseY < ty + 16;
@@ -286,12 +280,19 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
             String msg = onlyMakeable ? "Nothing you can make yet" : "Nothing discovered yet";
             Gui26.text(g, this.font, msg, x + (BOOK_W - this.font.width(msg)) / 2, y + 80, 0xFFAAAAAA, false);
         }
-        // pages
+        // how many more there are to find, and the pages
+        if (lockedHere > 0) {
+            g.pose().pushMatrix();
+            g.pose().translate(x + 10, y + 149);
+            g.pose().scale(0.75f, 0.75f);
+            Gui26.text(g, this.font, lockedHere + " more to discover", 0, 0, 0xFF9AA8B4, false);
+            g.pose().popMatrix();
+        }
         if (pages() > 1) {
             String p = (page + 1) + "/" + pages();
-            Gui26.text(g, this.font, p, x + (BOOK_W - this.font.width(p)) / 2, y + 147, 0xFFFFFFFF, false);
-            if (page > 0) g.blitSprite(RenderPipelines.GUI_TEXTURED, PAGE_BACK, x + 38, y + 143, 12, 17);
-            if (page < pages() - 1) g.blitSprite(RenderPipelines.GUI_TEXTURED, PAGE_FWD, x + 93, y + 143, 12, 17);
+            Gui26.text(g, this.font, p, x + 113 - this.font.width(p) / 2, y + 147, 0xFFFFFFFF, false);
+            if (page > 0) g.blitSprite(RenderPipelines.GUI_TEXTURED, PAGE_BACK, x + 92, y + 143, 12, 17);
+            if (page < pages() - 1) g.blitSprite(RenderPipelines.GUI_TEXTURED, PAGE_FWD, x + 123, y + 143, 12, 17);
         }
     }
 
@@ -304,6 +305,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
         super.extractRenderState(g, mouseX, mouseY, a);
+        if (ciPending) { ciPending = false; ciLog(); }
         if (!bookOpen) return;
         int x = bookX, y = this.topPos;
         for (int i = 0; i < FILTER_ICONS.length; i++) {
@@ -360,7 +362,6 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
             int fx = x + filterX(i), fy = y + 10;
             if (mx >= fx && mx < fx + 14 && my >= fy && my < fy + 14) {
                 filter = i; page = 0; rebuild(); click();
-                if (Tide.CI) ciLog();
                 return true;
             }
         }
@@ -371,8 +372,8 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
             setIndex += mx < x + 60 ? -1 : 1; page = 0; rebuild(); click(); return true;
         }
         if (pages() > 1 && my >= y + 143 && my < y + 160) {
-            if (mx >= x + 38 && mx < x + 50 && page > 0) { page--; click(); return true; }
-            if (mx >= x + 93 && mx < x + 105 && page < pages() - 1) { page++; click(); return true; }
+            if (mx >= x + 92 && mx < x + 104 && page > 0) { page--; click(); return true; }
+            if (mx >= x + 123 && mx < x + 135 && page < pages() - 1) { page++; click(); return true; }
         }
         Cell c = cellAt(mx, my);
         if (c != null && c.row != null && !c.locked) {

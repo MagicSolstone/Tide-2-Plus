@@ -125,7 +125,7 @@ jobs:
           xdotool key Escape; sleep 1; xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_displays"; sleep 0.5; xdotool key Return; sleep 4; import -window root shots/8-displays.png; xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_side"; sleep 0.5; xdotool key Return; sleep 3; import -window root shots/8b-displays-side.png
           # the Angling Table: the Craft tab with its recipe book, the Hooks filter, a diamond hook laid out from the book
           # and taken from the result slot (made on a bone hook), then the Assemble tab
-          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_bench"; sleep 0.5; xdotool key Return; sleep 4; import -window root shots/9-bench.png
+          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_bench"; sleep 0.5; xdotool key Return; sleep 5; import -window root shots/9-bench.png
           read hx hy rx ry ax ay < <(grep "TIDE-CI table px hooks" client.log | tail -1 | sed 's/.*hooks \([0-9]*\) \([0-9]*\) result \([0-9]*\) \([0-9]*\) assemble \([0-9]*\) \([0-9]*\).*/\1 \2 \3 \4 \5 \6/')
           echo "table at: hooks $hx,$hy result $rx,$ry assemble $ax,$ay"
           if [ -n "$hx" ]; then

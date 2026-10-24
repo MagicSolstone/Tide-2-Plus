@@ -33,6 +33,9 @@ def cook(raw: Image.Image) -> Image.Image:
     px = [raw.getpixel((x, y)) for y in range(raw.size[1]) for x in range(raw.size[0]) if raw.getpixel((x, y))[3] > 0]
     ls = sorted(lum(p) for p in px)
     lo, hi = ls[int(len(ls) * 0.03)], ls[int(len(ls) * 0.97)]
+    dark = ls[len(ls) // 2] < 70                 # a dark fish: spread its own range over the ramp, no forced outline
+    if dark:
+        lo, hi = ls[0], ls[-1]
     out = Image.new('RGBA', raw.size)
     w, h = raw.size
     for y in range(h):
@@ -49,7 +52,7 @@ def cook(raw: Image.Image) -> Image.Image:
             if edge:
                 i = max(0, i - 3)                               # a browned, crisp edge
             c = RAMP[i]
-            if L < 40:
+            if L < 40 and not dark:
                 c = tuple(int(v * 0.45) for v in RAMP[0])
             out.putpixel((x, y), (*c, p[3]))
     return out
@@ -60,6 +63,9 @@ def write(names):
     os.makedirs(A + 'models/item/cooked', exist_ok=True)
     for n in names:
         cook(Image.open(T + n + '.png')).save(T + 'cooked/' + n + '.png')
+        if os.path.exists(T + n + '.png.mcmeta'):                    # animated: the cooked one animates the same way
+            with open(T + n + '.png.mcmeta') as src, open(T + 'cooked/' + n + '.png.mcmeta', 'w') as dst:
+                dst.write(src.read())
         with open(A + 'models/item/cooked/' + n + '.json', 'w') as f:
             json.dump({"parent": "minecraft:item/generated", "textures": {"layer0": "tide:item/cooked/" + n}}, f, indent=2)
     have = sorted(f[:-4] for f in os.listdir(T + 'cooked') if f.endswith('.png'))

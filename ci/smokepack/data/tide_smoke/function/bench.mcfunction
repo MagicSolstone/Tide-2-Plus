@@ -9,3 +9,4 @@ give @s minecraft:diamond 2
 give @s minecraft:string 9
 give @s minecraft:stick 8
 give @s minecraft:iron_ingot 3
+tag @s add tide_open_table

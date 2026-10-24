@@ -46,5 +46,16 @@ public class TideEventHandler {
             com.li64.tide.data.tackle.TackleLog.tick(p);
             com.li64.tide.data.tackle.TackleUnlocks.tick(p);
         });
+        // CI: the smoke pack tags the player to open the Angling Table next to them (no aiming at it needed)
+        if (Tide.CI) for (var p : server.getPlayerList().getPlayers())
+            if (p.entityTags().contains("tide_open_table")) {
+                p.removeTag("tide_open_table");
+                net.minecraft.core.BlockPos at = p.blockPosition();
+                for (net.minecraft.core.BlockPos pos : net.minecraft.core.BlockPos.betweenClosed(at.offset(-3, -2, -3), at.offset(3, 2, 3)))
+                    if (p.level().getBlockState(pos).getBlock() instanceof com.li64.tide.registries.blocks.AnglingTableBlock) {
+                        com.li64.tide.client.gui.menus.AnglingCraftMenu.open(p, p.level(), pos.immutable(), true);
+                        break;
+                    }
+            }
     }
 }

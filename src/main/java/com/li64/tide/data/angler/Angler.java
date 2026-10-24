@@ -249,9 +249,6 @@ public final class Angler {
         addXp(player, total, extra, false);
         int levelAfter = levelForXp(Data.of(player).xp);
         banner(player, stack, total, perfect, extra, levelBefore, levelAfter);
-        // just the total (gear bonuses are already in it), and whether the hook was perfect
-        player.sendSystemMessage(Component.literal("+" + total + " fishing XP" + (perfect ? " · perfect hook!" : ""))
-                .withStyle(ChatFormatting.DARK_GRAY));
         return total;
     }
 
@@ -368,6 +365,20 @@ public final class Angler {
         java.util.List<String> effects = EFFECTS.remove(player.getUUID());
         String footer = "+" + xp + " fishing XP · Lv " + after + " (" + Math.round(progress(Data.of(player).xp) * 100) + "%)";
         if (after > before && title(after).equals(title(before))) footer = "+" + xp + " fishing XP · Level up! Fishing level " + after;
+        // one line in chat, for after the card has gone: the fish (in its quality's colour), its weight, what was
+        // special and the XP; hovering it shows the rest of the card (size, what came up with it, what the rod did)
+        java.util.List<String> hover = new java.util.ArrayList<>();
+        if (len > 0) hover.add(FishWeight.imperialLength(len) + " long");
+        if (extras != null) hover.add("Also caught: " + String.join(", ", extras));
+        if (effects != null) hover.addAll(effects);
+        hover.add(footer);
+        net.minecraft.network.chat.MutableComponent line = Component.literal(title).withStyle(s -> s.withColor(q == null ? 0xFFFFFF : q.color));
+        if (grams > 0) line.append(Component.literal(" " + FishWeight.imperial(grams)).withStyle(ChatFormatting.GOLD));
+        java.util.List<String> notes = new java.util.ArrayList<>(bits.stream().filter(b -> !b.endsWith(" long") && !b.equals(FishWeight.imperialLength(len))).toList());
+        notes.add("+" + xp + " XP");
+        line.append(Component.literal(" · " + String.join(" · ", notes)).withStyle(ChatFormatting.GRAY));
+        line.withStyle(s -> s.withHoverEvent(new net.minecraft.network.chat.HoverEvent.ShowText(Component.literal(String.join("\n", hover)))));
+        player.sendSystemMessage(line);
         Tide.NETWORK.sendToPlayer(new com.li64.tide.network.messages.CatchBannerMsg(
                 net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(), title,
                 q == null ? 0xFFFFFF : q.color, String.join(" · ", bits) + (extras == null ? "" : "\n" + String.join(" · ", extras))

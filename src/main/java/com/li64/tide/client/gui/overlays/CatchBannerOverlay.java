@@ -8,12 +8,12 @@ import net.minecraft.world.item.ItemStack;
 
 /**
  * A short card above the hotbar after each catch (and for small level-ups): the fish, its quality and size,
- * what was special, and the XP. Stays about five seconds, then fades; a new catch replaces it.
+ * what was special, and the XP. Stays about ten seconds (a line in chat keeps it after), then fades; a new catch replaces it.
  */
 public final class CatchBannerOverlay {
     private CatchBannerOverlay() {}
 
-    private static final long SHOW_MS = 5000, FADE_MS = 800;
+    private static final long SHOW_MS = 10000, FADE_MS = 1000;
     private static ItemStack icon = ItemStack.EMPTY;
     private static String title = "", detail = "", footer = "", weight = "";
     private static int color = 0xFFFFFF;

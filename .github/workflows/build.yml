@@ -175,6 +175,7 @@ jobs:
           cpid=$!
           for i in $(seq 1 60); do sleep 5; grep -q "joined the game" server-mp.log && break; kill -0 $cpid 2>/dev/null || break; done
           sleep 25; import -window root shots/m1-joined.png
+          timeout 30 python3 ci/rcon_positions.py 2>&1 | tee -a rcon.txt || true
           xdotool mousemove 640 360; xdotool mousedown 3; sleep 1.4; xdotool mouseup 3
           for i in $(seq 1 90); do grep -q "TIDE-CI bite" server-mp.log && break; sleep 0.5; done
           echo "bite: $(grep -c 'TIDE-CI bite' server-mp.log)"
@@ -185,7 +186,7 @@ jobs:
           xdotool click 3
           sleep 2; import -window root shots/m3-caught.png
           sleep 6; import -window root shots/m4-after.png
-          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_displays"; sleep 0.5; xdotool key Return; sleep 5; import -window root shots/m5-displays-fa.png
+          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_displays"; sleep 0.5; xdotool key Return; sleep 4; xdotool key F1; sleep 1; import -window root shots/m5-displays-fa.png; xdotool key F1
           echo "--- server"; grep -nE "TIDE-CI|\[Tide catch\]|reached fishing|lost connection|left the game|Exception|ERROR" server-mp.log | tail -20
           echo "--- client"; grep -nE "TIDE-CI|Exception|ERROR|Disconnect|disconnect|lost" client-mp.log | grep -v "OpenGL\|GLX\|flite\|narrator\|OpenAL\|SoundSystem\|Realms\|sessionserver" | tail -20
           pkill -f 'net.fabricmc' ; sleep 3; kill $spid $cpid 2>/dev/null; rm -rf run/mods run/resourcepacks; sed -i '/^resourcePacks:/d' run/options.txt; true

@@ -38,7 +38,6 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
         public @Nullable EntityRenderState fish;
         public Direction facing = Direction.NORTH;
         public float x, y, z, roll, pitch, yaw, scale = 1f;
-        public boolean swimming;
     }
 
     @Override
@@ -66,9 +65,9 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
                         Minecraft.getInstance().level.registryAccess(), displayData.nbt().get()));
                 if (CompatHelper.isHybridAquaticLoaded()) CompatHelper.hybridAquaticApplyVariant(entity, display.getDisplayStack());
                 if (entity instanceof net.minecraft.world.entity.animal.fish.TropicalFish) tropicalPattern(entity, display.getDisplayStack());
-                // Vanilla's fish are drawn "in water": out of it they flop, and animation resource packs (Fresh
-                // Animations) then wiggle them, turn them on their belly and make a tropical fish's pattern blink.
-                // In water and never ticked, they hold a still swimming pose; submit() turns them onto their side.
+                // Animation resource packs (Fresh Animations) wiggle a fish that's out of water, turn it on its belly and
+                // make a tropical fish's pattern blink. So the fish counts as in water (the pack holds it still in a
+                // swimming pose), while the renderer is told it's out (so it lies on its side, as Tide's displays expect).
                 if (swimsOnDisplay(entity, display.getDisplayStack())) ((com.li64.tide.mixin.EntityWaterAccessor) entity).tide$setWasTouchingWater(true);
                 entity.xRotO = entity.getXRot();
                 entity.yRotO = entity.getYRot();
@@ -77,7 +76,6 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
         }
         if (entity == null) return;
 
-        state.swimming = entity.isInWater();
         state.facing = display.getBlockState().getValue(FishDisplayBlock.FACING);
         state.x = displayData.x();
         state.y = displayData.y();
@@ -96,6 +94,7 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
         state.scale = Mth.sqrt((float) (display.getFishLength() / display.getBaseLength()));
         // a frozen moment: no animation time, so fish hold their display pose
         state.fish = this.entityRenderer.extractEntity(entity, 0f);
+        if (state.fish instanceof net.minecraft.client.renderer.entity.state.LivingEntityRenderState living) living.isInWater = false;
         state.fish.lightCoords = state.lightCoords;
     }
 
@@ -137,8 +136,7 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
         poseStack.translate(0.5f, 0.0f, 0.0f); // move towards display
 
         poseStack.translate(-state.z, state.y, state.x);
-        // a flopping fish is already on its side (the renderer turns it); a "swimming" one we turn ourselves
-        poseStack.rotateDegrees(Axis.ZP, state.roll + (state.swimming ? 0f : 90f));
+        poseStack.rotateDegrees(Axis.ZP, state.roll + 90f);
         poseStack.rotateDegrees(Axis.XP, state.pitch);
         poseStack.rotateDegrees(Axis.YP, state.yaw);
         poseStack.scale(state.scale, state.scale, state.scale);

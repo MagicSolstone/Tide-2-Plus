@@ -54,7 +54,7 @@ public class StatsComponent extends ProfileComponent {
             if (stats.getHeaviestCatch() > 0.0)
                 builder.add(Component.translatable("journal.info.stats.heaviest",
                         FishWeight.format(stats.getHeaviestCatch())));
-            if (stats.getLargestCatch() > 0.0) {
+            if (stats.getLargestCatch() > 0.0 && stats.getHeaviestCatch() <= 0.0) {     // only for fish caught before weights
                 builder.add(Component.translatable("journal.info.stats.largest",
                         TideUtils.getFormattedLength(stats.getLargestCatch())));
                 builder.add(Component.translatable("journal.info.stats.smallest",

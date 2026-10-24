@@ -10,6 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Consumer;
@@ -22,6 +23,14 @@ public abstract class ItemStackMixin {
         @Shadow public abstract int getMaxDamage();
         @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;setDamageValue(I)V", shift = At.Shift.AFTER),
                 method = "applyDamage(ILnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V")
+        /** Tide's rods never break: they stop one short, broken but whole, until they're repaired (string at an anvil). */
+        @ModifyVariable(at = @At("HEAD"), argsOnly = true, ordinal = 0,
+                method = "applyDamage(ILnet/minecraft/server/level/ServerPlayer;Ljava/util/function/Consumer;)V")
+        private int tide$rodsDontBreak(int newDamage) {
+            if (getItem() instanceof TideFishingRodItem && getMaxDamage() > 1) return Math.min(newDamage, getMaxDamage() - 1);
+            return newDamage;
+        }
+
         public void hurtAndBreak(int newDamage, ServerPlayer player, Consumer<ItemStack> onBreak, CallbackInfo ci) {
             if (player != null && getDamageValue() >= getMaxDamage() && getItem() instanceof TideFishingRodItem rod) rod.onItemBroken((ItemStack)(Object)this, player);
         }

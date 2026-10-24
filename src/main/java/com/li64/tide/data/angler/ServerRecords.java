@@ -68,7 +68,7 @@ public final class ServerRecords extends SavedData {
         int quality = TideItemData.FISH_QUALITY.getOrDefault(stack, -1);
         ServerRecords r = of(server);
         Entry old = r.records.get(species);
-        if (old != null && grams <= old.grams()) return false;
+        if (old != null && !FishWeight.visiblyHeavier(grams, old.grams())) return false;     // a tie on the scale keeps the old record
         r.records.put(species, new Entry(player.getScoreboardName(), player.getStringUUID(), grams, quality));
         r.setDirty();
         sendToEveryone(server);

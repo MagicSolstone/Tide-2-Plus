@@ -71,6 +71,12 @@ public class TideFishingRodItem extends FishingRodItem {
         this.baitSlots = baitSlots;
     }
 
+    /** A rod worn down to its last point: it won't cast until it's repaired (it never breaks and loses its gear). */
+    public static boolean isBroken(ItemStack rod) {
+        return rod.getItem() instanceof TideFishingRodItem && rod.isDamageableItem() && rod.getMaxDamage() > 1
+                && rod.getDamageValue() >= rod.getMaxDamage() - 1;
+    }
+
     /** Drops bait beyond this rod's slots (1.21.1 did this as items loaded; 26.x has no such hook). */
     public void trimBait(ItemStack stack) {
         BaitContents contents = TideItemData.BAIT_CONTENTS.get(stack);
@@ -258,6 +264,14 @@ public class TideFishingRodItem extends FishingRodItem {
         else {
             if (!level.isClientSide() && FishCatchMinigame.delayActive((ServerPlayer) player))
                 return InteractionResult.CONSUME;
+            if (isBroken(player.getItemInHand(hand))) {
+                if (!level.isClientSide()) {
+                    player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("This rod is broken: repair it with string at an anvil")
+                            .withStyle(net.minecraft.ChatFormatting.RED));
+                    level.playSound(null, player.blockPosition(), SoundEvents.ITEM_BREAK.value(), SoundSource.PLAYERS, 0.5f, 1.4f);
+                }
+                return InteractionResult.FAIL;
+            }
 
             if (Tide.SERVER_CONFIG.general.holdToCast) {
                 // Charge the cast if the hook isn't active

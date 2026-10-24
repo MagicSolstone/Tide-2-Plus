@@ -92,7 +92,7 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
             state.pitch += t.getFloatOr("pitch", 0f);
             state.yaw += t.getFloatOr("yaw", 0f);
         }
-        state.scale = Mth.sqrt((float) (display.getFishLength() / display.getBaseLength()));
+        state.scale = displayScale(display);
         // a frozen moment: no animation time, so fish hold their display pose
         state.fish = this.entityRenderer.extractEntity(entity, 0f);
         if (state.fish instanceof net.minecraft.client.renderer.entity.state.LivingEntityRenderState living) living.isInWater = false;
@@ -144,5 +144,21 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
 
         this.entityRenderer.submit(state.fish, camera, 0.0, 0.0, 0.0, poseStack, collector);
         poseStack.popPose();
+    }
+
+    /**
+     * How big a fish hangs: by its weight against an average one of its kind (heavier is bigger; a Trophy, well
+     * fed, looks it), the same curve the length gave before. Fish from before weights go by length.
+     */
+    private static float displayScale(com.li64.tide.registries.blocks.entities.FishDisplayBlockEntity display) {
+        net.minecraft.world.item.ItemStack fish = display.getDisplayStack();
+        double grams = com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(fish, 0.0), base = display.getBaseLength();
+        double ratio;
+        if (grams > 0 && base > 0) {
+            String path = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(fish.getItem()).getPath();
+            double average = 0.01 * com.li64.tide.data.angler.FishWeight.build(path) * Math.pow(base, 3);
+            ratio = Math.cbrt(grams / Math.max(1e-6, average));
+        } else ratio = display.getFishLength() / Math.max(1e-6, base);
+        return (float) Mth.clamp(Math.sqrt(ratio), 0.55, 1.7);
     }
 }

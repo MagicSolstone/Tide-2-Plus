@@ -34,9 +34,11 @@ public final class CatchBannerOverlay {
         Font font = Minecraft.getInstance().font;
         String[] details = detail.isEmpty() ? new String[0] : detail.split("\n");
         String head = weight.isEmpty() ? title : title + "  ";
-        int textW = Math.max(font.width(head) + font.width(weight), font.width(footer));
+        String[] foot = footer.isEmpty() ? new String[0] : footer.split("\n");
+        int textW = font.width(head) + font.width(weight);
+        for (String f : foot) textW = Math.max(textW, font.width(f));
         for (String d : details) textW = Math.max(textW, font.width(d));
-        int w = textW + (icon.isEmpty() ? 12 : 32), h = 8 + 10 + details.length * 10 + (footer.isEmpty() ? 0 : 10);
+        int w = textW + (icon.isEmpty() ? 12 : 32), h = 8 + 10 + details.length * 10 + foot.length * 10;
         int x = (g.guiWidth() - w) / 2, y = g.guiHeight() - 72 - h;
         g.fill(x, y, x + w, y + h, (Math.round(alpha * 0xB0) << 24) | 0x101820);
         g.fill(x, y, x + 2, y + h, (a << 24) | (color & 0xFFFFFF));
@@ -52,6 +54,16 @@ public final class CatchBannerOverlay {
             Gui26.text(g, font, line, tx, ty, (a << 24) | (i == 0 ? 0xE8E8E8 : effect ? 0xD08AFF : 0xFFE08A), true);
             ty += 10;
         }
-        if (!footer.isEmpty()) Gui26.text(g, font, footer, tx, ty, (a << 24) | 0x7FD8FF, true);
+        // the XP (where it came from in grey, after it), then a level-up in gold
+        for (String f : foot) {
+            if (f.startsWith("Level up")) Gui26.text(g, font, f, tx, ty, (a << 24) | 0xFFD24A, true);
+            else {
+                int cut = f.indexOf("  (");
+                String main = cut < 0 ? f : f.substring(0, cut), why = cut < 0 ? "" : f.substring(cut);
+                Gui26.text(g, font, main, tx, ty, (a << 24) | 0x7FD8FF, true);
+                if (!why.isEmpty()) Gui26.text(g, font, why, tx + font.width(main), ty, (a << 24) | 0x9AA8B4, true);
+            }
+            ty += 10;
+        }
     }
 }

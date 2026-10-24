@@ -36,20 +36,28 @@ public final class FishWeight {
 
     // ------------------------------------------------------------------ formatting
 
-    /** Pounds with one decimal ("3.4 lb"); two for small fish ("0.38 lb"); whole pounds from 100 ("1,298 lb"). */
+    /**
+     * Ounces under a pound ("0.16 oz", "5.3 oz"), so small fish don't all read "0.01 lb"; then pounds with one
+     * decimal ("3.4 lb") and whole pounds from 100 ("1,298 lb").
+     */
     public static String imperial(double grams) {
-        double lb = grams / 453.59237;
-        if (lb < 0.01) return "0.01 lb";
-        if (lb < 1) return String.format("%.2f lb", lb);
+        double lb = grams / 453.59237, oz = lb * 16;
+        if (lb < 1) return oz < 1 ? String.format("%.2f oz", Math.max(0.01, oz)) : String.format("%.1f oz", oz);
         if (lb < 100) return String.format("%.1f lb", lb);
         return String.format("%,d lb", Math.round(lb));
     }
 
-    /** Grams under a kilo ("380 g"), then kilos ("2.3 kg", "1,298 kg"). */
+    /** Grams (one decimal under 10: "4.6 g"), then kilos ("2.3 kg", "1,298 kg"). */
     public static String metric(double grams) {
-        if (grams < 1000) return Math.max(1, Math.round(grams)) + " g";
+        if (grams < 10) return String.format("%.1f g", Math.max(0.1, grams));
+        if (grams < 1000) return Math.round(grams) + " g";
         if (grams < 100_000) return String.format("%.1f kg", grams / 1000);
         return String.format("%,d kg", Math.round(grams / 1000));
+    }
+
+    /** Whether one weight beats another by enough to show: a record shouldn't read "0.2 oz, beat 0.2 oz". */
+    public static boolean visiblyHeavier(double grams, double than) {
+        return grams > than && !imperial(grams).equals(imperial(than));
     }
 
     /** Uses the client's unit setting when there is one. */

@@ -233,40 +233,51 @@ public final class Angler {
         FishRarity rarity = data.profile().rarity();
         double xp = rarityXp(rarity);
         String extra = "";
+        // the XP, as parts that add up: the fish, then each bonus in whole points (the card shows them)
         java.util.List<String> parts = new java.util.ArrayList<>();
-        parts.add(net.minecraft.network.chat.Component.translatable(stack.getItem().getDescriptionId()).getString() + " " + Math.round(xp));
+        parts.add(Math.round(xp) + " fish");
 
         TidePlayerData journal = TidePlayerData.getOrCreate(player);
         FishStats before = journal.getDataFor(stack.getItem()).flatMap(f -> f.stats).orElse(null);
         if (before == null || before.getAmountCaught() == 0) {
             xp += NEW_SPECIES_XP;
-            parts.add("new species +" + NEW_SPECIES_XP);
+            parts.add("+" + NEW_SPECIES_XP + " new species");
             extra = " · new species!";
         } else {
+            // your heaviest of the kind (fish from before weights: the longest)
+            double grams = com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0);
             double length = com.li64.tide.data.item.TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0);
-            if (length > 0 && length > before.getLargestCatch()) {
+            boolean record = grams > 0 && before.getHeaviestCatch() > 0 ? FishWeight.visiblyHeavier(grams, before.getHeaviestCatch())
+                    : length > 0 && length > before.getLargestCatch();
+            if (record) {
                 xp += RECORD_XP;
-                parts.add("new record +" + RECORD_XP);
+                parts.add("+" + RECORD_XP + " your record");
                 extra = " · new record!";
             }
         }
         Integer q = com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(stack, null);
         if (q != null && CatchQuality.byId(q).bonusXp() > 0) {
             xp += CatchQuality.byId(q).bonusXp();
-            parts.add(CatchQuality.byId(q).label + " +" + CatchQuality.byId(q).bonusXp());
+            parts.add("+" + CatchQuality.byId(q).bonusXp() + " " + CatchQuality.byId(q).label);
         }
+        long sum = Math.round(xp);
         if (perfect) {
+            long add = Math.round(xp * 1.25) - sum;
             xp *= 1.25;
-            parts.add("perfect hook x1.25");
+            sum += add;
+            if (add > 0) parts.add("+" + add + " perfect hook");
         }
         if (xpBoost > 0) {
+            long add = Math.round(xp * (1.0 + xpBoost)) - sum;
             xp *= 1.0 + xpBoost;
+            sum += add;
+            if (add > 0) parts.add("+" + add + " tackle");
         }
-        long total = Math.round(xp);
+        long total = sum;
         int levelBefore = levelForXp(Data.of(player).xp);
         addXp(player, total, extra, false);
         int levelAfter = levelForXp(Data.of(player).xp);
-        banner(player, stack, total, perfect, extra, levelBefore, levelAfter);
+        banner(player, stack, total, parts, perfect, extra, levelBefore, levelAfter);
         return total;
     }
 
@@ -372,35 +383,32 @@ public final class Angler {
     }
 
     /** The card above the hotbar for a catch: what it was, how big, what was special, the XP (and a small level-up). */
-    private static void banner(ServerPlayer player, ItemStack stack, long xp, boolean perfect, String extra, int before, int after) {
+    private static void banner(ServerPlayer player, ItemStack stack, long xp, java.util.List<String> parts, boolean perfect, String extra, int before, int after) {
         Integer qi = com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(stack, null);
         CatchQuality q = qi == null ? null : CatchQuality.byId(qi);
         String name = Component.translatable(stack.getItem().getDescriptionId()).getString();
         String title = q == null || q == CatchQuality.AVERAGE ? name : q.label + " " + name;
         java.util.List<String> bits = new java.util.ArrayList<>();
-        double len = com.li64.tide.data.item.TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0);
         double grams = com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0);
-        if (len > 0 && grams <= 0) bits.add(FishWeight.imperialLength(len));
-        else if (len > 0) bits.add(FishWeight.imperialLength(len) + " long");
         if (extra.contains("new species")) bits.add("New species!");
         if (SERVER_RECORD.remove(player.getUUID())) bits.add("Server record!");
-        else if (extra.contains("new record")) bits.add("New record!");
+        else if (extra.contains("new record")) bits.add("Your record!");
         if (TWIN.remove(player.getUUID())) bits.add("Two on the hook!");
         if (perfect) bits.add("Perfect hook");
         java.util.List<String> extras = EXTRAS.remove(player.getUUID());
         java.util.List<String> effects = EFFECTS.remove(player.getUUID());
-        String footer = "+" + xp + " fishing XP · Lv " + after + " (" + Math.round(progress(Data.of(player).xp) * 100) + "%)";
-        if (after > before && title(after).equals(title(before))) footer = "+" + xp + " fishing XP · Level up! Fishing level " + after;
+        // the XP and where it came from (the level is on the rod panel; a level-up gets its own line)
+        String footer = "+" + xp + " fishing XP" + (parts.size() > 1 ? "  (" + String.join(", ", parts) + ")" : "");
+        if (after > before) footer += "\nLevel up! Fishing level " + after;
         // one line in chat, for after the card has gone: the fish (in its quality's colour), its weight, what was
-        // special and the XP; hovering it shows the rest of the card (size, what came up with it, what the rod did)
+        // special and the XP; hovering it shows the rest of the card (what came up with it, what the rod did)
         java.util.List<String> hover = new java.util.ArrayList<>();
-        if (len > 0) hover.add(FishWeight.imperialLength(len) + " long");
         if (extras != null) hover.add("Also caught: " + String.join(", ", extras));
         if (effects != null) hover.addAll(effects);
         hover.add(footer);
         net.minecraft.network.chat.MutableComponent line = Component.literal(title).withStyle(s -> s.withColor(q == null ? 0xFFFFFF : q.color));
         if (grams > 0) line.append(Component.literal(" " + FishWeight.imperial(grams)).withStyle(ChatFormatting.GOLD));
-        java.util.List<String> notes = new java.util.ArrayList<>(bits.stream().filter(b -> !b.endsWith(" long") && !b.equals(FishWeight.imperialLength(len))).toList());
+        java.util.List<String> notes = new java.util.ArrayList<>(bits);
         notes.add("+" + xp + " XP");
         line.append(Component.literal(" · " + String.join(" · ", notes)).withStyle(ChatFormatting.GRAY));
         line.withStyle(s -> s.withHoverEvent(new net.minecraft.network.chat.HoverEvent.ShowText(Component.literal(String.join("\n", hover)))));
@@ -419,10 +427,8 @@ public final class Angler {
         d.save(player);
         int after = levelForXp(d.xp);
 
-        if (overlay && amount > 0) player.sendOverlayMessage(Component.literal("+" + amount + " Fishing XP")
-                .withStyle(ChatFormatting.AQUA)
-                .append(Component.literal("  Lv " + after + " · " + Math.round(progress(d.xp) * 100) + "%" + extra)
-                        .withStyle(ChatFormatting.GRAY)));
+        if (overlay && amount > 0) player.sendOverlayMessage(Component.literal("+" + amount + " Fishing XP")      // (the level is on the rod panel)
+                .withStyle(ChatFormatting.AQUA).append(Component.literal(extra).withStyle(ChatFormatting.GRAY)));
         if (after > before) levelUp(player, after, overlay);
         sync(player);
     }

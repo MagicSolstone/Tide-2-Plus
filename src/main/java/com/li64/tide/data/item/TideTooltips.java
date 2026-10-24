@@ -25,6 +25,8 @@ public class TideTooltips {
         if (BaitUtils.isBait(stack)) lines.addAll(BaitUtils.getDescriptionLines(stack));
 
         if (stack.is(TideTags.Items.FISHING_RODS)) {
+            if (TideFishingRodItem.isBroken(stack))
+                lines.add(Component.literal("Broken: repair it with string at an anvil (its gear stays on)").withStyle(ChatFormatting.RED));
             lines.addAll(com.li64.tide.data.rods.RodEffects.describeRod(stack));
             lines.addAll(TideFishingRodItem.getDescriptionLines(stack));
         }
@@ -62,8 +64,8 @@ public class TideTooltips {
         if (lengthCm <= 0 && grams <= 0) return;
         net.minecraft.network.chat.MutableComponent size = Component.empty();
         if (grams > 0) size.append(Component.literal(com.li64.tide.data.angler.FishWeight.format(grams)).withStyle(ChatFormatting.GOLD));
-        if (lengthCm > 0) size.append(Component.literal(grams > 0 ? " · " : "").withStyle(ChatFormatting.BLUE))
-                .append(TideUtils.getFormattedLength(lengthCm).copy().append(grams > 0 ? " long" : "").withStyle(ChatFormatting.BLUE));
+        // the length only for fish caught before weights (weight is what records and the wall go by)
+        else if (lengthCm > 0) size.append(TideUtils.getFormattedLength(lengthCm).copy().withStyle(ChatFormatting.BLUE));
         lines.add(size);
     }
 }

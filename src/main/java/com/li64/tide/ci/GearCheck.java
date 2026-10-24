@@ -87,6 +87,7 @@ public final class GearCheck {
                     bobbers.size(), lures.size(), baits.size()));
 
             benchCheck(server);
+            rodRepairCheck(server);
 
             String guide = com.li64.tide.data.commands.FishingCommand.guide(server);
             var parsed = com.google.gson.JsonParser.parseString(guide).getAsJsonObject();
@@ -479,6 +480,32 @@ public final class GearCheck {
             else total += w;
         }
         return total;
+    }
+
+    // ------------------------------------------------------------------ rods wear out but don't break
+
+    /** Every Tide rod repairs with string, and wearing one out leaves it broken (one point left), not gone. */
+    private static void rodRepairCheck(MinecraftServer server) {
+        int n = 0;
+        for (Item item : BuiltInRegistries.ITEM) {
+            ItemStack rod = new ItemStack(item);
+            if (!rod.is(com.li64.tide.data.TideTags.Items.FISHING_RODS) || !BuiltInRegistries.ITEM.getKey(item).getNamespace().equals("tide")) continue;
+            n++;
+            if (!(item instanceof com.li64.tide.registries.items.TideFishingRodItem)) { problem(id(item) + " isn't a Tide rod (it would break for good)"); continue; }
+            if (!rod.isValidRepairItem(new ItemStack(Items.STRING))) problem(id(item) + " can't be repaired with string");
+            if (!rod.isDamageableItem()) continue;
+            rod.setDamageValue(rod.getMaxDamage() - 3);
+            rod.hurtAndBreak(50, server.overworld(), null, broken -> {});
+            if (rod.isEmpty() || rod.getDamageValue() != rod.getMaxDamage() - 1 || !com.li64.tide.registries.items.TideFishingRodItem.isBroken(rod))
+                problem(id(item) + " worn out: " + (rod.isEmpty() ? "gone" : "damage " + rod.getDamageValue() + "/" + rod.getMaxDamage()));
+        }
+        notes.add("rods: " + n + " Tide rods repair with string and stop at broken instead of breaking");
+        // records: a tie on the scale (same weight as shown) keeps the old record
+        var fw = com.li64.tide.data.angler.FishWeight.class;
+        notes.add("weights: 4.4 g = " + com.li64.tide.data.angler.FishWeight.imperial(4.4) + ", 4.6 g = " + com.li64.tide.data.angler.FishWeight.imperial(4.6)
+                + ", 300 g = " + com.li64.tide.data.angler.FishWeight.imperial(300) + ", 2 kg = " + com.li64.tide.data.angler.FishWeight.imperial(2000));
+        if (com.li64.tide.data.angler.FishWeight.visiblyHeavier(4.6, 4.4)) problem("4.6 g beats a 4.4 g record though both read " + com.li64.tide.data.angler.FishWeight.imperial(4.6));
+        if (!com.li64.tide.data.angler.FishWeight.visiblyHeavier(9, 4.4)) problem("9 g doesn't beat a 4.4 g record");
     }
 
     // ------------------------------------------------------------------ the angling table's recipes

@@ -501,7 +501,22 @@ public final class GearCheck {
             if (entries.stream().noneMatch(e -> BuiltInRegistries.ITEM.getKey(e.result()).toString().equals(must))) problem("the angling table can't make " + must);
         for (String not : List.of("tide:angling_table", "minecraft:fishing_rod", "minecraft:raw_iron"))
             if (entries.stream().anyMatch(e -> BuiltInRegistries.ITEM.getKey(e.result()).toString().equals(not))) problem("the angling table makes " + not + ", which belongs at the crafting table");
-        // a Tier 2 hook made at the table remembers its Tier 1 hook (the same path the Craft button takes)
+        // discovery: what string alone opens up, what a little more does, and what a few recipes ask for
+        java.util.function.Function<List<Item>, List<String>> by = items -> com.li64.tide.data.tackle.TackleUnlocks.unlockedBy(new HashSet<>(items));
+        List<String> stringOnly = by.apply(List.of(Items.STRING));
+        notes.add("discovery: string alone unlocks " + stringOnly);
+        List<String> jungle = by.apply(List.of(Items.STRING, Items.STICK, Items.BAMBOO));
+        if (!jungle.contains("bamboo_fishing_rod")) problem("bamboo doesn't unlock the bamboo rod");
+        if (stringOnly.contains("redstone_line") || stringOnly.contains("bamboo_fishing_rod")) problem("string alone unlocks too much: " + stringOnly);
+        List<String> hooks = by.apply(List.of(Items.DIAMOND));
+        if (hooks.contains("diamond_hook")) problem("a diamond alone unlocks the diamond hook (it should need a Tier 1 hook too)");
+        if (!by.apply(List.of(Items.DIAMOND, BuiltInRegistries.ITEM.getValue(Tide.resource("bone_hook")))).contains("diamond_hook")) problem("a bone hook and a diamond don't unlock the diamond hook");
+        for (var e : entries)
+            if (List.of("redstone_line", "bamboo_fishing_rod", "diamond_hook", "iron_rod_smithing", "spinner_lure", "bait", "fishing_line").contains(e.id().getPath()))
+                notes.add("discovery: " + e.id().getPath() + " needs " + com.li64.tide.data.tackle.TackleUnlocks.needs(e));
+        notes.add("discovery: everything unlocked with all materials: " + by.apply(BuiltInRegistries.ITEM.stream().toList()).size() + "/" + entries.size());
+
+        // a Tier 2 hook made at the table remembers its Tier 1 hook
         var diamond = entries.stream().filter(e -> BuiltInRegistries.ITEM.getKey(e.result()).getPath().equals("diamond_hook")).findFirst().orElse(null);
         if (diamond != null && diamond.holder().value() instanceof ShapelessRecipe r) {
             List<ItemStack> in = new ArrayList<>();

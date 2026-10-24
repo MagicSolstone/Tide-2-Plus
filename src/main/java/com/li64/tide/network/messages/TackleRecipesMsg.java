@@ -14,7 +14,8 @@ public record TackleRecipesMsg(List<Row> rows) implements TidePacketPayload {
     @Override public Identifier id() { return ID; }
 
     /** {@code ingredients}: one entry per item used, each the item ids it accepts. */
-    public record Row(String id, String result, int count, int kind, boolean smithing, List<List<String>> ingredients) {}
+    /** {@code grid}: where each ingredient goes in the 3x3 grid (0 = top left). */
+    public record Row(String id, String result, int count, int kind, boolean smithing, List<List<String>> ingredients, List<Integer> grid) {}
 
     /** The client's copy. */
     public static volatile List<Row> CLIENT = List.of();
@@ -38,7 +39,9 @@ public record TackleRecipesMsg(List<Row> rows) implements TidePacketPayload {
                 for (int o = 0; o < k; o++) opts.add(buf.readUtf());
                 ings.add(opts);
             }
-            out.add(new Row(id, result, count, kind, smithing, ings));
+            List<Integer> grid = new ArrayList<>(m);
+            for (int j = 0; j < m; j++) grid.add(buf.readVarInt());
+            out.add(new Row(id, result, count, kind, smithing, ings, grid));
         }
         return out;
     }
@@ -52,6 +55,7 @@ public record TackleRecipesMsg(List<Row> rows) implements TidePacketPayload {
                 buf.writeVarInt(opts.size());
                 for (String o : opts) buf.writeUtf(o);
             }
+            for (int g : r.grid()) buf.writeVarInt(g);
         }
     }
 

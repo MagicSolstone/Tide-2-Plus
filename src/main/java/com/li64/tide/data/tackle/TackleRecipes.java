@@ -37,7 +37,7 @@ public final class TackleRecipes {
 
     /** One recipe as the table shows it: what it makes and one ingredient per item it uses (smithing: template, base, addition). */
     public record Entry(Identifier id, Item result, int count, Kind kind, boolean smithing, List<Ingredient> ingredients,
-                        RecipeHolder<?> holder) {}
+                        int[] grid, RecipeHolder<?> holder) {}
 
     private static volatile List<Entry> entries = List.of();
 
@@ -89,8 +89,13 @@ public final class TackleRecipes {
         List<Ingredient> ingredients;
         ItemStack out;
         boolean smithing = false;
+        int[] grid = null;
         if (r instanceof ShapedRecipe s) {
             ingredients = s.getIngredients().stream().filter(Optional::isPresent).map(Optional::get).toList();
+            List<Integer> at = new ArrayList<>();
+            for (int i = 0; i < s.getIngredients().size(); i++)
+                if (s.getIngredients().get(i).isPresent()) at.add(i % s.getWidth() + (i / s.getWidth()) * 3);
+            grid = at.stream().mapToInt(Integer::intValue).toArray();
             out = s.assemble(CraftingInput.of(s.getWidth(), s.getHeight(), s.getIngredients().stream().map(TackleRecipes::sample).toList()));
         } else if (r instanceof ShapelessRecipe s) {
             ingredients = s.placementInfo().ingredients();
@@ -107,7 +112,12 @@ public final class TackleRecipes {
         if (out.isEmpty() || ingredients.isEmpty()) return null;
         Kind kind = kindOf(out);
         if (kind == null) return null;
-        return new Entry(id, out.getItem(), out.getCount(), kind, smithing, List.copyOf(ingredients), h);
+        if (grid == null) {                                       // shapeless and upgrades: one per slot, from the top left
+            if (ingredients.size() > 9) return null;
+            grid = new int[ingredients.size()];
+            for (int i = 0; i < grid.length; i++) grid[i] = i;
+        }
+        return new Entry(id, out.getItem(), out.getCount(), kind, smithing, List.copyOf(ingredients), grid, h);
     }
 
     private static ItemStack sample(Optional<Ingredient> ing) {
@@ -131,85 +141,130 @@ public final class TackleRecipes {
 
     // ------------------------------------------------------------------ crafting at the table
 
-    /** Inventory slots the table may take from: the main inventory and the offhand (not armour). */
-    private static List<Integer> slots(ServerPlayer player) {
-        List<Integer> out = new ArrayList<>();
-        for (int i = 0; i < 36; i++) out.add(i);
-        out.add(40);
-        return out;
+    /** What the table's grid makes, and the recipe that makes it. */
+    public record Match(Entry entry, ItemStack result, CraftingInput input) {}
+
+    /** The table recipe the grid's items make, or null. Upgrades (smithing) take their three items in any arrangement. */
+    public static Match match(CraftingInput input, net.minecraft.world.level.Level level) {
+        if (input.isEmpty()) return null;
+        for (Entry e : entries) {
+            Recipe<?> r = e.holder.value();
+            try {
+                if (r instanceof CraftingRecipe c) {
+                    if (c.matches(input, level)) {
+                        ItemStack out = c.assemble(input);
+                        if (!out.isEmpty()) return new Match(e, out, input);
+                    }
+                } else if (r instanceof SmithingTransformRecipe s) {
+                    ItemStack out = smith(s, input);
+                    if (!out.isEmpty()) return new Match(e, out, input);
+                }
+            } catch (RuntimeException ex) {
+                Tide.LOG.debug("Tide: table recipe {} failed to match", e.id, ex);
+            }
+        }
+        return null;
+    }
+
+    /** An upgrade in the grid: exactly its template, base and addition, in any order. */
+    private static ItemStack smith(SmithingTransformRecipe s, CraftingInput input) {
+        List<ItemStack> items = input.items().stream().filter(st -> !st.isEmpty()).toList();
+        int need = 1 + (s.templateIngredient().isPresent() ? 1 : 0) + (s.additionIngredient().isPresent() ? 1 : 0);
+        if (items.size() != need) return ItemStack.EMPTY;
+        for (ItemStack st : items) if (st.getCount() < 1) return ItemStack.EMPTY;
+        int[][] orders = need == 3 ? new int[][]{{0, 1, 2}, {0, 2, 1}, {1, 0, 2}, {1, 2, 0}, {2, 0, 1}, {2, 1, 0}} : need == 2 ? new int[][]{{0, 1}, {1, 0}} : new int[][]{{0}};
+        for (int[] o : orders) {
+            int k = 0;
+            ItemStack t = s.templateIngredient().isPresent() ? items.get(o[k++]) : ItemStack.EMPTY;
+            ItemStack b = items.get(o[k++]);
+            ItemStack a = s.additionIngredient().isPresent() ? items.get(o[k]) : ItemStack.EMPTY;
+            if (!Ingredient.testOptionalIngredient(s.templateIngredient(), t) || !s.baseIngredient().test(b)
+                    || !Ingredient.testOptionalIngredient(s.additionIngredient(), a)) continue;
+            ItemStack out = s.assemble(new SmithingRecipeInput(t.copyWithCount(1), b.copyWithCount(1), a.copyWithCount(1)));
+            if (!out.isEmpty()) return out;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    /** What's left in the grid after crafting (a bucket from a milk bucket, say), position by position. */
+    public static List<ItemStack> remainders(Match m) {
+        if (m.entry.holder.value() instanceof CraftingRecipe c) return c.getRemainingItems(m.input);
+        List<ItemStack> none = new ArrayList<>();
+        for (int i = 0; i < m.input.size(); i++) none.add(ItemStack.EMPTY);
+        return none;
+    }
+
+    /** Inventory slots the recipe book may take from: the main inventory and the offhand (not armour). */
+    private static int[] SLOTS = null;
+
+    private static int[] slots() {
+        if (SLOTS == null) {
+            SLOTS = new int[37];
+            for (int i = 0; i < 36; i++) SLOTS[i] = i;
+            SLOTS[36] = 40;
+        }
+        return SLOTS;
     }
 
     /**
-     * Which inventory slot each ingredient comes from, or null if the player is short. {@code prefer}: for each
-     * ingredient, an item to use first if the player has it (e.g. which Tier 1 hook a Tier 2 hook is made on).
+     * The recipe book's click: put a recipe's items into the grid from the inventory (as many sets as possible with
+     * {@code all}, else one). Whatever was in the grid goes back to the inventory first. False if one set can't be made.
      */
-    public static int[] plan(ServerPlayer player, Entry e, List<Item> prefer) {
+    public static boolean fill(ServerPlayer player, Entry e, net.minecraft.world.Container grid, boolean all) {
         var inv = player.getInventory();
-        Map<Integer, Integer> left = new HashMap<>();
-        for (int s : slots(player)) left.put(s, inv.getItem(s).getCount());
-        int[] from = new int[e.ingredients.size()];
-        for (int i = 0; i < from.length; i++) {
-            Ingredient ing = e.ingredients.get(i);
-            Item want = prefer != null && i < prefer.size() ? prefer.get(i) : null;
-            int pick = -1;
-            for (int pass = 0; pass < 2 && pick < 0; pass++)
-                for (int s : slots(player)) {
-                    ItemStack st = inv.getItem(s);
-                    if (st.isEmpty() || left.get(s) <= 0 || !ing.test(st)) continue;
-                    if (pass == 0 && want != null && !st.is(want)) continue;
-                    if (pass == 0 && want == null) continue;
-                    pick = s;
-                    break;
-                }
-            if (pick < 0) return null;
-            left.put(pick, left.get(pick) - 1);
-            from[i] = pick;
+        for (int i = 0; i < grid.getContainerSize(); i++) {
+            ItemStack st = grid.removeItemNoUpdate(i);
+            if (!st.isEmpty()) inv.placeItemBackInInventory(st, net.minecraft.util.Prediction.SERVER_ONLY);
         }
-        return from;
-    }
-
-    /** Makes one; returns false (changing nothing) if the player is short of something. */
-    public static boolean craftOnce(ServerPlayer player, Entry e, List<Item> prefer) {
-        int[] from = plan(player, e, prefer);
-        if (from == null) return false;
-        var inv = player.getInventory();
-        List<ItemStack> used = new ArrayList<>();
-        for (int s : from) used.add(inv.getItem(s).copyWithCount(1));
-        ItemStack result;
-        List<ItemStack> remainders = new ArrayList<>();
-        Recipe<?> r = e.holder.value();
-        if (r instanceof SmithingTransformRecipe s) {
-            int n = 0;
-            ItemStack template = s.templateIngredient().isPresent() ? used.get(n++) : ItemStack.EMPTY;
-            ItemStack base = used.get(n++);
-            ItemStack addition = s.additionIngredient().isPresent() ? used.get(n) : ItemStack.EMPTY;
-            result = s.assemble(new SmithingRecipeInput(template, base, addition));
-        } else if (r instanceof ShapedRecipe s) {
-            List<ItemStack> grid = new ArrayList<>();
-            int k = 0;
-            for (Optional<Ingredient> o : s.getIngredients()) grid.add(o.isPresent() ? used.get(k++) : ItemStack.EMPTY);
-            CraftingInput input = CraftingInput.of(s.getWidth(), s.getHeight(), grid);
-            result = s.assemble(input);
-            remainders.addAll(s.getRemainingItems(input));
-        } else if (r instanceof ShapelessRecipe s) {
-            CraftingInput input = CraftingInput.of(used.size(), 1, used);
-            result = s.assemble(input);
-            remainders.addAll(s.getRemainingItems(input));
-        } else return false;
-        if (result.isEmpty()) return false;
-        for (int s : from) inv.getItem(s).shrink(1);
-        if (Tide.CI) Tide.LOG.info("TIDE-CI bench made {} from {} (base hook {})", BuiltInRegistries.ITEM.getKey(result.getItem()),
-                used.stream().map(u -> BuiltInRegistries.ITEM.getKey(u.getItem()).getPath()).toList(), com.li64.tide.data.rods.RodEffects.baseHook(result));
-        result.onCraftedBy(player, result.getCount());
-        player.awardStat(net.minecraft.stats.Stats.ITEM_CRAFTED.get(result.getItem()), result.getCount());
-        give(player, result);
-        for (ItemStack rest : remainders) if (!rest.isEmpty()) give(player, rest);
-        inv.setChanged();
+        // pick an item for each ingredient: the one the player has most of, kept the same for every set
+        Map<Item, Integer> have = new HashMap<>();
+        for (int s : slots()) {
+            ItemStack st = inv.getItem(s);
+            if (!st.isEmpty()) have.merge(st.getItem(), st.getCount(), Integer::sum);
+        }
+        Map<Item, Integer> uses = new HashMap<>();
+        Item[] pick = new Item[e.ingredients.size()];
+        for (int i = 0; i < pick.length; i++) {
+            Ingredient ing = e.ingredients.get(i);
+            Item best = null;
+            int bestLeft = 0;
+            for (var entry : have.entrySet()) {
+                int left = entry.getValue() - uses.getOrDefault(entry.getKey(), 0);
+                if (left > bestLeft && ing.test(new ItemStack(entry.getKey()))) { best = entry.getKey(); bestLeft = left; }
+            }
+            if (best == null) return false;
+            pick[i] = best;
+            uses.merge(best, 1, Integer::sum);
+        }
+        int sets = 1;
+        if (all) {
+            sets = 64;
+            for (var u : uses.entrySet()) sets = Math.min(sets, have.get(u.getKey()) / u.getValue());
+            for (Item it : pick) sets = Math.min(sets, it.getDefaultMaxStackSize());
+            sets = Math.min(sets, Math.max(1, e.result.getDefaultMaxStackSize() / Math.max(1, e.count)));
+            sets = Math.max(1, sets);
+        }
+        for (int i = 0; i < pick.length; i++) {
+            ItemStack taken = take(inv, pick[i], sets);
+            grid.setItem(e.grid[i], taken);
+        }
         return true;
     }
 
-    private static void give(ServerPlayer player, ItemStack stack) {
-        if (!player.getInventory().add(stack) && !stack.isEmpty()) player.drop(stack, false, net.minecraft.util.Prediction.SERVER_ONLY);
+    /** Takes {@code n} of an item from the inventory (keeping one kind of stack, so an enchanted rod stays itself). */
+    private static ItemStack take(net.minecraft.world.entity.player.Inventory inv, Item item, int n) {
+        ItemStack out = ItemStack.EMPTY;
+        for (int s : slots()) {
+            ItemStack st = inv.getItem(s);
+            if (st.isEmpty() || !st.is(item)) continue;
+            if (!out.isEmpty() && !ItemStack.isSameItemSameComponents(out, st)) continue;
+            int k = Math.min(n - out.getCount(), st.getCount());
+            if (out.isEmpty()) out = st.split(k);
+            else { st.shrink(k); out.grow(k); }
+            if (out.getCount() >= n) break;
+        }
+        inv.setChanged();
+        return out;
     }
 
     /** The list as sent to players: result, count, filter, smithing flag, and the item ids each ingredient accepts. */
@@ -219,7 +274,8 @@ public final class TackleRecipes {
             List<List<String>> ings = e.ingredients.stream()
                     .map(i -> i.items().map(h -> BuiltInRegistries.ITEM.getKey(h.value()).toString()).toList()).toList();
             rows.add(new com.li64.tide.network.messages.TackleRecipesMsg.Row(e.id.toString(),
-                    BuiltInRegistries.ITEM.getKey(e.result).toString(), e.count, e.kind.ordinal(), e.smithing, ings));
+                    BuiltInRegistries.ITEM.getKey(e.result).toString(), e.count, e.kind.ordinal(), e.smithing, ings,
+                    java.util.Arrays.stream(e.grid).boxed().toList()));
         }
         return new com.li64.tide.network.messages.TackleRecipesMsg(rows);
     }

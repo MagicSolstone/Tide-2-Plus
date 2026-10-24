@@ -28,6 +28,7 @@ public class TideEventHandler {
         com.li64.tide.data.angler.Angler.onJoin(player);
         com.li64.tide.data.tackle.TackleLog.sync(player);
         com.li64.tide.data.tackle.TackleRecipes.sync(player);
+        com.li64.tide.data.tackle.TackleUnlocks.sync(player);
     }
 
     public static void serverStarted() {
@@ -41,6 +42,9 @@ public class TideEventHandler {
 
     public static void endServerTick(MinecraftServer server) {
         server.getPlayerList().getPlayers().forEach(FishingInfoManager::tick);
-        if (server.getTickCount() % 40 == 0) server.getPlayerList().getPlayers().forEach(com.li64.tide.data.tackle.TackleLog::tick);
+        if (server.getTickCount() % 40 == 0) server.getPlayerList().getPlayers().forEach(p -> {
+            com.li64.tide.data.tackle.TackleLog.tick(p);
+            com.li64.tide.data.tackle.TackleUnlocks.tick(p);
+        });
     }
 }

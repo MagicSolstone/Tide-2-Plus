@@ -5,19 +5,21 @@ import com.li64.tide.client.Gui26;
 import com.li64.tide.client.gui.menus.AnglingCraftMenu;
 import com.li64.tide.data.rods.RigSets;
 import com.li64.tide.data.tackle.TackleLog;
-import com.li64.tide.data.tackle.TackleRecipes;
 import com.li64.tide.network.messages.BenchTabMsg;
-import com.li64.tide.network.messages.TackleCraftMsg;
+import com.li64.tide.network.messages.TackleFillMsg;
 import com.li64.tide.network.messages.TackleRecipesMsg;
+import com.li64.tide.network.messages.TackleUnlocksMsg;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.ImageButton;
+import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.Item;
@@ -28,78 +30,89 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 /**
- * The Angling Table's Craft tab: every piece of fishing gear the table can make, filtered by kind or by rig, with
- * what it does, what it takes (what you have of each), and a Craft button. Items you can make now are lit up.
+ * The Angling Table's Craft tab: a crafting grid for fishing gear, with its own recipe book beside it. The book shows
+ * the recipes you've discovered, by kind or by rig; click one to move its items from your inventory into the grid
+ * (shift-click for as many as you can make), or, if you're short, to see it laid out in the grid as a ghost.
  */
 public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu> {
-    public static final int W = 256, H = 222;
-    private static final int GRID_X = 8, GRID_Y = 38, COLS = 6, ROWS = 5, CELL = 18;
-    private static final int INFO_X = 128, INFO_W = 120;
-    private static final int PANEL = 0xFFC6C6C6, LIGHT = 0xFFFFFFFF, SHADE = 0xFF555555, EDGE = 0xFF000000;
-    private static final int SLOT_DARK = 0xFF373737, SLOT_FILL = 0xFF8B8B8B, SLOT_LIGHT = 0xFFFFFFFF, INK = 0xFF404040;
+    private static final Identifier BG = Identifier.withDefaultNamespace("textures/gui/container/crafting_table.png");
+    private static final WidgetSprites BOOK_BUTTON = new WidgetSprites(Identifier.withDefaultNamespace("recipe_book/button"),
+            Identifier.withDefaultNamespace("recipe_book/button_highlighted"));
+    private static final Identifier SLOT_OK = Identifier.withDefaultNamespace("recipe_book/slot_craftable"),
+            SLOT_NO = Identifier.withDefaultNamespace("recipe_book/slot_uncraftable"),
+            FILTER_ON = Identifier.withDefaultNamespace("recipe_book/filter_enabled"), FILTER_OFF = Identifier.withDefaultNamespace("recipe_book/filter_disabled"),
+            FILTER_ON_HI = Identifier.withDefaultNamespace("recipe_book/filter_enabled_highlighted"), FILTER_OFF_HI = Identifier.withDefaultNamespace("recipe_book/filter_disabled_highlighted"),
+            PAGE_FWD = Identifier.withDefaultNamespace("recipe_book/page_forward"), PAGE_BACK = Identifier.withDefaultNamespace("recipe_book/page_backward");
+    public static final int BOOK_W = 147, BOOK_H = 166;
+    private static final int COLS = 5, ROWS = 4, CELL = 25, CELLS_X = 11, CELLS_Y = 43;
 
-    /** The filters along the top: All, Sets, then one per kind. */
+    /** The filters along the top of the book: everything, by rig, then one per kind (the server's order). */
     private static final String[] FILTER_ICONS = {"tide:angling_table", "tide:tackle_box", "tide:bamboo_fishing_rod", "tide:fishing_line",
             "tide:red_bobber", "tide:fishing_hook", "tide:spinner_lure", "tide:bait", "tide:fishing_journal"};
-    private static final String[] FILTER_NAMES = {"Everything", "Rigs (sets)", "Rods", "Lines", "Bobbers", "Hooks", "Lures", "Bait", "Gear"};
+    private static final String[] FILTER_NAMES = {"Everything", "Rigs", "Rods", "Lines", "Bobbers", "Hooks", "Lures", "Bait", "Gear"};
 
-    /** One thing in the grid: a recipe, or (in rig view) a rig piece that's found rather than made. */
-    private record Cell(TackleRecipesMsg.Row row, Item item) {}
+    /** A book entry: a discovered recipe, or (rig view) a piece not discovered yet or found rather than made. */
+    private record Cell(TackleRecipesMsg.Row row, Item item, boolean locked) {}
 
-    /** Ingredients the same, grouped: which ingredient positions they fill and the items each accepts. */
-    private record Need(List<Integer> positions, List<Item> options) {}
-
+    private static boolean bookOpen = true, onlyMakeable = false;
     private static int filter = 0, setIndex = 0;
-    private static boolean onlyMakeable = false;
-    private static String selectedId = null;
-    private final Map<String, Map<Integer, Item>> prefer = new HashMap<>();
+    private int page = 0, bookX, lockedHere = 0;
     private List<Cell> cells = List.of();
-    private int scroll = 0;
-    private Button craftButton;
+    private TackleRecipesMsg.Row ghost = null;
     private Map<Item, Integer> stock = Map.of();
     private int stockTick = -1;
+    private Set<String> seenUnlocks = Set.of();
 
     public AnglingCraftScreen(AnglingCraftMenu menu, Inventory inventory, Component title) {
-        super(menu, inventory, title, W, H);
-        this.inventoryLabelX = AnglingCraftMenu.INV_X;
-        this.inventoryLabelY = AnglingCraftMenu.INV_Y - 11;
-        this.titleLabelX = 8;
-        this.titleLabelY = 6;
+        super(menu, inventory, title);
+        this.titleLabelX = 29;
+    }
+
+    private boolean narrow() {
+        return this.width < 379;
     }
 
     @Override
     protected void init() {
         super.init();
+        if (bookOpen && !narrow()) this.leftPos = (this.width - this.imageWidth) / 2 + 77;
+        this.bookX = bookOpen && narrow() ? (this.width - BOOK_W) / 2 : this.leftPos - BOOK_W - 2;
+        this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 34, 20, 18, BOOK_BUTTON, b -> {
+            bookOpen = !bookOpen;
+            this.rebuildWidgets();
+        }, Component.literal("Fishing recipe book")));
         this.addRenderableWidget(Button.builder(Component.literal("Assemble rod"), b -> Tide.NETWORK.sendToServer(new BenchTabMsg(false)))
-                .bounds(this.leftPos + W - 80, this.topPos - 17, 80, 16).build());
-        this.craftButton = this.addRenderableWidget(Button.builder(Component.literal("Craft"), b -> craft(false))
-                .bounds(this.leftPos + INFO_X + INFO_W - 46, this.topPos + 115, 46, 16).build());
+                .bounds(this.leftPos + this.imageWidth - 80, this.topPos - 17, 80, 16).build());
+        seenUnlocks = TackleUnlocksMsg.CLIENT;
         rebuild();
         if (Tide.CI) ciLog();
     }
 
-    /** CI: where things are on screen (in window pixels), so the smoke test can click them. */
+    /** CI: where things are on screen (window pixels), so the smoke test can click them. */
     private void ciLog() {
         double k = this.minecraft.getWindow().getGuiScale();
-        Tide.LOG.info("TIDE-CI bench {} recipes, filter {}, cells {}", TackleRecipesMsg.CLIENT.size(), filter, cells.size());
-        Tide.LOG.info("TIDE-CI bench px hooks {} {} craft {} {} assemble {} {}",
-                (int) ((this.leftPos + 8 + 5 * 20 + 9) * k), (int) ((this.topPos + 25) * k),
-                (int) ((this.leftPos + INFO_X + INFO_W - 23) * k), (int) ((this.topPos + 123) * k),
-                (int) ((this.leftPos + W - 40) * k), (int) ((this.topPos - 9) * k));
-        for (int i = 0; i < cells.size() && i < COLS * ROWS; i++)
-            if (BuiltInRegistries.ITEM.getKey(cells.get(i).item).getPath().equals("diamond_hook"))
-                Tide.LOG.info("TIDE-CI bench px diamond_hook {} {}", (int) ((this.leftPos + GRID_X + (i % COLS) * CELL + 9) * k),
-                        (int) ((this.topPos + gridTop() + (i / COLS) * CELL + 9) * k));
+        Tide.LOG.info("TIDE-CI table {} recipes, {} discovered, filter {}, {} shown, {} to discover, book {}", TackleRecipesMsg.CLIENT.size(),
+                TackleUnlocksMsg.CLIENT.size(), filter, cells.size(), lockedHere, bookOpen);
+        Tide.LOG.info("TIDE-CI table px hooks {} {} result {} {} assemble {} {}",
+                (int) ((bookX + filterX(5) + 7) * k), (int) ((this.topPos + 17) * k),
+                (int) ((this.leftPos + 124 + 8) * k), (int) ((this.topPos + 35 + 8) * k),
+                (int) ((this.leftPos + this.imageWidth - 40) * k), (int) ((this.topPos - 9) * k));
+        for (int i = 0; i < Math.min(cells.size() - page * COLS * ROWS, COLS * ROWS); i++) {
+            Cell c = cells.get(page * COLS * ROWS + i);
+            if (BuiltInRegistries.ITEM.getKey(c.item).getPath().equals("diamond_hook"))
+                Tide.LOG.info("TIDE-CI table px diamond_hook {} {}", (int) ((bookX + CELLS_X + (i % COLS) * CELL + 12) * k),
+                        (int) ((this.topPos + CELLS_Y + (i / COLS) * CELL + 12) * k));
+        }
     }
 
-    // ------------------------------------------------------------------ data
+    // ------------------------------------------------------------------ the book's contents
 
     private static Item item(String id) {
         Identifier key = Identifier.tryParse(id);
         return key == null ? Items.AIR : BuiltInRegistries.ITEM.getOptional(key).orElse(Items.AIR);
     }
 
-    /** What the player has, by item (main inventory and offhand), refreshed each tick. */
+    /** What the player has to craft with: inventory, offhand and whatever is already in the grid. */
     private Map<Item, Integer> stock() {
         if (stockTick == this.minecraft.player.tickCount) return stock;
         stockTick = this.minecraft.player.tickCount;
@@ -107,6 +120,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
         Inventory inv = this.minecraft.player.getInventory();
         for (int i = 0; i < 36; i++) add(out, inv.getItem(i));
         add(out, inv.getItem(40));
+        for (int i = AnglingCraftMenu.GRID_START; i < AnglingCraftMenu.INV_START; i++) add(out, this.menu.getSlot(i).getItem());
         return stock = out;
     }
 
@@ -114,14 +128,11 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
         if (!s.isEmpty()) out.merge(s.getItem(), s.getCount(), Integer::sum);
     }
 
-    /** Whether the player has enough for one, taking each ingredient from what's left (as the server does). */
     private boolean canMake(TackleRecipesMsg.Row row) {
         Map<Item, Integer> left = new HashMap<>(stock());
-        Map<Integer, Item> pref = prefer.getOrDefault(row.id(), Map.of());
-        for (int i = 0; i < row.ingredients().size(); i++) {
-            Item want = pref.get(i), pick = null;
-            if (want != null && left.getOrDefault(want, 0) > 0) pick = want;
-            else for (String o : row.ingredients().get(i)) {
+        for (List<String> opts : row.ingredients()) {
+            Item pick = null;
+            for (String o : opts) {
                 Item it = item(o);
                 if (left.getOrDefault(it, 0) > 0) { pick = it; break; }
             }
@@ -131,334 +142,263 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
         return true;
     }
 
-    private List<Need> needs(TackleRecipesMsg.Row row) {
-        Map<List<String>, List<Integer>> grouped = new LinkedHashMap<>();
-        for (int i = 0; i < row.ingredients().size(); i++) grouped.computeIfAbsent(row.ingredients().get(i), k -> new ArrayList<>()).add(i);
-        List<Need> out = new ArrayList<>();
-        grouped.forEach((opts, pos) -> out.add(new Need(pos, opts.stream().map(AnglingCraftScreen::item).filter(i -> i != Items.AIR).toList())));
-        return out;
+    private static boolean known(TackleRecipesMsg.Row row) {
+        return TackleUnlocksMsg.CLIENT.contains(row.id());
     }
 
     private void rebuild() {
         List<Cell> out = new ArrayList<>();
         List<TackleRecipesMsg.Row> rows = TackleRecipesMsg.CLIENT;
+        lockedHere = 0;
         if (filter == 1) {
-            RigSets.RigSet set = RigSets.SETS.get(Math.floorMod(setIndex, RigSets.SETS.size()));
+            RigSets.RigSet set = rig();
             for (String m : set.members()) {
                 Item it = item(Tide.MOD_ID + ":" + m);
                 if (it == Items.AIR) continue;
                 TackleRecipesMsg.Row row = rows.stream().filter(r -> item(r.result()) == it).findFirst().orElse(null);
-                out.add(new Cell(row, it));
+                boolean locked = row != null && !known(row);
+                if (locked) lockedHere++;
+                out.add(new Cell(row, it, locked));
             }
-            out.sort(Comparator.comparing((Cell c) -> c.row == null).thenComparingInt(c -> c.row == null ? 0 : c.row.kind()));
         } else {
-            for (TackleRecipesMsg.Row r : rows)
-                if (filter == 0 || r.kind() == filter - 2) out.add(new Cell(r, item(r.result())));
+            for (TackleRecipesMsg.Row r : rows) {
+                if (filter != 0 && r.kind() != filter - 2) continue;
+                if (known(r)) out.add(new Cell(r, item(r.result()), false));
+                else lockedHere++;
+            }
         }
-        if (onlyMakeable) out.removeIf(c -> c.row == null || !canMake(c.row));
+        if (onlyMakeable) out.removeIf(c -> c.row == null || c.locked || !canMake(c.row));
         cells = out;
-        int maxScroll = Math.max(0, (cells.size() + COLS - 1) / COLS - rows());
-        scroll = Math.min(scroll, maxScroll);
-        if (selected() == null && !cells.isEmpty()) selectedId = key(cells.get(0));
+        page = Math.max(0, Math.min(page, pages() - 1));
     }
 
-    private int rows() {
-        return filter == 1 ? ROWS - 1 : ROWS;
+    private RigSets.RigSet rig() {
+        return RigSets.SETS.get(Math.floorMod(setIndex, RigSets.SETS.size()));
     }
 
-    private int gridTop() {
-        return filter == 1 ? GRID_Y + CELL : GRID_Y;
+    private int pages() {
+        return Math.max(1, (cells.size() + COLS * ROWS - 1) / (COLS * ROWS));
     }
 
-    private static String key(Cell c) {
-        return c.row != null ? c.row.id() : "found:" + BuiltInRegistries.ITEM.getKey(c.item);
-    }
-
-    private Cell selected() {
-        for (Cell c : cells) if (key(c).equals(selectedId)) return c;
-        return null;
-    }
-
-    private void craft(boolean all) {
-        Cell c = selected();
-        if (c == null || c.row == null) return;
-        Map<Integer, Item> pref = prefer.getOrDefault(c.row.id(), Map.of());
-        List<String> ids = new ArrayList<>();
-        for (int i = 0; i < c.row.ingredients().size(); i++) {
-            Item it = pref.get(i);
-            ids.add(it == null ? "" : BuiltInRegistries.ITEM.getKey(it).toString());
-        }
-        Tide.NETWORK.sendToServer(new TackleCraftMsg(c.row.id(), ids, all || this.minecraft.hasShiftDown()));
+    private static int filterX(int i) {
+        return 8 + i * 14 + (i > 1 ? 3 : 0);
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
-        if (onlyMakeable || cells.isEmpty()) rebuild();
-        Cell c = selected();
-        this.craftButton.active = c != null && c.row != null && canMake(c.row);
-        this.craftButton.visible = c != null && c.row != null;
+        if (!TackleUnlocksMsg.CLIENT.equals(seenUnlocks)) { seenUnlocks = TackleUnlocksMsg.CLIENT; rebuild(); }
+        else if (onlyMakeable && this.minecraft.player.tickCount % 10 == 0) rebuild();
+        if (ghost != null) for (int i = AnglingCraftMenu.GRID_START; i < AnglingCraftMenu.INV_START; i++)
+            if (this.menu.getSlot(i).hasItem()) { ghost = null; break; }
     }
 
     // ------------------------------------------------------------------ drawing
 
-    private void panel(GuiGraphicsExtractor g, int x, int y, int w, int h) {
-        g.fill(x, y + 1, x + w, y + h - 1, EDGE);
-        g.fill(x + 1, y, x + w - 1, y + h, EDGE);
-        g.fill(x + 1, y + 1, x + w - 1, y + h - 1, PANEL);
-        g.fill(x + 1, y + 1, x + w - 2, y + 3, LIGHT);
-        g.fill(x + 1, y + 1, x + 3, y + h - 2, LIGHT);
-        g.fill(x + 3, y + h - 3, x + w - 1, y + h - 1, SHADE);
-        g.fill(x + w - 3, y + 3, x + w - 1, y + h - 1, SHADE);
-    }
-
-    private static void slotBox(GuiGraphicsExtractor g, int x, int y, int fill) {
-        g.fill(x, y, x + 18, y + 18, SLOT_LIGHT);
-        g.fill(x, y, x + 17, y + 17, SLOT_DARK);
-        g.fill(x + 1, y + 1, x + 17, y + 17, fill);
-    }
-
     @Override
     public void extractBackground(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
         super.extractBackground(g, mouseX, mouseY, a);
-        int x = this.leftPos, y = this.topPos;
-        panel(g, x, y, W, H);
-        // the Craft tab, joined to the panel
-        g.fill(x + 4, y - 15, x + 60, y + 2, EDGE);
-        g.fill(x + 5, y - 14, x + 59, y + 3, PANEL);
-        g.fill(x + 5, y - 14, x + 58, y - 12, LIGHT);
-        Gui26.text(g, this.font, "Craft", x + 24, y - 10, INK, false);
-        g.item(new ItemStack(item("tide:angling_table")), x + 4 + 2, y - 14 + 0);
+        g.blit(RenderPipelines.GUI_TEXTURED, BG, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        if (ghost != null) drawGhost(g);
+        if (bookOpen) drawBook(g, mouseX, mouseY);
+    }
 
-        // filters
+    private void drawGhost(GuiGraphicsExtractor g) {
+        for (int i = 0; i < ghost.ingredients().size() && i < ghost.grid().size(); i++) {
+            List<String> opts = ghost.ingredients().get(i);
+            if (opts.isEmpty()) continue;
+            Item it = item(opts.get((int) ((System.currentTimeMillis() / 1000) % opts.size())));
+            Slot s = this.menu.getSlot(AnglingCraftMenu.GRID_START + ghost.grid().get(i));
+            int x = this.leftPos + s.x, y = this.topPos + s.y;
+            g.item(new ItemStack(it), x, y);
+            g.fill(x, y, x + 16, y + 16, 0x80_8B8B8B);
+        }
+        Slot r = this.menu.getSlot(AnglingCraftMenu.RESULT);
+        int x = this.leftPos + r.x, y = this.topPos + r.y;
+        g.item(new ItemStack(item(ghost.result()), ghost.count()), x, y);
+        g.fill(x, y, x + 16, y + 16, 0x80_8B8B8B);
+    }
+
+    private void drawBook(GuiGraphicsExtractor g, int mouseX, int mouseY) {
+        int x = bookX, y = this.topPos;
+        // the book: a light frame around a dark page, like the crafting table's recipe book
+        g.fill(x, y + 1, x + BOOK_W, y + BOOK_H - 1, 0xFF000000);
+        g.fill(x + 1, y, x + BOOK_W - 1, y + BOOK_H, 0xFF000000);
+        g.fill(x + 1, y + 1, x + BOOK_W - 1, y + BOOK_H - 1, 0xFFC6C6C6);
+        g.fill(x + 1, y + 1, x + BOOK_W - 3, y + 3, 0xFFFFFFFF);
+        g.fill(x + 1, y + 1, x + 3, y + BOOK_H - 3, 0xFFFFFFFF);
+        g.fill(x + 3, y + BOOK_H - 3, x + BOOK_W - 1, y + BOOK_H - 1, 0xFF555555);
+        g.fill(x + BOOK_W - 3, y + 3, x + BOOK_W - 1, y + BOOK_H - 1, 0xFF555555);
+        g.fill(x + 7, y + 7, x + BOOK_W - 7, y + BOOK_H - 7, 0xFF373737);
+
+        // filters: small icons in a row (everything and rigs, a gap, then the kinds)
         for (int i = 0; i < FILTER_ICONS.length; i++) {
-            int fx = x + 8 + i * 20, fy = y + 16;
-            slotBox(g, fx, fy, i == filter ? 0xFF6E9FC8 : SLOT_FILL);
-            g.item(new ItemStack(item(FILTER_ICONS[i])), fx + 1, fy + 1);
-        }
-        // "only what I can make"
-        int tx = x + 8 + FILTER_ICONS.length * 20 + 4, ty = y + 20;
-        g.fill(tx, ty, tx + 10, ty + 10, SLOT_DARK);
-        g.fill(tx + 1, ty + 1, tx + 9, ty + 9, onlyMakeable ? 0xFF5DB85D : 0xFFE0E0E0);
-        if (onlyMakeable) Gui26.text(g, this.font, "✔", tx + 2, ty + 1, 0xFF14401A, false);
-        Gui26.text(g, this.font, "Can make", tx + 13, ty + 1, INK, false);
-
-        // rig picker
-        if (filter == 1) {
-            RigSets.RigSet set = RigSets.SETS.get(Math.floorMod(setIndex, RigSets.SETS.size()));
-            g.fill(x + GRID_X, y + GRID_Y, x + GRID_X + COLS * CELL, y + GRID_Y + 15, 0xFF2A3440);
-            Gui26.text(g, this.font, "<", x + GRID_X + 4, y + GRID_Y + 4, 0xFFFFFFFF, false);
-            Gui26.text(g, this.font, ">", x + GRID_X + COLS * CELL - 9, y + GRID_Y + 4, 0xFFFFFFFF, false);
-            String name = set.name();
-            Gui26.text(g, this.font, name, x + GRID_X + (COLS * CELL - this.font.width(name)) / 2, y + GRID_Y + 4, 0xFFFFD27F, false);
-        }
-
-        // the grid
-        int top = gridTop();
-        for (int r = 0; r < rows(); r++)
-            for (int c = 0; c < COLS; c++) {
-                int i = (scroll + r) * COLS + c, cx = x + GRID_X + c * CELL, cy = y + top + r * CELL;
-                if (i >= cells.size()) { slotBox(g, cx, cy, SLOT_FILL); continue; }
-                Cell cell = cells.get(i);
-                boolean make = cell.row != null && canMake(cell.row);
-                boolean sel = key(cell).equals(selectedId);
-                slotBox(g, cx, cy, sel ? 0xFFE8C46A : make ? 0xFF8FC48A : cell.row == null ? 0xFF6E6E6E : SLOT_FILL);
-                g.item(new ItemStack(cell.item, cell.row == null ? 1 : cell.row.count()), cx + 1, cy + 1);
-                if (cell.row != null && cell.row.count() > 1) g.itemDecorations(this.font, new ItemStack(cell.item, cell.row.count()), cx + 1, cy + 1);
-            }
-        // scrollbar
-        int total = (cells.size() + COLS - 1) / COLS, sbX = x + GRID_X + COLS * CELL + 2, sbH = rows() * CELL;
-        g.fill(sbX, y + top, sbX + 6, y + top + sbH, SLOT_DARK);
-        if (total > rows()) {
-            int knob = Math.max(10, sbH * rows() / total), ky = y + top + (sbH - knob) * scroll / Math.max(1, total - rows());
-            g.fill(sbX + 1, ky, sbX + 5, ky + knob, 0xFFC6C6C6);
-        } else g.fill(sbX + 1, y + top, sbX + 5, y + top + sbH, 0xFF8B8B8B);
-
-        // details
-        int ix = x + INFO_X, iy = y + GRID_Y;
-        g.fill(ix - 2, iy - 2, ix + INFO_W, y + 132, 0xFFB4B4B4);
-        Cell cell = selected();
-        if (cell != null) drawInfo(g, cell, ix, iy, mouseX, mouseY);
-        else Gui26.text(g, this.font, cells.isEmpty() ? "Nothing to show" : "", ix + 2, iy + 2, INK, false);
-
-        // inventory slots
-        for (Slot s : this.menu.slots) slotBox(g, x + s.x - 1, y + s.y - 1, SLOT_FILL);
-    }
-
-    private void drawInfo(GuiGraphicsExtractor g, Cell cell, int ix, int iy, int mouseX, int mouseY) {
-        ItemStack stack = new ItemStack(cell.item);
-        g.item(stack, ix, iy);
-        List<FormattedCharSequence> name = this.font.split(stack.getHoverName(), INFO_W - 22);
-        Gui26.text(g, this.font, name.get(0), ix + 19, iy + 4, 0xFF202020, false);
-        // what it does: its tooltip without the name, small
-        List<Component> lines = new ArrayList<>(Screen.getTooltipFromItem(this.minecraft, stack));
-        if (!lines.isEmpty()) lines.remove(0);
-        lines.removeIf(l -> l.getString().isBlank());
-        List<FormattedCharSequence> small = new ArrayList<>();
-        float s = 0.75f;
-        for (Component l : lines) small.addAll(this.font.split(l, (int) ((INFO_W - 4) / s)));
-        int textTop = iy + 19, textBottom = iy + 46;
-        int maxLines = (int) ((textBottom - textTop) / (9 * s));
-        g.pose().pushMatrix();
-        g.pose().translate(ix + 1, textTop);
-        g.pose().scale(s, s);
-        for (int i = 0; i < Math.min(maxLines, small.size()); i++)
-            Gui26.text(g, this.font, small.get(i), 0, i * 9, i == maxLines - 1 && small.size() > maxLines ? 0xFF606060 : 0xFF303030, false);
-        g.pose().popMatrix();
-        if (small.size() > maxLines) {
-            Gui26.text(g, this.font, "…", ix + INFO_W - 10, textBottom - 6, INK, false);
-            if (mouseX >= ix && mouseX < ix + INFO_W && mouseY >= textTop && mouseY < textBottom) g.setTooltipForNextFrame(this.font, stack, mouseX, mouseY);
-        }
-
-        int ny = iy + 48;
-        if (cell.row == null) {
-            String where = TackleLog.FOUND.getOrDefault(BuiltInRegistries.ITEM.getKey(cell.item).getPath(), "Found while fishing or exploring.");
-            int ly = ny;
-            for (FormattedCharSequence l : this.font.split(Component.literal("Not crafted. " + where), INFO_W - 4)) {
-                Gui26.text(g, this.font, l, ix + 1, ly, 0xFF5A3A10, false);
-                ly += 9;
-            }
-            return;
-        }
-        Gui26.text(g, this.font, cell.row.smithing() ? "Upgrade:" : "Needs:", ix + 1, ny, INK, false);
-        List<Need> needs = needs(cell.row);
-        Map<Integer, Item> pref = prefer.getOrDefault(cell.row.id(), Map.of());
-        Map<Item, Integer> have = stock();
-        int nx = ix, ry = ny + 9;
-        for (Need n : needs) {
-            if (nx + 20 > ix + INFO_W) { nx = ix; ry += 20; }
-            Item shown = shownOption(n, pref, have);
-            int owned = n.options.stream().mapToInt(o -> have.getOrDefault(o, 0)).sum();
-            int need = n.positions.size();
-            slotBox(g, nx, ry, owned >= need ? 0xFF8FC48A : 0xFFC88A8A);
-            if (shown != null) g.item(new ItemStack(shown), nx + 1, ry + 1);
-            String count = Math.min(owned, 99) + "/" + need;
+            int fx = x + filterX(i), fy = y + 10;
+            boolean hover = mouseX >= fx && mouseX < fx + 14 && mouseY >= fy && mouseY < fy + 14;
+            g.fill(fx, fy, fx + 14, fy + 14, i == filter ? 0xFFE8C46A : hover ? 0xFF8A8A8A : 0xFF5A5A5A);
+            g.fill(fx + 1, fy + 1, fx + 13, fy + 13, i == filter ? 0xFF8A6A2A : 0xFF2A2A2A);
             g.pose().pushMatrix();
-            g.pose().translate(nx + 18 - this.font.width(count) * 0.6f, ry + 13);
-            g.pose().scale(0.6f, 0.6f);
-            Gui26.text(g, this.font, count, 0, 0, owned >= need ? 0xFFFFFFFF : 0xFFFFB0B0, true);
+            g.pose().translate(fx + 1, fy + 1);
+            g.pose().scale(0.75f, 0.75f);
+            g.item(new ItemStack(item(FILTER_ICONS[i])), 0, 0);
             g.pose().popMatrix();
-            if (mouseX >= nx && mouseX < nx + 18 && mouseY >= ry && mouseY < ry + 18 && shown != null) {
-                List<Component> tip = new ArrayList<>();
-                tip.add(new ItemStack(shown).getHoverName());
-                if (n.options.size() > 1) {
-                    long kinds = n.options.stream().filter(o -> have.getOrDefault(o, 0) > 0).count();
-                    tip.add(Component.literal("Any of " + n.options.size() + " kinds").withStyle(net.minecraft.ChatFormatting.GRAY));
-                    if (kinds > 1) tip.add(Component.literal("Click to choose which one to use").withStyle(net.minecraft.ChatFormatting.YELLOW));
-                }
-                g.setTooltipForNextFrame(this.font, tip, Optional.empty(), mouseX, mouseY);
-            }
-            nx += 20;
         }
-    }
 
-    /** The item an ingredient shows: the chosen one, else one the player has, else each option in turn. */
-    private Item shownOption(Need n, Map<Integer, Item> pref, Map<Item, Integer> have) {
-        if (n.options.isEmpty()) return null;
-        Item chosen = pref.get(n.positions.get(0));
-        if (chosen != null && n.options.contains(chosen)) return chosen;
-        for (Item o : n.options) if (have.getOrDefault(o, 0) > 0) return o;
-        return n.options.get((int) ((System.currentTimeMillis() / 1000) % n.options.size()));
+        // the heading (or the rig picker), and the "only what I can make" switch
+        int hy = y + 28;
+        if (filter == 1) {
+            String name = rig().name();
+            Gui26.text(g, this.font, "<", x + 10, hy + 4, 0xFFFFFFFF, true);
+            Gui26.text(g, this.font, ">", x + 104, hy + 4, 0xFFFFFFFF, true);
+            Gui26.text(g, this.font, name, x + 10 + (98 - this.font.width(name)) / 2, hy + 4, 0xFFFFD27F, true);
+        } else {
+            Gui26.text(g, this.font, FILTER_NAMES[filter], x + 10, hy + 4, 0xFFFFFFFF, true);
+            if (lockedHere > 0) {
+                String more = lockedHere + " to discover";
+                g.pose().pushMatrix();
+                g.pose().translate(x + 13 + this.font.width(FILTER_NAMES[filter]), hy + 5.5f);
+                g.pose().scale(0.75f, 0.75f);
+                Gui26.text(g, this.font, more, 0, 0, 0xFF9AA8B4, false);
+                g.pose().popMatrix();
+            }
+        }
+        int tx = x + 113, ty = hy + 1;
+        boolean overToggle = mouseX >= tx && mouseX < tx + 26 && mouseY >= ty && mouseY < ty + 16;
+        g.blitSprite(RenderPipelines.GUI_TEXTURED, onlyMakeable ? (overToggle ? FILTER_ON_HI : FILTER_ON) : (overToggle ? FILTER_OFF_HI : FILTER_OFF), tx, ty, 26, 16);
+
+        // the recipes
+        int first = page * COLS * ROWS;
+        for (int i = 0; i < COLS * ROWS && first + i < cells.size(); i++) {
+            Cell c = cells.get(first + i);
+            int cx = x + CELLS_X + (i % COLS) * CELL, cy = y + CELLS_Y + (i / COLS) * CELL;
+            if (c.locked) {
+                g.fill(cx + 1, cy + 1, cx + 24, cy + 24, 0xFF202020);
+                Gui26.text(g, this.font, "?", cx + 10, cy + 8, 0xFF7A7A7A, false);
+                continue;
+            }
+            boolean make = c.row != null && canMake(c.row);
+            g.blitSprite(RenderPipelines.GUI_TEXTURED, make ? SLOT_OK : SLOT_NO, cx, cy, CELL, CELL);
+            g.item(new ItemStack(c.item, c.row == null ? 1 : c.row.count()), cx + 4, cy + 4);
+            if (c.row != null && c.row.count() > 1) g.itemDecorations(this.font, new ItemStack(c.item, c.row.count()), cx + 4, cy + 4);
+            if (c.row == null) g.fill(cx + 4, cy + 4, cx + 20, cy + 20, 0x90_202020);       // found, not made
+        }
+        if (cells.isEmpty()) {
+            String msg = onlyMakeable ? "Nothing you can make yet" : "Nothing discovered yet";
+            Gui26.text(g, this.font, msg, x + (BOOK_W - this.font.width(msg)) / 2, y + 80, 0xFFAAAAAA, false);
+        }
+        // pages
+        if (pages() > 1) {
+            String p = (page + 1) + "/" + pages();
+            Gui26.text(g, this.font, p, x + (BOOK_W - this.font.width(p)) / 2, y + 147, 0xFFFFFFFF, false);
+            if (page > 0) g.blitSprite(RenderPipelines.GUI_TEXTURED, PAGE_BACK, x + 38, y + 143, 12, 17);
+            if (page < pages() - 1) g.blitSprite(RenderPipelines.GUI_TEXTURED, PAGE_FWD, x + 93, y + 143, 12, 17);
+        }
     }
 
     @Override
     protected void extractLabels(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY) {
-        g.text(this.font, this.title, this.titleLabelX, this.titleLabelY, INK, false);
-        g.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, INK, false);
-        if (this.craftButton != null && this.craftButton.visible) {
-            g.pose().pushMatrix();
-            g.pose().translate(INFO_X + 1, 118);
-            g.pose().scale(0.6f, 0.6f);
-            Gui26.text(g, this.font, "Shift-click Craft", 0, 0, 0xFF606060, false);
-            Gui26.text(g, this.font, "to make a stack", 0, 10, 0xFF606060, false);
-            g.pose().popMatrix();
-        }
+        g.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF404040, false);
+        g.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, this.inventoryLabelY, 0xFF404040, false);
     }
 
     @Override
     public void extractRenderState(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
         super.extractRenderState(g, mouseX, mouseY, a);
-        int x = this.leftPos, y = this.topPos;
+        if (!bookOpen) return;
+        int x = bookX, y = this.topPos;
         for (int i = 0; i < FILTER_ICONS.length; i++) {
-            int fx = x + 8 + i * 20, fy = y + 16;
-            if (mouseX >= fx && mouseX < fx + 18 && mouseY >= fy && mouseY < fy + 18)
+            int fx = x + filterX(i), fy = y + 10;
+            if (mouseX >= fx && mouseX < fx + 14 && mouseY >= fy && mouseY < fy + 14)
                 g.setTooltipForNextFrame(this.font, Component.literal(FILTER_NAMES[i]), mouseX, mouseY);
         }
-        Cell hover = cellAt(mouseX, mouseY);
-        if (hover != null) g.setTooltipForNextFrame(this.font, new ItemStack(hover.item), mouseX, mouseY);
-        if (filter == 1 && mouseX >= x + GRID_X && mouseX < x + GRID_X + COLS * CELL && mouseY >= y + GRID_Y && mouseY < y + GRID_Y + 15) {
-            RigSets.RigSet set = RigSets.SETS.get(Math.floorMod(setIndex, RigSets.SETS.size()));
-            g.setTooltipForNextFrame(this.font, List.of(Component.literal(set.name()).withStyle(net.minecraft.ChatFormatting.LIGHT_PURPLE),
-                    Component.literal("2 pieces: " + set.twoText()), Component.literal("3 pieces: " + set.bonusText())), Optional.empty(), mouseX, mouseY);
+        if (mouseX >= x + 113 && mouseX < x + 139 && mouseY >= y + 29 && mouseY < y + 45)
+            g.setTooltipForNextFrame(this.font, Component.literal(onlyMakeable ? "Showing what you can make" : "Showing everything you've discovered"), mouseX, mouseY);
+        if (filter == 1 && mouseX >= x + 8 && mouseX < x + 112 && mouseY >= y + 28 && mouseY < y + 42) {
+            RigSets.RigSet set = rig();
+            g.setTooltipForNextFrame(this.font, List.of(Component.literal(set.name()).withStyle(ChatFormatting.LIGHT_PURPLE),
+                    Component.literal("2 pieces: " + set.twoText()), Component.literal("3 pieces: " + set.bonusText()),
+                    Component.literal("Click the arrows for other rigs").withStyle(ChatFormatting.GRAY)), Optional.empty(), mouseX, mouseY);
+        }
+        Cell c = cellAt(mouseX, mouseY);
+        if (c == null) return;
+        if (c.locked) {
+            g.setTooltipForNextFrame(this.font, List.of(Component.literal("Not discovered yet").withStyle(ChatFormatting.GRAY),
+                    Component.literal("Have the right materials to learn it").withStyle(ChatFormatting.DARK_GRAY)), Optional.empty(), mouseX, mouseY);
+        } else if (c.row == null) {
+            String where = TackleLog.FOUND.getOrDefault(BuiltInRegistries.ITEM.getKey(c.item).getPath(), "Found while fishing or exploring.");
+            g.setTooltipForNextFrame(this.font, List.of(new ItemStack(c.item).getHoverName(),
+                    Component.literal("Not crafted: " + where).withStyle(ChatFormatting.GOLD)), Optional.empty(), mouseX, mouseY);
+        } else {
+            List<Component> tip = new ArrayList<>(net.minecraft.client.gui.screens.Screen.getTooltipFromItem(this.minecraft, new ItemStack(c.item)));
+            boolean make = canMake(c.row);
+            tip.add(Component.literal(make ? "Click to fill the grid (shift: as many as you can)" : "Click to see what it takes")
+                    .withStyle(make ? ChatFormatting.GREEN : ChatFormatting.YELLOW));
+            g.setTooltipForNextFrame(this.font, tip, Optional.empty(), mouseX, mouseY);
         }
     }
 
     private Cell cellAt(double mx, double my) {
-        int gx = (int) Math.floor(mx) - this.leftPos - GRID_X, gy = (int) Math.floor(my) - this.topPos - gridTop();
-        if (gx < 0 || gy < 0 || gx >= COLS * CELL || gy >= rows() * CELL) return null;
-        int i = (scroll + gy / CELL) * COLS + gx / CELL;
+        if (!bookOpen) return null;
+        int gx = (int) Math.floor(mx) - bookX - CELLS_X, gy = (int) Math.floor(my) - this.topPos - CELLS_Y;
+        if (gx < 0 || gy < 0 || gx >= COLS * CELL || gy >= ROWS * CELL) return null;
+        int i = page * COLS * ROWS + (gy / CELL) * COLS + gx / CELL;
         return i < cells.size() ? cells.get(i) : null;
     }
 
     // ------------------------------------------------------------------ input
 
+    private boolean inBook(double mx, double my) {
+        return bookOpen && mx >= bookX && mx < bookX + BOOK_W && my >= this.topPos && my < this.topPos + BOOK_H;
+    }
+
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent e, boolean doubleClick) {
+        if (!inBook(e.x(), e.y())) return super.mouseClicked(e, doubleClick);
         double mx = e.x(), my = e.y();
-        int x = this.leftPos, y = this.topPos;
+        int x = bookX, y = this.topPos;
         for (int i = 0; i < FILTER_ICONS.length; i++) {
-            int fx = x + 8 + i * 20, fy = y + 16;
-            if (mx >= fx && mx < fx + 18 && my >= fy && my < fy + 18) {
-                filter = i; scroll = 0; selectedId = null; rebuild(); click();
+            int fx = x + filterX(i), fy = y + 10;
+            if (mx >= fx && mx < fx + 14 && my >= fy && my < fy + 14) {
+                filter = i; page = 0; rebuild(); click();
                 if (Tide.CI) ciLog();
                 return true;
             }
         }
-        int tx = x + 8 + FILTER_ICONS.length * 20 + 4;
-        if (mx >= tx && mx < tx + 60 && my >= y + 18 && my < y + 32) {
-            onlyMakeable = !onlyMakeable; selectedId = null; rebuild(); click(); return true;
+        if (mx >= x + 113 && mx < x + 139 && my >= y + 29 && my < y + 45) {
+            onlyMakeable = !onlyMakeable; page = 0; rebuild(); click(); return true;
         }
-        if (filter == 1 && my >= y + GRID_Y && my < y + GRID_Y + 15 && mx >= x + GRID_X && mx < x + GRID_X + COLS * CELL) {
-            setIndex += mx < x + GRID_X + COLS * CELL / 2.0 ? -1 : 1;
-            selectedId = null; scroll = 0; rebuild(); click(); return true;
+        if (filter == 1 && my >= y + 28 && my < y + 42 && mx >= x + 8 && mx < x + 112) {
+            setIndex += mx < x + 60 ? -1 : 1; page = 0; rebuild(); click(); return true;
+        }
+        if (pages() > 1 && my >= y + 143 && my < y + 160) {
+            if (mx >= x + 38 && mx < x + 50 && page > 0) { page--; click(); return true; }
+            if (mx >= x + 93 && mx < x + 105 && page < pages() - 1) { page++; click(); return true; }
         }
         Cell c = cellAt(mx, my);
-        if (c != null) {
-            if (key(c).equals(selectedId) && doubleClick && c.row != null) craft(false);
-            selectedId = key(c); click(); return true;
+        if (c != null && c.row != null && !c.locked) {
+            if (canMake(c.row)) {
+                ghost = null;
+                Tide.NETWORK.sendToServer(new TackleFillMsg(c.row.id(), e.hasShiftDown()));
+            } else {
+                boolean gridEmpty = true;
+                for (int i = AnglingCraftMenu.GRID_START; i < AnglingCraftMenu.INV_START; i++) if (this.menu.getSlot(i).hasItem()) gridEmpty = false;
+                ghost = gridEmpty ? c.row : null;
+                if (!gridEmpty) this.minecraft.player.sendOverlayMessage(Component.literal("Empty the grid to see the recipe laid out"));
+            }
+            click();
         }
-        if (clickIngredient(mx, my)) return true;
-        return super.mouseClicked(e, doubleClick);
+        return true;                                              // a click on the book never reaches the slots behind it
     }
 
-    /** Clicking an ingredient that can be one of several things you have picks the next one to use. */
-    private boolean clickIngredient(double mx, double my) {
-        Cell cell = selected();
-        if (cell == null || cell.row == null) return false;
-        int ix = this.leftPos + INFO_X, nx = ix, ry = this.topPos + GRID_Y + 57;
-        Map<Item, Integer> have = stock();
-        Map<Integer, Item> pref = prefer.computeIfAbsent(cell.row.id(), k -> new HashMap<>());
-        for (Need n : needs(cell.row)) {
-            if (nx + 20 > ix + INFO_W) { nx = ix; ry += 20; }
-            if (mx >= nx && mx < nx + 18 && my >= ry && my < ry + 18) {
-                List<Item> owned = n.options.stream().filter(o -> have.getOrDefault(o, 0) > 0).toList();
-                if (owned.size() < 2) return true;
-                Item cur = shownOption(n, pref, have);
-                Item next = owned.get((owned.indexOf(cur) + 1) % owned.size());
-                for (int p : n.positions) pref.put(p, next);
-                click();
-                return true;
-            }
-            nx += 20;
-        }
-        return false;
+    @Override
+    protected boolean hasClickedOutside(double mx, double my, int left, int top) {
+        return !inBook(mx, my) && super.hasClickedOutside(mx, my, left, top);
     }
 
     @Override
     public boolean mouseScrolled(double mx, double my, double dx, double dy) {
-        int total = (cells.size() + COLS - 1) / COLS;
-        if (mx >= this.leftPos && mx < this.leftPos + INFO_X && my >= this.topPos + GRID_Y && my < this.topPos + GRID_Y + ROWS * CELL) {
-            scroll = Math.max(0, Math.min(Math.max(0, total - rows()), scroll - (int) Math.signum(dy)));
+        if (inBook(mx, my) && pages() > 1) {
+            page = Math.max(0, Math.min(pages() - 1, page - (int) Math.signum(dy)));
             return true;
         }
         return super.mouseScrolled(mx, my, dx, dy);
@@ -466,10 +406,5 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
 
     private void click() {
         this.minecraft.getSoundManager().play(net.minecraft.client.resources.sounds.SimpleSoundInstance.forUI(net.minecraft.sounds.SoundEvents.UI_BUTTON_CLICK, 1.0f));
-    }
-
-    /** The kinds as the server numbers them (for tests and the CI log). */
-    static TackleRecipes.Kind kind(int ordinal) {
-        return TackleRecipes.Kind.values()[ordinal];
     }
 }

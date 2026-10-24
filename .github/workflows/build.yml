@@ -123,19 +123,20 @@ jobs:
           # the fish satchel (hotbar 6), opened with sneak + right-click
           xdotool key 6; sleep 1; xdotool keydown shift; sleep 0.3; xdotool click 3; sleep 0.5; xdotool keyup shift; sleep 2; import -window root shots/7c-satchel.png
           xdotool key Escape; sleep 1; xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_displays"; sleep 0.5; xdotool key Return; sleep 4; import -window root shots/8-displays.png; xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_side"; sleep 0.5; xdotool key Return; sleep 3; import -window root shots/8b-displays-side.png
-          # the Angling Table: Craft tab, the Hooks filter, a diamond hook made on a bone hook, then the Assemble tab
-          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_bench"; sleep 0.5; xdotool key Return; sleep 2
+          # the Angling Table: the Craft tab with its recipe book, the Hooks filter, a diamond hook laid out from the book
+          # and taken from the result slot (made on a bone hook), then the Assemble tab
+          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_bench"; sleep 0.5; xdotool key Return; sleep 3
           xdotool key 4; sleep 0.5; xdotool click 3; sleep 2; import -window root shots/9-bench.png
-          read hx hy cx cy ax ay < <(grep "TIDE-CI bench px hooks" client.log | tail -1 | sed 's/.*hooks \([0-9]*\) \([0-9]*\) craft \([0-9]*\) \([0-9]*\) assemble \([0-9]*\) \([0-9]*\).*/\1 \2 \3 \4 \5 \6/')
-          echo "bench at: hooks $hx,$hy craft $cx,$cy assemble $ax,$ay"
+          read hx hy rx ry ax ay < <(grep "TIDE-CI table px hooks" client.log | tail -1 | sed 's/.*hooks \([0-9]*\) \([0-9]*\) result \([0-9]*\) \([0-9]*\) assemble \([0-9]*\) \([0-9]*\).*/\1 \2 \3 \4 \5 \6/')
+          echo "table at: hooks $hx,$hy result $rx,$ry assemble $ax,$ay"
           if [ -n "$hx" ]; then
             xdotool mousemove $hx $hy; sleep 0.3; xdotool click 1; sleep 1; import -window root shots/9b-bench-hooks.png
-            read dx dy < <(grep "TIDE-CI bench px diamond_hook" client.log | tail -1 | sed 's/.*diamond_hook \([0-9]*\) \([0-9]*\).*/\1 \2/')
-            if [ -n "$dx" ]; then xdotool mousemove $dx $dy; sleep 0.3; xdotool click 1; sleep 1; import -window root shots/9c-bench-diamond.png; fi
-            xdotool mousemove $cx $cy; sleep 0.3; xdotool click 1; sleep 1.5; import -window root shots/9d-bench-crafted.png
+            read dx dy < <(grep "TIDE-CI table px diamond_hook" client.log | tail -1 | sed 's/.*diamond_hook \([0-9]*\) \([0-9]*\).*/\1 \2/')
+            if [ -n "$dx" ]; then xdotool mousemove $dx $dy; sleep 0.3; xdotool click 1; sleep 1.5; import -window root shots/9c-bench-filled.png; fi
+            xdotool mousemove $rx $ry; sleep 0.3; xdotool click 1; sleep 1; import -window root shots/9d-bench-taken.png
             xdotool mousemove $ax $ay; sleep 0.3; xdotool click 1; sleep 2; import -window root shots/9e-bench-assemble.png
           fi
-          grep -h "TIDE-CI bench" client.log | tail -8 | tee bench.txt
+          grep -h "TIDE-CI table" client.log | tail -12 | tee bench.txt
           xdotool key Escape; sleep 1
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null; true
 

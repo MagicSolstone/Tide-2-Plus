@@ -21,6 +21,7 @@
   ],
   "display_data": {
     "entity": "minecraft:tropical_fish",
+    "roll": 90.0,
     "x": 0.05,
     "y": -0.08
   },

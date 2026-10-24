@@ -98,22 +98,22 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
      */
     private void ciScript() {
         ciTicks++;
-        if (ciTicks == 20) { filter = 5; page = 0; rebuild(); Tide.LOG.info("TIDE-CI table step 1 hooks: {} shown", cells.size()); }
-        else if (ciTicks == 50) {
+        if (ciTicks == 40) { filter = 5; page = 0; rebuild(); Tide.LOG.info("TIDE-CI table step 1 hooks: {} shown", cells.size()); }
+        else if (ciTicks == 100) {
             var row = TackleRecipesMsg.CLIENT.stream().filter(r -> r.result().equals("tide:diamond_hook")).findFirst().orElse(null);
             if (row != null) Tide.NETWORK.sendToServer(new TackleFillMsg(row.id(), false));
             Tide.LOG.info("TIDE-CI table step 2 fill diamond hook ({})", row != null && canMake(row) ? "can make" : "can't make");
-        } else if (ciTicks == 70) {
+        } else if (ciTicks == 160) {
             Tide.LOG.info("TIDE-CI table step 3 result {}", this.menu.getSlot(AnglingCraftMenu.RESULT).getItem());
-        } else if (ciTicks == 90) {
+        } else if (ciTicks == 200) {
             this.slotClicked(this.menu.getSlot(AnglingCraftMenu.RESULT), AnglingCraftMenu.RESULT, 0, net.minecraft.world.inventory.ContainerInput.QUICK_MOVE);
-        } else if (ciTicks == 110) {
+        } else if (ciTicks == 260) {
             Inventory inv = this.minecraft.player.getInventory();
             String made = "none";
             for (int i = 0; i < inv.getContainerSize(); i++)
                 if (inv.getItem(i).is(item("tide:diamond_hook"))) made = String.valueOf(com.li64.tide.data.rods.RodEffects.baseHook(inv.getItem(i)));
             Tide.LOG.info("TIDE-CI table step 4 diamond hook in inventory, base hook {}", made);
-        } else if (ciTicks == 130) {
+        } else if (ciTicks == 320) {
             ciScriptDone = true;
             Tide.LOG.info("TIDE-CI table step 5 assemble tab");
             Tide.NETWORK.sendToServer(new BenchTabMsg(false));

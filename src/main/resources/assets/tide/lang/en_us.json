@@ -46,7 +46,7 @@
   "commands.journal.unlock.already_unlocked": "Fish \"%s\" is already unlocked",
   "commands.journal.unlock.fail": "\"%s\" is not in the fishing journal",
   "commands.journal.unlock_all": "Unlocked all fish for %s",
-  "container.tide.angling_table": "Upgrade Rod",
+  "container.tide.angling_table": "Assemble Rod",
   "container.tide.loot_crate": "Crate",
   "curios.identifier.informational": "Informational",
   "entity.tide.abyss_angler": "Abyss Angler",

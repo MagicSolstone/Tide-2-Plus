@@ -35,6 +35,7 @@ public class AnglingCraftMenu extends AbstractContainerMenu {
     private final TransientCraftingContainer grid = new TransientCraftingContainer(this, 3, 3);
     private final ResultContainer result = new ResultContainer();
     private int resultCount = 0;
+    private ItemStack lastResult = ItemStack.EMPTY;
 
     public AnglingCraftMenu(int id, Inventory inventory) {
         this(id, inventory, ContainerLevelAccess.NULL);
@@ -82,6 +83,7 @@ public class AnglingCraftMenu extends AbstractContainerMenu {
         var m = TackleRecipes.match(this.grid.asPositionedCraftInput().input(), this.player.level());
         ItemStack out = m == null ? ItemStack.EMPTY : m.result().copy();
         this.resultCount = out.getCount();
+        this.lastResult = out.copy();
         this.result.setItem(0, out);
         this.setRemoteSlot(RESULT, out);
         if (this.player instanceof ServerPlayer sp)
@@ -125,7 +127,7 @@ public class AnglingCraftMenu extends AbstractContainerMenu {
         @Override
         public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
             if (!player.level().isClientSide()) {
-                ItemStack made = stack.copyWithCount(Math.max(1, resultCount));
+                ItemStack made = lastResult.isEmpty() ? stack.copy() : lastResult.copy();      // (a shift-click hands over an emptied stack)
                 made.onCraftedBy(player, made.getCount());
                 player.awardStat(net.minecraft.stats.Stats.ITEM_CRAFTED.get(made.getItem()), made.getCount());
                 if (Tide.CI) Tide.LOG.info("TIDE-CI table made {} (base hook {})", net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(made.getItem()),

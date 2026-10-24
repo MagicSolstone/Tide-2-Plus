@@ -1,6 +1,20 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "tide:item/luminescent_jellyfish"
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "tide:fish_quality",
+    "cases": [
+      {
+        "when": 0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/poor/luminescent_jellyfish"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "tide:item/luminescent_jellyfish"
+    }
   }
 }

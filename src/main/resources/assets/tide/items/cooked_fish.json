@@ -2,614 +2,1237 @@
   "model": {
     "type": "minecraft:select",
     "property": "minecraft:component",
-    "component": "tide:cooked_from",
+    "component": "tide:fish_quality",
     "cases": [
       {
-        "when": "abyss_angler",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/abyss_angler"
-        }
-      },
-      {
-        "when": "alpha_fish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/alpha_fish"
-        }
-      },
-      {
-        "when": "amber_rockfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/amber_rockfish"
-        }
-      },
-      {
-        "when": "anchovy",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/anchovy"
-        }
-      },
-      {
-        "when": "angelfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/angelfish"
-        }
-      },
-      {
-        "when": "anglerfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/anglerfish"
-        }
-      },
-      {
-        "when": "arapaima",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/arapaima"
-        }
-      },
-      {
-        "when": "bedrock_bug",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/bedrock_bug"
-        }
-      },
-      {
-        "when": "bedrock_tetra",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/bedrock_tetra"
-        }
-      },
-      {
-        "when": "black_crappie",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/black_crappie"
-        }
-      },
-      {
-        "when": "blossom_bass",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/blossom_bass"
-        }
-      },
-      {
-        "when": "blue_neonfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/blue_neonfish"
-        }
-      },
-      {
-        "when": "bluegill",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/bluegill"
-        }
-      },
-      {
-        "when": "brook_trout",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/brook_trout"
-        }
-      },
-      {
-        "when": "bull_shark",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/bull_shark"
-        }
-      },
-      {
-        "when": "carp",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/carp"
-        }
-      },
-      {
-        "when": "catfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/catfish"
-        }
-      },
-      {
-        "when": "cave_crawler",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/cave_crawler"
-        }
-      },
-      {
-        "when": "cave_eel",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/cave_eel"
-        }
-      },
-      {
-        "when": "chasm_eel",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/chasm_eel"
-        }
-      },
-      {
-        "when": "coelacanth",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/coelacanth"
-        }
-      },
-      {
-        "when": "crystal_shrimp",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/crystal_shrimp"
-        }
-      },
-      {
-        "when": "crystalline_carp",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/crystalline_carp"
-        }
-      },
-      {
-        "when": "darkness_eater",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/darkness_eater"
-        }
-      },
-      {
-        "when": "deep_blue",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/deep_blue"
-        }
-      },
-      {
-        "when": "deep_grouper",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/deep_grouper"
-        }
-      },
-      {
-        "when": "devils_hole_pupfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/devils_hole_pupfish"
-        }
-      },
-      {
-        "when": "dragon_fish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/dragon_fish"
-        }
-      },
-      {
-        "when": "dripstone_darter",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/dripstone_darter"
-        }
-      },
-      {
-        "when": "dutchman_sock",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/dutchman_sock"
-        }
-      },
-      {
-        "when": "echo_snapper",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/echo_snapper"
-        }
-      },
-      {
-        "when": "elytrout",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/elytrout"
-        }
-      },
-      {
-        "when": "ender_glider",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/ender_glider"
-        }
-      },
-      {
-        "when": "enderfin",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/enderfin"
-        }
-      },
-      {
-        "when": "endergazer",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/endergazer"
-        }
-      },
-      {
-        "when": "flounder",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/flounder"
-        }
-      },
-      {
-        "when": "frostbite_flounder",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/frostbite_flounder"
-        }
-      },
-      {
-        "when": "gilded_minnow",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/gilded_minnow"
-        }
-      },
-      {
-        "when": "glowfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/glowfish"
-        }
-      },
-      {
-        "when": "great_white_shark",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/great_white_shark"
-        }
-      },
-      {
-        "when": "guppy",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/guppy"
-        }
-      },
-      {
-        "when": "incandescent_larva",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/incandescent_larva"
-        }
-      },
-      {
-        "when": "iron_tetra",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/iron_tetra"
-        }
-      },
-      {
-        "when": "judgment_fish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/judgment_fish"
-        }
-      },
-      {
-        "when": "lapis_lanternfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/lapis_lanternfish"
-        }
-      },
-      {
-        "when": "largemouth_bass",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/largemouth_bass"
-        }
-      },
-      {
-        "when": "luminescent_jellyfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/luminescent_jellyfish"
-        }
-      },
-      {
-        "when": "mackerel",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/mackerel"
-        }
-      },
-      {
-        "when": "mahi_mahi",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/mahi_mahi"
-        }
-      },
-      {
-        "when": "manta_ray",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/manta_ray"
-        }
-      },
-      {
-        "when": "mantyvern",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/mantyvern"
-        }
-      },
-      {
-        "when": "marstilus",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/marstilus"
-        }
-      },
-      {
-        "when": "midas_fish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/midas_fish"
-        }
-      },
-      {
-        "when": "mirage_catfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/mirage_catfish"
-        }
-      },
-      {
-        "when": "mooneye",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/mooneye"
-        }
-      },
-      {
-        "when": "nephrosilu",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/nephrosilu"
-        }
-      },
-      {
-        "when": "neptune_koi",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/neptune_koi"
-        }
-      },
-      {
-        "when": "ocean_perch",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/ocean_perch"
-        }
-      },
-      {
-        "when": "pale_clubfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/pale_clubfish"
-        }
-      },
-      {
-        "when": "pentapus",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/pentapus"
-        }
-      },
-      {
-        "when": "pike",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/pike"
-        }
-      },
-      {
-        "when": "pluto_snail",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/pluto_snail"
-        }
-      },
-      {
-        "when": "rainbow_trout",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/rainbow_trout"
-        }
-      },
-      {
-        "when": "red_40",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/red_40"
-        }
-      },
-      {
-        "when": "red_snapper",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/red_snapper"
-        }
-      },
-      {
-        "when": "sailfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/sailfish"
-        }
-      },
-      {
-        "when": "sand_tiger_shark",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/sand_tiger_shark"
-        }
-      },
-      {
-        "when": "saturn_cuttlefish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/saturn_cuttlefish"
-        }
-      },
-      {
-        "when": "shadow_shark",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/shadow_shark"
-        }
-      },
-      {
-        "when": "shadow_snapper",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/shadow_snapper"
-        }
-      },
-      {
-        "when": "sleepy_carp",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/sleepy_carp"
-        }
-      },
-      {
-        "when": "slimy_salmon",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/slimy_salmon"
-        }
-      },
-      {
-        "when": "smallmouth_bass",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/smallmouth_bass"
-        }
-      },
-      {
-        "when": "snatcher_squid",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/snatcher_squid"
-        }
-      },
-      {
-        "when": "snook",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/snook"
-        }
-      },
-      {
-        "when": "spore_stalker",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/spore_stalker"
-        }
-      },
-      {
-        "when": "sturgeon",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/sturgeon"
-        }
-      },
-      {
-        "when": "sun_emblem",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/sun_emblem"
-        }
-      },
-      {
-        "when": "swordfish",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/swordfish"
-        }
-      },
-      {
-        "when": "uranias_pisces",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/uranias_pisces"
-        }
-      },
-      {
-        "when": "vengeance",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/vengeance"
-        }
-      },
-      {
-        "when": "violet_carp",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/violet_carp"
-        }
-      },
-      {
-        "when": "walleye",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/walleye"
-        }
-      },
-      {
-        "when": "white_crappie",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/white_crappie"
-        }
-      },
-      {
-        "when": "windbass",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/windbass"
-        }
-      },
-      {
-        "when": "yellow_perch",
-        "model": {
-          "type": "minecraft:model",
-          "model": "tide:item/cooked/yellow_perch"
+        "when": 0,
+        "model": {
+          "type": "minecraft:select",
+          "property": "minecraft:component",
+          "component": "tide:cooked_from",
+          "cases": [
+            {
+              "when": "abyss_angler",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/abyss_angler"
+              }
+            },
+            {
+              "when": "alpha_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/alpha_fish"
+              }
+            },
+            {
+              "when": "amber_rockfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/amber_rockfish"
+              }
+            },
+            {
+              "when": "anchovy",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/anchovy"
+              }
+            },
+            {
+              "when": "angelfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/angelfish"
+              }
+            },
+            {
+              "when": "anglerfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/anglerfish"
+              }
+            },
+            {
+              "when": "arapaima",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/arapaima"
+              }
+            },
+            {
+              "when": "bedrock_bug",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/bedrock_bug"
+              }
+            },
+            {
+              "when": "bedrock_tetra",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/bedrock_tetra"
+              }
+            },
+            {
+              "when": "black_crappie",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/black_crappie"
+              }
+            },
+            {
+              "when": "blossom_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/blossom_bass"
+              }
+            },
+            {
+              "when": "blue_neonfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/blue_neonfish"
+              }
+            },
+            {
+              "when": "bluegill",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/bluegill"
+              }
+            },
+            {
+              "when": "brook_trout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/brook_trout"
+              }
+            },
+            {
+              "when": "bull_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/bull_shark"
+              }
+            },
+            {
+              "when": "carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/carp"
+              }
+            },
+            {
+              "when": "catfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/catfish"
+              }
+            },
+            {
+              "when": "cave_crawler",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/cave_crawler"
+              }
+            },
+            {
+              "when": "cave_eel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/cave_eel"
+              }
+            },
+            {
+              "when": "chasm_eel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/chasm_eel"
+              }
+            },
+            {
+              "when": "coelacanth",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/coelacanth"
+              }
+            },
+            {
+              "when": "crystal_shrimp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/crystal_shrimp"
+              }
+            },
+            {
+              "when": "crystalline_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/crystalline_carp"
+              }
+            },
+            {
+              "when": "darkness_eater",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/darkness_eater"
+              }
+            },
+            {
+              "when": "deep_blue",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/deep_blue"
+              }
+            },
+            {
+              "when": "deep_grouper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/deep_grouper"
+              }
+            },
+            {
+              "when": "devils_hole_pupfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/devils_hole_pupfish"
+              }
+            },
+            {
+              "when": "dragon_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/dragon_fish"
+              }
+            },
+            {
+              "when": "dripstone_darter",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/dripstone_darter"
+              }
+            },
+            {
+              "when": "dutchman_sock",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/dutchman_sock"
+              }
+            },
+            {
+              "when": "echo_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/echo_snapper"
+              }
+            },
+            {
+              "when": "elytrout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/elytrout"
+              }
+            },
+            {
+              "when": "ender_glider",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/ender_glider"
+              }
+            },
+            {
+              "when": "enderfin",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/enderfin"
+              }
+            },
+            {
+              "when": "endergazer",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/endergazer"
+              }
+            },
+            {
+              "when": "flounder",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/flounder"
+              }
+            },
+            {
+              "when": "frostbite_flounder",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/frostbite_flounder"
+              }
+            },
+            {
+              "when": "gilded_minnow",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/gilded_minnow"
+              }
+            },
+            {
+              "when": "glowfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/glowfish"
+              }
+            },
+            {
+              "when": "great_white_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/great_white_shark"
+              }
+            },
+            {
+              "when": "guppy",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/guppy"
+              }
+            },
+            {
+              "when": "incandescent_larva",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/incandescent_larva"
+              }
+            },
+            {
+              "when": "iron_tetra",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/iron_tetra"
+              }
+            },
+            {
+              "when": "judgment_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/judgment_fish"
+              }
+            },
+            {
+              "when": "lapis_lanternfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/lapis_lanternfish"
+              }
+            },
+            {
+              "when": "largemouth_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/largemouth_bass"
+              }
+            },
+            {
+              "when": "luminescent_jellyfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/luminescent_jellyfish"
+              }
+            },
+            {
+              "when": "mackerel",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/mackerel"
+              }
+            },
+            {
+              "when": "mahi_mahi",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/mahi_mahi"
+              }
+            },
+            {
+              "when": "manta_ray",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/manta_ray"
+              }
+            },
+            {
+              "when": "mantyvern",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/mantyvern"
+              }
+            },
+            {
+              "when": "marstilus",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/marstilus"
+              }
+            },
+            {
+              "when": "midas_fish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/midas_fish"
+              }
+            },
+            {
+              "when": "mirage_catfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/mirage_catfish"
+              }
+            },
+            {
+              "when": "mooneye",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/mooneye"
+              }
+            },
+            {
+              "when": "nephrosilu",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/nephrosilu"
+              }
+            },
+            {
+              "when": "neptune_koi",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/neptune_koi"
+              }
+            },
+            {
+              "when": "ocean_perch",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/ocean_perch"
+              }
+            },
+            {
+              "when": "pale_clubfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/pale_clubfish"
+              }
+            },
+            {
+              "when": "pentapus",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/pentapus"
+              }
+            },
+            {
+              "when": "pike",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/pike"
+              }
+            },
+            {
+              "when": "pluto_snail",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/pluto_snail"
+              }
+            },
+            {
+              "when": "rainbow_trout",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/rainbow_trout"
+              }
+            },
+            {
+              "when": "red_40",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/red_40"
+              }
+            },
+            {
+              "when": "red_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/red_snapper"
+              }
+            },
+            {
+              "when": "sailfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/sailfish"
+              }
+            },
+            {
+              "when": "sand_tiger_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/sand_tiger_shark"
+              }
+            },
+            {
+              "when": "saturn_cuttlefish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/saturn_cuttlefish"
+              }
+            },
+            {
+              "when": "shadow_shark",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/shadow_shark"
+              }
+            },
+            {
+              "when": "shadow_snapper",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/shadow_snapper"
+              }
+            },
+            {
+              "when": "sleepy_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/sleepy_carp"
+              }
+            },
+            {
+              "when": "slimy_salmon",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/slimy_salmon"
+              }
+            },
+            {
+              "when": "smallmouth_bass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/smallmouth_bass"
+              }
+            },
+            {
+              "when": "snatcher_squid",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/snatcher_squid"
+              }
+            },
+            {
+              "when": "snook",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/snook"
+              }
+            },
+            {
+              "when": "spore_stalker",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/spore_stalker"
+              }
+            },
+            {
+              "when": "sturgeon",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/sturgeon"
+              }
+            },
+            {
+              "when": "sun_emblem",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/sun_emblem"
+              }
+            },
+            {
+              "when": "swordfish",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/swordfish"
+              }
+            },
+            {
+              "when": "uranias_pisces",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/uranias_pisces"
+              }
+            },
+            {
+              "when": "vengeance",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/vengeance"
+              }
+            },
+            {
+              "when": "violet_carp",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/violet_carp"
+              }
+            },
+            {
+              "when": "walleye",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/walleye"
+              }
+            },
+            {
+              "when": "white_crappie",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/white_crappie"
+              }
+            },
+            {
+              "when": "windbass",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/windbass"
+              }
+            },
+            {
+              "when": "yellow_perch",
+              "model": {
+                "type": "minecraft:model",
+                "model": "tide:item/poor/cooked/yellow_perch"
+              }
+            }
+          ],
+          "fallback": {
+            "type": "minecraft:model",
+            "model": "tide:item/poor/cooked_fish"
+          }
         }
       }
     ],
     "fallback": {
-      "type": "minecraft:model",
-      "model": "tide:item/cooked_fish"
+      "type": "minecraft:select",
+      "property": "minecraft:component",
+      "component": "tide:cooked_from",
+      "cases": [
+        {
+          "when": "abyss_angler",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/abyss_angler"
+          }
+        },
+        {
+          "when": "alpha_fish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/alpha_fish"
+          }
+        },
+        {
+          "when": "amber_rockfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/amber_rockfish"
+          }
+        },
+        {
+          "when": "anchovy",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/anchovy"
+          }
+        },
+        {
+          "when": "angelfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/angelfish"
+          }
+        },
+        {
+          "when": "anglerfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/anglerfish"
+          }
+        },
+        {
+          "when": "arapaima",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/arapaima"
+          }
+        },
+        {
+          "when": "bedrock_bug",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/bedrock_bug"
+          }
+        },
+        {
+          "when": "bedrock_tetra",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/bedrock_tetra"
+          }
+        },
+        {
+          "when": "black_crappie",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/black_crappie"
+          }
+        },
+        {
+          "when": "blossom_bass",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/blossom_bass"
+          }
+        },
+        {
+          "when": "blue_neonfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/blue_neonfish"
+          }
+        },
+        {
+          "when": "bluegill",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/bluegill"
+          }
+        },
+        {
+          "when": "brook_trout",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/brook_trout"
+          }
+        },
+        {
+          "when": "bull_shark",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/bull_shark"
+          }
+        },
+        {
+          "when": "carp",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/carp"
+          }
+        },
+        {
+          "when": "catfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/catfish"
+          }
+        },
+        {
+          "when": "cave_crawler",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/cave_crawler"
+          }
+        },
+        {
+          "when": "cave_eel",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/cave_eel"
+          }
+        },
+        {
+          "when": "chasm_eel",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/chasm_eel"
+          }
+        },
+        {
+          "when": "coelacanth",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/coelacanth"
+          }
+        },
+        {
+          "when": "crystal_shrimp",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/crystal_shrimp"
+          }
+        },
+        {
+          "when": "crystalline_carp",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/crystalline_carp"
+          }
+        },
+        {
+          "when": "darkness_eater",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/darkness_eater"
+          }
+        },
+        {
+          "when": "deep_blue",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/deep_blue"
+          }
+        },
+        {
+          "when": "deep_grouper",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/deep_grouper"
+          }
+        },
+        {
+          "when": "devils_hole_pupfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/devils_hole_pupfish"
+          }
+        },
+        {
+          "when": "dragon_fish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/dragon_fish"
+          }
+        },
+        {
+          "when": "dripstone_darter",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/dripstone_darter"
+          }
+        },
+        {
+          "when": "dutchman_sock",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/dutchman_sock"
+          }
+        },
+        {
+          "when": "echo_snapper",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/echo_snapper"
+          }
+        },
+        {
+          "when": "elytrout",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/elytrout"
+          }
+        },
+        {
+          "when": "ender_glider",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/ender_glider"
+          }
+        },
+        {
+          "when": "enderfin",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/enderfin"
+          }
+        },
+        {
+          "when": "endergazer",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/endergazer"
+          }
+        },
+        {
+          "when": "flounder",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/flounder"
+          }
+        },
+        {
+          "when": "frostbite_flounder",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/frostbite_flounder"
+          }
+        },
+        {
+          "when": "gilded_minnow",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/gilded_minnow"
+          }
+        },
+        {
+          "when": "glowfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/glowfish"
+          }
+        },
+        {
+          "when": "great_white_shark",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/great_white_shark"
+          }
+        },
+        {
+          "when": "guppy",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/guppy"
+          }
+        },
+        {
+          "when": "incandescent_larva",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/incandescent_larva"
+          }
+        },
+        {
+          "when": "iron_tetra",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/iron_tetra"
+          }
+        },
+        {
+          "when": "judgment_fish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/judgment_fish"
+          }
+        },
+        {
+          "when": "lapis_lanternfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/lapis_lanternfish"
+          }
+        },
+        {
+          "when": "largemouth_bass",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/largemouth_bass"
+          }
+        },
+        {
+          "when": "luminescent_jellyfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/luminescent_jellyfish"
+          }
+        },
+        {
+          "when": "mackerel",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/mackerel"
+          }
+        },
+        {
+          "when": "mahi_mahi",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/mahi_mahi"
+          }
+        },
+        {
+          "when": "manta_ray",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/manta_ray"
+          }
+        },
+        {
+          "when": "mantyvern",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/mantyvern"
+          }
+        },
+        {
+          "when": "marstilus",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/marstilus"
+          }
+        },
+        {
+          "when": "midas_fish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/midas_fish"
+          }
+        },
+        {
+          "when": "mirage_catfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/mirage_catfish"
+          }
+        },
+        {
+          "when": "mooneye",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/mooneye"
+          }
+        },
+        {
+          "when": "nephrosilu",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/nephrosilu"
+          }
+        },
+        {
+          "when": "neptune_koi",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/neptune_koi"
+          }
+        },
+        {
+          "when": "ocean_perch",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/ocean_perch"
+          }
+        },
+        {
+          "when": "pale_clubfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/pale_clubfish"
+          }
+        },
+        {
+          "when": "pentapus",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/pentapus"
+          }
+        },
+        {
+          "when": "pike",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/pike"
+          }
+        },
+        {
+          "when": "pluto_snail",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/pluto_snail"
+          }
+        },
+        {
+          "when": "rainbow_trout",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/rainbow_trout"
+          }
+        },
+        {
+          "when": "red_40",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/red_40"
+          }
+        },
+        {
+          "when": "red_snapper",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/red_snapper"
+          }
+        },
+        {
+          "when": "sailfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/sailfish"
+          }
+        },
+        {
+          "when": "sand_tiger_shark",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/sand_tiger_shark"
+          }
+        },
+        {
+          "when": "saturn_cuttlefish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/saturn_cuttlefish"
+          }
+        },
+        {
+          "when": "shadow_shark",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/shadow_shark"
+          }
+        },
+        {
+          "when": "shadow_snapper",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/shadow_snapper"
+          }
+        },
+        {
+          "when": "sleepy_carp",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/sleepy_carp"
+          }
+        },
+        {
+          "when": "slimy_salmon",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/slimy_salmon"
+          }
+        },
+        {
+          "when": "smallmouth_bass",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/smallmouth_bass"
+          }
+        },
+        {
+          "when": "snatcher_squid",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/snatcher_squid"
+          }
+        },
+        {
+          "when": "snook",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/snook"
+          }
+        },
+        {
+          "when": "spore_stalker",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/spore_stalker"
+          }
+        },
+        {
+          "when": "sturgeon",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/sturgeon"
+          }
+        },
+        {
+          "when": "sun_emblem",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/sun_emblem"
+          }
+        },
+        {
+          "when": "swordfish",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/swordfish"
+          }
+        },
+        {
+          "when": "uranias_pisces",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/uranias_pisces"
+          }
+        },
+        {
+          "when": "vengeance",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/vengeance"
+          }
+        },
+        {
+          "when": "violet_carp",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/violet_carp"
+          }
+        },
+        {
+          "when": "walleye",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/walleye"
+          }
+        },
+        {
+          "when": "white_crappie",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/white_crappie"
+          }
+        },
+        {
+          "when": "windbass",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/windbass"
+          }
+        },
+        {
+          "when": "yellow_perch",
+          "model": {
+            "type": "minecraft:model",
+            "model": "tide:item/cooked/yellow_perch"
+          }
+        }
+      ],
+      "fallback": {
+        "type": "minecraft:model",
+        "model": "tide:item/cooked_fish"
+      }
     }
   }
 }

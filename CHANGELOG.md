@@ -1,3 +1,11 @@
+## Tide+ 1.0.12 - 10/24/26
+
+Poor fish look poor. Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.11).
+
+## Changes
+- **Poor fish look dull.** A Poor fish is drawn washed-out (raw), and a cooked Poor fish has a faint sickly green, so Poor and Average no longer look the same. Every Tide fish and all cooked fish have their Poor look; Minecraft's own cod, salmon, pufferfish and tropical fish don't yet.
+- **The quality dog-ear is a little smaller** (4 pixels instead of 5), and only Good and up get one: Poor has its own look now, Average stays plain.
+
 ## Tide+ 1.0.11 - 10/24/26
 
 Every cooked fish looks like its fish, and the quality mark moves out of the way. Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.10).

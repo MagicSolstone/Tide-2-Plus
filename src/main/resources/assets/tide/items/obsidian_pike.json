@@ -1,6 +1,20 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "tide:item/obsidian_pike"
+    "type": "minecraft:select",
+    "property": "minecraft:component",
+    "component": "tide:fish_quality",
+    "cases": [
+      {
+        "when": 0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "tide:item/poor/obsidian_pike"
+        }
+      }
+    ],
+    "fallback": {
+      "type": "minecraft:model",
+      "model": "tide:item/obsidian_pike"
+    }
   }
 }

@@ -1,7 +1,7 @@
-# Tide+ 1.0.11
+# Tide+ 1.0.12
 
-Every cooked fish looks like its fish, and the quality mark moves out of the way. Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.10).
+Poor fish look poor. Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.11).
 
 ## Changes
-- **Cooked fish for every species.** All 86 fish that cook into a cooked fish now look like that fish, cooked: the same shape and markings in cooked browns, with a browned edge. Only fish cooked from 1.0.10 on remember their species; older cooked fish keep the plain look.
-- **The quality mark is a dog-ear in the top-left corner** instead of a diamond in the top-right. Fish art runs from the bottom-left up to the top-right, so the top-left is empty and the mark no longer covers a fish's face.
+- **Poor fish look dull.** A Poor fish is drawn washed-out (raw), and a cooked Poor fish has a faint sickly green, so Poor and Average no longer look the same. Every Tide fish and all cooked fish have their Poor look; Minecraft's own cod, salmon, pufferfish and tropical fish don't yet.
+- **The quality dog-ear is a little smaller** (4 pixels instead of 5), and only Good and up get one: Poor has its own look now, Average stays plain.

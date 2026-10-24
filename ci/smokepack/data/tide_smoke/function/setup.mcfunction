@@ -1,5 +1,6 @@
 # An open pool in front of the player with Tide fish in it, and Tide items in the hotbar.
 scoreboard objectives add tide_displays trigger
+scoreboard objectives add tide_side trigger
 tag @s add tide_smoke
 time set noon
 weather clear

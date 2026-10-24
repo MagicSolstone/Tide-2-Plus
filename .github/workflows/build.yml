@@ -186,7 +186,7 @@ jobs:
           xdotool click 3
           sleep 2; import -window root shots/m3-caught.png
           sleep 6; import -window root shots/m4-after.png
-          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_displays"; sleep 0.5; xdotool key Return; sleep 4; xdotool key F1; sleep 1; import -window root shots/m5-displays-fa.png; xdotool key F1
+          xdotool key t; sleep 1; xdotool type --delay 40 "/trigger tide_displays"; sleep 0.5; xdotool key Return; sleep 4; xdotool key F1; sleep 1; import -window root shots/m5-displays-fa.png; sleep 0.7; import -window root shots/m5b-displays-fa.png; xdotool key F1
           echo "--- server"; grep -nE "TIDE-CI|\[Tide catch\]|reached fishing|lost connection|left the game|Exception|ERROR" server-mp.log | tail -20
           echo "--- client"; grep -nE "TIDE-CI|Exception|ERROR|Disconnect|disconnect|lost" client-mp.log | grep -v "OpenGL\|GLX\|flite\|narrator\|OpenAL\|SoundSystem\|Realms\|sessionserver" | tail -20
           pkill -f 'net.fabricmc' ; sleep 3; kill $spid $cpid 2>/dev/null; rm -rf run/mods run/resourcepacks; sed -i '/^resourcePacks:/d' run/options.txt; true

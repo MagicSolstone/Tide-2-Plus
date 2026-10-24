@@ -173,4 +173,22 @@ public class FishDisplayBlock extends BaseEntityBlock implements SimpleWaterlogg
         return super.getCloneItemStack(level, pos, state, includeData);
     }
 
+
+    /** A Trophy on the wall gives off the odd purple sparkle; a Mythic, gold ones. */
+    @Override
+    public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, net.minecraft.util.RandomSource random) {
+        if (!(level.getBlockEntity(pos) instanceof FishDisplayBlockEntity display) || display.isEmpty()) return;
+        int q = com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(display.getDisplayStack(), -1);
+        boolean mythic = q == com.li64.tide.data.angler.CatchQuality.MYTHIC.ordinal(), trophy = q == com.li64.tide.data.angler.CatchQuality.TROPHY.ordinal();
+        if (!mythic && !(trophy && random.nextInt(3) == 0)) return;
+        Direction facing = state.getValue(FACING);
+        for (int i = 0; i < (mythic ? 2 : 1); i++) {
+            double x = pos.getX() + 0.5 + facing.getStepX() * 0.35 + (random.nextDouble() - 0.5) * (facing.getStepX() == 0 ? 1.1 : 0.3);
+            double y = pos.getY() + 0.2 + random.nextDouble() * 0.6;
+            double z = pos.getZ() + 0.5 + facing.getStepZ() * 0.35 + (random.nextDouble() - 0.5) * (facing.getStepZ() == 0 ? 1.1 : 0.3);
+            level.addParticle(mythic ? net.minecraft.core.particles.ParticleTypes.WAX_ON : net.minecraft.core.particles.ParticleTypes.WITCH,
+                    x, y, z, 0, mythic ? 0.02 : 0, 0);
+        }
+    }
+
 }

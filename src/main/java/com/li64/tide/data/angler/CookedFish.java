@@ -42,6 +42,7 @@ public final class CookedFish {
         CatchQuality q = CatchQuality.byId(qid);
         FishRarity rarity = FishData.get(raw).map(d -> d.profile().rarity()).orElse(FishRarity.COMMON);
         TideItemData.FISH_QUALITY.set(cooked, q.ordinal());
+        if (q == CatchQuality.MYTHIC) cooked.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);
 
         // "Cooked Mythic Largemouth Bass" (the species, not just "Cooked Fish")
         Component species = Component.translatable(raw.getItem().getDescriptionId());

@@ -202,12 +202,21 @@ public enum CatchQuality {
             TideItemData.FISH_WEIGHT.set(stack, grams);
         }
         mark(stack, q);
+        // a caught tropical fish is one of the game's named kinds (clownfish, blue tang...), so it looks like that on a display
+        if (stack.is(net.minecraft.world.item.Items.TROPICAL_FISH) && !stack.has(DataComponents.TROPICAL_FISH_PATTERN)) {
+            var common = net.minecraft.world.entity.animal.fish.TropicalFish.COMMON_VARIANTS;
+            var v = common.get(rng.nextInt(common.size()));
+            stack.set(DataComponents.TROPICAL_FISH_PATTERN, v.pattern());
+            stack.set(DataComponents.TROPICAL_FISH_BASE_COLOR, v.baseColor());
+            stack.set(DataComponents.TROPICAL_FISH_PATTERN_COLOR, v.patternColor());
+        }
         if (q.ordinal() >= TROPHY.ordinal()) announce(player, stack, q);
     }
 
     /** Quality onto a fish item: the component, and the name ("Good Bluegill", coloured; Average keeps the plain name). */
     public static void mark(ItemStack stack, CatchQuality q) {
         TideItemData.FISH_QUALITY.set(stack, q.ordinal());
+        if (q == MYTHIC) stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true);       // a Mythic shimmers
         if (q != AVERAGE) {
             stack.set(DataComponents.ITEM_NAME, Component.translatable("item.tide.quality_name",
                     Component.literal(q.label), Component.translatable(stack.getItem().getDescriptionId()))

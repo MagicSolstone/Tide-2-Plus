@@ -36,4 +36,4 @@ item replace entity @s armor.head with tide:angler_hat
 item replace entity @s armor.chest with tide:fishing_vest
 item replace entity @s armor.legs with tide:waders
 item replace entity @s armor.feet with tide:wading_boots
-item replace entity @s weapon.offhand with tide:bluegill[tide:fish_quality=0]
+item replace entity @s weapon.offhand with minecraft:salmon[tide:fish_quality=0]

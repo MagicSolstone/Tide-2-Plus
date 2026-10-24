@@ -1,7 +1,9 @@
 """Poor fish look poor: a dulled version of every fish (raw), and of every cooked fish with a faint sickly green.
 
-    python3 tools/poor_art.py      textures in textures/item/poor/ (raw) and poor/cooked/ (cooked), their models, and
-                                   item definitions that pick them when tide:fish_quality is 0 (Poor)
+    python3 tools/poor_art.py                 textures in textures/item/poor/ (raw) and poor/cooked/ (cooked), their models,
+                                              and item definitions that pick them when tide:fish_quality is 0 (Poor)
+    python3 tools/poor_art.py --vanilla JAR   the same for Minecraft's cod, salmon, tropical fish and pufferfish (and cooked
+                                              cod and salmon), from the textures in the Minecraft jar
 
 Run after tools/cooked_art.py (it rewrites the cooked fish's item definitions, which this then wraps).
 """
@@ -101,5 +103,29 @@ def main() -> None:
     print(len(fish), 'poor raw fish,', len(cooked), 'poor cooked fish')
 
 
+VANILLA = {"cod": False, "salmon": False, "tropical_fish": False, "pufferfish": False, "cooked_cod": True, "cooked_salmon": True}
+
+
+def vanilla(jar: str) -> None:
+    import io
+    import zipfile
+    mc_items = os.path.join(os.path.dirname(__file__), '..', 'src/main/resources/assets/minecraft/items/')
+    os.makedirs(mc_items, exist_ok=True)
+    os.makedirs(T + 'poor/minecraft', exist_ok=True)
+    with zipfile.ZipFile(jar) as z:
+        for n, cooked in VANILLA.items():
+            img = Image.open(io.BytesIO(z.read(f'assets/minecraft/textures/item/{n}.png')))
+            dull(img, cooked).save(T + 'poor/minecraft/' + n + '.png')
+            normal = json.loads(z.read(f'assets/minecraft/items/{n}.json'))['model']
+            poor = {"type": "minecraft:model", "model": model('poor/minecraft/' + n, 'poor/minecraft/' + n)}
+            with open(mc_items + n + '.json', 'w') as f:
+                json.dump({"model": poor_select(poor, normal)}, f, indent=2)
+    print(len(VANILLA), 'poor vanilla fish')
+
+
 if __name__ == '__main__':
-    main()
+    import sys
+    if sys.argv[1:2] == ['--vanilla']:
+        vanilla(sys.argv[2])
+    else:
+        main()

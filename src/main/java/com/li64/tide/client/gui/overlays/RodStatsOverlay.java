@@ -90,7 +90,15 @@ public final class RodStatsOverlay {
         int w = Math.max(labelW + 10 + valueW, Math.max(font.width(title), Math.max(on == null ? 0 : Math.min(font.width(on), 170), off == null ? 0 : Math.min(font.width(off), 170))));
         List<net.minecraft.util.FormattedCharSequence> onLines = on == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(on), Math.max(w, 120));
         List<net.minecraft.util.FormattedCharSequence> offLines = off == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(off), Math.max(w, 120));
-        int h = 12 + rows.size() * 10 + (onLines.size() + offLines.size()) * 10 + (onLines.isEmpty() && offLines.isEmpty() ? 0 : 3);
+        // progress to the next level: a thin bar under the title that fills as you catch (and glides when XP lands)
+        boolean maxed = own >= Angler.MAX_LEVEL;
+        long lo = Angler.xpForLevel(own), hi = maxed ? lo : Angler.xpForLevel(own + 1);
+        double target = maxed ? 1.0 : Math.max(0, Math.min(1, (ClientAngler.xp - lo) / (double) Math.max(1, hi - lo)));
+        if (own != shownLevel) { shownLevel = own; shownFill = target; }
+        shownFill += (target - shownFill) * 0.12;
+        if (Math.abs(target - shownFill) < 0.002) shownFill = target;
+        String pctText = maxed ? "max" : Math.round(target * 100) + "%";
+        int h = 17 + rows.size() * 10 + (onLines.size() + offLines.size()) * 10 + (onLines.isEmpty() && offLines.isEmpty() ? 0 : 3);
         int sw = g.guiWidth(), sh = g.guiHeight();
         float px = sw - (w + 10) * s - 4, py = (sh - (h + 8) * s) / 2f;
 
@@ -101,7 +109,11 @@ public final class RodStatsOverlay {
         g.fill(0, 0, 2, h + 8, 0xFF4FA3FF);
         int y = 5;
         Gui26.text(g, font, title, 6, y, HEAD, true);
-        y += 12;
+        Gui26.text(g, font, pctText, 6 + w - font.width(pctText), y, DIM, true);
+        y += 11;
+        g.fill(6, y, 6 + w, y + 3, 0x60FFFFFF);
+        g.fill(6, y, 6 + (int) Math.round(w * shownFill), y + 3, 0xFFFFC83A);
+        y += 6;
         for (Row r : rows) {
             Gui26.text(g, font, r.label(), 6, y, TEXT, true);
             Gui26.text(g, font, r.value(), 6 + w - font.width(r.value()), y, r.color(), true);
@@ -117,6 +129,9 @@ public final class RodStatsOverlay {
         }
         g.pose().popMatrix();
     }
+
+    private static int shownLevel = -1;
+    private static double shownFill = 0;
 
     private static Row pct(String label, double v, boolean lowerIsBetter) {
         long n = Math.round(v * 100);

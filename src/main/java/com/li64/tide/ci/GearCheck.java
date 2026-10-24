@@ -90,6 +90,22 @@ public final class GearCheck {
             var parsed = com.google.gson.JsonParser.parseString(guide).getAsJsonObject();
             notes.add("guide: " + parsed.getAsJsonArray("items").size() + " items, " + parsed.getAsJsonArray("rigs").size()
                     + " rigs, " + guide.length() + " characters; first item " + parsed.getAsJsonArray("items").get(0));
+            // a wild fish killed for its drop gets a quality (never above Great) and a weight
+            for (String id : List.of("minecraft:cod", "tide:bluegill")) {
+                ItemStack fish = new ItemStack(BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse(id)));
+                int best = 0;
+                for (int i = 0; i < 400; i++) {
+                    ItemStack f = fish.copy();
+                    com.li64.tide.data.loot.ApplyFishEntityLengthFunction.grade(f, level.getRandom(), 99, 0);
+                    Integer q = com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(f, null);
+                    double g = com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(f, 0.0);
+                    if (q == null || g <= 0) { problem("killed " + id + " has no quality or weight"); break; }
+                    if (q > com.li64.tide.data.angler.CatchQuality.GREAT.ordinal()) { problem("killed " + id + " came out above Great"); break; }
+                    best = Math.max(best, q);
+                }
+                notes.add("killed " + id + ": graded, best of 400 at level 99 = " + com.li64.tide.data.angler.CatchQuality.byId(best).label);
+            }
+
             // what /fishing describe sends Solstone, for a few kinds of item
             for (String id : List.of("tide:golden_hook", "tide:bamboo_fishing_rod", "tide:golden_bait", "minecraft:diamond_sword"))
                 notes.add("describe: " + com.li64.tide.data.commands.FishingCommand.tooltip(

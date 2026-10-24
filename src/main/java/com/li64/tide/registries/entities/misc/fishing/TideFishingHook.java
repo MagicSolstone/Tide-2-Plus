@@ -793,6 +793,8 @@ public class TideFishingHook extends Projectile {
                             // fishing XP (before the journal, so first catches and records count), then the journal
                             boolean newSpecies = TidePlayerData.getOrCreate(serverPlayer).getDataFor(stack.getItem())
                                     .flatMap(f -> f.stats).map(st -> st.getAmountCaught() == 0).orElse(true);
+                            if (com.li64.tide.data.angler.ServerRecords.onCatch(serverPlayer, stack))
+                                com.li64.tide.data.angler.Angler.markServerRecord(serverPlayer);
                             long gained = com.li64.tide.data.angler.Angler.onFishCaught(serverPlayer, stack, this.wasPerfectCatch,
                                     com.li64.tide.data.rods.RodEffects.of(serverPlayer, this.rod).xp());
                             TideUtils.tryLogCatch(stack, serverPlayer);

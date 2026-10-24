@@ -29,7 +29,7 @@ public class ApplyFishEntityLengthFunction implements LootItemFunction {
 
     @Override
     public @NotNull Set<ContextKey<?>> getReferencedContextParams() {
-        return Set.of(LootContextParams.THIS_ENTITY);
+        return Set.of(LootContextParams.THIS_ENTITY, LootContextParams.LAST_DAMAGE_PLAYER);
     }
 
     @Override
@@ -41,7 +41,33 @@ public class ApplyFishEntityLengthFunction implements LootItemFunction {
         if (entity instanceof FishLengthHolder lengthHolder) {
             TideItemData.FISH_LENGTH.set(stack, lengthHolder.tide$getLength());
             lengthHolder.tide$applyExtras(stack);
+            if (lengthHolder.tide$getQuality() < 0) grade(stack, context, lengthHolder.tide$getLength());
         }
         return stack;
+    }
+
+    /**
+     * A wild fish (never caught on a rod) killed for its drop gets a quality and a weight like a catch, rolled at the
+     * killer's fishing level. Capped at Great: Trophy and Mythic fish come from the rod. No XP or journal entry.
+     */
+    private static void grade(ItemStack stack, LootContext context, double length) {
+        int level = context.getOptional(LootContextParams.LAST_DAMAGE_PLAYER) instanceof net.minecraft.server.level.ServerPlayer p
+                ? com.li64.tide.data.angler.Angler.effectiveLevel(p) : 1;
+        grade(stack, context.getRandom(), level, length);
+    }
+
+    public static void grade(ItemStack stack, net.minecraft.util.RandomSource rng, int level, double length) {
+        if (!com.li64.tide.data.angler.CatchQuality.enabled()) return;
+        var data = FishData.get(stack).orElse(null);
+        if (data == null) return;
+        var q = com.li64.tide.data.angler.CatchQuality.roll(rng, level);
+        if (q.ordinal() > com.li64.tide.data.angler.CatchQuality.GREAT.ordinal()) q = com.li64.tide.data.angler.CatchQuality.GREAT;
+        if (length <= 0 && data.size().isPresent()) {
+            length = q.sampleLength(data.size().get(), rng);
+            TideItemData.FISH_LENGTH.set(stack, length);
+        }
+        if (length > 0) TideItemData.FISH_WEIGHT.set(stack, com.li64.tide.data.angler.FishWeight.grams(
+                net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath(), length, q, rng));
+        com.li64.tide.data.angler.CatchQuality.mark(stack, q);
     }
 }

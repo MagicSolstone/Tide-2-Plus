@@ -342,6 +342,13 @@ public final class Angler {
     }
 
     /** The hook says a second fish came up with this one (shown on the catch banner). */
+    private static final java.util.Set<java.util.UUID> SERVER_RECORD = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** This catch beat the server's record (shown on the card and the chat line). */
+    public static void markServerRecord(ServerPlayer player) {
+        SERVER_RECORD.add(player.getUUID());
+    }
+
     public static void markTwin(ServerPlayer player) {
         TWIN.add(player.getUUID());
     }
@@ -358,7 +365,8 @@ public final class Angler {
         if (len > 0 && grams <= 0) bits.add(FishWeight.imperialLength(len));
         else if (len > 0) bits.add(FishWeight.imperialLength(len) + " long");
         if (extra.contains("new species")) bits.add("New species!");
-        if (extra.contains("new record")) bits.add("New record!");
+        if (SERVER_RECORD.remove(player.getUUID())) bits.add("Server record!");
+        else if (extra.contains("new record")) bits.add("New record!");
         if (TWIN.remove(player.getUUID())) bits.add("Two on the hook!");
         if (perfect) bits.add("Perfect hook");
         java.util.List<String> extras = EXTRAS.remove(player.getUUID());

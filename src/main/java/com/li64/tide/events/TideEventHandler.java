@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class TideEventHandler {
     public static void onPlayerJoinWorld(ServerPlayer player) {
+        com.li64.tide.data.angler.ServerRecords.fillFromJournal(player);
         Tide.NETWORK.sendToPlayer(new SyncDataMsg(), player);
 
         TidePlayerData playerData = TidePlayerData.getOrCreate(player);

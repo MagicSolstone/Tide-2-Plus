@@ -216,10 +216,9 @@ public enum CatchQuality {
     }
 
     private static void announce(ServerPlayer player, ItemStack stack, CatchQuality q) {
-        player.level().playSound(null, player.blockPosition(),
-                q == MYTHIC ? SoundEvents.UI_TOAST_CHALLENGE_COMPLETE : SoundEvents.PLAYER_LEVELUP,
-                SoundSource.PLAYERS, 0.8f, q == MYTHIC ? 1.0f : 1.6f);
         MinecraftServer server = player.level().getServer();
+        if (q == MYTHIC && server != null) ServerRecords.soundForEveryone(server, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 0.8f, 1.0f);   // everyone hears a Mythic
+        else player.level().playSound(null, player.blockPosition(), SoundEvents.PLAYER_LEVELUP, SoundSource.PLAYERS, 0.8f, 1.6f);
         if (server == null) return;
         MutableComponent msg = Component.literal("🎣 ").withStyle(ChatFormatting.AQUA)
                 .append(player.getDisplayName().copy().withStyle(ChatFormatting.WHITE))

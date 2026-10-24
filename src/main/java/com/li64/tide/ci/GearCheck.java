@@ -106,6 +106,24 @@ public final class GearCheck {
                 notes.add("killed " + id + ": graded, best of 400 at level 99 = " + com.li64.tide.data.angler.CatchQuality.byId(best).label);
             }
 
+            // fish crafted into resources give more for a better fish (through the real recipe, so the mixin is tested)
+            {
+                ItemStack tetra = new ItemStack(BuiltInRegistries.ITEM.getValue(net.minecraft.resources.Identifier.parse("tide:iron_tetra")));
+                List<String> got = new ArrayList<>();
+                for (com.li64.tide.data.angler.CatchQuality q : com.li64.tide.data.angler.CatchQuality.values()) {
+                    ItemStack f = tetra.copy();
+                    com.li64.tide.data.angler.CatchQuality.mark(f, q);
+                    var input = net.minecraft.world.item.crafting.CraftingInput.of(1, 1, List.of(f));
+                    var out = server.getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.CRAFTING, input, level)
+                            .map(h -> h.value().assemble(input)).orElse(ItemStack.EMPTY);
+                    got.add(q.label + " " + out.getCount());
+                    int want = com.li64.tide.data.angler.FishResources.amount(2, q.ordinal());
+                    if (!out.is(net.minecraft.world.item.Items.RAW_IRON) || out.getCount() != want)
+                        problem("iron tetra (" + q.label + ") crafted " + out + ", expected " + want + " raw iron");
+                }
+                notes.add("iron tetra -> raw iron: " + String.join(", ", got));
+            }
+
             // what /fishing describe sends Solstone, for a few kinds of item
             for (String id : List.of("tide:golden_hook", "tide:bamboo_fishing_rod", "tide:golden_bait", "minecraft:diamond_sword"))
                 notes.add("describe: " + com.li64.tide.data.commands.FishingCommand.tooltip(

@@ -64,6 +64,7 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
                 if (displayData.nbt().isPresent()) entity.load(TagValueInput.create(ProblemReporter.DISCARDING,
                         Minecraft.getInstance().level.registryAccess(), displayData.nbt().get()));
                 if (CompatHelper.isHybridAquaticLoaded()) CompatHelper.hybridAquaticApplyVariant(entity, display.getDisplayStack());
+                if (entity instanceof net.minecraft.world.entity.animal.fish.TropicalFish) tropicalPattern(entity, display.getDisplayStack());
                 entity.xRotO = entity.getXRot();
                 entity.yRotO = entity.getYRot();
             }
@@ -82,6 +83,27 @@ public class FishDisplayRenderer implements BlockEntityRenderer<FishDisplayBlock
         // a frozen moment: no animation time, so fish hold their display pose
         state.fish = this.entityRenderer.extractEntity(entity, 0f);
         state.fish.lightCoords = state.lightCoords;
+    }
+
+    /**
+     * A caught tropical fish item doesn't say what it looked like (only a bucket does), so on the wall it was the plain
+     * white default, which reads as a silverfish. Use the pattern the item has if it came from a bucket; otherwise one of
+     * the game's named varieties, picked from the fish's weight and length so the same fish always looks the same.
+     */
+    private static void tropicalPattern(Entity entity, net.minecraft.world.item.ItemStack stack) {
+        var pattern = stack.get(net.minecraft.core.component.DataComponents.TROPICAL_FISH_PATTERN);
+        var base = stack.get(net.minecraft.core.component.DataComponents.TROPICAL_FISH_BASE_COLOR);
+        var colour = stack.get(net.minecraft.core.component.DataComponents.TROPICAL_FISH_PATTERN_COLOR);
+        if (pattern == null || base == null || colour == null) {
+            var common = net.minecraft.world.entity.animal.fish.TropicalFish.COMMON_VARIANTS;
+            long seed = Double.hashCode(com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0)) * 31L
+                    + Double.hashCode(com.li64.tide.data.item.TideItemData.FISH_LENGTH.getOrDefault(stack, 0.0));
+            var v = common.get(Math.floorMod(seed, common.size()));
+            pattern = v.pattern(); base = v.baseColor(); colour = v.patternColor();
+        }
+        entity.setComponent(net.minecraft.core.component.DataComponents.TROPICAL_FISH_PATTERN, pattern);
+        entity.setComponent(net.minecraft.core.component.DataComponents.TROPICAL_FISH_BASE_COLOR, base);
+        entity.setComponent(net.minecraft.core.component.DataComponents.TROPICAL_FISH_PATTERN_COLOR, colour);
     }
 
     @Override

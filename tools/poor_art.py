@@ -47,7 +47,7 @@ def save_tex(src: str, dst: str, cooked: bool) -> None:
 
 
 # ---- Trophy and Mythic: a band of light in the quality's colour sweeps across the fish now and then
-SHIMMER = {4: 0xD06AFF, 5: 0xFFB020}           # Trophy purple, Mythic gold (the dog-ear's colours)
+SHIMMER = {4: 0xD88CFF, 5: 0xFFD54A}           # Trophy purple, Mythic gold (the dog-ear's colours)
 SWEEP, PAUSE = 14, 22                            # frames with the band crossing, then frames without
 
 
@@ -64,9 +64,9 @@ def shimmer_mask(img: Image.Image) -> Image.Image:
             for x in range(16):
                 if sp[x, y][3] == 0:
                     continue
-                a = max(0.0, 1 - abs((x + (15 - y)) / 2 - pos) / 1.6)
+                a = max(0.0, 1 - abs((x + (15 - y)) / 2 - pos) / 2.0)
                 if a > 0:
-                    op[x, f * 16 + y] = (255, 255, 255, int(a * 150))
+                    op[x, f * 16 + y] = (255, 255, 255, int(a * 220))
     return out
 
 

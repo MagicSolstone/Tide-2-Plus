@@ -66,16 +66,34 @@ public final class Angler {
 
     // ------------------------------------------------------------------ the curve
 
-    /** XP to go from {@code level} to the next: base + growth x level squared (20 + 0.2L^2 by default). */
-    public static long xpToNext(int level) {
-        return Math.round(xpBase() + xpGrowth() * level * level);
+    private static int softFrom() {
+        return Tide.SERVER_CONFIG == null ? 30 : Math.max(1, Tide.SERVER_CONFIG.leveling.softenFromLevel);
     }
 
-    /** Total XP needed to reach a level (level 1 = 0). Defaults: 2 = 20, 30 = ~2,300, 50 = ~8,000, 99 = ~66,000. */
+    private static double softShare() {
+        return Tide.SERVER_CONFIG == null ? 0.5 : Math.max(0.0, Math.min(1.0, Tide.SERVER_CONFIG.leveling.growthAboveSoften));
+    }
+
+    private static double squares(long n) {
+        return n * (n + 1) * (2 * n + 1) / 6.0;
+    }
+
+    /** XP to go from {@code level} to the next: base + growth x level squared, half as steep from level 30 on by default. */
+    public static long xpToNext(int level) {
+        double g = xpGrowth(), cost = xpBase() + g * level * level;
+        int k = softFrom();
+        if (level >= k) cost -= g * (1 - softShare()) * ((double) level * level - (double) k * k);
+        return Math.round(cost);
+    }
+
+    /** Total XP needed to reach a level (level 1 = 0). Defaults: 2 = 20, 30 = ~2,300, 50 = ~7,700, 99 = ~41,000. */
     public static long xpForLevel(int level) {
         level = Math.max(1, Math.min(MAX_LEVEL, level));
         long n = level - 1;
-        return Math.round(xpBase() * n + xpGrowth() * n * (n + 1) * (2 * n + 1) / 6.0);
+        double g = xpGrowth(), total = xpBase() * n + g * squares(n);
+        int k = softFrom();
+        if (n >= k) total -= g * (1 - softShare()) * (squares(n) - squares(k - 1) - (double) k * k * (n - k + 1));
+        return Math.round(total);
     }
 
     public static int levelForXp(long xp) {

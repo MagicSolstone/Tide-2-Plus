@@ -26,9 +26,12 @@ public final class TideServerConfig {
     /** The fishing level system (this fork). Off = everyone fishes at the baseline level. */
     public static class Leveling {
         public boolean enabled = true;
-        /** XP to level up = xpPerLevel + xpGrowth x level^2 (defaults: ~2 fish at level 1, ~15 at level 28). */
+        /** XP to level up = xpPerLevel + xpGrowth x level^2 (defaults: ~2 fish at level 1, ~11 at level 30). */
         public double xpPerLevel = 20.0;
         public double xpGrowth = 0.2;
+        /** From this level on, the cost keeps climbing at only this share of the growth (0.5 = half as steep). */
+        public int softenFromLevel = 30;
+        public double growthAboveSoften = 0.5;
         /** The level that fishes exactly like original Tide, and what "fair play" contests use. */
         public int baselineLevel = 40;
         public boolean announceLevelUps = true;

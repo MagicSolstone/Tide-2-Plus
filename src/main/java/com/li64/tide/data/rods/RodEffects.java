@@ -115,6 +115,12 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             }
     }
 
+    /** 1 for hooks made from raw materials, 2 for hooks made from one of those, 0 for anything else. */
+    public static int hookTier(ItemStack stack) {
+        if (stack == null || stack.isEmpty() || !isTide(stack)) return 0;
+        return BASE_HOOKS.contains(path(stack)) ? 1 : UPGRADED_HOOKS.contains(path(stack)) ? 2 : 0;
+    }
+
     /** The base hook an upgraded hook was made on, or null. */
     public static String baseHook(ItemStack hook) {
         return hook == null || hook.isEmpty() ? null : hook.get(com.li64.tide.data.item.TideDataComponents.BASE_HOOK);
@@ -522,18 +528,22 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     public static List<Component> describeItem(ItemStack stack) {
         List<Component> out = new ArrayList<>();
         String base = baseHook(stack);
-        if (base != null) out.add(Component.translatable("item.tide." + base).withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(" underneath (its perks count too)").withStyle(ChatFormatting.GRAY)));
+        int tier = hookTier(stack);
+        if (tier > 0) out.add(line(ChatFormatting.GOLD, "Tier " + tier + " hook"));
+        if (base != null) out.add(Component.literal("Made on a ").withStyle(ChatFormatting.GRAY)
+                .append(Component.translatable("item.tide." + base).withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(" (its perks count too)").withStyle(ChatFormatting.GRAY)));
         out.addAll(Lures.describe(stack));
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.LIGHT_PURPLE, " " + perk.when().text));
         out.addAll(Unlocks.describe(stack));
         Component rigs = RigSets.memberLine(stack);
         if (rigs != null && isTide(stack)) out.add(rigs);
-        if (isTide(stack) && BASE_HOOKS.contains(path(stack)) && !path(stack).equals("fishing_hook"))
-            out.add(line(ChatFormatting.GRAY, "Upgrade it (diamond, amethyst...) and it keeps these perks"));
-        if (isTide(stack) && UPGRADED_HOOKS.contains(path(stack)) && base == null)
-            out.add(line(ChatFormatting.GRAY, "Craft it on a bone, golden... hook to keep that hook's perks too"));
+        if (tier == 1)
+            out.add(line(ChatFormatting.GRAY, path(stack).equals("fishing_hook") ? "Used to make Tier 2 hooks"
+                    : "Used to make Tier 2 hooks, which keep these perks"));
+        if (tier == 2 && base == null)
+            out.add(line(ChatFormatting.GRAY, "Made from a Tier 1 hook, and keeps that hook's perks"));
         if (path(stack).equals("lavaproof_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in lava"));
         if (path(stack).equals("void_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in the void"));
         if (path(stack).equals("glow_hook") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Glows, lighting the water around it"));

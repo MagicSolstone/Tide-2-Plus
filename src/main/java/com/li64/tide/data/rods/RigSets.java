@@ -17,6 +17,11 @@ import java.util.Set;
  * Matched rigs: tackle made for the same place or time. Three or more pieces of one family on a rod (counting
  * the rod, line, hook, bobber, lure and bait as one piece each, whichever family members they are) add the
  * family's bonus while you fish where or when it's made for.
+ *
+ * <p>HOW TO CHANGE THINGS HERE (see CODE_GUIDE.md): the rigs are the {@link #SETS} list below, one line each: name,
+ * where/when it works, the two-piece bonus, the three-piece bonus, then the item names that belong to it. A rig counts
+ * at most one piece per kind of tackle, so it needs members of three or more kinds. The iron rig also gives the rod a
+ * sword's attack ({@link #refreshMelee}).
  */
 public final class RigSets {
     private RigSets() {}
@@ -24,7 +29,7 @@ public final class RigSets {
     /** Two pieces of a family give its small bonus; three or more, its full bonus. */
     public static final int HALF = 2, PIECES = 3;
 
-    public record RigSet(String name, When when, RodEffects two, RodEffects full, Set<String> members, String note) {
+    public record RigSet(String name, When when, RodEffects two, RodEffects full, Set<String> members, String twoNote, String note) {
         /** The full (3-piece) bonus in words, with where it works. */
         public String bonusText() {
             return text(full) + (note.isEmpty() ? "" : "; " + note);
@@ -32,7 +37,7 @@ public final class RigSets {
 
         /** The 2-piece bonus in words, with where it works. */
         public String twoText() {
-            return text(two);
+            return text(two) + (twoNote.isEmpty() ? "" : "; " + twoNote);
         }
 
         private String text(RodEffects fx) {
@@ -47,11 +52,11 @@ public final class RigSets {
     }
 
     private static RigSet set(String name, When when, RodEffects two, RodEffects full, String... members) {
-        return new RigSet(name, when, two, full, Set.of(members), "");
+        return new RigSet(name, when, two, full, Set.of(members), "", "");
     }
 
-    /** Iron: works anywhere, and a full rig makes the rod hit like an iron sword (see {@link #refreshMelee}). */
-    private static final String IRON_NOTE = "hits like an iron sword";
+    /** Iron: works anywhere. Two pieces make the rod hit like a wooden sword, three like an iron sword (see {@link #refreshMelee}). */
+    private static final String IRON_TWO_NOTE = "hits like a wooden sword", IRON_NOTE = "hits like an iron sword";
 
     private static RodEffects fx(double bite, int luck, double quality, double xp) {
         return new RodEffects(0, bite, 0, 0, luck, quality, 0, xp);
@@ -92,7 +97,7 @@ public final class RigSets {
                     "lavaproof_hook", "fiery_hook", "netherite_bobber", "magma_lure"),
             set("Void rig", When.END, BITE_2, LUCK_BITE_3, "void_hook", "chorus_bobber", "chorus_lure"),
             new RigSet("Iron rig", When.ALWAYS, new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0), new RodEffects(0, 0, 0.10, -0.10, 0, 0, 0, 0),
-                    Set.of("iron_fishing_rod", "iron_line", "fishing_hook", "iron_bobber"), IRON_NOTE));
+                    Set.of("iron_fishing_rod", "iron_line", "fishing_hook", "iron_bobber"), IRON_TWO_NOTE, IRON_NOTE));
 
     private static String path(ItemStack s) {
         return BuiltInRegistries.ITEM.getKey(s.getItem()).getPath();
@@ -134,24 +139,30 @@ public final class RigSets {
         return out;
     }
 
-    /** The rod's attack bonus (an iron sword's: 6 damage, 1.6 speed) while it carries a complete iron rig; the rod's own otherwise. */
+    /** Attack damage added to a rod by the iron rig: +3 at two pieces (a wooden sword's 4), +5 at three (an iron sword's 6). */
     private static final net.minecraft.resources.Identifier IRON_RIG_ID = com.li64.tide.Tide.resource("iron_rig");
 
     public static boolean isIronRig(RigSet set) {
         return set.name().equals("Iron rig");
     }
 
-    /** Call after anything on a rod changes: gives the rod an iron sword's attack while it has a full iron rig, and takes it away again. */
+    /**
+     * Call after anything on a rod changes: gives the rod a sword's attack while it has two or three pieces of the iron
+     * rig, and takes it away again. (Rods have no "weapon" property, so hitting mobs never wears them down.)
+     */
     public static void refreshMelee(ItemStack rod) {
         if (rod == null || rod.isEmpty() || !BuiltInRegistries.ITEM.getKey(rod.getItem()).getNamespace().equals("tide")) return;
-        boolean on = SETS.stream().anyMatch(s -> isIronRig(s) && pieces(s, rod) >= PIECES);
+        int pieces = SETS.stream().filter(RigSets::isIronRig).mapToInt(s -> pieces(s, rod)).max().orElse(0);
+        double damage = pieces >= PIECES ? 5.0 : pieces >= HALF ? 3.0 : 0;
         var current = rod.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
-        boolean has = current != null && current.modifiers().stream().anyMatch(m -> m.modifier().id().equals(IRON_RIG_ID));
-        if (on == has) return;
-        if (!on) { rod.remove(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS); return; }
+        double has = current == null ? 0 : current.modifiers().stream().filter(m -> m.modifier().id().equals(IRON_RIG_ID))
+                .filter(m -> m.attribute().equals(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE))
+                .mapToDouble(m -> m.modifier().amount()).findFirst().orElse(0);
+        if (damage == has) return;
+        if (damage == 0) { rod.remove(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS); return; }
         rod.set(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, net.minecraft.world.item.component.ItemAttributeModifiers.builder()
                 .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, new net.minecraft.world.entity.ai.attributes.AttributeModifier(
-                        IRON_RIG_ID, 5.0, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                        IRON_RIG_ID, damage, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
                 .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED, new net.minecraft.world.entity.ai.attributes.AttributeModifier(
                         IRON_RIG_ID, -2.4, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
                 .build());

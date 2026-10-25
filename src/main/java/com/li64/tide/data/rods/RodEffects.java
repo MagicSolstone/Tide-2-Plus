@@ -25,6 +25,11 @@ import java.util.Map;
  * whole-number fishing speed (like the Lure enchantment: each point bites about 5 seconds sooner) and
  * {@code ease} lowers catch difficulty (a bigger catch area in the minigame); {@code upgrade} is the chance a
  * hooked fish's quality goes up one tier.
+ *
+ * <p>HOW TO CHANGE THINGS HERE (see CODE_GUIDE.md): each item's always-on perks are one line in the tables below
+ * ({@code RODS}, {@code HOOKS}, {@code LINES}, {@code BOBBERS}, {@code LURES}, {@code BAITS}), written with helpers
+ * like {@code bite(0.10)}; perks that only work somewhere or sometime are in {@code SITUATIONAL}; the helpers
+ * ({@code bite}, {@code window}, {@code luck}...) are defined below the gear table. Rigs are in {@link RigSets}.
  */
 public record RodEffects(double cast, double bite, double window, double fight, int luck, double quality,
                          double land, double xp, double twin, double cook, int speed, double ease, double upgrade) {

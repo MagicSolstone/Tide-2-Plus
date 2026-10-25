@@ -1,7 +1,7 @@
 package com.li64.tide.client;
 
 import net.minecraft.client.Minecraft;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLMouse;
 
 /**
  * Switching tabs (Craft / Assemble) or screens (tackle box / rigging) closes one menu and opens another, and the game
@@ -26,6 +26,6 @@ public final class MouseKeep {
         boolean fresh = System.currentTimeMillis() - savedAt < 3000;
         savedAt = 0;
         if (!fresh) return;
-        GLFW.glfwSetCursorPos(Minecraft.getInstance().getWindow().handle(), x, y);
+        SDLMouse.SDL_WarpMouseInWindow(Minecraft.getInstance().getWindow().handle(), (float) x, (float) y);
     }
 }

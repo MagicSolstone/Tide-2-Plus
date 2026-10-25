@@ -49,16 +49,16 @@ public final class CatchBannerOverlay {
         if (!weight.isEmpty()) Gui26.text(g, font, weight, tx + font.width(head), ty, (a << 24) | 0xFFC83A, true);   // the weight, in gold: the number to brag about
         ty += 10;
         for (int i = 0; i < details.length; i++) {
-            boolean effect = details[i].startsWith("*");      // what a rod did (purple), vs. items that came up (yellow)
-            String line = effect ? details[i].substring(1) : details[i];
-            Gui26.text(g, font, line, tx, ty, (a << 24) | (i == 0 ? 0xE8E8E8 : effect ? 0xD08AFF : 0xFFE08A), true);
+            boolean effect = details[i].startsWith("*"), extra = details[i].startsWith("~");      // what a rod did (purple), items that came up (yellow), else what was special
+            String line = effect || extra ? details[i].substring(1) : details[i];
+            Gui26.text(g, font, line, tx, ty, (a << 24) | (effect ? 0xD08AFF : extra ? 0xFFE08A : 0xE8E8E8), true);
             ty += 10;
         }
         // the XP (where it came from in grey, after it), then a level-up in gold
         for (String f : foot) {
             if (f.startsWith("Level up")) Gui26.text(g, font, f, tx, ty, (a << 24) | 0xFFD24A, true);
             else {
-                int cut = f.indexOf("  (");
+                int cut = f.indexOf(" (");
                 String main = cut < 0 ? f : f.substring(0, cut), why = cut < 0 ? "" : f.substring(cut);
                 Gui26.text(g, font, main, tx, ty, (a << 24) | 0x7FD8FF, true);
                 if (!why.isEmpty()) Gui26.text(g, font, why, tx + font.width(main), ty, (a << 24) | 0x9AA8B4, true);

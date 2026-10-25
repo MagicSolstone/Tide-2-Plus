@@ -1,19 +1,28 @@
-# Tide+ 1.0.17
+# Tide+ 1.0.18
 
-Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.16).
+Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.17).
 
-## The Angling Table is the fishing workbench
-- **All fishing gear is made at the Angling Table**: rods, lines, bobbers, hooks, lures, bait and gear (journal, tackle box, satchel, gauges, waders...). The crafting table and smithing table no longer make them. The vanilla fishing rod, the Angling Table itself, fish-to-resource recipes and line dyeing stay at the crafting table.
-- **Craft tab: a 3x3 grid**, like a crafting table. Rod upgrades (iron, gold, diamond, crystal...) go in the grid too: the rod, the upgrade and its extra, in any arrangement. The rod keeps its enchantments and parts.
-- **A fishing recipe book** beside the grid, with filters for Rods, Lines, Bobbers, Hooks, Lures, Bait, Gear and Rigs (pick a rig to see its pieces). Click a recipe to move its items into the grid (shift-click for as many as you can make). If you're short, the grid shows what it takes. There's a "can make" filter and a button to hide the book.
-- **Recipes are discovered** from their materials, like vanilla's recipe book: bamboo shows the bamboo rod, redstone and a fishing line show the redstone line, a Tier 1 hook and a diamond show the diamond hook. Sticks, string and planks don't count, so string alone doesn't show every line. A popup says when you discover one. Undiscovered rig pieces show as "?". You can still make a recipe you know by hand.
-- **Assemble tab**: the old rod screen (line, bobber, hook, lure), one click away. The table opens on whichever tab you used last.
+## Angling Table and tackle box
+- **Rig tooltips** show only over the rig's name (not its arrows), wrap, and sit above the cursor.
+- **Recipe book**: hovering the ghost items of a recipe you can't make yet shows what they are, and what it makes. Clicking a recipe while the grid is full sends the grid back to your inventory first, like the crafting table's book.
+- **Filter icons**: Gear is the tackle box; Rigs is a lead.
+- **Switching tabs keeps your cursor where it was** (Craft gear / Assemble rod, and the tackle box's Rig a rod / < Box).
+- The tackle box's button says **Assemble rod**, like the table's.
 
-## Changes
-- **Fishing levels**: from level 30 on, each level's cost climbs half as fast (level 99 is about 40% less XP than before). Everyone keeps their XP, so anyone past 30 goes up a few levels.
-- **Hooks are labelled Tier 1 or Tier 2.** Tier 2 hooks are made from a Tier 1 hook and keep its perks.
-- **Rods don't break any more.** A worn-out rod stops at broken and won't cast until it's repaired, with string at an anvil (or two of the same rod, or Mending). Its line, hook, bobber, lure and enchantments stay on. This works for every Tide rod.
-- **The catch card** shows the XP and where it came from (`+44 fishing XP (10 fish, +5 Good, +20 new species, +6 perfect hook, +3 tackle)`). The level shows only on a level-up (it's on the rod panel).
-- **Weights**: fish under a pound show in ounces ("0.16 oz", "5.3 oz"). A record has to beat the old one by enough to show on the scale; a tie keeps the old holder. "Your record" goes by weight too.
-- **Length is no longer shown** (weight is what counts). A mounted fish's size on the wall now follows its weight.
-- **Tooltips wrap**: long lines (rig bonuses, perks) wrap instead of running across the screen.
+## Catch card
+- **A perfect hook that also raises the quality** is one purple line ("Perfect hook: Good to Great!") instead of two. Tackle that raises the quality (amethyst rod, golden bait...) says so the same way ("Tackle: Good to Great!").
+- **Shorter XP line**: `+13 Fishing XP (+3 perfect hook)`. The fish's own XP is the base, so only the extras are listed.
+- **Server records are flashier**: a chime on top of the bell for everyone, and a sparkle around whoever set it. Still much smaller than a level-up.
+
+## Rods and hooks
+- **Rod panel shows vanilla enchantments**: Lure, Luck of the Sea, Unbreaking and Mending each get a line saying what they do.
+- **Lure and bait speed is softer.** Before, 3-5 points of speed made a bite almost instant. Each point now helps a little less than the last (3 points: about a third off the wait, 5: about 45%, 10: about 60%), and a bite takes at least 1.5 seconds. The rod panel shows it as a percentage.
+- **Treble hook is a Tier 2 hook.**
+- **Circle hook is stronger**: lands Good/Bad hooks 40% of the time (was 25%), plus a wider hook window and an easier fight.
+- **New Iron rig** (iron rod, iron line, plain hook, iron bobber): works anywhere. Two pieces give a little hook window; three give more window and an easier fight, and the rod **hits like an iron sword**.
+
+## Fixes
+- **Fish no longer fly over your head** when you reel in a far cast. They arc down to your feet at any distance.
+
+## On the wall
+- **Sneak and look at a mounted fish** to see its name, quality and weight.

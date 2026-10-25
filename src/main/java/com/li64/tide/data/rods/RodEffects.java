@@ -40,6 +40,15 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, speed, ease, 0);
     }
 
+    /**
+     * What's left of the wait for a bite after lure and bait speed (each point of speed used to be about 5 seconds
+     * off, which made 3-5 points nearly instant): the first points count most, and past about 18 it stops at a quarter.
+     */
+    public static double lureWaitFactor(int speed) {
+        if (speed <= 0) return 1.0 + Math.min(-speed, 10) * 0.1;
+        return Math.max(0.25, 6.0 / (speed + 6.0));
+    }
+
     public static final RodEffects NONE = new RodEffects(0, 0, 0, 0, 0, 0, 0, 0);
 
     private static final RodEffects ANY_LINE = cast(0.10);
@@ -92,7 +101,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("feathered_hook", new RodEffects(0.05, 0.08, 0, 0, 0, 0, 0, 0)),
             Map.entry("barbed_hook", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.10)),   // holds on: a chance to bump the catch a tier (the circle hook is the landing one)
             Map.entry("treble_hook", new RodEffects(0, 0, 0, 0.05, 0, 0, 0, 0, 0.12, 0)),
-            Map.entry("circle_hook", land(0.25)),
+            Map.entry("circle_hook", new RodEffects(0, 0, 0.10, -0.05, 0, 0, 0.40, 0)),      // the landing hook: sets deep, so Good and Bad hooks hold and the fish tires sooner
             Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.08)),
             Map.entry("lucky_hook", new RodEffects(0, 0, 0, 0, 1, 0, 0, 0)));
 
@@ -102,7 +111,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     /** Hooks made by adding something to a base hook. */
     public static final java.util.Set<String> UPGRADED_HOOKS = java.util.Set.of(
             "diamond_hook", "emerald_hook", "amethyst_hook", "netherite_hook", "prismarine_hook", "glow_hook",
-            "feathered_hook", "barbed_hook", "circle_hook", "lucky_hook",
+            "feathered_hook", "barbed_hook", "circle_hook", "lucky_hook", "treble_hook",
             "fiery_hook", "permafrost_hook", "twilight_hook", "lavaproof_hook", "void_hook");
 
     /** Called when a shapeless recipe makes something: an upgraded hook remembers the base hook it was made on. */
@@ -193,7 +202,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         UNDERGROUND("underground"), NETHER("in the Nether"), END("in the End"),
         OCEAN("in oceans"), RIVER("in rivers"), SWAMP("in swamps"), JUNGLE("in jungles"),
         COLD("in cold places"), DRY("in deserts and badlands"), BEACH("on beaches"), MUSHROOM("on mushroom islands"),
-        LAVA("when fishing in lava"), FOREST("in forests");
+        LAVA("when fishing in lava"), FOREST("in forests"),
+        ALWAYS("");      // (a rig that works anywhere, any time)
 
         public final String text;
 
@@ -228,6 +238,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                 case BEACH -> biome.is(net.minecraft.tags.BiomeTags.IS_BEACH);
                 case MUSHROOM -> name.contains("mushroom");
                 case FOREST -> biome.is(net.minecraft.tags.BiomeTags.IS_FOREST);
+                case ALWAYS -> true;
                 case LAVA -> {      // judged by where the angler's hook is, not where they stand
                     var hook = com.li64.tide.registries.entities.misc.fishing.HookAccessor.getHook(player);
                     yield hook != null && hook.getCurrentMedium() == com.li64.tide.data.fishing.mediums.FishingMedium.LAVA;
@@ -543,7 +554,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             out.add(line(ChatFormatting.GRAY, path(stack).equals("fishing_hook") ? "Used to make Tier 2 hooks"
                     : "Used to make Tier 2 hooks, which keep these perks"));
         if (tier == 2 && base == null)
-            out.add(line(ChatFormatting.GRAY, "Made from a Tier 1 hook, and keeps that hook's perks"));
+            out.add(line(ChatFormatting.GRAY, path(stack).equals("treble_hook") ? "Made from three plain hooks"
+                    : "Made from a Tier 1 hook, and keeps that hook's perks"));
         if (path(stack).equals("lavaproof_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in lava"));
         if (path(stack).equals("void_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in the void"));
         if (path(stack).equals("glow_hook") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Glows, lighting the water around it"));

@@ -24,10 +24,10 @@ public final class RigSets {
     /** Two pieces of a family give its small bonus; three or more, its full bonus. */
     public static final int HALF = 2, PIECES = 3;
 
-    public record RigSet(String name, When when, RodEffects two, RodEffects full, Set<String> members) {
+    public record RigSet(String name, When when, RodEffects two, RodEffects full, Set<String> members, String note) {
         /** The full (3-piece) bonus in words, with where it works. */
         public String bonusText() {
-            return text(full);
+            return text(full) + (note.isEmpty() ? "" : "; " + note);
         }
 
         /** The 2-piece bonus in words, with where it works. */
@@ -36,7 +36,8 @@ public final class RigSets {
         }
 
         private String text(RodEffects fx) {
-            return String.join(", ", fx.describe(ChatFormatting.WHITE).stream().map(Component::getString).toList()).toLowerCase() + " " + when.text;
+            return String.join(", ", fx.describe(ChatFormatting.WHITE).stream().map(Component::getString).toList()).toLowerCase()
+                    + (when.text.isEmpty() ? "" : " " + when.text);
         }
 
         /** What this many pieces give (nothing below two). */
@@ -46,8 +47,11 @@ public final class RigSets {
     }
 
     private static RigSet set(String name, When when, RodEffects two, RodEffects full, String... members) {
-        return new RigSet(name, when, two, full, Set.of(members));
+        return new RigSet(name, when, two, full, Set.of(members), "");
     }
+
+    /** Iron: works anywhere, and a full rig makes the rod hit like an iron sword (see {@link #refreshMelee}). */
+    private static final String IRON_NOTE = "hits like an iron sword";
 
     private static RodEffects fx(double bite, int luck, double quality, double xp) {
         return new RodEffects(0, bite, 0, 0, luck, quality, 0, xp);
@@ -86,7 +90,9 @@ public final class RigSets {
                     "jig_lure", "echo_lure", "cave_grubs", "dripstone_bait", "sculk_bait"),
             set("Fire rig", When.LAVA, QUALITY_2, LUCK_QUALITY_3, "blazing_fishing_rod", "netherite_fishing_rod", "netherite_line",
                     "lavaproof_hook", "fiery_hook", "netherite_bobber", "magma_lure"),
-            set("Void rig", When.END, BITE_2, LUCK_BITE_3, "void_hook", "chorus_bobber", "chorus_lure"));
+            set("Void rig", When.END, BITE_2, LUCK_BITE_3, "void_hook", "chorus_bobber", "chorus_lure"),
+            new RigSet("Iron rig", When.ALWAYS, new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0), new RodEffects(0, 0, 0.10, -0.10, 0, 0, 0, 0),
+                    Set.of("iron_fishing_rod", "iron_line", "fishing_hook", "iron_bobber"), IRON_NOTE));
 
     private static String path(ItemStack s) {
         return BuiltInRegistries.ITEM.getKey(s.getItem()).getPath();
@@ -126,6 +132,29 @@ public final class RigSets {
         }
         out.sort((a, b) -> b.have() - a.have());
         return out;
+    }
+
+    /** The rod's attack bonus (an iron sword's: 6 damage, 1.6 speed) while it carries a complete iron rig; the rod's own otherwise. */
+    private static final net.minecraft.resources.Identifier IRON_RIG_ID = com.li64.tide.Tide.resource("iron_rig");
+
+    public static boolean isIronRig(RigSet set) {
+        return set.name().equals("Iron rig");
+    }
+
+    /** Call after anything on a rod changes: gives the rod an iron sword's attack while it has a full iron rig, and takes it away again. */
+    public static void refreshMelee(ItemStack rod) {
+        if (rod == null || rod.isEmpty() || !BuiltInRegistries.ITEM.getKey(rod.getItem()).getNamespace().equals("tide")) return;
+        boolean on = SETS.stream().anyMatch(s -> isIronRig(s) && pieces(s, rod) >= PIECES);
+        var current = rod.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
+        boolean has = current != null && current.modifiers().stream().anyMatch(m -> m.modifier().id().equals(IRON_RIG_ID));
+        if (on == has) return;
+        if (!on) { rod.remove(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS); return; }
+        rod.set(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, net.minecraft.world.item.component.ItemAttributeModifiers.builder()
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, new net.minecraft.world.entity.ai.attributes.AttributeModifier(
+                        IRON_RIG_ID, 5.0, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED, new net.minecraft.world.entity.ai.attributes.AttributeModifier(
+                        IRON_RIG_ID, -2.4, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                .build());
     }
 
     /** The bonus from every complete rig that's working right now. */

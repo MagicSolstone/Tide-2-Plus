@@ -517,13 +517,13 @@ public class TideFishingHook extends Projectile {
         }
         else {
             this.timeUntilLured = (int) (Mth.nextInt(this.random, 200, 600) * this.medium.biteTimeMultiplier());
-            this.timeUntilLured -= (int) (2000.0 / (1.0 + Math.exp(-0.2 * this.lureSpeed)) - 1000.0);
+            this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.rods.RodEffects.lureWaitFactor(this.lureSpeed));
             double globalBiteTimeMultiplier = Tide.PLATFORM.isModLoaded("stardew_fishing") ? CompatHelper.stardewFishingBiteTimeMultiplier() : 1.0;
             // fishing level: patience (how long until a bite)
             if (this.getPlayerOwner() instanceof ServerPlayer angler)
                 this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.angler.Angler.stats(angler).biteWait()
                         * com.li64.tide.data.rods.RodEffects.of(angler, this.rod).biteWaitFactor());
-            this.timeUntilLured = Math.max((int) (this.timeUntilLured * globalBiteTimeMultiplier), 10);
+            this.timeUntilLured = Math.max((int) (this.timeUntilLured * globalBiteTimeMultiplier), 30);
         }
     }
 
@@ -734,7 +734,7 @@ public class TideFishingHook extends Projectile {
                         double dy = player.getY() - this.getY();
                         double dz = player.getZ() - this.getZ();
 
-                        entity.setDeltaMovement(dx * 0.1, dy * 0.11 + Math.sqrt(Math.sqrt(dx * dx + dy * dy + dz * dz)) * 0.08, dz * 0.1);
+                        entity.setDeltaMovement(pullToward(player, this.getX(), this.getY(), this.getZ()));
                         if (CompatHelper.isHybridAquaticLoaded() && entity instanceof ItemEntity itemEntity) {
                             entity = CompatHelper.hybridAquaticPullEntity(itemEntity, player, this);
                         }
@@ -760,7 +760,7 @@ public class TideFishingHook extends Projectile {
                                 ItemEntity extra = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), new ItemStack(extraItem));
                                 com.li64.tide.data.angler.Angler.markExtra(serverPlayer, "+ " + new ItemStack(extraItem).getHoverName().getString());
                                 double ex = player.getX() - this.getX(), ey = player.getY() - this.getY(), ez = player.getZ() - this.getZ();
-                                extra.setDeltaMovement(ex * 0.1, ey * 0.11 + Math.sqrt(Math.sqrt(ex * ex + ey * ey + ez * ez)) * 0.08, ez * 0.1);
+                                extra.setDeltaMovement(pullToward(player, this.getX(), this.getY(), this.getZ()));
                                 this.level().addFreshEntity(extra);
                             }
                             com.li64.tide.data.rods.RodEffects.Pick pick = com.li64.tide.data.rods.RodEffects.pick(this.rod);
@@ -770,7 +770,7 @@ public class TideFishingHook extends Projectile {
                                     ItemEntity extra = new ItemEntity(this.level(), this.getX(), this.getY(), this.getZ(), bonus);
                                     com.li64.tide.data.angler.Angler.markExtra(serverPlayer, "+ " + bonus.getHoverName().getString());
                                     double ex = player.getX() - this.getX(), ey = player.getY() - this.getY(), ez = player.getZ() - this.getZ();
-                                    extra.setDeltaMovement(ex * 0.1, ey * 0.11 + Math.sqrt(Math.sqrt(ex * ex + ey * ey + ez * ez)) * 0.08, ez * 0.1);
+                                    extra.setDeltaMovement(pullToward(player, this.getX(), this.getY(), this.getZ()));
                                     this.level().addFreshEntity(extra);
                                     if (Tide.CI) Tide.LOG.info("TIDE-CI pick: {}", bonus.getHoverName().getString());
                                 }
@@ -854,6 +854,25 @@ public class TideFishingHook extends Projectile {
         this.startRetrieving();
 
         return i;
+    }
+
+    /**
+     * The push that sends a catch to the angler's feet. It used to scale with the distance (so a far cast sent the fish
+     * over their head); this works out an arc of 10-28 ticks (longer for farther) that comes down at the angler,
+     * allowing for the item's gravity, air drag and the slide after it lands.
+     */
+    private static net.minecraft.world.phys.Vec3 pullToward(Player player, double fromX, double fromY, double fromZ) {
+        double dx = player.getX() - fromX, dz = player.getZ() - fromZ, dy = player.getY() + 0.25 - fromY;
+        double dist = Math.sqrt(dx * dx + dz * dz);
+        final double drag = 0.98, gravity = 0.04, slide = 2.4;           // slide: blocks gone per unit of speed on landing
+        int ticks = (int) Mth.clamp(Math.round(10 + dist * 0.4), 10, 28);
+        double fall = Math.pow(drag, ticks);
+        double sum = (1 - fall) / (1 - drag);                              // total of the horizontal speeds over the flight, per unit
+        double horizontal = dist / (sum + slide * fall);                   // flight plus slide covers the distance
+        double terminal = -gravity / (1 - drag);
+        double lift = terminal + (dy - ticks * terminal) / sum;
+        double scale = dist > 0.01 ? horizontal / dist : 0;
+        return new net.minecraft.world.phys.Vec3(dx * scale, lift + gravity, dz * scale);
     }
 
     public void selectCatch(ItemStack rod) {

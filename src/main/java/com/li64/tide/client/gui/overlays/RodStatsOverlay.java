@@ -54,7 +54,10 @@ public final class RodStatsOverlay {
         List<Row> rows = new ArrayList<>();
         rows.add(pct("Cast range", (1 + e.cast()) * st.castDistance() - 1, false));
         rows.add(pct("Bite speed", 1 / (e.biteWaitFactor() * st.biteWait()) - 1, false));
-        if (speed != 0) rows.add(new Row("Lure and bait", String.format("%d s sooner", speed * 5), speed > 0 ? GOOD : BAD));
+        if (speed != 0) {
+            long cut = Math.round(Math.abs(1 - RodEffects.lureWaitFactor(speed)) * 100);
+            rows.add(new Row("Lure and bait", speed > 0 ? "-" + cut + "% wait" : "+" + cut + "% wait", speed > 0 ? GOOD : BAD));
+        }
         rows.add(pct("Hook window", (1 + e.window()) * st.hookZones() - 1, false));
         rows.add(new Row("Luck", luck == 0 ? "None" : String.format("%+d", luck), luck > 0 ? GOOD : luck < 0 ? BAD : DIM));
         if (e.quality() != 0) rows.add(pct("Catch quality", e.quality(), false));
@@ -65,6 +68,13 @@ public final class RodStatsOverlay {
         if (e.twin() != 0) rows.add(new Row("Second fish", Math.round(Math.min(e.twin(), RodEffects.TWIN_CAP) * 100) + "%" + (e.twin() > RodEffects.TWIN_CAP ? " (max)" : ""), GOOD));
         if (e.cook() != 0) rows.add(new Row("Comes up cooked", Math.round(e.cook() * 100) + "%", GOOD));
         if (e.upgrade() != 0) rows.add(new Row("Quality bump", Math.round(e.upgrade() * 100) + "%", GOOD));
+
+        // vanilla enchantments: what each one does here (their numbers are already in the rows above)
+        if (lure > 0) rows.add(new Row("Lure " + roman(lure), "-" + Math.round((1 - RodEffects.lureWaitFactor(lure)) * 100) + "% wait", GOOD));
+        if (sea > 0) rows.add(new Row("Luck of the Sea " + roman(sea), "+" + sea + " luck", GOOD));
+        int unbreaking = EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(Enchantments.UNBREAKING), rod);
+        if (unbreaking > 0) rows.add(new Row("Unbreaking " + roman(unbreaking), "wears slower", GOOD));
+        if (EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(Enchantments.MENDING), rod) > 0) rows.add(new Row("Mending", "repairs from XP", GOOD));
 
         Set<String> active = new LinkedHashSet<>(), idle = new LinkedHashSet<>();
         List<ItemStack> all = new ArrayList<>(List.of(rod));
@@ -128,6 +138,11 @@ public final class RodStatsOverlay {
             for (var line : offLines) { Gui26.text(g, font, line, 6, y, OFF, true); y += 10; }
         }
         g.pose().popMatrix();
+    }
+
+    private static String roman(int n) {
+        String[] r = {"", "I", "II", "III", "IV", "V"};
+        return n >= 1 && n < r.length ? r[n] : String.valueOf(n);
     }
 
     private static int shownLevel = -1;

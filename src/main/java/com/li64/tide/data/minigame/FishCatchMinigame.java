@@ -81,10 +81,14 @@ public class FishCatchMinigame {
 
         // catch quality is decided at the bite, so a bigger fish fights harder: faster, smaller zones
         hook.pendingQuality = null;
+        Angler.clearBumps(player);
         if (data.isPresent() && com.li64.tide.data.angler.CatchQuality.enabled()) {
             com.li64.tide.data.angler.CatchQuality rolled = com.li64.tide.data.angler.CatchQuality.roll(player.getRandom(), level, gear.quality());
-            if (gear.upgrade() > 0 && rolled != com.li64.tide.data.angler.CatchQuality.MYTHIC && player.getRandom().nextDouble() < gear.upgrade())
+            if (gear.upgrade() > 0 && rolled != com.li64.tide.data.angler.CatchQuality.MYTHIC && player.getRandom().nextDouble() < gear.upgrade()) {
+                var before = rolled;
                 rolled = com.li64.tide.data.angler.CatchQuality.values()[rolled.ordinal() + 1];   // amethyst rod, golden bait
+                Angler.markBump(player, "Tackle", before, rolled);
+            }
             final com.li64.tide.data.angler.CatchQuality q = rolled;
             hook.pendingQuality = q;
             speed *= (float) q.fightSpeed();
@@ -153,8 +157,7 @@ public class FishCatchMinigame {
         var q = hook.pendingQuality;
         if (perfectCatch && q != null && q != com.li64.tide.data.angler.CatchQuality.MYTHIC && player.getRandom().nextDouble() < PERFECT_BUMP) {
             hook.pendingQuality = com.li64.tide.data.angler.CatchQuality.values()[q.ordinal() + 1];
-            if (player instanceof net.minecraft.server.level.ServerPlayer sp)
-                com.li64.tide.data.angler.Angler.markEffect(sp, "Perfect hook: " + q.label + " to " + hook.pendingQuality.label + "!");
+            Angler.markBump(player, "Perfect hook", q, hook.pendingQuality);
         }
         if (CompatHelper.useStarcatcherMinigame())
             CompatHelper.starcatcherCompleteCatch(player, hook, perfectCatch);

@@ -16,5 +16,6 @@ public class TideGuiOverlays {
         FishingInfoOverlay.render(graphics, dt);
         com.li64.tide.client.gui.overlays.RodStatsOverlay.render(graphics, dt);
         com.li64.tide.client.gui.overlays.CatchBannerOverlay.render(graphics, dt);
+        com.li64.tide.client.gui.overlays.DisplayTipOverlay.render(graphics, dt);
     }
 }

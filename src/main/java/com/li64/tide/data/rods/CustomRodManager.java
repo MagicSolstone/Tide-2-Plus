@@ -45,9 +45,11 @@ public class CustomRodManager {
     private static void setAccessory(ItemDataKey<CompoundTag> dataKey, ItemStack rod, ItemStack accessory) {
         if (accessory == null || accessory.isEmpty()) {
             dataKey.set(rod, new CompoundTag());
+            RigSets.refreshMelee(rod);
             return;
         }
         dataKey.set(rod, (CompoundTag) ItemStack.CODEC.encode(accessory, NbtOps.INSTANCE, new CompoundTag()).getOrThrow());
+        RigSets.refreshMelee(rod);
          /*dataKey.set(rod, accessory.save(new CompoundTag()));*/
     }
 

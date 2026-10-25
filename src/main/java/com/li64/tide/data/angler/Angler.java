@@ -235,7 +235,7 @@ public final class Angler {
         String extra = "";
         // the XP, as parts that add up: the fish, then each bonus in whole points (the card shows them)
         java.util.List<String> parts = new java.util.ArrayList<>();
-        parts.add(Math.round(xp) + " fish");
+        // (the fish's own XP is the base; only what was added on top is listed)
 
         TidePlayerData journal = TidePlayerData.getOrCreate(player);
         FishStats before = journal.getDataFor(stack.getItem()).flatMap(f -> f.stats).orElse(null);
@@ -378,6 +378,21 @@ public final class Angler {
         SERVER_RECORD.add(player.getUUID());
     }
 
+    private static final java.util.Map<java.util.UUID, java.util.List<String>> BUMPS = new java.util.concurrent.ConcurrentHashMap<>();
+    private static final java.util.Set<java.util.UUID> PERFECT_BUMPED = java.util.concurrent.ConcurrentHashMap.newKeySet();
+
+    /** Forget bumps from a catch that never landed (called when a new fish bites). */
+    public static void clearBumps(ServerPlayer player) {
+        BUMPS.remove(player.getUUID());
+        PERFECT_BUMPED.remove(player.getUUID());
+    }
+
+    /** The catch was brought up a quality tier by {@code source} ("Perfect hook", "Tackle"...), for the catch card. */
+    public static void markBump(ServerPlayer player, String source, CatchQuality from, CatchQuality to) {
+        BUMPS.computeIfAbsent(player.getUUID(), k -> new java.util.ArrayList<>()).add(source + ": " + from.label + " to " + to.label + "!");
+        if (source.equals("Perfect hook")) PERFECT_BUMPED.add(player.getUUID());
+    }
+
     public static void markTwin(ServerPlayer player) {
         TWIN.add(player.getUUID());
     }
@@ -394,17 +409,24 @@ public final class Angler {
         if (SERVER_RECORD.remove(player.getUUID())) bits.add("Server record!");
         else if (extra.contains("new record")) bits.add("Your record!");
         if (TWIN.remove(player.getUUID())) bits.add("Two on the hook!");
-        if (perfect) bits.add("Perfect hook");
+        // (a perfect hook that also raised the quality is one purple line below, not two)
+        boolean perfectBumped = PERFECT_BUMPED.remove(player.getUUID());
+        if (perfect && !perfectBumped) bits.add("Perfect hook");
         java.util.List<String> extras = EXTRAS.remove(player.getUUID());
         java.util.List<String> effects = EFFECTS.remove(player.getUUID());
+        java.util.List<String> bumps = BUMPS.remove(player.getUUID());
+        if (bumps != null) {
+            effects = effects == null ? new java.util.ArrayList<>() : new java.util.ArrayList<>(effects);
+            effects.addAll(0, bumps);
+        }
         // the XP and where it came from (the level is on the rod panel; a level-up gets its own line)
-        String footer = "+" + xp + " fishing XP" + (parts.size() > 1 ? "  (" + String.join(", ", parts) + ")" : "");
+        String footer = "+" + xp + " Fishing XP" + (!parts.isEmpty() ? " (" + String.join(", ", parts) + ")" : "");
         if (after > before) footer += "\nLevel up! Fishing level " + after;
         // one line in chat, for after the card has gone: the fish (in its quality's colour), its weight, what was
         // special and the XP; hovering it shows the rest of the card (what came up with it, what the rod did)
         java.util.List<String> hover = new java.util.ArrayList<>();
         if (extras != null) hover.add("Also caught: " + String.join(", ", extras));
-        if (effects != null) hover.addAll(effects);
+        if (effects != null) hover.addAll(effects);       // (the bumps are in there too)
         hover.add(footer);
         net.minecraft.network.chat.MutableComponent line = Component.literal(title).withStyle(s -> s.withColor(q == null ? 0xFFFFFF : q.color));
         if (grams > 0) line.append(Component.literal(" " + FishWeight.imperial(grams)).withStyle(ChatFormatting.GOLD));
@@ -413,10 +435,14 @@ public final class Angler {
         line.append(Component.literal(" · " + String.join(" · ", notes)).withStyle(ChatFormatting.GRAY));
         line.withStyle(s -> s.withHoverEvent(new net.minecraft.network.chat.HoverEvent.ShowText(Component.literal(String.join("\n", hover)))));
         player.sendSystemMessage(line);
+        // the card's lines: what was special (white), what came up with it (~, yellow), what the rod did (*, purple)
+        java.util.List<String> cardLines = new java.util.ArrayList<>();
+        if (!bits.isEmpty()) cardLines.add(String.join(" · ", bits));
+        if (extras != null) cardLines.add("~" + String.join(" · ", extras));
+        if (effects != null) cardLines.add("*" + String.join(" · ", effects));
         Tide.NETWORK.sendToPlayer(new com.li64.tide.network.messages.CatchBannerMsg(
                 net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString(), title,
-                q == null ? 0xFFFFFF : q.color, String.join(" · ", bits) + (extras == null ? "" : "\n" + String.join(" · ", extras))
-                        + (effects == null ? "" : "\n*" + String.join(" · ", effects)), footer, false,
+                q == null ? 0xFFFFFF : q.color, String.join("\n", cardLines), footer, false,
                 grams > 0 ? FishWeight.imperial(grams) : ""), player);
     }
 

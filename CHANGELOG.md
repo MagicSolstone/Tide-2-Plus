@@ -258,7 +258,7 @@ Rods hold a line, hook, bobber and lure, plus bait. Each piece does something, a
 - Breaking a rod drops what was on it. Rods' hanging lines sway in the hand and inventory, and the glow hook lights the water around it.
 
 ## Storage
-- **Tackle box**: 27 slots of tackle plus a rack for 3 rods. A *Rig a rod* button (or sneak + right-click) opens an angling table that uses the box's tackle directly.
+- **Tackle box**: 27 slots of tackle plus a rack for 3 rods. An *Assemble rod* button (or sneak + right-click) opens an angling table that uses the box's tackle directly.
 - **Fish satchel**: right-click it in your inventory (or sneak + right-click in hand) to see all 64 places and take out the fish you want. Right-click in hand still turns fish collecting on and off.
 
 ## Journal

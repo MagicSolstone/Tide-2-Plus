@@ -26,9 +26,12 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
     @Override
     protected void subInit() {
         super.subInit();
+        com.li64.tide.client.MouseKeep.restore();
         if (showTabs())
-            this.addRenderableWidget(net.minecraft.client.gui.components.Button.builder(Component.literal("Craft gear"),
-                            b -> Tide.NETWORK.sendToServer(new com.li64.tide.network.messages.BenchTabMsg(true)))
+            this.addRenderableWidget(net.minecraft.client.gui.components.Button.builder(Component.literal("Craft gear"), b -> {
+                                com.li64.tide.client.MouseKeep.save();
+                                Tide.NETWORK.sendToServer(new com.li64.tide.network.messages.BenchTabMsg(true));
+                            })
                     .bounds(this.leftPos + this.imageWidth - 72, this.topPos - 17, 72, 16).build());
     }
 

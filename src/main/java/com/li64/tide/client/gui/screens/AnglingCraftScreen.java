@@ -47,8 +47,8 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     private static final int COLS = 5, ROWS = 4, CELL = 25, CELLS_X = 11, CELLS_Y = 43;
 
     /** The filters along the top of the book: everything, by rig, then one per kind (the server's order). */
-    private static final String[] FILTER_ICONS = {"tide:angling_table", "tide:tackle_box", "tide:bamboo_fishing_rod", "tide:fishing_line",
-            "tide:red_bobber", "tide:fishing_hook", "tide:spinner_lure", "tide:bait", "tide:fishing_journal"};
+    private static final String[] FILTER_ICONS = {"tide:angling_table", "minecraft:lead", "tide:bamboo_fishing_rod", "tide:fishing_line",
+            "tide:red_bobber", "tide:fishing_hook", "tide:spinner_lure", "tide:bait", "tide:tackle_box"};
     private static final String[] FILTER_NAMES = {"Everything", "Rigs", "Rods", "Lines", "Bobbers", "Hooks", "Lures", "Bait", "Gear"};
 
     /** A book entry: a discovered recipe, or (rig view) a piece not discovered yet or found rather than made. */
@@ -59,6 +59,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     private int page = 0, bookX, lockedHere = 0;
     private List<Cell> cells = List.of();
     private TackleRecipesMsg.Row ghost = null;
+    private int ghostTick = 0;
     private Map<Item, Integer> stock = Map.of();
     private int stockTick = -1;
     private Set<String> seenUnlocks = Set.of();
@@ -75,14 +76,17 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     @Override
     protected void init() {
         super.init();
+        com.li64.tide.client.MouseKeep.restore();
         if (bookOpen && !narrow()) this.leftPos = (this.width - this.imageWidth) / 2 + 77;
         this.bookX = bookOpen && narrow() ? (this.width - BOOK_W) / 2 : this.leftPos - BOOK_W - 2;
         this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 34, 20, 18, BOOK_BUTTON, b -> {
             bookOpen = !bookOpen;
             this.rebuildWidgets();
         }, Component.literal("Fishing recipe book")));
-        this.addRenderableWidget(Button.builder(Component.literal("Assemble rod"), b -> Tide.NETWORK.sendToServer(new BenchTabMsg(false)))
-                .bounds(this.leftPos + this.imageWidth - 80, this.topPos - 17, 80, 16).build());
+        this.addRenderableWidget(Button.builder(Component.literal("Assemble rod"), b -> {
+                    com.li64.tide.client.MouseKeep.save();
+                    Tide.NETWORK.sendToServer(new BenchTabMsg(false));
+                }).bounds(this.leftPos + this.imageWidth - 80, this.topPos - 17, 80, 16).build());
         seenUnlocks = TackleUnlocksMsg.CLIENT;
         rebuild();
     }
@@ -223,7 +227,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
         if (Tide.CI && !ciScriptDone) ciScript();
         if (!TackleUnlocksMsg.CLIENT.equals(seenUnlocks)) { seenUnlocks = TackleUnlocksMsg.CLIENT; rebuild(); }
         else if (onlyMakeable && this.minecraft.player.tickCount % 10 == 0) rebuild();
-        if (ghost != null) for (int i = AnglingCraftMenu.GRID_START; i < AnglingCraftMenu.INV_START; i++)
+        if (ghost != null && this.minecraft.player.tickCount - ghostTick > 10) for (int i = AnglingCraftMenu.GRID_START; i < AnglingCraftMenu.INV_START; i++)
             if (this.menu.getSlot(i).hasItem()) { ghost = null; break; }
     }
 
@@ -239,9 +243,8 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
 
     private void drawGhost(GuiGraphicsExtractor g) {
         for (int i = 0; i < ghost.ingredients().size() && i < ghost.grid().size(); i++) {
-            List<String> opts = ghost.ingredients().get(i);
-            if (opts.isEmpty()) continue;
-            Item it = item(opts.get((int) ((System.currentTimeMillis() / 1000) % opts.size())));
+            Item it = ghostItem(i);
+            if (it == Items.AIR) continue;
             Slot s = this.menu.getSlot(AnglingCraftMenu.GRID_START + ghost.grid().get(i));
             int x = this.leftPos + s.x, y = this.topPos + s.y;
             g.item(new ItemStack(it), x, y);
@@ -347,11 +350,23 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
         }
         if (mouseX >= x + 113 && mouseX < x + 139 && mouseY >= y + 29 && mouseY < y + 45)
             g.setTooltipForNextFrame(this.font, Component.literal(onlyMakeable ? "Showing what you can make" : "Showing everything you've discovered"), mouseX, mouseY);
-        if (filter == 1 && mouseX >= x + 8 && mouseX < x + 112 && mouseY >= y + 28 && mouseY < y + 42) {
+        if (filter == 1) {
+            // only over the rig's name, not the arrows; wrapped, and held above the cursor so the name stays visible
             RigSets.RigSet set = rig();
-            g.setTooltipForNextFrame(this.font, List.of(Component.literal(set.name()).withStyle(ChatFormatting.LIGHT_PURPLE),
-                    Component.literal("2 pieces: " + set.twoText()), Component.literal("3 pieces: " + set.bonusText()),
-                    Component.literal("Click the arrows for other rigs").withStyle(ChatFormatting.GRAY)), Optional.empty(), mouseX, mouseY);
+            int nameW = this.font.width(set.name()), nameX = x + 10 + (98 - nameW) / 2;
+            if (mouseX >= nameX && mouseX < nameX + nameW && mouseY >= y + 28 && mouseY < y + 42) {
+                List<Component> tip = new ArrayList<>();
+                wrap(tip, set.name(), ChatFormatting.LIGHT_PURPLE);
+                wrap(tip, "2 pieces: " + set.twoText(), ChatFormatting.WHITE);
+                wrap(tip, "3 pieces: " + set.bonusText(), ChatFormatting.WHITE);
+                wrap(tip, "Click the arrows for other rigs", ChatFormatting.GRAY);
+                int top = Math.max(16, mouseY - 8 - (tip.size() * 10 + 6));     // the tooltip draws from 12 above the y it is given
+                g.setTooltipForNextFrame(this.font, tip, Optional.empty(), mouseX, top + 12);
+            }
+        }
+        if (ghost != null) {
+            List<Component> tip = ghostTooltip(mouseX, mouseY);
+            if (tip != null) { g.setTooltipForNextFrame(this.font, tip, Optional.empty(), mouseX, mouseY); return; }
         }
         Cell c = cellAt(mouseX, mouseY);
         if (c == null) return;
@@ -369,6 +384,35 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
                     .withStyle(make ? ChatFormatting.GREEN : ChatFormatting.YELLOW));
             g.setTooltipForNextFrame(this.font, tip, Optional.empty(), mouseX, mouseY);
         }
+    }
+
+    /** Adds a line of text, wrapped to a comfortable tooltip width. */
+    private void wrap(List<Component> out, String text, ChatFormatting colour) {
+        for (var part : this.font.getSplitter().splitLines(Component.literal(text), 170, net.minecraft.network.chat.Style.EMPTY))
+            out.add(Component.literal(part.getString()).withStyle(colour));
+    }
+
+    /** The item the ghost shows for one of its grid ingredients (cycling through what would do). */
+    private Item ghostItem(int i) {
+        List<String> opts = ghost.ingredients().get(i);
+        return opts.isEmpty() ? Items.AIR : item(opts.get((int) ((System.currentTimeMillis() / 1000) % opts.size())));
+    }
+
+    /** A tooltip for the ghost item under the cursor (an ingredient in the grid, or what it makes), if any. */
+    private List<Component> ghostTooltip(int mouseX, int mouseY) {
+        for (int i = 0; i < ghost.ingredients().size() && i < ghost.grid().size(); i++) {
+            Item it = ghostItem(i);
+            Slot s = this.menu.getSlot(AnglingCraftMenu.GRID_START + ghost.grid().get(i));
+            if (it != Items.AIR && over(s, mouseX, mouseY)) return new ArrayList<>(net.minecraft.client.gui.screens.Screen.getTooltipFromItem(this.minecraft, new ItemStack(it)));
+        }
+        if (over(this.menu.getSlot(AnglingCraftMenu.RESULT), mouseX, mouseY))
+            return new ArrayList<>(net.minecraft.client.gui.screens.Screen.getTooltipFromItem(this.minecraft, new ItemStack(item(ghost.result()), ghost.count())));
+        return null;
+    }
+
+    private boolean over(Slot s, int mouseX, int mouseY) {
+        int sx = this.leftPos + s.x, sy = this.topPos + s.y;
+        return mouseX >= sx && mouseX < sx + 16 && mouseY >= sy && mouseY < sy + 16;
     }
 
     private Cell cellAt(double mx, double my) {
@@ -413,10 +457,12 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
                 ghost = null;
                 Tide.NETWORK.sendToServer(new TackleFillMsg(c.row.id(), e.hasShiftDown()));
             } else {
+                // like the crafting table's book: whatever is in the grid goes back to the inventory, then the recipe shows as a ghost
                 boolean gridEmpty = true;
                 for (int i = AnglingCraftMenu.GRID_START; i < AnglingCraftMenu.INV_START; i++) if (this.menu.getSlot(i).hasItem()) gridEmpty = false;
-                ghost = gridEmpty ? c.row : null;
-                if (!gridEmpty) this.minecraft.player.sendOverlayMessage(Component.literal("Empty the grid to see the recipe laid out"));
+                if (!gridEmpty) Tide.NETWORK.sendToServer(new TackleFillMsg(c.row.id(), false));      // (it clears the grid, then comes up short)
+                ghost = c.row;
+                ghostTick = this.minecraft.player.tickCount;
             }
             click();
         }

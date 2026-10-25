@@ -25,8 +25,11 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
     @Override
     protected void init() {
         super.init();
-        this.addRenderableWidget(Button.builder(Component.literal("Rig a rod"), b -> Tide.NETWORK.sendToServer(new OpenTackleMsg(true)))
-                .bounds(this.leftPos + this.imageWidth - 64, this.topPos - 16, 64, 14).build());
+        com.li64.tide.client.MouseKeep.restore();
+        this.addRenderableWidget(Button.builder(Component.literal("Assemble rod"), b -> {
+                    com.li64.tide.client.MouseKeep.save();
+                    Tide.NETWORK.sendToServer(new OpenTackleMsg(true));
+                }).bounds(this.leftPos + this.imageWidth - 80, this.topPos - 17, 80, 16).build());
     }
 
     @Override

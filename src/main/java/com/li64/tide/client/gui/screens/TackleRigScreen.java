@@ -21,7 +21,10 @@ public class TackleRigScreen extends AnglingTableScreen {
     @Override
     protected void subInit() {
         super.subInit();
-        this.addRenderableWidget(Button.builder(Component.literal("< Box"), b -> Tide.NETWORK.sendToServer(new OpenTackleMsg(false)))
+        this.addRenderableWidget(Button.builder(Component.literal("< Box"), b -> {
+                    com.li64.tide.client.MouseKeep.save();
+                    Tide.NETWORK.sendToServer(new OpenTackleMsg(false));
+                })
                 .bounds(this.leftPos + this.imageWidth - 44, this.topPos - 16, 44, 14).build());
     }
 

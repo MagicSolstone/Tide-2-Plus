@@ -47,7 +47,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     private static final int COLS = 5, ROWS = 4, CELL = 25, CELLS_X = 11, CELLS_Y = 43;
 
     /** The filters along the top of the book: everything, by rig, then one per kind (the server's order). */
-    private static final String[] FILTER_ICONS = {"tide:angling_table", "minecraft:lead", "tide:bamboo_fishing_rod", "tide:fishing_line",
+    private static final String[] FILTER_ICONS = {"tide:angling_table", "minecraft:nether_star", "tide:bamboo_fishing_rod", "tide:fishing_line",
             "tide:red_bobber", "tide:fishing_hook", "tide:spinner_lure", "tide:bait", "tide:tackle_box"};
     private static final String[] FILTER_NAMES = {"Everything", "Rigs", "Rods", "Lines", "Bobbers", "Hooks", "Lures", "Bait", "Gear"};
 

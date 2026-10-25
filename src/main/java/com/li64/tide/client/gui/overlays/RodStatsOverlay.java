@@ -33,6 +33,9 @@ public final class RodStatsOverlay {
 
     private record Row(String label, String value, int color) {}
 
+    /** The rows always on the panel; everything else shows while sneaking. */
+    private static final Set<String> BASIC = Set.of("Cast range", "Bite speed", "Hook window", "Luck");
+
     public static void render(GuiGraphicsExtractor g, float dt) {
         Minecraft mc = Minecraft.getInstance();
         Player player = mc.player;
@@ -53,11 +56,8 @@ public final class RodStatsOverlay {
 
         List<Row> rows = new ArrayList<>();
         rows.add(pct("Cast range", (1 + e.cast()) * st.castDistance() - 1, false));
-        rows.add(pct("Bite speed", 1 / (e.biteWaitFactor() * st.biteWait()) - 1, false));
-        if (speed != 0) {
-            long cut = Math.round(Math.abs(1 - RodEffects.lureWaitFactor(speed)) * 100);
-            rows.add(new Row("Lure and bait", speed > 0 ? "-" + cut + "% wait" : "+" + cut + "% wait", speed > 0 ? GOOD : BAD));
-        }
+        // one bite-speed number: the rod and tackle, the fishing level, and lure/bait speed all together (+% = faster, like every other row)
+        rows.add(pct("Bite speed", 1 / (e.biteWaitFactor() * st.biteWait() * RodEffects.lureWaitFactor(speed)) - 1, false));
         rows.add(pct("Hook window", (1 + e.window()) * st.hookZones() - 1, false));
         rows.add(new Row("Luck", luck == 0 ? "None" : String.format("%+d", luck), luck > 0 ? GOOD : luck < 0 ? BAD : DIM));
         if (e.quality() != 0) rows.add(pct("Catch quality", e.quality(), false));
@@ -70,11 +70,20 @@ public final class RodStatsOverlay {
         if (e.upgrade() != 0) rows.add(new Row("Quality bump", Math.round(e.upgrade() * 100) + "%", GOOD));
 
         // vanilla enchantments: what each one does here (their numbers are already in the rows above)
-        if (lure > 0) rows.add(new Row("Lure " + roman(lure), "-" + Math.round((1 - RodEffects.lureWaitFactor(lure)) * 100) + "% wait", GOOD));
+        if (lure > 0) rows.add(new Row("Lure " + roman(lure), String.format("%+d%%", Math.round((1 / RodEffects.lureWaitFactor(lure) - 1) * 100)), GOOD));
         if (sea > 0) rows.add(new Row("Luck of the Sea " + roman(sea), "+" + sea + " luck", GOOD));
         int unbreaking = EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(Enchantments.UNBREAKING), rod);
         if (unbreaking > 0) rows.add(new Row("Unbreaking " + roman(unbreaking), "wears slower", GOOD));
         if (EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(Enchantments.MENDING), rod) > 0) rows.add(new Row("Mending", "repairs from XP", GOOD));
+
+        // normally just the four basics; sneaking opens the full panel (extras, enchantments, what is active here)
+        boolean detail = player.isShiftKeyDown();
+        int hidden = 0;
+        if (!detail) {
+            int before = rows.size();
+            rows.removeIf(r -> !BASIC.contains(r.label()));
+            hidden = before - rows.size();
+        }
 
         Set<String> active = new LinkedHashSet<>(), idle = new LinkedHashSet<>();
         List<ItemStack> all = new ArrayList<>(List.of(rod));
@@ -95,8 +104,10 @@ public final class RodStatsOverlay {
         int labelW = rows.stream().mapToInt(r -> font.width(r.label())).max().orElse(0);
         int valueW = rows.stream().mapToInt(r -> font.width(r.value())).max().orElse(0);
         String title = "Fishing Lv " + level + (ClientAngler.fair && ClientAngler.enabled ? " (fair play)" : "");
-        String on = active.isEmpty() ? null : "Active: " + String.join(", ", active);
-        String off = idle.isEmpty() ? null : "Not now: " + String.join(", ", idle);
+        if (!detail && (!active.isEmpty() || !idle.isEmpty())) hidden++;
+        String on = !detail || active.isEmpty() ? null : "Active: " + String.join(", ", active);
+        String off = !detail || idle.isEmpty() ? null : "Not now: " + String.join(", ", idle);
+        String hint = hidden > 0 ? "Sneak for " + hidden + " more" : null;
         int w = Math.max(labelW + 10 + valueW, Math.max(font.width(title), Math.max(on == null ? 0 : Math.min(font.width(on), 170), off == null ? 0 : Math.min(font.width(off), 170))));
         List<net.minecraft.util.FormattedCharSequence> onLines = on == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(on), Math.max(w, 120));
         List<net.minecraft.util.FormattedCharSequence> offLines = off == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(off), Math.max(w, 120));
@@ -108,7 +119,7 @@ public final class RodStatsOverlay {
         shownFill += (target - shownFill) * 0.12;
         if (Math.abs(target - shownFill) < 0.002) shownFill = target;
         String pctText = maxed ? "max" : Math.round(target * 100) + "%";
-        int h = 17 + rows.size() * 10 + (onLines.size() + offLines.size()) * 10 + (onLines.isEmpty() && offLines.isEmpty() ? 0 : 3);
+        int h = 17 + rows.size() * 10 + (hint == null ? 0 : 10) + (onLines.size() + offLines.size()) * 10 + (onLines.isEmpty() && offLines.isEmpty() ? 0 : 3);
         int sw = g.guiWidth(), sh = g.guiHeight();
         float px = sw - (w + 10) * s - 4, py = (sh - (h + 8) * s) / 2f;
 
@@ -129,6 +140,7 @@ public final class RodStatsOverlay {
             Gui26.text(g, font, r.value(), 6 + w - font.width(r.value()), y, r.color(), true);
             y += 10;
         }
+        if (hint != null) { Gui26.text(g, font, hint, 6, y, DIM, true); y += 10; }
         if (!onLines.isEmpty()) {
             y += 3;
             for (var line : onLines) { Gui26.text(g, font, line, 6, y, DIM, true); y += 10; }

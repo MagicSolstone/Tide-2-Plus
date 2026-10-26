@@ -25,7 +25,7 @@ public class TackleRigScreen extends AnglingTableScreen {
 
     @Override
     protected void subInit() {
-        this.topPos = Math.max(18, (this.height - TALL) / 2);      // centred for the taller bench (the buttons follow)
+        this.topPos = Math.max(6, (this.height - TALL) / 2);      // centred for the taller bench (it has no buttons above it)
         super.subInit();
     }
 
@@ -76,7 +76,7 @@ public class TackleRigScreen extends AnglingTableScreen {
     protected void extractLabels(@NotNull GuiGraphicsExtractor g, int xm, int ym) {
         g.text(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF404040, false);
         g.text(this.font, BOX, this.inventoryLabelX, this.inventoryLabelY, 0xFF1F5A28, false);
-        g.text(this.font, Component.literal("Rods"), com.li64.tide.registries.items.TackleBoxItem.Menu.RACK_X - 4, 72, 0xFF14281A, false);
+        g.text(this.font, Component.literal("Rods"), com.li64.tide.registries.items.TackleBoxItem.Menu.RACK_X - 1, 72, 0xFFDDEFD8, false);
         g.text(this.font, this.playerInventoryTitle, this.inventoryLabelX, TackleBoxItem.RigMenu.OWN_Y - 11, 0xFF404040, false);
     }
 }

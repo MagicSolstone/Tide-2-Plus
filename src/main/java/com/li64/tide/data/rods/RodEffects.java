@@ -45,9 +45,9 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     public static final double SPEED_POINT = 0.06;
 
     /**
-     * Stacked bite speed with diminishing returns instead of a hard cap: every point counts in full up to +50%,
-     * half as much from +50% to +100%, and a quarter as much past that. So the best possible rig still bites
-     * noticeably faster than a good one, but never anywhere near instantly.
+     * Stacked bite speed (and rare finds) with diminishing returns instead of a hard cap: every point counts in full
+     * up to +50%, half as much from +50% to +100%, and a quarter as much past that. So the best possible rig is still
+     * noticeably better than a good one, but never runs away.
      */
     public static double softenBite(double raw) {
         if (raw <= 0.5) return raw;
@@ -55,8 +55,17 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return 0.75 + (raw - 1.0) * 0.25;
     }
 
-    /** Each point of luck makes rare fish this much more likely (the rod panel and tooltips show it as "rare finds"). */
+    /**
+     * Each point of luck is this much "rare finds": every rare fish becomes that share more likely than its own normal
+     * chance (+15% makes a 2-in-100 fish about 2.3-in-100; it is never a chance of getting a rare fish). Luck points stay
+     * whole numbers inside (bait files, the Midas fish's requirement, vanilla loot); players only ever see the percentage.
+     */
     public static final double RARE_PER_LUCK = 0.15;
+
+    /** All the luck on a rod and angler, as the rare-finds bonus it really gives (softened like bite speed: no hard cap). */
+    public static double rareFinds(int luck) {
+        return softenBite(luck * RARE_PER_LUCK);
+    }
 
     public static final RodEffects NONE = new RodEffects(0, 0, 0, 0, 0, 0, 0, 0);
 
@@ -100,7 +109,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("stone_hook", fight(-0.03)),
             Map.entry("copper_hook", bite(0.05)),
             Map.entry("golden_hook", xp(0.10)),      // its luck is only in deserts and badlands (situational), so it isn't the default pick
-            Map.entry("diamond_hook", new RodEffects(0, 0, 0.12, 0, 0, 0, 0.05, 0)),
+            Map.entry("diamond_hook", new RodEffects(0, 0, 0.15, 0, 0, 0.05, 0.05, 0)),
             Map.entry("emerald_hook", xp(0.15)),
             Map.entry("amethyst_hook", quality(0.03)),
             Map.entry("netherite_hook", new RodEffects(0, 0, 0.10, -0.10, 0, 0.05, 0, 0)),
@@ -110,7 +119,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("feathered_hook", new RodEffects(0.05, 0.08, 0, 0, 0, 0, 0, 0)),
             Map.entry("barbed_hook", quality(0.06)),      // holds on to the better fish (the circle hook is the landing one)
             Map.entry("treble_hook", new RodEffects(0, 0, 0, 0.05, 0, 0, 0, 0, 0.12, 0)),
-            Map.entry("circle_hook", new RodEffects(0, 0, 0.10, -0.05, 0, 0, 0.40, 0)),      // the landing hook: sets deep, so Good and Bad hooks hold and the fish tires sooner
+            Map.entry("circle_hook", new RodEffects(0, 0, 0.05, -0.05, 0, 0, 0.40, 0)),      // the landing hook: sets deep, so Good and Bad hooks hold and the fish tires sooner
             Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.08)),
             Map.entry("lucky_hook", new RodEffects(0, 0, 0, 0, 1, 0, 0, 0)));
 
@@ -166,15 +175,15 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("enchanted_golden_apple_bobber", new RodEffects(0, 0, 0, 0, 1, 0.12, 0, 0)),
             Map.entry("iron_bobber", window(0.08)),
             Map.entry("golden_bobber", xp(0.10)),
-            Map.entry("diamond_bobber", bite(0.12)),
+            Map.entry("diamond_bobber", bite(0.15)),
             Map.entry("netherite_bobber", new RodEffects(0, 0, 0.05, -0.10, 0, 0, 0, 0)),
                         Map.entry("amethyst_bobber", quality(0.01)),   // (amethyst gear shines by day: see SITUATIONAL)
             Map.entry("echo_bobber", xp(0.15)),
             Map.entry("chorus_bobber", cast(0.15)),
             Map.entry("feather_bobber", new RodEffects(0.10, 0.05, 0, 0, 0, 0, 0, 0)),
-            Map.entry("lichen_bobber", bite(0.10)),
+            Map.entry("lichen_bobber", bite(0.06)),
             Map.entry("nautilus_bobber", new RodEffects(0, 0, 0.05, -0.05, 0, 0, 0, 0)),
-            Map.entry("pearl_bobber", quality(0.20)),
+            Map.entry("pearl_bobber", quality(0.10)),      // one ender pearl: its big quality is on a full moon
             Map.entry("heart_bobber", land(0.15)),
             Map.entry("grassy_bobber", bite(0.08)),
             Map.entry("duck_bobber", xp(0.05)),
@@ -272,7 +281,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("blazing_fishing_rod", List.of(new Perk(When.NETHER, bite(0.20)), new Perk(When.LAVA, quality(0.10)))),
             Map.entry("netherite_fishing_rod", List.of(new Perk(When.LAVA, new RodEffects(0, 0.10, 0, 0, 1, 0, 0, 0)))),
             Map.entry("mangrove_fishing_rod", List.of(new Perk(When.SWAMP, new RodEffects(0, 0.20, 0, 0, 1, 0, 0, 0)))),
-            Map.entry("cherry_fishing_rod", List.of(new Perk(When.DAWN_DUSK, new RodEffects(0, 0.60, 0, 0, 0, 0.10, 0, 0)))),
+            Map.entry("cherry_fishing_rod", List.of(new Perk(When.DAWN_DUSK, new RodEffects(0, 0.40, 0, 0, 0, 0.10, 0, 0)))),
             Map.entry("frost_fishing_rod", List.of(new Perk(When.COLD, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0, 0.15, 0)))),
             Map.entry("cactus_fishing_rod", List.of(new Perk(When.DRY, new RodEffects(0, 0.25, 0, 0, 1, 0, 0, 0)))),
             Map.entry("widow_fishing_rod", List.of(new Perk(When.NIGHT, new RodEffects(0, 0.25, 0, 0, 0, 0, 0, 0.20, 0.15, 0)),
@@ -640,7 +649,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (xp != 0) out.add(line(color, pct(xp) + " fishing XP"));
         if (twin != 0) out.add(line(color, Math.round(twin * 100) + "% chance of a second fish"));
         if (cook != 0) out.add(line(color, Math.round(cook * 100) + "% chance the fish comes up cooked"));
-        if (speed != 0) out.add(line(color, String.format("%+d fishing speed (bites about %d s sooner)", speed, speed * 5)));
+        if (speed != 0) out.add(line(color, pct(speed * SPEED_POINT) + " bite speed"));
         if (ease != 0) out.add(line(color, "-" + Math.round(ease * 100) + "% catch difficulty"));
         if (!when.isEmpty()) out.replaceAll(c -> line(color, c.getString() + when));
         return out;

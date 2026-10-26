@@ -70,12 +70,13 @@ public class BaitUtils {
         int luck = getBaitLuck(bait);
         int crateChance = getCrateChance(bait);
 
+        // speed and luck points shown the way the rod panel shows them: bite speed and rare finds, as percentages
         if (speed != 0)
             builder.add(Component.translatable("text.tide.bait_tooltip.speed",
-                    (speed < 0 ? "" : "+") + speed).withStyle(ChatFormatting.BLUE));
+                    String.format("%+d%%", Math.round(speed * com.li64.tide.data.rods.RodEffects.SPEED_POINT * 100))).withStyle(ChatFormatting.BLUE));
         if (luck != 0)
             builder.add(Component.translatable("text.tide.bait_tooltip.lucky",
-                    (luck < 0 ? "" : "+") + luck).withStyle(ChatFormatting.BLUE));
+                    String.format("%+d%%", Math.round(luck * com.li64.tide.data.rods.RodEffects.RARE_PER_LUCK * 100))).withStyle(ChatFormatting.BLUE));
         if (crateChance != 0)
             builder.add(Component.translatable("text.tide.bait_tooltip.crate",
                     (crateChance < 0 ? "" : "+") + crateChance + "%").withStyle(ChatFormatting.BLUE));

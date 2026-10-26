@@ -148,17 +148,18 @@ public enum CatchQuality {
         // the typical range). Better fish centre higher, but the curves overlap: a Mythic can be a small fish and an
         // Average one can, rarely, be a big one. Past 1.2x the typical top, sizes grow slowly.
         double z = switch (this) {
-            case POOR -> -1.35 + 0.55 * rng.nextGaussian();
-            case AVERAGE -> 0.0 + 0.75 * rng.nextGaussian();
-            case GOOD -> 0.95 + 0.75 * rng.nextGaussian();
-            case GREAT -> 1.5 + 0.8 * rng.nextGaussian();
-            case TROPHY -> 1.95 + 0.85 * rng.nextGaussian();
-            case MYTHIC -> 2.5 + 0.95 * rng.nextGaussian();
+            case POOR -> -1.35 + 0.5 * rng.nextGaussian();
+            case AVERAGE -> 0.0 + 0.65 * rng.nextGaussian();
+            case GOOD -> 0.95 + 0.65 * rng.nextGaussian();
+            case GREAT -> 1.5 + 0.7 * rng.nextGaussian();
+            case TROPHY -> 1.95 + 0.75 * rng.nextGaussian();
+            case MYTHIC -> 2.5 + 0.85 * rng.nextGaussian();
         };
         // past 1.2x the typical top, sizes grow ever more slowly (a hard stop would pile fish up at the same size and make
-        // the record impossible to beat; this way a bigger fish is always possible, just much rarer)
+        // the record impossible to beat; this way a bigger fish is always possible, just much rarer). For a trout-shaped
+        // fish of typical 30-60 cm, a Mythic weighs about 13 lb at the median and 31 lb at 1 in 1,000.
         double x = Math.exp(mu + sigma * z) / hi;
-        if (x > 1.2) x = 1.2 + 0.5 * Math.log(1 + (x - 1.2) / 0.5);
+        if (x > 1.2) x = 1.2 + 0.35 * Math.log(1 + (x - 1.2) / 0.35);
         double length = x * hi;
         double min = size.recordLowCm().orElse(0.6 * lo);
         return Math.max(length, min);

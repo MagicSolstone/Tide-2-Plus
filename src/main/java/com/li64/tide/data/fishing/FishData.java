@@ -179,8 +179,8 @@ public record FishData( Holder<Item> fish,
 
     @Override
     public double weight(FishingContext context) {
-        // luck: the rare fish (selection_quality 0.5) get RARE_PER_LUCK more likely per point, as a share of their own weight
-        double rare = Math.max(0.0, 1.0 + quality / 0.5 * com.li64.tide.data.rods.RodEffects.RARE_PER_LUCK * context.luck());
+        // luck: the rare fish (selection_quality 0.5) become "rare finds" % more likely than their own weight (softened)
+        double rare = Math.max(0.0, 1.0 + quality / 0.5 * com.li64.tide.data.rods.RodEffects.rareFinds(context.luck()));
         return this.modifyWeight(weight * rare, 0.0, modifiers, context) * com.li64.tide.data.rods.Lures.fishFactor(context, this);
     }
 

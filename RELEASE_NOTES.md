@@ -22,9 +22,20 @@ Install the same way: the jar in `mods/` on the server and every client (replace
 - The journal's luck requirement (the Midas fish) is shown as a percentage too.
 
 ## Fish sizes overlap
-- **Each quality is its own bell curve of sizes**, centred higher for better fish but overlapping: a Mythic can be a small fish, and an Average one can, rarely, be a big one. Sizes keep growing slowly past the old top instead of stopping at a hard cap, so there is no size that can never be beaten.
+- **Each quality is its own bell curve of sizes**, centred higher for better fish but overlapping: a Mythic can be a small fish, and an Average one can, rarely, be a big one. Sizes keep growing slowly past the old top instead of stopping at a hard cap, so there is no size that can never be beaten. For a trout-shaped fish (typically 30-60 cm): an Average one is usually 0.7-4 lb, a Mythic usually 4.6-23 lb, about 13 lb at the median.
 - **The catch line in chat shows how your fish compares with the server record** when you hover it.
 
 ## Iron rig
 - **Hitting mobs wears the rod down** (1 durability per hit, like a sword). A rod worn out by other things stops at broken until repaired, but:
 - **An iron-rig rod at its last point of durability breaks for real** when it hits something (its line, hook, bobber and lure drop).
+
+## Rare finds and bite speed both soften
+- **Rare finds use the same diminishing returns as bite speed**: full value up to +50%, half from +50% to +100%, a quarter past that. "+150%" never means a guaranteed rare fish: it means each rare fish is that much more likely than its own normal chance (a 2-in-100 fish at +100% is about 4-in-100).
+- **Every luck and speed number is a percentage now**: bait tooltips ("+30% rare finds", "+12% bite speed"), rod tooltips, `/fishinglevel` and the angler page. Nothing says "luck" or "fishing speed" points any more.
+
+## Balance
+- **Pearl bobber**: +10% catch quality (was +20%; it costs one ender pearl). Its full-moon quality and beach rare finds are unchanged.
+- **Diamond hook**: +15% hook window, +5% catch quality, +5% landing (was +12% window, +5% landing), so it is worth more than the circle hook for anything but landing.
+- **Circle hook**: +5% hook window (was +10%); still +40% to land Good and Bad hooks and an easier fight.
+- **Diamond bobber**: +15% bite speed (was +12%). **Lichen bobber**: +6% (was +10%; glow lichen is easy to find).
+- **Cherry rod**: +40% bite speed at dawn and dusk (was +60%).

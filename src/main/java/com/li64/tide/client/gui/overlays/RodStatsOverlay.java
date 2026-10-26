@@ -59,7 +59,7 @@ public final class RodStatsOverlay {
         // (+% = faster, like every other row). Lure enchantments are in here; luck from Luck of the Sea is in Luck.
         rows.add(pct("Bite speed", 1 / (e.biteWaitFactor(speed) * st.biteWait()) - 1, false));
         rows.add(pct("Hook window", (1 + e.window()) * st.hookZones() - 1, false));
-        rows.add(pct("Rare finds", luck * RodEffects.RARE_PER_LUCK, false));      // luck: rarer fish, a few more crates
+        rows.add(pct("Rare finds", RodEffects.rareFinds(luck), false));      // luck: rarer fish, a few more crates
         rows.add(extra("Catch quality", e.quality(), ""));
         rows.add(extra("Fishing XP", e.xp(), ""));
         rows.add(extra("Land Good/Bad", e.land(), ""));

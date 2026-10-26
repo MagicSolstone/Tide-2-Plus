@@ -237,7 +237,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                 case DAY -> sky && level.isBrightOutside();
                 case DAWN_DUSK -> {      // the clock is synced, so the client's stats panel agrees with the server
                     long t = level.getOverworldClockTime() % 24000;
-                    yield sky && (t >= 22500 || t < 1000 || (t >= 11500 && t < 13500));
+                    yield sky && (t >= 22000 || t < 1500 || (t >= 11000 && t < 14000));      // about 3 minutes each, dawn and dusk
                 }
                 case THUNDER -> level.isThundering() && level.canSeeSky(pos.above());
                 case NEW_MOON -> sky && level.isDarkOutside() && com.li64.tide.util.Mc26.moonPhase(level, pos) == 4;
@@ -294,7 +294,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("kelp_line", List.of(new Perk(When.OCEAN, bite(0.15)))),
             Map.entry("vine_line", List.of(new Perk(When.JUNGLE, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)))),
             Map.entry("netherite_line", List.of(new Perk(When.NETHER, bite(0.15)), new Perk(When.LAVA, window(0.10)))),
-            Map.entry("copper_line", List.of(new Perk(When.RAIN, bite(0.10)), new Perk(When.THUNDER, luck(1)))),
+            Map.entry("copper_line", List.of(new Perk(When.RAIN, bite(0.10)))),
             Map.entry("phantom_line", List.of(new Perk(When.NIGHT, bite(0.15)))),
             Map.entry("prismarine_line", List.of(new Perk(When.OCEAN, luck(1)))),
             Map.entry("spider_line", List.of(new Perk(When.NIGHT, window(0.10)), new Perk(When.NEW_MOON, luck(1)))),
@@ -313,7 +313,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("glow_berry_bobber", List.of(new Perk(When.NIGHT, bite(0.15)))),
             Map.entry("pumpkin_bobber", List.of(new Perk(When.NIGHT, xp(0.15)))),
             Map.entry("lily_pad_bobber", List.of(new Perk(When.SWAMP, bite(0.20)))),
-            Map.entry("copper_bobber", List.of(new Perk(When.RAIN, bite(0.15)), new Perk(When.THUNDER, luck(1)))),
+            Map.entry("copper_bobber", List.of(new Perk(When.RAIN, bite(0.15)))),
             Map.entry("feather_bobber", List.of(new Perk(When.RIVER, bite(0.15)))),
             Map.entry("grassy_bobber", List.of(new Perk(When.DAWN_DUSK, bite(0.25)))),
             Map.entry("cherry_bobber", List.of(new Perk(When.DAWN_DUSK, xp(0.15)))),
@@ -346,7 +346,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("spinner_lure", List.of(new Perk(When.DAY, bite(0.10)))),
             Map.entry("chorus_lure", List.of(new Perk(When.END, new RodEffects(0, 0.25, 0, 0, 1, 0, 0, 0)))),
             Map.entry("storm_lure", List.of(new Perk(When.RAIN, bite(0.15)),
-                    new Perk(When.THUNDER, new RodEffects(0, 0.10, 0, 0, 2, 0.15, 0, 0)))),
+                    new Perk(When.THUNDER, new RodEffects(0, 0.10, 0, 0, 1, 0.15, 0, 0)))),
             Map.entry("ink_lure", List.of(new Perk(When.NIGHT, window(0.10)), new Perk(When.NEW_MOON, luck(1)))),
             Map.entry("frog_lure", List.of(new Perk(When.SWAMP, bite(0.20)))),
             Map.entry("squid_lure", List.of(new Perk(When.OCEAN, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)), new Perk(When.BEACH, bite(0.15)))),

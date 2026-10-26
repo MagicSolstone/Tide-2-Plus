@@ -18,9 +18,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The Angling Table's Craft tab: a 3x3 grid and a result slot, like a crafting table, but for fishing gear (which the
@@ -29,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class AnglingCraftMenu extends AbstractContainerMenu {
     public static final int RESULT = 0, GRID_START = 1, INV_START = 10, HOTBAR_START = 37, END = 46;
-    private static final Map<UUID, Boolean> LAST_TAB = new ConcurrentHashMap<>();
     private final ContainerLevelAccess access;
     private final Player player;
     private final TransientCraftingContainer grid = new TransientCraftingContainer(this, 3, 3);
@@ -64,12 +60,12 @@ public class AnglingCraftMenu extends AbstractContainerMenu {
     }
 
     /** Opens the table on the tab the player used last (Craft the first time). */
-    public static void openLast(ServerPlayer player, Level level, BlockPos pos) {
-        open(player, level, pos, LAST_TAB.getOrDefault(player.getUUID(), true));
+    /** Using the table always opens the 3x3 crafting grid (the Assemble tab is a button away). */
+    public static void openCraft(ServerPlayer player, Level level, BlockPos pos) {
+        open(player, level, pos, true);
     }
 
     public static void open(ServerPlayer player, Level level, BlockPos pos, boolean craft) {
-        LAST_TAB.put(player.getUUID(), craft);
         Component title = Component.translatable("container.tide.angling_table");
         if (craft) player.openMenu(new SimpleMenuProvider((id, inv, p) -> new AnglingCraftMenu(id, inv, ContainerLevelAccess.create(level, pos)), title));
         else player.openMenu(new SimpleMenuProvider((id, inv, p) -> new AnglingTableMenu(id, inv, ContainerLevelAccess.create(level, pos)), title));

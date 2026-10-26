@@ -88,7 +88,7 @@ Data you edit without touching Java lives in `src/main/resources/`:
 | How big fish are | `CatchQuality.sampleLength` | One bell curve per quality; edit the centre and spread numbers. |
 | Material rigs (Stone, Gold, Diamond, Honey, Iron) and the Lucky rig, and their drops | `RigSets.SETS` (the `When.ALWAYS` ones), `RigSets.SET_DROPS`, `RigSets.wear` (Stone) | |
 | Sun and Moon rigs (their strength follows the sky) | `RigSets.strength`, `RodEffects.noon`, `RodEffects.moonlight`; amethyst's own moonlight quality is `RodEffects.AMETHYST_QUALITY` | |
-| Rig colours, tier names and the gem on a rod's icon | `RigSets.COLOR`, `RigSets.tier`, `RigSets.refreshLook` (and the rods' `assets/tide/items/*.json`) | |
+| Rig colours and tier names | `RigSets.COLOR`, `RigSets.tier` | |
 | The Angling Table's look | `client/gui/BenchStyle.java` (frame, slot hints), `AnglingTableScreen.rigPanel` (rig cards) | |
 | Things a hook or bobber brings up | `RodEffects.PART_DROPS` (stone hook seaweed, emerald hook emeralds) | |
 | Cut bait strength by fish quality | `data/rods/CutBait.java` (`rareShare`) | |

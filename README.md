@@ -47,7 +47,7 @@ version is in the **[CHANGELOG](CHANGELOG.md)**.
 
 ### Server records
 - The server keeps the **heaviest fish of each kind**: who caught it, the weight and the quality, shown in each fish's
-  journal page. Beating one is announced to everyone with a chime and a sparkle.
+  journal page. Beating one is announced to everyone with a gong.
 
 ### Rods and tackle
 A rod holds a **line, hook, bobber and lure**, plus **bait**. Every piece does something, and many are made for a place,
@@ -76,10 +76,10 @@ the full one. Each piece belongs to one rig, and a rod carries at most **two rig
   Frost, Cave, Fire (lava) and Void.
 - **Sky rigs** that follow the sky: the **Sunlight rig** bites faster toward noon and brings up seeds; the **Moonlight
   rig** grows toward a full moon, finds rare fish and better quality, and brings up amethyst.
-- **Material rigs** that work anywhere, each with a twist: **Stone** (the rod barely wears), **Iron** (the rod fights like
+- **Material rigs** that work anywhere, each with a twist: **Stone** (the starter rig: plain tackle, quicker bites and a rod that barely wears), **Iron** (the rod fights like
   a sword), **Gold** (XP and gold nuggets), **Diamond** (catch quality), **Honey** (honeycombs and honey bottles) and
   **Lucky** (rare finds).
-- **Each rig has a colour**, and a rod wears a small gem in its rig's colour on its icon.
+- **Each rig has a colour**, used for its name, its card at the Angling Table and the rod panel.
 
 ### Bait
 - **Region baits** let a region's fish bite anywhere; **session baits** boost XP, landing, quality or a second fish.

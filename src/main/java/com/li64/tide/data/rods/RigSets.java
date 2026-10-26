@@ -71,21 +71,21 @@ public final class RigSets {
         return new RodEffects(0, bite, 0, 0, luck, quality, 0, xp);
     }
 
-    // The usual shapes: a little of one thing at two pieces; at three, the best kit there is for that place or time
-    // (it beats any always-on set there, so a trip is worth a change of tackle), but only there.
-    private static final RodEffects QUALITY_2 = fx(0, 0, 0.08, 0), LUCK_QUALITY_3 = rig(0, 2, 0.50, 0);
-    private static final RodEffects BITE_2 = fx(0.10, 0, 0, 0), LUCK_BITE_3 = rig(0.25, 2, 0.36, 0);
+    // The usual shapes: a little of one thing at two pieces; at three, a topping on what the pieces already give there
+    // (each piece has its own perks for the same place or time, so the rig itself stays modest: +1 luck and some quality).
+    private static final RodEffects QUALITY_2 = fx(0, 0, 0.08, 0), LUCK_QUALITY_3 = rig(0, 1, 0.30, 0);
+    private static final RodEffects BITE_2 = fx(0.10, 0, 0, 0), LUCK_BITE_3 = rig(0.25, 1, 0.20, 0);
 
     public static final List<RigSet> SETS = List.of(
             set("Ocean rig", When.OCEAN, QUALITY_2, LUCK_QUALITY_3, "prismarine_fishing_rod", "conduit_fishing_rod", "drowned_fishing_rod",
                     "kelp_line", "prismarine_line", "prismarine_hook", "nautilus_bobber", "prismarine_bobber", "turtle_bobber",
                     "squid_lure", "coastal_bait", "brine_shrimp"),
-            set("River rig", When.RIVER, BITE_2, rig(0.25, 1, 0.32, 0.15), "silk_line", "wooden_hook",
+            set("River rig", When.RIVER, BITE_2, rig(0.25, 1, 0.20, 0.15), "silk_line", "wooden_hook",
                     "feather_bobber", "duck_bobber", "fly_lure", "dough_ball"),
-            set("Night rig", When.NIGHT, fx(0, 0, 0, 0.10), rig(0, 2, 0.42, 0.25), "bone_fishing_rod", "widow_fishing_rod",
+            set("Night rig", When.NIGHT, fx(0, 0, 0, 0.10), rig(0, 1, 0.25, 0.25), "bone_fishing_rod", "widow_fishing_rod",
                     "phantom_line", "glow_hook", "glow_berry_bobber", "pumpkin_bobber", "glow_lure", "ink_lure",
                     "glow_worms"),
-            set("Twilight rig", When.DAWN_DUSK, fx(0, 0, 0, 0.10), rig(0, 1, 0.42, 0.30), "cherry_fishing_rod",
+            set("Twilight rig", When.DAWN_DUSK, fx(0, 0, 0, 0.10), rig(0, 1, 0.30, 0.30), "cherry_fishing_rod",
                     "feathered_hook", "twilight_hook", "cherry_bobber", "grassy_bobber", "popper_lure", "blossom_bait"),
             set("Storm rig", When.RAIN, QUALITY_2, LUCK_QUALITY_3, "copper_fishing_rod", "copper_line", "copper_hook", "copper_bobber", "storm_lure"),
             set("Swamp rig", When.SWAMP, BITE_2, LUCK_BITE_3, "mangrove_fishing_rod", "slime_line", "lily_pad_bobber", "slime_bobber",
@@ -93,7 +93,7 @@ public final class RigSets {
             set("Jungle rig", When.JUNGLE, QUALITY_2, LUCK_QUALITY_3, "bamboo_fishing_rod", "vine_line", "apple_bobber", "jungle_bait"),
             set("Desert rig", When.DRY, BITE_2, LUCK_BITE_3, "cactus_fishing_rod", "redstone_line", "fish_bone_hook",
                     "cactus_bobber", "desert_bait"),
-            set("Frost rig", When.COLD, BITE_2, rig(0.20, 1, 0.42, 0), "frost_fishing_rod", "permafrost_hook",
+            set("Frost rig", When.COLD, BITE_2, rig(0.20, 1, 0.25, 0), "frost_fishing_rod", "permafrost_hook",
                     "snowball_bobber", "ice_jig_lure", "frost_bait"),
             set("Cave rig", When.UNDERGROUND, QUALITY_2, LUCK_QUALITY_3, "echo_fishing_rod", "spider_line", "echo_bobber", "sculk_bobber", "lichen_bobber",
                     "jig_lure", "echo_lure", "cave_grubs", "dripstone_bait", "sculk_bait"),
@@ -103,8 +103,9 @@ public final class RigSets {
             new RigSet("Iron rig", When.ALWAYS, new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0), new RodEffects(0, 0, 0.10, -0.10, 0, 0, 0, 0),
                     Set.of("iron_fishing_rod", "iron_line", "fishing_hook", "iron_bobber"), IRON_TWO_NOTE, IRON_NOTE),
             // the material rigs: always on, a little weaker than a place-and-time rig in its own place, each with its own twist
-            new RigSet("Stone rig", When.ALWAYS, RodEffects.NONE, RodEffects.NONE,
-                    Set.of("stone_fishing_rod", "stone_hook", "fishing_line"), "the rod wears half as fast", "the rod barely wears"),
+            // the starter rig: the first rod, the plain line, bobber and bait, and the stone hook
+            new RigSet("Stone rig", When.ALWAYS, fx(0.10, 0, 0, 0), fx(0.20, 0, 0, 0.10),
+                    Set.of("stone_fishing_rod", "stone_hook", "fishing_line", "red_bobber", "bait"), "the rod wears half as fast", "the rod barely wears"),
             new RigSet("Gold rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.10), new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.20),
                     Set.of("golden_fishing_rod", "midas_fishing_rod", "golden_line", "golden_hook", "golden_spoon_lure"),
                     "", "25% chance of a gold nugget with each fish"),
@@ -113,13 +114,13 @@ public final class RigSets {
             new RigSet("Honey rig", When.ALWAYS, RodEffects.NONE, new RodEffects(0, 0, 0, 0, 0, 0, 0.10, 0),
                     Set.of("honeycomb_fishing_rod", "honey_line", "honey_bobber"),
                     "15% chance of a honeycomb with each fish", "25% chance of a honey bottle with each fish"),
-            new RigSet("Lucky rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 2, 0, 0, 0),
+            new RigSet("Lucky rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 1, 0.10, 0, 0),
                     Set.of("golden_apple_bobber", "enchanted_golden_apple_bobber", "lucky_hook", "magnet_lure", "lucky_bait"), "", ""),
             // the sky rigs: their bonus follows the sun or the moon (see strength)
             new RigSet("Sunlight rig", When.DAY, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0), new RodEffects(0, 0.40, 0, 0, 0, 0, 0, 0),
                     Set.of("sunflower_fishing_rod", "spinner_lure", "golden_bobber"),
                     "strongest at noon; seeds come up with fish", "strongest at noon; more seeds come up with fish"),
-            new RigSet("Moonlight rig", When.NIGHT, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 2, 0.25, 0, 0),
+            new RigSet("Moonlight rig", When.NIGHT, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 1, 0.25, 0, 0),
                     Set.of("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber", "pearl_bobber",
                             "mushroom_bobber", "moon_bait"),
                     "strongest on a full moon, weakest on a new moon; 10% chance of an amethyst shard with each fish",
@@ -232,29 +233,12 @@ public final class RigSets {
     }
 
     /**
-     * Call after anything on a rod changes: a small gem in the corner of the rod's icon for each rig it has, in the rig's
-     * colour (up to two: Tier 2 rigs first, bright; Tier 1 ones dimmer). Uses the rod's custom model data (flags and
-     * colours 0 and 1), which the rod's item definition reads (assets/tide/items/*_fishing_rod.json).
+     * Call after anything on a rod changes. Rods once wore a small gem per rig on their icon (1.1.0); they show the
+     * plain rod again, so this clears the custom model data that drew the gems, from rods that still carry it.
      */
     public static void refreshLook(ItemStack rod) {
         if (rod == null || rod.isEmpty() || !BuiltInRegistries.ITEM.getKey(rod.getItem()).getNamespace().equals("tide")) return;
-        List<int[]> gems = new ArrayList<>();      // {pieces, colour}
-        for (RigSet set : carried(rod)) gems.add(new int[]{pieces(set, rod), color(set)});
-        if (gems.isEmpty()) {
-            rod.remove(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA);
-            return;
-        }
-        List<Boolean> flags = new ArrayList<>();
-        List<Integer> colours = new ArrayList<>();
-        for (int i = 0; i < 2; i++) {
-            boolean has = i < gems.size();
-            flags.add(has);
-            int c = has ? gems.get(i)[1] : 0xFFFFFF;
-            if (has && gems.get(i)[0] < PIECES) c = ((c >> 16 & 0xFF) * 3 / 5) << 16 | ((c >> 8 & 0xFF) * 3 / 5) << 8 | (c & 0xFF) * 3 / 5;
-            colours.add(c);
-        }
-        rod.set(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA,
-                new net.minecraft.world.item.component.CustomModelData(List.of(), flags, List.of(), colours));
+        rod.remove(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA);
     }
 
     /**
@@ -267,10 +251,14 @@ public final class RigSets {
         int pieces = SETS.stream().filter(RigSets::isIronRig).mapToInt(s -> counted(s, rod)).max().orElse(0);
         double damage = pieces >= PIECES ? 5.0 : pieces >= HALF ? 3.0 : 0;
         var current = rod.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
-        double has = current == null ? 0 : current.modifiers().stream().filter(m -> m.modifier().id().equals(IRON_RIG_ID))
+        // the sword's own modifier ids, so the tooltip reads like a sword's: "When in Main Hand", then the attack damage
+        // and attack speed in green (1.1.0 rods used their own id, which shows blue "+3 Attack Damage": rebuilt here)
+        var damageId = net.minecraft.world.item.Item.BASE_ATTACK_DAMAGE_ID;
+        double has = current == null ? 0 : current.modifiers().stream().filter(m -> m.modifier().id().equals(damageId))
                 .filter(m -> m.attribute().equals(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE))
                 .mapToDouble(m -> m.modifier().amount()).findFirst().orElse(0);
-        if (damage == has && (damage == 0 || rod.has(net.minecraft.core.component.DataComponents.WEAPON))) return;
+        boolean old = current != null && current.modifiers().stream().anyMatch(m -> m.modifier().id().equals(IRON_RIG_ID));
+        if (!old && damage == has && (damage == 0 || rod.has(net.minecraft.core.component.DataComponents.WEAPON))) return;
         if (damage == 0) {
             rod.remove(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
             rod.remove(net.minecraft.core.component.DataComponents.WEAPON);
@@ -279,9 +267,9 @@ public final class RigSets {
         rod.set(net.minecraft.core.component.DataComponents.WEAPON, new net.minecraft.world.item.component.Weapon(1));
         rod.set(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, net.minecraft.world.item.component.ItemAttributeModifiers.builder()
                 .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, new net.minecraft.world.entity.ai.attributes.AttributeModifier(
-                        IRON_RIG_ID, damage, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                        damageId, damage, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
                 .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED, new net.minecraft.world.entity.ai.attributes.AttributeModifier(
-                        IRON_RIG_ID, -2.4, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
+                        net.minecraft.world.item.Item.BASE_ATTACK_SPEED_ID, -2.4, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
                 .build());
     }
 

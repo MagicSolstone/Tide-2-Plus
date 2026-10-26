@@ -141,13 +141,7 @@ public final class ServerRecords extends SavedData {
                         .withStyle(ChatFormatting.DARK_GRAY));
         server.getPlayerList().broadcastSystemMessage(msg, false);
         if (q != CatchQuality.MYTHIC) {      // a Mythic's fanfare already plays for all
-            soundForEveryone(server, SoundEvents.BELL_BLOCK, 0.6f, 1.2f);
-            soundForEveryone(server, SoundEvents.UI_TOAST_CHALLENGE_COMPLETE, 0.5f, 1.3f);
-        }
-        // a small sparkle for the record-setter (nothing like a level-up's fireworks)
-        if (player.level() instanceof net.minecraft.server.level.ServerLevel level) {
-            level.sendParticles(net.minecraft.core.particles.ParticleTypes.FIREWORK, player.getX(), player.getY() + 1.2, player.getZ(), 40, 0.5, 0.6, 0.5, 0.08);
-            level.sendParticles(net.minecraft.core.particles.ParticleTypes.GLOW, player.getX(), player.getY() + 1.0, player.getZ(), 12, 0.6, 0.6, 0.6, 0.02);
+            soundForEveryone(server, SoundEvents.BELL_BLOCK, 0.8f, 0.9f);      // one low gong
         }
         Tide.LOG.info("[Tide record] {} {} {}g (was {} {}g)", player.getScoreboardName(), BuiltInRegistries.ITEM.getKey(stack.getItem()), Math.round(grams), old.player(), Math.round(old.grams()));
     }

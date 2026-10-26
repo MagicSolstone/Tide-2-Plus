@@ -162,6 +162,8 @@ jobs:
           for i in $(seq 1 84); do sleep 5; grep -q "Done (" server-mp.log && break; kill -0 $spid 2>/dev/null || break; done
           echo "server: $(grep -c 'Done (' server-mp.log)"
           timeout 60 python3 ci/rcon_guide.py 2>&1 | tee rcon.txt || true
+          # the whole guide, compressed, so it can be read from the log of any run (also saved with the results)
+          if [ -s guide.json ]; then echo "guidegz begin"; gzip -9c guide.json | base64 -w 3000 | sed 's/^/guidegz /'; echo "guidegz end"; fi
           # popular client mods that hook into every entity (they found the hook accessor bug):
           # LambDynamicLights and whatever it requires, latest for this Minecraft version, from Modrinth
           mkdir -p run/mods
@@ -257,7 +259,7 @@ jobs:
           git config --global user.email "ci@users.noreply.github.com"
           grep -E '^\S+\.java:[0-9]+: error:|What went wrong' -A1 build.log | sed "s#$GITHUB_WORKSPACE/##" | head -40 | while IFS= read -r l; do echo "::warning::$l"; done
           mkdir -p /tmp/ci && cd /tmp/ci && git init -q -b ci-results
-          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/rcon.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/bench.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/fa-probe.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
+          cp /tmp/results/latest.txt /tmp/results/latest-tail.txt /tmp/results/server.txt /tmp/results/client.txt . ; head -c 5000000 $GITHUB_WORKSPACE/client.log > client-full.log 2>/dev/null; mkdir -p shots; cp $GITHUB_WORKSPACE/shots/*.png shots/ 2>/dev/null; cp $GITHUB_WORKSPACE/glx.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/gear.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/rcon.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/guide.json . 2>/dev/null; cp $GITHUB_WORKSPACE/bench.txt . 2>/dev/null; cp $GITHUB_WORKSPACE/fa-probe.txt . 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server.log > server-full.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/server-mp.log > server-mp.log 2>/dev/null; head -c 5000000 $GITHUB_WORKSPACE/client-mp.log > client-mp.log 2>/dev/null
           git add -A
           git commit -qm "build $sha: $status"
           tail -15 /tmp/ci/latest-tail.txt | while IFS= read -r l; do echo "::notice::$l"; done

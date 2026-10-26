@@ -13,6 +13,8 @@ async def main():
     print(f"guide took {time.monotonic() - t:.2f}s")
     assert raw.startswith("tackleguide "), raw[:200]
     g = json.loads(raw[len("tackleguide "):])
+    with open("guide.json", "w") as f:      # kept with the results, for the tackle guide pages
+        f.write(raw[len("tackleguide "):])
     print(f"guide over rcon: {len(raw)} characters, {len(g['items'])} items, {len(g['rigs'])} rigs")
     await r.close()
 

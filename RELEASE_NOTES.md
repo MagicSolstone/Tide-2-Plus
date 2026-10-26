@@ -48,7 +48,7 @@ Conditions only one or two pieces had (forest, new moon, mushroom fields, beach)
 
 ## Tackle box
 - **The rod rack holds 5 rods** (was 3).
-- **Assembling from the tackle box shows your whole inventory**: the box's tackle where your inventory usually is, your hotbar, and your own inventory rows below it. Shift-click from your rows puts a piece on the rod first, then in the box (or a rod on the rack).
+- **One screen**: opening the tackle box shows the box, your whole inventory and a portable Angling Table together, with the rig cards and the rod's stats. No more switching between the box and Assemble rod. The box's tackle sits where your inventory usually is, then your hotbar, then your own inventory rows. Shift-click from your rows puts a piece on the rod first, then in the box (or a rod on the rack).
 
 ## Rods
 - **No blank tooltips**: the stone rod and the plain bobber say they have no perks of their own and what they add to the Stone rig, and the kid's rod shows its -30% catch quality as a number.

@@ -1,10 +1,7 @@
 package com.li64.tide.client.gui.screens;
 
-import com.li64.tide.Tide;
-import com.li64.tide.network.messages.OpenTackleMsg;
 import com.li64.tide.registries.items.TackleBoxItem;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -30,11 +27,6 @@ public class TackleRigScreen extends AnglingTableScreen {
     protected void subInit() {
         this.topPos = Math.max(18, (this.height - TALL) / 2);      // centred for the taller bench (the buttons follow)
         super.subInit();
-        this.addRenderableWidget(Button.builder(Component.literal("< Box"), b -> {
-                    com.li64.tide.client.MouseKeep.save();
-                    Tide.NETWORK.sendToServer(new OpenTackleMsg(false));
-                })
-                .bounds(this.leftPos + this.imageWidth - 44, this.topPos - 16, 44, 14).build());
     }
 
     @Override

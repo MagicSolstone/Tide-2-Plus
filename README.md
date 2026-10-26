@@ -100,8 +100,8 @@ the full one. Each piece belongs to one rig, and a rod carries at most **three r
 - Dressed as a proper tackle bench: a wooden frame, brass corners, and labels and outlines for each slot.
 
 ### Storage
-- **Tackle box**: 27 slots of tackle and a rack for five rods, with an *Assemble rod* button to rig a rod straight from
-  the box.
+- **Tackle box**: 27 slots of tackle and a rack for five rods. Opening it shows the box, your whole inventory and a
+  portable Angling Table, so you can rig a rod anywhere, with its rig cards and stats.
 - **Fish satchel**: 64 slots of fish; open it to take out the one you want.
 
 ### Finding tackle

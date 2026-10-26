@@ -28,8 +28,8 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * A tackle box: 27 slots for lines, hooks, bobbers, lures and bait, kept in the item. Right-click to open it;
- * sneak + right-click to open a portable angling table and change what's on a rod wherever you are.
+ * A tackle box: 27 slots for lines, hooks, bobbers, lures and bait and a rack of 5 rods, kept in the item. Right-click
+ * to open it: the box, your inventory and a portable angling table, to change what's on a rod wherever you are.
  */
 public class TackleBoxItem extends AbstractTooltipItem {
     public static final int SIZE = 27;
@@ -41,14 +41,14 @@ public class TackleBoxItem extends AbstractTooltipItem {
     @Override
     public @NotNull InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack box = player.getItemInHand(hand);
-        if (!level.isClientSide()) open(player, box, player.isShiftKeyDown());
+        if (!level.isClientSide()) open(player, box, true);      // one screen: the box, your inventory and the table to rig a rod
         level.playSound(null, player.blockPosition(), SoundEvents.CHEST_OPEN, SoundSource.PLAYERS, 0.5f, 1.4f);
         return InteractionResult.SUCCESS;
     }
 
     /** Opens the box, or its rigging view (an angling table next to the box's tackle). */
     public static void open(Player player, ItemStack box, boolean rig) {
-        if (rig) player.openMenu(new SimpleMenuProvider((id, inv, p) -> new RigMenu(id, inv, box), Component.translatable("block.tide.angling_table")));
+        if (rig) player.openMenu(new SimpleMenuProvider((id, inv, p) -> new RigMenu(id, inv, box), box.getHoverName()));
         else player.openMenu(new SimpleMenuProvider((id, inv, p) -> new Menu(id, inv, box), box.getHoverName()));
     }
 
@@ -180,7 +180,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
         if (!counts.isEmpty()) tooltip.accept(Component.literal("  " + counts.entrySet().stream()
                 .map(e -> e.getValue() + " " + e.getKey().label.toLowerCase()).collect(java.util.stream.Collectors.joining(", "))).withStyle(ChatFormatting.GRAY));
         tooltip.accept(Component.literal("Right-click to open").withStyle(ChatFormatting.DARK_GRAY));
-        tooltip.accept(Component.literal("Sneak + right-click: rig a rod from the box").withStyle(ChatFormatting.DARK_GRAY));
+        tooltip.accept(Component.literal("Right-click: the box, your inventory and a table to rig a rod").withStyle(ChatFormatting.DARK_GRAY));
     }
 
     /** The box's screen: 27 slots of tackle, a rack of 3 for rods beside them, then your inventory. */

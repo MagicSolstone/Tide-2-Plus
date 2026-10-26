@@ -91,6 +91,7 @@ public final class GearCheck {
 
             String guide = com.li64.tide.data.commands.FishingCommand.guide(server);
             var parsed = com.google.gson.JsonParser.parseString(guide).getAsJsonObject();
+            java.nio.file.Files.writeString(java.nio.file.Path.of("guide.json"), guide);      // kept with the results (the tackle guide pages)
             notes.add("guide: " + parsed.getAsJsonArray("items").size() + " items, " + parsed.getAsJsonArray("rigs").size()
                     + " rigs, " + guide.length() + " characters; first item " + parsed.getAsJsonArray("items").get(0));
             // a wild fish killed for its drop gets a quality (never above Great) and a weight

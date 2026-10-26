@@ -149,7 +149,6 @@ public class TideItems {
     public static final Item EMERALD_HOOK = register("emerald_hook", FishingHookItem::new);
     public static final Item AMETHYST_HOOK = register("amethyst_hook", FishingHookItem::new);
     public static final Item NETHERITE_HOOK = register("netherite_hook", FishingHookItem::new);
-    public static final Item BONE_HOOK = register("bone_hook", FishingHookItem::new);
     public static final Item PRISMARINE_HOOK = register("prismarine_hook", FishingHookItem::new);
     public static final Item GLOW_HOOK = register("glow_hook", FishingHookItem::new);
     public static final Item FEATHERED_HOOK = register("feathered_hook", FishingHookItem::new);
@@ -166,7 +165,6 @@ public class TideItems {
     public static final Item GOLDEN_LINE = register("golden_line", FishingLineItem::new);
     public static final Item DIAMOND_LINE = register("diamond_line", FishingLineItem::new);
     public static final Item SLIME_LINE = register("slime_line", FishingLineItem::new);
-    public static final Item COAL_LINE = register("coal_line", FishingLineItem::new);
     public static final Item KELP_LINE = register("kelp_line", FishingLineItem::new);
     public static final Item HONEY_LINE = register("honey_line", FishingLineItem::new);
     public static final Item SILK_LINE = register("silk_line", FishingLineItem::new);

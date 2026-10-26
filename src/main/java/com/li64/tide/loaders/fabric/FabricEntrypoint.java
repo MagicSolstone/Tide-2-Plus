@@ -39,6 +39,10 @@ public class FabricEntrypoint implements ModInitializer {
 
         TideRegistries.init();
         TideItems.init();
+        // items removed in 1.1.1: old ones in chests and on rods turn into what replaced them
+        var items = (net.fabricmc.fabric.api.event.registry.FabricRegistry) (Object) net.minecraft.core.registries.BuiltInRegistries.ITEM;
+        items.addAlias(com.li64.tide.Tide.resource("coal_line"), com.li64.tide.Tide.resource("fishing_line"));
+        items.addAlias(com.li64.tide.Tide.resource("bone_hook"), com.li64.tide.Tide.resource("fish_bone_hook"));
         TideBlocks.init();
         TideBlockEntities.init();
         TideEntityTypes.init();

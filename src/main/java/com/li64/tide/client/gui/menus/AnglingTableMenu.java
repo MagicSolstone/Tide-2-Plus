@@ -30,6 +30,24 @@ public class AnglingTableMenu extends ItemCombinerMenu {
     protected AnglingTableMenu(net.minecraft.world.inventory.MenuType<?> type, int menuId, Inventory inventory, ContainerLevelAccess level) {
         super(type, menuId, inventory, level, createInputSlotDefinitions());
         this.level = inventory.player.level();
+        // one of each on the rod: the rod, line, bobber, hook and lure slots hold a single item (a dropped or shift-clicked
+        // stack leaves the rest in hand), so taking the finished rod never eats the spares
+        for (int i = 0; i <= 4; i++) {
+            net.minecraft.world.inventory.Slot orig = this.slots.get(i);
+            net.minecraft.world.inventory.Slot one = new net.minecraft.world.inventory.Slot(this.inputSlots, orig.getContainerSlot(), orig.x, orig.y) {
+                @Override
+                public boolean mayPlace(@NotNull ItemStack stack) {
+                    return orig.mayPlace(stack);
+                }
+
+                @Override
+                public int getMaxStackSize() {
+                    return 1;
+                }
+            };
+            one.index = i;
+            this.slots.set(i, one);
+        }
     }
 
     public net.minecraft.world.inventory.ContainerLevelAccess access() {

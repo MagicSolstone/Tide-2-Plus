@@ -52,7 +52,7 @@ public class TackleBoxItem extends AbstractTooltipItem {
         else player.openMenu(new SimpleMenuProvider((id, inv, p) -> new Menu(id, inv, box), box.getHoverName()));
     }
 
-    public static final int MAX_RODS = 3;
+    public static final int MAX_RODS = 5;
 
     /** A tackle slot: lines, hooks, bobbers, lures and bait. */
     static Slot tackleSlot(net.minecraft.world.Container box, int index, int x, int y) {
@@ -82,11 +82,16 @@ public class TackleBoxItem extends AbstractTooltipItem {
 
     /**
      * Rigging a rod from the box: an angling table where the box's 27 slots stand in for the player's inventory
-     * rows (the hotbar stays), so lines, lures and bait go straight from the box onto the rod and back.
+     * rows (the hotbar stays), so lines, lures and bait go straight from the box onto the rod and back. The player's own
+     * inventory rows follow below the hotbar, so everything they carry is in reach too.
      */
     public static class RigMenu extends AnglingTableMenu {
         private final ItemStack box;
         private final SimpleContainer tackle;
+        /** Where the box's tackle, the hotbar, the rod rack and the player's own rows start in {@link #slots}. */
+        private final int boxStart, hotbarStart, rackStart, ownStart;
+        /** The player's own inventory rows, under the hotbar (menu coordinates). */
+        public static final int OWN_Y = 174;
 
         public RigMenu(int id, Inventory inventory) {
             this(id, inventory, ItemStack.EMPTY);
@@ -103,7 +108,28 @@ public class TackleBoxItem extends AbstractTooltipItem {
                 only.index = first + i;
                 this.slots.set(first + i, only);
             }
+            this.boxStart = first;
+            this.hotbarStart = first + SIZE;
+            this.rackStart = this.slots.size();
             for (int i = 0; i < MAX_RODS; i++) this.addSlot(rodSlot(tackle, SIZE + i, Menu.RACK_X, 84 + i * 18));
+            this.ownStart = this.slots.size();
+            for (int row = 0; row < 3; row++)
+                for (int col = 0; col < 9; col++) this.addSlot(new Slot(inventory, 9 + row * 9 + col, 8 + col * 18, OWN_Y + row * 18));
+        }
+
+        /** Shift-click from the player's own rows: onto the rod first, then into the box (or its rack), then the hotbar. */
+        @Override
+        public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
+            if (index < ownStart) return super.quickMoveStack(player, index);
+            Slot slot = this.slots.get(index);
+            if (!slot.hasItem()) return ItemStack.EMPTY;
+            ItemStack stack = slot.getItem(), before = stack.copy();
+            if (!this.moveItemStackTo(stack, 0, 5, false)
+                    && !(isRod(stack) ? this.moveItemStackTo(stack, rackStart, rackStart + MAX_RODS, false) : this.moveItemStackTo(stack, boxStart, boxStart + SIZE, false))
+                    && !this.moveItemStackTo(stack, hotbarStart, hotbarStart + 9, false)) return ItemStack.EMPTY;
+            if (stack.isEmpty()) slot.setByPlayer(ItemStack.EMPTY);
+            else slot.setChanged();
+            return before;
         }
 
         @Override

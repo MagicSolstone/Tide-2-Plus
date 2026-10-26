@@ -54,7 +54,7 @@ A rod holds a **line, hook, bobber and lure**, plus **bait**. Every piece does s
 a time or the weather.
 - **31 rods**, from the kid's rod to netherite and the wayfinder, including six rare **found rods** that drop from mobs,
   wheat and leaves, each with its own trick (fishing up mob drops, sunken loot, saplings; growing crops; potion effects).
-- **18 lines, 23 hooks, 33 bobbers, 15 lures and 25 baits.** Hooks come in **Tier 1** (made from raw materials) and
+- **17 lines, 22 hooks, 33 bobbers, 15 lures and 25 baits.** Hooks come in **Tier 1** (made from raw materials) and
   **Tier 2** (made on a Tier 1 hook, keeping its perks). Any line can be dyed.
 - **Tackle with tricks**, for example: the stone hook drags up seaweed, the emerald hook the odd emerald, the barbed hook
   lands almost anything but tears the fish, the heart bobber heals you, the lichen and glow pieces light the water,
@@ -100,7 +100,7 @@ the full one. Each piece belongs to one rig, and a rod carries at most **three r
 - Dressed as a proper tackle bench: a wooden frame, brass corners, and labels and outlines for each slot.
 
 ### Storage
-- **Tackle box**: 27 slots of tackle and a rack for three rods, with an *Assemble rod* button to rig a rod straight from
+- **Tackle box**: 27 slots of tackle and a rack for five rods, with an *Assemble rod* button to rig a rod straight from
   the box.
 - **Fish satchel**: 64 slots of fish; open it to take out the one you want.
 

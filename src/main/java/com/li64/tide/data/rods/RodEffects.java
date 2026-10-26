@@ -113,19 +113,18 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("emerald_hook", xp(0.10)),      // and the odd emerald (PART_DROPS)
             Map.entry("amethyst_hook", NONE),
             Map.entry("netherite_hook", new RodEffects(0, 0, 0.10, -0.10, 0, 0.05, 0, 0)),
-            Map.entry("bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.05, 0)),
             Map.entry("prismarine_hook", bite(0.05)),
             Map.entry("glow_hook", bite(0.12)),
             Map.entry("feathered_hook", new RodEffects(0.05, 0.08, 0, 0, 0, 0, 0, 0)),
             Map.entry("barbed_hook", NONE),      // its trick: fish never shake loose, but no perfect hooks (FishCatchMinigame.handleHook)
             Map.entry("treble_hook", new RodEffects(0, 0, 0, 0.05, 0, 0, 0, 0, 0.12, 0)),
             Map.entry("circle_hook", new RodEffects(0, 0, 0.05, -0.05, 0, 0, 0.40, 0)),      // the landing hook: sets deep, so Good and Bad hooks hold and the fish tires sooner
-            Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.05, 0)),      // took over from the bone hook (still works if you have one)
+            Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.05, 0)),
             Map.entry("lucky_hook", new RodEffects(0, 0, 0, 0, 1, 0, 0, 0)));
 
     /** Hooks made from raw materials: an upgrade made on one of these keeps its perks (iron is the plain one). */
     public static final java.util.Set<String> BASE_HOOKS = java.util.Set.of(
-            "fishing_hook", "wooden_hook", "stone_hook", "copper_hook", "golden_hook", "bone_hook", "fish_bone_hook");
+            "fishing_hook", "wooden_hook", "stone_hook", "copper_hook", "golden_hook", "fish_bone_hook");
     /** Hooks made by adding something to a base hook. */
     public static final java.util.Set<String> UPGRADED_HOOKS = java.util.Set.of(
             "diamond_hook", "emerald_hook", "amethyst_hook", "netherite_hook", "prismarine_hook", "glow_hook",
@@ -150,7 +149,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     /** The base hook an upgraded hook was made on, or null. */
     public static String baseHook(ItemStack hook) {
-        return hook == null || hook.isEmpty() ? null : hook.get(com.li64.tide.data.item.TideDataComponents.BASE_HOOK);
+        String base = hook == null || hook.isEmpty() ? null : hook.get(com.li64.tide.data.item.TideDataComponents.BASE_HOOK);
+        return "bone_hook".equals(base) ? "fish_bone_hook" : base;      // the bone hook was removed in 1.1.1: its upgrades count as made on a fish bone hook
     }
 
     /** Lines with their own perk, on top of every line's casting range. */
@@ -159,7 +159,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("iron_line", ease(0.14)),
             Map.entry("golden_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.10)),
             Map.entry("diamond_line", ease(0.25)),
-            Map.entry("coal_line", window(0.10)),      // retired (merged into the redstone line); still works on old rods
             Map.entry("honey_line", new RodEffects(0, 0.05, 0, 0, 0, 0, 0.05, 0)),      // the Honey rig works anywhere, so its bite speed does too
             Map.entry("silk_line", bite(0.08)),
             Map.entry("phantom_line", new RodEffects(0.10, 0, 0.05, 0, 0, 0, 0, 0)),
@@ -296,7 +295,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("netherite_line", List.of(new Perk(When.NETHER, bite(0.15)), new Perk(When.LAVA, window(0.10)))),
             Map.entry("copper_line", List.of(new Perk(When.RAIN, bite(0.10)))),
             Map.entry("phantom_line", List.of(new Perk(When.NIGHT, bite(0.15)))),
-            Map.entry("prismarine_line", List.of(new Perk(When.OCEAN, luck(1)))),
+            Map.entry("prismarine_line", List.of(new Perk(When.OCEAN, window(0.10)))),
             Map.entry("spider_line", List.of(new Perk(When.UNDERGROUND, new RodEffects(0, 0.10, 0.10, 0, 0, 0, 0, 0)))),
             // hooks
                         Map.entry("lavaproof_hook", List.of(new Perk(When.LAVA, new RodEffects(0, 0.20, 0, -0.05, 1, 0, 0, 0.15)))),
@@ -304,7 +303,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("fiery_hook", List.of(new Perk(When.NETHER, bite(0.15)), new Perk(When.LAVA, quality(0.10)))),
             Map.entry("permafrost_hook", List.of(new Perk(When.COLD, bite(0.15)))),
             Map.entry("feathered_hook", List.of(new Perk(When.DAWN_DUSK, quality(0.10)))),
-            Map.entry("bone_hook", List.of(new Perk(When.DRY, bite(0.15)))),
             Map.entry("fish_bone_hook", List.of(new Perk(When.DRY, bite(0.15)))),
             Map.entry("lichen_bobber", List.of(new Perk(When.UNDERGROUND, bite(0.20)))),
             // bobbers

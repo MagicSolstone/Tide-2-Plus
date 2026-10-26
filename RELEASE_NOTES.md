@@ -11,7 +11,7 @@ The pieces of a rig already have their own perks for its place or time, so the r
 - **Lucky rig at Tier 2**: +1 luck and +10% catch quality (was +2 luck).
 - **Storm rig in a thunderstorm** stacked the most: the copper line and copper bobber no longer add luck in a thunderstorm, and the storm lure adds +1 luck there (was +2).
 - **Outliers trimmed** (measured: every rig's strongest kit with everything active, side by side):
-  - **Ocean**: the conduit rod gives +15% rare finds in oceans (was +30%), and the turtle bobber only bite speed there. Its best kit drops from +70% to about +45% rare finds.
+  - **Ocean**: the conduit rod gives +15% rare finds in oceans (was +30%), the turtle bobber only bite speed there, and the prismarine line +10% hook window there instead of luck. Its best kit drops from +70% to about +50% rare finds.
   - **Storm**: the copper rod's thunder quality is gone, and the storm lure gives +10% quality in a thunderstorm (was +15%). Best kit quality about +50% (was +65%).
   - **Fire**: the magma lure no longer eases the fight, and the lavaproof hook eases it 5% (was 10%). Best kit fight -35% (was -50%); still the strongest rig, fit for netherite.
   - **Lucky rig** works anywhere, so it was the strongest of all for rare finds: Tier 1 is now +5% catch quality, Tier 2 +1 luck and +5% quality, and the lucky hook's full-moon luck is gone (it is a Lucky rig piece). Best kit about +45% rare finds (was +63%).
@@ -43,7 +43,12 @@ Conditions only one or two pieces had (forest, new moon, mushroom fields, beach)
 - **The panel is wood now**, not grey, on both tabs and on the tackle box's Assemble screen (the frame used to sit under the screen's dimmed background).
 - **Using the table always opens the 3x3 crafting grid**; the Assemble tab is one button away.
 - **A stats panel on the right of the Assemble screen** shows the rod being put together, rod, tackle and rigs added up, with every place, time and rig condition it cares about met. It updates as pieces go on.
+- **One of each on the rod**: the rod, line, bobber, hook and lure slots take a single item. Dropping or shift-clicking a stack leaves the rest with you (before, a stack in a slot was used up when you took the finished rod).
 - **Rig cards show up to 6 rigs**: a full card for each rig that is working, and a one-line header for the rest (a rig with one piece, or one past the three a rod carries). Each header has two boxes, Tier 1 and Tier 2, that fill in as the rig reaches them. Hover any card or header to see both bonuses and what could still go on.
+
+## Tackle box
+- **The rod rack holds 5 rods** (was 3).
+- **Assembling from the tackle box shows your whole inventory**: the box's tackle where your inventory usually is, your hotbar, and your own inventory rows below it. Shift-click from your rows puts a piece on the rod first, then in the box (or a rod on the rack).
 
 ## Rods
 - **No blank tooltips**: the stone rod and the plain bobber say they have no perks of their own and what they add to the Stone rig, and the kid's rod shows its -30% catch quality as a number.
@@ -51,6 +56,9 @@ Conditions only one or two pieces had (forest, new moon, mushroom fields, beach)
 - **A rod's tooltip shows its totals**: with tackle on it, the rod lists what it all adds up to, always-on and then each place or time (a bamboo rod, vine line and apple bobber: +50% bite speed in jungles). It used to list only the rod's own perks, though the pieces always counted.
 - **Rod icons are plain again**: the small rig gems are gone.
 - **The iron rig's attack shows like a sword's**: "When in Main Hand", then the attack damage and attack speed in green (4 and 1.6 at Tier 1, 6 and 1.6 at Tier 2).
+
+## Removed
+- **The coal line and the bone hook are gone.** Old ones turn into a fishing line and a fish bone hook by themselves, in chests and on rods, and a hook upgraded on a bone hook counts as made on a fish bone hook.
 
 ## Server records
 - **A single low gong** for a new server record, with no sparkles around the player.

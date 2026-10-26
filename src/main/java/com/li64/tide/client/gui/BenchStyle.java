@@ -20,6 +20,16 @@ public final class BenchStyle {
         g.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, texture, x, y, 0, 0, w, h, 256, 256, WOOD_TINT);
     }
 
+    /** The panel's colours once tinted (the grey texture times WOOD_TINT), for drawing more panel by hand. */
+    public static final int PANEL = 0xFFC6A06A, SLOT = 0xFF8B704A, SLOT_SHADOW = 0xFF372C1D, SLOT_LIGHT = 0xFFFFCE89;
+
+    /** A slot drawn like the texture's: shadow top-left, light bottom-right (sx, sy: the item's top-left). */
+    public static void slot(GuiGraphicsExtractor g, int sx, int sy) {
+        g.fill(sx - 1, sy - 1, sx + 17, sy + 17, SLOT_LIGHT);
+        g.fill(sx - 1, sy - 1, sx + 16, sy + 16, SLOT_SHADOW);
+        g.fill(sx, sy, sx + 16, sy + 16, SLOT);
+    }
+
     /** A wooden frame just outside the screen's own panel (x, y, w, h: the panel). */
     public static void frame(GuiGraphicsExtractor g, int x, int y, int w, int h) {
         int x0 = x - 5, y0 = y - 5, x1 = x + w + 5, y1 = y + h + 5;

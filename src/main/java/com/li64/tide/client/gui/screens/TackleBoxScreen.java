@@ -48,14 +48,14 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
         int band = y + 17 + 3 * 18 + 1;
         g.fill(x + 3, band, x + w - 3, band + 12, OUTLINE);
         g.fill(x + 3, band + 1, x + w - 3, band + 11, BAND);
-        for (int lx : new int[]{x + w - 26, x + w - 14}) {
+        // the rod rack: a darker strip down the right, past the band (five rods)
+        int rx = x + TackleBoxItem.Menu.RACK_X - 4;
+        g.fill(rx, y + 14, rx + 26, y + 18 + TackleBoxItem.MAX_RODS * 18 + 2, OUTLINE);
+        g.fill(rx + 1, y + 15, rx + 25, y + 18 + TackleBoxItem.MAX_RODS * 18 + 1, SHADE);
+        for (int lx : new int[]{rx - 26, rx - 14}) {
             g.fill(lx, band - 2, lx + 8, band + 13, METAL_DARK);
             g.fill(lx + 1, band - 1, lx + 7, band + 11, METAL);
         }
-        // the rod rack: a darker strip down the right of the tray
-        int rx = x + TackleBoxItem.Menu.RACK_X - 4;
-        g.fill(rx, y + 14, rx + 26, y + 18 + 3 * 18 + 2, OUTLINE);
-        g.fill(rx + 1, y + 15, rx + 25, y + 18 + 3 * 18 + 1, SHADE);
         // a carrying handle on the lid
         int hx = x + w / 2 - 40;      // (left of centre: the Assemble rod button sits at the top right)
         g.fill(hx, y - 7, hx + 48, y + 1, OUTLINE);

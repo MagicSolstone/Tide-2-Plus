@@ -11,11 +11,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
     public static final Identifier GUI_LOCATION = Tide.resource("textures/gui/container/angling_table.png");
+    /** The table texture's height (a screen can be taller, like the tackle box's with your inventory below). */
+    protected static final int TABLE_H = 166;
 
     public AnglingTableScreen(AnglingTableMenu menu, Inventory inventory, Component component) {
         super(menu, inventory, component, GUI_LOCATION);
         this.titleLabelX = 56;
         this.titleLabelY = 8;
+    }
+
+    /** How tall the whole bench is drawn (the tackle box's version adds your inventory rows under the table). */
+    protected int panelHeight() {
+        return this.imageHeight;
     }
 
     /** The table's tabs (not when rigging from a tackle box, which has no Craft tab). */
@@ -40,8 +47,8 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         // the screen's own background first (it dims and blurs everything drawn before it, and draws the grey panel),
         // then the frame and the panel again in wood on top
         super.extractBackground(g, mouseX, mouseY, a);
-        com.li64.tide.client.gui.BenchStyle.frame(g, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
-        com.li64.tide.client.gui.BenchStyle.panel(g, GUI_LOCATION, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
+        com.li64.tide.client.gui.BenchStyle.frame(g, this.leftPos, this.topPos, this.imageWidth, panelHeight());
+        com.li64.tide.client.gui.BenchStyle.panel(g, GUI_LOCATION, this.leftPos, this.topPos, this.imageWidth, TABLE_H);
         slotHints(g);
         rigPanel(g, mouseX, mouseY);
         statsPanel(g);

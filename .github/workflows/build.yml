@@ -155,7 +155,7 @@ jobs:
           # level 2 casts short: stand at the water's edge
           sed -i -e 's/^fishinglevel set @s .*/fishinglevel set @s 2/' -e 's/^tp @s ~ ~ ~ 0 35$/tp @s ~ ~ ~2 0 40/' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
           # a complicated rod: bonus honey, a line that cooks, a treble hook on a bone hook, the bell bobber, a lure
-          sed -i 's|^item replace entity @s hotbar.0 with .*|item replace entity @s hotbar.0 with tide:honeycomb_fishing_rod[enchantments={"minecraft:lure":5},tide:fishing_line={id:"tide:redstone_line",count:1},tide:fishing_hook={id:"tide:treble_hook",count:1,components:{"tide:base_hook":"bone_hook"}},tide:fishing_bobber={id:"tide:bell_bobber",count:1},tide:fishing_lure={id:"tide:glow_lure",count:1}]|' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
+          sed -i 's|^item replace entity @s hotbar.0 with .*|item replace entity @s hotbar.0 with tide:honeycomb_fishing_rod[enchantments={"minecraft:lure":5},tide:fishing_line={id:"tide:redstone_line",count:1},tide:fishing_hook={id:"tide:treble_hook",count:1,components:{"tide:base_hook":"fish_bone_hook"}},tide:fishing_bobber={id:"tide:bell_bobber",count:1},tide:fishing_lure={id:"tide:glow_lure",count:1}]|' run/world/datapacks/tide_smoke/data/tide_smoke/function/setup.mcfunction
           printf 'online-mode=false\nspawn-protection=0\nview-distance=4\nsimulation-distance=4\nenforce-secure-profile=false\nwhite-list=false\nenforce-whitelist=false\nenable-rcon=true\nrcon.password=ci\nrcon.port=25575\n' > run/server.properties
           ./gradlew runServer --no-daemon > server-mp.log 2>&1 &
           spid=$!

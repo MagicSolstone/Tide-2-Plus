@@ -23,8 +23,8 @@ import java.util.Map;
  * chance that a Good or Bad hook still lands the fish; {@code twin} is the chance of a second fish of
  * the same kind; {@code cook} the chance the fish comes up already cooked; {@code speed} is original Tide's
  * whole-number fishing speed (like the Lure enchantment: each point bites about 5 seconds sooner) and
- * {@code ease} lowers catch difficulty (a bigger catch area in the minigame); {@code upgrade} is the chance a
- * hooked fish's quality goes up one tier.
+ * {@code ease} lowers catch difficulty (a bigger catch area in the minigame). {@code quality} shifts the odds
+ * toward better fish smoothly (there is no separate "raise the tier" chance any more).
  *
  * <p>HOW TO CHANGE THINGS HERE (see CODE_GUIDE.md): each item's always-on perks are one line in the tables below
  * ({@code RODS}, {@code HOOKS}, {@code LINES}, {@code BOBBERS}, {@code LURES}, {@code BAITS}), written with helpers
@@ -32,17 +32,13 @@ import java.util.Map;
  * ({@code bite}, {@code window}, {@code luck}...) are defined below the gear table. Rigs are in {@link RigSets}.
  */
 public record RodEffects(double cast, double bite, double window, double fight, int luck, double quality,
-                         double land, double xp, double twin, double cook, int speed, double ease, double upgrade) {
+                         double land, double xp, double twin, double cook, int speed, double ease) {
     public RodEffects(double cast, double bite, double window, double fight, int luck, double quality, double land, double xp) {
-        this(cast, bite, window, fight, luck, quality, land, xp, 0, 0, 0, 0, 0);
+        this(cast, bite, window, fight, luck, quality, land, xp, 0, 0, 0, 0);
     }
 
     public RodEffects(double cast, double bite, double window, double fight, int luck, double quality, double land, double xp, double twin, double cook) {
-        this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, 0, 0, 0);
-    }
-
-    public RodEffects(double cast, double bite, double window, double fight, int luck, double quality, double land, double xp, double twin, double cook, int speed, double ease) {
-        this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, speed, ease, 0);
+        this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, 0, 0);
     }
 
     /** Each point of "speed" (the Lure enchantment, bait, a rod's own) is worth this much bite speed. */
@@ -81,7 +77,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("midas_fishing_rod", new RodEffects(0, 0, 0, 0, 1, 0.10, 0, 0.10)),
             Map.entry("kids_fishing_pole", new RodEffects(0, 0.10, 0.15, -0.20, -1, -0.30, 0.10, 0)),
             Map.entry("bamboo_fishing_rod", cast(0.05)),
-            Map.entry("amethyst_fishing_rod", new RodEffects(0, 0, 0, 0, 0, 0.05, 0, 0, 0, 0, 0, 0, 0.15)),
+            Map.entry("amethyst_fishing_rod", quality(0.02)),      // (its real strength is by day: see SITUATIONAL)
             Map.entry("cherry_fishing_rod", xp(0.15)),
             Map.entry("conduit_fishing_rod", new RodEffects(0, 0, 0.10, -0.05, 0, 0.05, 0, 0)),
             Map.entry("clockwork_fishing_rod", new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0.10)),
@@ -103,13 +99,13 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("golden_hook", xp(0.10)),      // its luck is only in deserts and badlands (situational), so it isn't the default pick
             Map.entry("diamond_hook", new RodEffects(0, 0, 0.12, 0, 0, 0, 0.05, 0)),
             Map.entry("emerald_hook", xp(0.15)),
-            Map.entry("amethyst_hook", quality(0.12)),
+            Map.entry("amethyst_hook", quality(0.03)),
             Map.entry("netherite_hook", new RodEffects(0, 0, 0.10, -0.10, 0, 0.05, 0, 0)),
             Map.entry("bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.05, 0)),
             Map.entry("prismarine_hook", bite(0.05)),
             Map.entry("glow_hook", bite(0.12)),
             Map.entry("feathered_hook", new RodEffects(0.05, 0.08, 0, 0, 0, 0, 0, 0)),
-            Map.entry("barbed_hook", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.10)),   // holds on: a chance to bump the catch a tier (the circle hook is the landing one)
+            Map.entry("barbed_hook", quality(0.06)),      // holds on to the better fish (the circle hook is the landing one)
             Map.entry("treble_hook", new RodEffects(0, 0, 0, 0.05, 0, 0, 0, 0, 0.12, 0)),
             Map.entry("circle_hook", new RodEffects(0, 0, 0.10, -0.05, 0, 0, 0.40, 0)),      // the landing hook: sets deep, so Good and Bad hooks hold and the fish tires sooner
             Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.08)),
@@ -155,7 +151,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("honey_line", land(0.05)),
             Map.entry("silk_line", bite(0.08)),
             Map.entry("phantom_line", new RodEffects(0.10, 0, 0.05, 0, 0, 0, 0, 0)),
-            Map.entry("amethyst_line", quality(0.08)),
+            Map.entry("amethyst_line", quality(0.02)),
             Map.entry("netherite_line", new RodEffects(0, 0, 0, -0.08, 0, 0, 0.05, 0)),
             Map.entry("braided_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.10, 0)),
             Map.entry("redstone_line", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.20)));
@@ -169,7 +165,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("golden_bobber", xp(0.10)),
             Map.entry("diamond_bobber", bite(0.12)),
             Map.entry("netherite_bobber", new RodEffects(0, 0, 0.05, -0.10, 0, 0, 0, 0)),
-            Map.entry("amethyst_bobber", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.08)),   // amethyst grows things: like the amethyst rod, a tier bump
+                        Map.entry("amethyst_bobber", quality(0.01)),   // (amethyst gear shines by day: see SITUATIONAL)
             Map.entry("echo_bobber", xp(0.15)),
             Map.entry("chorus_bobber", cast(0.15)),
             Map.entry("feather_bobber", new RodEffects(0.10, 0.05, 0, 0, 0, 0, 0, 0)),
@@ -196,7 +192,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     /** Bait's extra perks, on top of the speed and luck in its bait data (counted once per kind of bait loaded). */
     private static final Map<String, RodEffects> BAITS = Map.ofEntries(
-            Map.entry("golden_bait", new RodEffects(0, 0, 0, 0, 0, 0.20, 0, 0, 0, 0, 0, 0, 0.05)),
+            Map.entry("golden_bait", quality(0.23)),
             Map.entry("chum", luck(-1)),
             // the session baits: XP for levelling, an easier landing (and so more perfect hooks), a second fish
             Map.entry("glistering_bait", xp(0.25)),
@@ -341,6 +337,11 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("frog_lure", List.of(new Perk(When.SWAMP, bite(0.20)))),
             Map.entry("squid_lure", List.of(new Perk(When.OCEAN, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)), new Perk(When.BEACH, bite(0.15)))),
             Map.entry("ice_jig_lure", List.of(new Perk(When.COLD, new RodEffects(0, 0.20, 0, 0, 0, 0.10, 0, 0)))),
+            // amethyst: crystals catch the light, so the whole set is at its best by day and only a little useful at night
+            Map.entry("amethyst_fishing_rod", List.of(new Perk(When.DAY, quality(0.10)))),
+            Map.entry("amethyst_hook", List.of(new Perk(When.DAY, quality(0.12)))),
+            Map.entry("amethyst_line", List.of(new Perk(When.DAY, quality(0.09)))),
+            Map.entry("amethyst_bobber", List.of(new Perk(When.DAY, quality(0.05)))),
             // bait
             Map.entry("glow_worms", List.of(new Perk(When.NIGHT, bite(0.15)))),
             Map.entry("cave_grubs", List.of(new Perk(When.UNDERGROUND, bite(0.15)))),
@@ -435,11 +436,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     private static RodEffects xp(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, v); }
     private static RodEffects speed(int v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v, 0); }
     private static RodEffects ease(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v); }
-    private static RodEffects upgrade(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v); }
 
     public RodEffects plus(RodEffects o) {
         return new RodEffects(cast + o.cast, bite + o.bite, window + o.window, fight + o.fight, luck + o.luck,
-                quality + o.quality, land + o.land, xp + o.xp, twin + o.twin, cook + o.cook, speed + o.speed, ease + o.ease, upgrade + o.upgrade);
+                quality + o.quality, land + o.land, xp + o.xp, twin + o.twin, cook + o.cook, speed + o.speed, ease + o.ease);
     }
 
     public boolean isEmpty() {
@@ -639,7 +639,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (cook != 0) out.add(line(color, Math.round(cook * 100) + "% chance the fish comes up cooked"));
         if (speed != 0) out.add(line(color, String.format("%+d fishing speed (bites about %d s sooner)", speed, speed * 5)));
         if (ease != 0) out.add(line(color, "-" + Math.round(ease * 100) + "% catch difficulty"));
-        if (upgrade != 0) out.add(line(color, Math.round(upgrade * 100) + "% chance to raise the catch's quality a tier"));
         if (!when.isEmpty()) out.replaceAll(c -> line(color, c.getString() + when));
         return out;
     }

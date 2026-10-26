@@ -61,7 +61,6 @@ public final class RodStatsOverlay {
         rows.add(pct("Hook window", (1 + e.window()) * st.hookZones() - 1, false));
         rows.add(new Row("Luck", luck == 0 ? "None" : String.format("%+d", luck), luck > 0 ? GOOD : luck < 0 ? BAD : DIM));
         rows.add(extra("Catch quality", e.quality(), ""));
-        rows.add(extra("Quality bump", e.upgrade(), ""));
         rows.add(extra("Fishing XP", e.xp(), ""));
         rows.add(extra("Land Good/Bad", e.land(), ""));
         rows.add(extra("Fish fight", -e.fight(), " easier"));

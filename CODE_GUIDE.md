@@ -72,7 +72,7 @@ Data you edit without touching Java lives in `src/main/resources/`:
 
 | I want to change | Edit | Notes |
 |---|---|---|
-| What a hook/line/bobber/lure/rod gives always | `data/rods/RodEffects.java`: the `RODS`, `HOOKS`, `LINES`, `BOBBERS`, `LURES`, `BAITS` tables | One line per item. `bite(0.10)` is +10% bite speed. The helper names (`bite`, `window`, `luck`, `quality`, `xp`, `land`, `fight`, `cast`, `ease`, `upgrade`) are defined near the bottom of the file. |
+| What a hook/line/bobber/lure/rod gives always | `data/rods/RodEffects.java`: the `RODS`, `HOOKS`, `LINES`, `BOBBERS`, `LURES`, `BAITS` tables | One line per item. `bite(0.10)` is +10% bite speed. The helper names (`bite`, `window`, `luck`, `quality`, `xp`, `land`, `fight`, `cast`, `ease`) are defined near the bottom of the file. |
 | What an item gives only in a place or time | same file, the `SITUATIONAL` table | `new Perk(When.NIGHT, bite(0.25))`. The places and times are the `When` list. |
 | What a rig gives | `data/rods/RigSets.java`: `SETS`, and the shapes (`QUALITY_2`, `LUCK_QUALITY_3`...) above it | Each rig lists its members by item name. 2 pieces give the small bonus, 3 the full one. |
 | How fast bites come (lure, bait, gear, rigs) | `RodEffects.softenBite`, `SPEED_POINT`, `biteSpeed` | One number: gear bite speed plus 6% per point of lure/bait speed, all added, then softened (full value to +50%, half to +100%, a quarter beyond). There is no hard cap. |
@@ -81,7 +81,7 @@ Data you edit without touching Java lives in `src/main/resources/`:
 | The XP curve | `config/tide.json` (`leveling`), the maths in `Angler.xpToNext` | Solstone mirrors this: see PORTING.md section 4. |
 | What each fishing level gives | `Angler.Stats.of` | `curve(level, atLevel1, atLevel99)`; level 40 is 1.0 (original Tide). |
 | Quality odds | `CatchQuality` (the weights at the top, `roll`) | |
-| The chance a perfect hook raises the quality | `FishCatchMinigame.PERFECT_BUMP` | |
+| The chance a perfect hook raises the quality (never to Mythic) | `FishCatchMinigame.PERFECT_BUMP` and `onWin` | |
 | How big the minigame zones are | `Angler.Zones.of` | |
 | Server record announcement and effects | `ServerRecords.announce` | sound, chat line, particles |
 | The text on the catch card | `Angler.banner` (what goes on it), `CatchBannerOverlay` (how it is drawn) | A line starting `*` is purple, `~` yellow, otherwise white. |

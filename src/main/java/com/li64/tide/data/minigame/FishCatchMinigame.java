@@ -84,11 +84,6 @@ public class FishCatchMinigame {
         Angler.clearBumps(player);
         if (data.isPresent() && com.li64.tide.data.angler.CatchQuality.enabled()) {
             com.li64.tide.data.angler.CatchQuality rolled = com.li64.tide.data.angler.CatchQuality.roll(player.getRandom(), level, gear.quality());
-            if (gear.upgrade() > 0 && rolled != com.li64.tide.data.angler.CatchQuality.MYTHIC && player.getRandom().nextDouble() < gear.upgrade()) {
-                var before = rolled;
-                rolled = com.li64.tide.data.angler.CatchQuality.values()[rolled.ordinal() + 1];   // amethyst rod, golden bait
-                Angler.markBump(player, "Tackle", before, rolled);
-            }
             final com.li64.tide.data.angler.CatchQuality q = rolled;
             hook.pendingQuality = q;
             speed *= (float) q.fightSpeed();
@@ -155,7 +150,8 @@ public class FishCatchMinigame {
                 0.15f, 1.0f);
         // a perfect hook sometimes brings the fish up a quality better than it bit
         var q = hook.pendingQuality;
-        if (perfectCatch && q != null && q != com.li64.tide.data.angler.CatchQuality.MYTHIC && player.getRandom().nextDouble() < PERFECT_BUMP) {
+        // (a perfect hook can raise a fish up to Trophy, never to Mythic: Mythic stays rare)
+        if (perfectCatch && q != null && q.ordinal() < com.li64.tide.data.angler.CatchQuality.TROPHY.ordinal() && player.getRandom().nextDouble() < PERFECT_BUMP) {
             hook.pendingQuality = com.li64.tide.data.angler.CatchQuality.values()[q.ordinal() + 1];
             Angler.markBump(player, "Perfect hook", q, hook.pendingQuality);
         }

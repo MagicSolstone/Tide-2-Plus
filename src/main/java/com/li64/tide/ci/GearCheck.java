@@ -231,7 +231,7 @@ public final class GearCheck {
                                           List<Item> bobbers, List<Item> lures, List<Item> baits) {
         RandomSource rng = RandomSource.create(42);
         int n = 60_000;
-        double minWait = 9, maxCast = 0, minFight = 9, maxLand = 0, maxUp = 0, maxTwin = 0, maxCook = 0, minBoost = 9, maxBoost = -9;
+        double minWait = 9, maxCast = 0, minFight = 9, maxLand = 0, maxTwin = 0, maxCook = 0, minBoost = 9, maxBoost = -9;
         int maxLuck = -99, minLuck = 99, maxSpeed = 0;
         String worstFight = "", worstWait = "", luckiest = "";
         Angler.Stats top = Angler.Stats.of(Angler.MAX_LEVEL), bottom = Angler.Stats.of(1);
@@ -282,7 +282,6 @@ public final class GearCheck {
                     problem("quality odds broken (sum " + sum + ") at level " + lv + " with boost " + fmt(boost) + ": " + loadout(rod));
             }
             maxLand = Math.max(maxLand, e.land());
-            maxUp = Math.max(maxUp, e.upgrade());
             maxTwin = Math.max(maxTwin, e.twin());
             maxCook = Math.max(maxCook, e.cook());
             maxCast = Math.max(maxCast, (1 + e.cast()) * top.castDistance());
@@ -291,7 +290,7 @@ public final class GearCheck {
             int luck = e.luck() + BaitUtils.getCombinedLuck(rod) + top.luck() + 3;   // + Luck of the Sea III
             if (luck > maxLuck) { maxLuck = luck; luckiest = loadout(rod); }
             minLuck = Math.min(minLuck, e.luck() + BaitUtils.getCombinedLuck(rod) + bottom.luck());
-            if (e.upgrade() > 1 || e.twin() > 1 || e.cook() > 1) problem("a chance over 100% with " + loadout(rod) + ": " + e);
+            if (e.twin() > 1 || e.cook() > 1) problem("a chance over 100% with " + loadout(rod) + ": " + e);
         }
         double[] best = CatchQuality.odds(Angler.MAX_LEVEL, maxBoost), worst = CatchQuality.odds(1, minBoost);
         notes.add(String.format("%,d random loadouts, every place-and-time perk on at once", n));
@@ -300,7 +299,7 @@ public final class GearCheck {
         notes.add(String.format("catch quality boost %s to %s: Mythic %s at level 99 best, %s at level 1 worst; Poor %s at level 1 worst",
                 pct(minBoost), pct(maxBoost), pct(best[5]), pct(worst[5]), pct(worst[0])));
         notes.add(String.format("most fishing speed points %d; luck %d to %d (%s); cast range up to x%s", maxSpeed, minLuck, maxLuck, luckiest, fmt(maxCast)));
-        notes.add(String.format("most: land %s, quality bump %s, second fish %s, cooked %s", pct(maxLand), pct(maxUp), pct(maxTwin), pct(maxCook)));
+        notes.add(String.format("most: land %s, second fish %s, cooked %s", pct(maxLand), pct(maxTwin), pct(maxCook)));
         if (best[5] > 0.10) problem("Mythic chance reaches " + pct(best[5]) + " at level 99 with the best gear (should stay rare)");
         if (maxCast > 3.5) problem("cast range can reach x" + fmt(maxCast) + ", the bobber may fly out of sight");
     }
@@ -403,13 +402,12 @@ public final class GearCheck {
         return r;
     }
 
-    /** Quality odds with the gear's tier-raising chance applied (what the minigame does). */
+    /** Quality odds with the gear's quality boost applied. */
     private static String qualityLine(String label, int lv, RodEffects e) {
         double[] p = CatchQuality.odds(lv, e.quality()).clone();
-        for (int i = p.length - 2; i >= 0; i--) { double up = p[i] * Math.min(1, e.upgrade()); p[i] -= up; p[i + 1] += up; }
         double good = p[2] + p[3] + p[4] + p[5], great = p[3] + p[4] + p[5];
-        return String.format("%s: luck %+d, bite %+.0f%%, quality %+.0f%%, tier up %.0f%% -> Good+ %s, Great+ %s, Trophy+ %s, Mythic 1 in %,d",
-                label, e.luck(), e.bite() * 100, e.quality() * 100, e.upgrade() * 100, pct(good), pct(great), pct(p[4] + p[5]), Math.round(1 / p[5]));
+        return String.format("%s: luck %+d, bite %+.0f%%, quality %+.0f%% -> Good+ %s, Great+ %s, Trophy+ %s, Mythic 1 in %,d",
+                label, e.luck(), e.bite() * 100, e.quality() * 100, pct(good), pct(great), pct(p[4] + p[5]), Math.round(1 / p[5]));
     }
 
     private static void oddsReport(MinecraftServer server, Collection<FishData> fish) {
@@ -706,7 +704,7 @@ public final class GearCheck {
     }
 
     private static double[] values(RodEffects e) {
-        return new double[]{e.cast(), e.bite(), e.window(), e.fight(), e.luck(), e.quality(), e.land(), e.xp(), e.twin(), e.cook(), e.speed(), e.ease(), e.upgrade()};
+        return new double[]{e.cast(), e.bite(), e.window(), e.fight(), e.luck(), e.quality(), e.land(), e.xp(), e.twin(), e.cook(), e.speed(), e.ease()};
     }
 
     private static String describe(ItemStack s) {

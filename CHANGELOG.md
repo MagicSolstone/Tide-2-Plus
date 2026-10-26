@@ -39,6 +39,7 @@ Install the same way: the jar in `mods/` on the server and every client (replace
 - **Circle hook**: +5% hook window (was +10%); still +40% to land Good and Bad hooks and an easier fight.
 - **Diamond bobber**: +15% bite speed (was +12%). **Lichen bobber**: +6% (was +10%; glow lichen is easy to find).
 - **Cherry rod**: +40% bite speed at dawn and dusk (was +60%).
+- **Wayfinder rod grows with distance**: within 500 blocks of world spawn it is a sturdy all-rounder (cast range, hook window, an easier fight, landing). From there out it gains catch quality, rare finds and fishing XP, reaching +15% quality, +30% rare finds and +10% XP at 5,000 blocks (a Nether block counts as 8). Close to home it is weaker than before; far away, a little stronger.
 
 ## Tide+ 1.0.19 - 10/25/26
 

@@ -93,7 +93,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("cherry_fishing_rod", xp(0.15)),
             Map.entry("conduit_fishing_rod", new RodEffects(0, 0, 0.10, -0.05, 0, 0.05, 0, 0)),
             Map.entry("clockwork_fishing_rod", new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0.10)),
-            Map.entry("wayfinder_fishing_rod", new RodEffects(0.10, 0, 0.10, -0.10, 1, 0.10, 0.05, 0.05)),
+            Map.entry("wayfinder_fishing_rod", new RodEffects(0.10, 0, 0.10, -0.10, 0, 0, 0.05, 0)),     // plus more the farther from spawn: see wayfinder()
             // found rods: each one's real draw is its own trick (PICKS, Specials), the numbers stay modest
             Map.entry("rotten_fishing_rod", xp(0.05)),
             Map.entry("widow_fishing_rod", NONE),
@@ -418,7 +418,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     private static final Map<String, List<String>> SPECIAL_TEXT = Map.of(
             "sickle_fishing_rod", List.of("35% chance each fish makes nearby crops grow"),
             "hex_fishing_rod", List.of("20% chance each fish gives you a helpful potion effect"),
-            "widow_fishing_rod", List.of("A night hunter: strong after dark, sluggish by day"));
+            "widow_fishing_rod", List.of("A night hunter: strong after dark, sluggish by day"),
+            "wayfinder_fishing_rod", List.of("Stronger the farther you fish from world spawn: from 500 blocks out, up to +15% catch quality, +30% rare finds and +10% fishing XP at 5,000 blocks"));
 
     /** Bonus drops from this rod. */
     public static List<Drop> drops(ItemStack rod) {
@@ -532,7 +533,30 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         for (ItemStack part : all)
             for (Perk perk : situational(part))
                 if (perk.when().test(player)) e = e.plus(perk.fx());
+        if (isTide(rod) && path(rod).equals("wayfinder_fishing_rod")) e = e.plus(wayfinder(player));
         return e.plus(RigSets.active(player, rod));
+    }
+
+    /** The wayfinder rod's distance bonus at full strength (5,000 blocks or more from world spawn). */
+    public static final RodEffects WAYFINDER_FAR = new RodEffects(0, 0, 0, 0, 2, 0.15, 0, 0.10);
+    public static final double WAYFINDER_START = 500, WAYFINDER_FULL = 5000;
+
+    /**
+     * How far along the wayfinder rod's bonus is, 0..1: nothing within 500 blocks of world spawn, growing evenly to
+     * full at 5,000. A block in the Nether counts as 8. Works on both sides (the client knows the spawn), so the rod
+     * panel shows it.
+     */
+    public static double wayfinderReach(net.minecraft.world.entity.player.Player player) {
+        net.minecraft.core.BlockPos spawn = player.level().getRespawnData().globalPos().pos();
+        double scale = player.level().dimension() == net.minecraft.world.level.Level.NETHER ? 8 : 1;
+        double d = Math.hypot(player.getX() * scale - spawn.getX(), player.getZ() * scale - spawn.getZ());
+        return Math.max(0, Math.min(1, (d - WAYFINDER_START) / (WAYFINDER_FULL - WAYFINDER_START)));
+    }
+
+    /** The wayfinder rod's bonus where the player stands now. */
+    public static RodEffects wayfinder(net.minecraft.world.entity.player.Player player) {
+        double k = wayfinderReach(player);
+        return new RodEffects(0, 0, 0, 0, (int) Math.round(WAYFINDER_FAR.luck * k), WAYFINDER_FAR.quality * k, 0, WAYFINDER_FAR.xp * k);
     }
 
     /** A rod's own perk lines (the rod item, not what's attached). */

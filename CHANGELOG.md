@@ -19,13 +19,20 @@ New always-on sets (2 pieces give the small bonus, 3 or more the full one), so t
 - **Fish bone hook takes the bone hook's place** (its stats, its Desert rig spot, and it is a Tier 1 hook). The bone hook is no longer made; an old one still works on a rod and can be turned into a fish bone hook at the table.
 - **Stone hook** sinks to the bottom: a 15% chance of kelp and 10% of seagrass with each fish.
 - **Emerald hook**: +10% fishing XP and a 3% chance of an emerald with each fish.
-- **Barbed hook**: fish never shake loose (Good and Bad hooks always land), but there are no perfect hooks.
-- **Heart bobber** heals you a heart with each fish.
+- **Barbed hook** lands almost anything (Good and Bad hooks always, even a Terrible one half the time), but it tears the fish: never better than Great, and half the time a tier worse. The card says when it did.
+- **Heart bobber** heals you three hearts with each fish.
 - **Lichen bobber** glows (lights the water like the glow hook), bites 20% faster underground, and joins the Cave rig.
 - **Village rod** teaches: players fishing within 16 blocks of you get +10% fishing XP.
-- **Crystal rod** tells you how good a fish is the moment it bites.
+- **Crystal rod** tells you what bit, how good it is and how rare, the moment it bites (handy for a fish you keep losing), and gives +10% hook window and +10% to land Good and Bad hooks.
+
+## Levels and rare fish
+- **A high fishing level no longer makes rare fish easy.** Levels still widen the hook zones and calm common and uncommon fish, but rare, very rare and legendary fish fight at least as hard, with hook zones no wider, than in original Tide, however high your level. Low levels are still harder on them. To take on a hard fish, use tackle: a wider hook window, an easier fight, a landing hook, or the barbed hook to land it at the cost of its quality.
+
+## Coal line merged
+- **The coal line is retired**; the redstone line took in its hook window (+5%). An old coal line still works on a rod and turns back into a fishing line at the table.
 
 ## Crates
+- **Crates may hold string (2-5) or a fishing line** (35% of crates), to help with crafting.
 - **Basic tackle turns up more, the best tackle very rarely.** Fishing crates hold tackle a little more often (30%, was 15%), now including plain lines and hooks, stone and iron pieces; golden pieces are rare, and a diamond hook, line or bobber (or netherite in Nether crates) is about 1 crate in 200. The fishing boat chest has a few basics too.
 
 ## Tide+ 1.0.20 - 10/26/26

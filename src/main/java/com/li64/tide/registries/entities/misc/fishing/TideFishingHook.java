@@ -800,8 +800,8 @@ public class TideFishingHook extends Projectile {
 
                         if (catchType == CatchType.ITEM) com.li64.tide.data.angler.Angler.onItemCaught(serverPlayer);
                         if (catchType == CatchType.FISH) {
-                            // the heart bobber: a heart back with each fish
-                            if (this.getBobber().is(TideItems.HEART_BOBBER)) player.heal(2.0f);
+                            // the heart bobber: three hearts back with each fish
+                            if (this.getBobber().is(TideItems.HEART_BOBBER)) player.heal(6.0f);
                             if (!player.isCreative() && BaitUtils.hasBait(rod)) {
                                 // consume used bait
                                 BaitContents.Mutable contents = new BaitContents.Mutable(TideItemData.BAIT_CONTENTS.getOrDefault(rod, new BaitContents()));

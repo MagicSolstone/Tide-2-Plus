@@ -172,7 +172,21 @@ public final class Angler {
     /** Minigame speed multiplier: the player's general skill, plus a penalty for fish above their level. */
     public static double fightSpeed(int level, FishRarity rarity) {
         double gap = Math.max(0, fishLevel(rarity) - level);
-        return Math.min(2.4, Stats.of(level).fightSpeed() * (1.0 + gap * 0.012));
+        // a high level calms common fish, but rare, very rare and legendary fish fight at least as hard as in original
+        // Tide however good you are: only tackle makes them easier
+        double skill = rareOrRarer(rarity) ? Math.max(1.0, Stats.of(level).fightSpeed()) : Stats.of(level).fightSpeed();
+        return Math.min(2.4, skill * (1.0 + gap * 0.012));
+    }
+
+    /** Rare, very rare or legendary. */
+    public static boolean rareOrRarer(FishRarity rarity) {
+        return rarity.ordinal() >= FishRarity.RARE.ordinal();
+    }
+
+    /** How much the level widens the hook zones for this fish (for rare and rarer fish, never past original Tide's). */
+    public static double hookZones(int level, FishRarity rarity) {
+        double z = Stats.of(level).hookZones();
+        return rareOrRarer(rarity) ? Math.min(1.0, z) : z;
     }
 
     // ------------------------------------------------------------------ the minigame bar

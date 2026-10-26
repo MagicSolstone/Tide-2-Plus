@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "tide:coal_line"
+  ],
+  "result": {
+    "count": 1,
+    "id": "tide:fishing_line"
+  }
+}

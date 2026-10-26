@@ -6,22 +6,12 @@
       "conditions": {
         "items": [
           {
-            "items": "#minecraft:coals"
+            "items": "tide:coal_line"
           }
         ]
       }
     },
     "has_1": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": "tide:fishing_line"
-          }
-        ]
-      }
-    },
-    "has_2": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -34,7 +24,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipes": "tide:coal_line"
+        "recipes": "tide:fishing_line_from_coal_line"
       }
     }
   },
@@ -42,13 +32,12 @@
     [
       "has_0",
       "has_1",
-      "has_2",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "tide:coal_line"
+      "tide:fishing_line_from_coal_line"
     ]
   }
 }

@@ -78,7 +78,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     private static final Map<String, RodEffects> RODS = Map.ofEntries(
             Map.entry("iron_fishing_rod", window(0.05)),
             Map.entry("golden_fishing_rod", new RodEffects(0, 0, 0, 0, 1, 0, 0, 0.10)),
-            Map.entry("crystal_fishing_rod", new RodEffects(0, 0, 0.05, 0, 0, 0.05, 0, 0)),
+            Map.entry("crystal_fishing_rod", new RodEffects(0, 0, 0.10, 0, 0, 0, 0.10, 0)),      // sees what bites (FishCatchMinigame); helps land the hard ones
             Map.entry("diamond_fishing_rod", new RodEffects(0.10, 0, 0.10, 0, 0, 0.10, 0, 0)),
             Map.entry("netherite_fishing_rod", new RodEffects(0.10, 0.05, 0.12, -0.12, 0, 0.15, 0.10, 0)),
             Map.entry("echo_fishing_rod", new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0.10)),
@@ -159,14 +159,14 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("iron_line", ease(0.14)),
             Map.entry("golden_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.10)),
             Map.entry("diamond_line", ease(0.25)),
-            Map.entry("coal_line", window(0.10)),
+            Map.entry("coal_line", window(0.10)),      // retired (merged into the redstone line); still works on old rods
             Map.entry("honey_line", land(0.05)),
             Map.entry("silk_line", bite(0.08)),
             Map.entry("phantom_line", new RodEffects(0.10, 0, 0.05, 0, 0, 0, 0, 0)),
             Map.entry("amethyst_line", NONE),
             Map.entry("netherite_line", new RodEffects(0, 0, 0, -0.08, 0, 0, 0.05, 0)),
             Map.entry("braided_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.10, 0)),
-            Map.entry("redstone_line", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.20)));
+            Map.entry("redstone_line", new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0, 0, 0.20)));      // (took in the old coal line)
 
     /** Bobbers with their own always-on perk (the plain one has none). */
     private static final Map<String, RodEffects> BOBBERS = Map.ofEntries(
@@ -184,7 +184,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("lichen_bobber", bite(0.05)),      // glows like the glow hook; strong underground (Cave rig)
             Map.entry("nautilus_bobber", new RodEffects(0, 0, 0.05, -0.05, 0, 0, 0, 0)),
             Map.entry("pearl_bobber", quality(0.10)),      // one ender pearl: its big quality is on a full moon
-            Map.entry("heart_bobber", land(0.10)),      // and heals a heart with each fish (TideFishingHook)
+            Map.entry("heart_bobber", land(0.10)),      // and heals three hearts with each fish (TideFishingHook)
             Map.entry("grassy_bobber", bite(0.08)),
             Map.entry("duck_bobber", xp(0.05)),
             Map.entry("slime_bobber", land(0.10)),
@@ -419,12 +419,12 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             "wayfinder_fishing_rod", List.of("Stronger the farther you fish from world spawn: from 500 blocks out, up to +15% catch quality, +30% rare finds and +10% fishing XP at 5,000 blocks"),
             "amethyst_fishing_rod", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),
             "village_fishing_rod", List.of("Players fishing within 16 blocks of you get +10% fishing XP"),
-            "crystal_fishing_rod", List.of("Shows how good a fish is the moment it bites"));
+            "crystal_fishing_rod", List.of("Shows what bit, how good it is and how rare, the moment it bites"));
 
     /** What a line, hook, bobber or lure does besides its numbers (tooltip lines). */
     private static final Map<String, List<String>> PART_TEXT = Map.of(
-            "barbed_hook", List.of("Fish never shake loose (Good and Bad hooks always land), but there are no perfect hooks"),
-            "heart_bobber", List.of("Heals you a heart with each fish"),
+            "barbed_hook", List.of("Lands almost anything (Good and Bad hooks always, Terrible ones half the time), but it tears the fish: never better than Great, and half the time a tier worse"),
+            "heart_bobber", List.of("Heals you three hearts with each fish"),
             "lichen_bobber", List.of("Glows, lighting the water around it"),
             "amethyst_hook", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),
             "amethyst_line", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),

@@ -76,7 +76,7 @@ public class FishCatchMinigame {
         FishRarity rarity = data.map(d -> d.profile().rarity()).orElse(FishRarity.COMMON);
         com.li64.tide.data.rods.RodEffects gear = com.li64.tide.data.rods.RodEffects.of(player, hook.getRod());
         this.gear = gear;
-        double zoneScale = Angler.Stats.of(level).hookZones() * (1.0 + gear.window());
+        double zoneScale = Angler.hookZones(level, rarity) * (1.0 + gear.window());
         speed *= (float) (Angler.fightSpeed(level, rarity) * (1.0 + gear.fight()));
 
         // catch quality is decided at the bite, so a bigger fish fights harder: faster, smaller zones
@@ -88,10 +88,14 @@ public class FishCatchMinigame {
             hook.pendingQuality = q;
             speed *= (float) q.fightSpeed();
             zoneScale *= q.zoneScale();
-            // the crystal rod sees into the water: it tells you how good the fish is as it bites
-            if (hook.getRod().is(com.li64.tide.registries.TideItems.CRYSTAL_FISHING_ROD))
-                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("Crystal rod: a " + q.label + " fish!")
+            // the crystal rod sees into the water: it tells you what is on the line, and how good, as it bites
+            if (hook.getRod().is(com.li64.tide.registries.TideItems.CRYSTAL_FISHING_ROD)) {
+                String what = hook.getHookedItems().isEmpty() ? "fish" : hook.getHookedItems().get(0).getHoverName().getString();
+                String rare = data.map(d -> d.profile().rarity()).filter(Angler::rareOrRarer)
+                        .map(r -> " (" + r.getSerializedName().replace('_', ' ') + ")").orElse("");
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("Crystal rod: a " + q.label + " " + what + rare)
                         .withStyle(s -> s.withColor(q.color)));
+            }
             else if (q.ordinal() >= com.li64.tide.data.angler.CatchQuality.TROPHY.ordinal())
                 player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(
                         q == com.li64.tide.data.angler.CatchQuality.MYTHIC ? "This one feels enormous!" : "Something big is on the line!")
@@ -152,10 +156,20 @@ public class FishCatchMinigame {
                 null, hook.getPlayerOwner().blockPosition(),
                 SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.AMBIENT,
                 0.15f, 1.0f);
+        // the barbed hook tears the fish: never better than Great, and half the time a tier worse
+        if (hook.getHook().is(com.li64.tide.registries.TideItems.BARBED_HOOK) && hook.pendingQuality != null) {
+            var torn = hook.pendingQuality;
+            if (torn.ordinal() > com.li64.tide.data.angler.CatchQuality.GREAT.ordinal()) torn = com.li64.tide.data.angler.CatchQuality.GREAT;
+            if (torn != com.li64.tide.data.angler.CatchQuality.POOR && player.getRandom().nextBoolean())
+                torn = com.li64.tide.data.angler.CatchQuality.values()[torn.ordinal() - 1];
+            if (torn != hook.pendingQuality) Angler.markBump(player, "Barbed hook", hook.pendingQuality, torn);
+            hook.pendingQuality = torn;
+        }
         // a perfect hook sometimes brings the fish up a quality better than it bit
         var q = hook.pendingQuality;
         // (a perfect hook can raise a fish up to Trophy, never to Mythic: Mythic stays rare)
-        if (perfectCatch && q != null && q.ordinal() < com.li64.tide.data.angler.CatchQuality.TROPHY.ordinal() && player.getRandom().nextDouble() < PERFECT_BUMP) {
+        if (perfectCatch && q != null && q.ordinal() < com.li64.tide.data.angler.CatchQuality.TROPHY.ordinal()
+                && !hook.getHook().is(com.li64.tide.registries.TideItems.BARBED_HOOK) && player.getRandom().nextDouble() < PERFECT_BUMP) {
             hook.pendingQuality = com.li64.tide.data.angler.CatchQuality.values()[q.ordinal() + 1];
             Angler.markBump(player, "Perfect hook", q, hook.pendingQuality);
         }
@@ -179,11 +193,9 @@ public class FishCatchMinigame {
         if (cancelIfNecessary()) return;
         Angler.Hook hook = Angler.Hook.of(Math.abs(accuracy), zones);
         double chance = hook.landChance >= 1.0 || hook.landChance <= 0.0 ? hook.landChance : Math.min(1.0, hook.landChance + gear.land());
-        // the barbed hook: nothing shakes loose (Good and Bad always land), but a perfect hook is only a Great one
-        if (this.hook.getHook().is(com.li64.tide.registries.TideItems.BARBED_HOOK)) {
-            if (hook == Angler.Hook.PERFECT) hook = Angler.Hook.GREAT;
-            if (hook == Angler.Hook.GOOD || hook == Angler.Hook.BAD) chance = 1.0;
-        }
+        // the barbed hook lands anything: Good and Bad always, even a Terrible hook half the time (it tears the fish: see onWin)
+        if (this.hook.getHook().is(com.li64.tide.registries.TideItems.BARBED_HOOK))
+            chance = hook == Angler.Hook.TERRIBLE ? 0.5 : 1.0;
         // CI: the scripted click's timing varies, so always land the fish and test the whole catch every build
         boolean landed = Tide.CI || chance >= 1.0 || player.getRandom().nextDouble() < chance;
         if (!landed && hook != Angler.Hook.TERRIBLE)

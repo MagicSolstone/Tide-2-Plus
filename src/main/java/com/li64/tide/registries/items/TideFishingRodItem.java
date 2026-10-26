@@ -365,7 +365,7 @@ public class TideFishingRodItem extends FishingRodItem {
         if (activeHook != null) {
             if (!level.isClientSide()) {
                 int durabilityLoss = activeHook.retrieve(rod, (ServerLevel) level, player);
-                // the Stone set: each point of wear only lands some of the time
+                // the Stone rig: each point of wear only lands some of the time
                 double wear = com.li64.tide.data.rods.RigSets.wear(rod);
                 int loss = 0;
                 for (int i = 0; i < durabilityLoss; i++) if (wear >= 1 || level.getRandom().nextDouble() < wear) loss++;

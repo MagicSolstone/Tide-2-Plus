@@ -2,12 +2,12 @@
 
 Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.20).
 
-## Material sets
-New always-on sets (2 pieces give the small bonus, 3 or more the full one), so the basic tackle has a role:
-- **Stone set** (stone rod, stone hook, plain line): the rod wears half as fast with two pieces, and barely at all with three.
-- **Gold set** (golden rod or Midas rod, golden line, golden hook, golden spoon lure): +10% fishing XP; with three, +20% XP and a 25% chance of a gold nugget with each fish.
-- **Diamond set** (diamond rod, line, hook, bobber): the catch-quality set. +10% catch quality, +25% with three. The diamond bobber now gives catch quality (+8%) instead of bite speed.
-- **Honey set** (honeycomb rod, honey line, honey bobber): a 15% chance of a honeycomb with each fish; with three, a 25% chance of a honey bottle and an easier landing.
+## Material rigs
+New always-on rigs that work anywhere (2 pieces give the small bonus, 3 or more the full one), so the basic tackle has a role:
+- **Stone rig** (stone rod, stone hook, plain line): the rod wears half as fast with two pieces, and barely at all with three.
+- **Gold rig** (golden rod or Midas rod, golden line, golden hook, golden spoon lure): +10% fishing XP; with three, +20% XP and a 25% chance of a gold nugget with each fish.
+- **Diamond rig** (diamond rod, line, hook, bobber): the catch-quality rig. +10% catch quality, +25% with three. The diamond bobber now gives catch quality (+8%) instead of bite speed.
+- **Honey rig** (honeycomb rod, honey line, honey bobber): a 15% chance of a honeycomb with each fish; with three, a 25% chance of a honey bottle and an easier landing.
 - Iron (the sword), Copper (Storm rig) and Netherite (Fire rig) are unchanged.
 - **Lucky rig** (golden apple bobber, enchanted golden apple bobber, lucky hook, magnet lure, lucky bait): +15% rare finds, +30% with three.
 
@@ -17,8 +17,8 @@ New always-on sets (2 pieces give the small bonus, 3 or more the full one), so t
 - **Amethyst moved to the moon**: amethyst catches moonlight now. Each piece gives catch quality at night that grows toward a full moon, and the pieces count toward the Moonlight rig. (Its sunlight bite speed went to the Sunlight rig.)
 
 ## Rigs are easier to read
-- **Tier 1 and Tier 2**: every rig and set now says Tier 1 (2+) and Tier 2 (3+) on tooltips, the recipe book, the rod panel and the Angling Table.
-- **Every piece belongs to one rig at most.** Moved: moon bait (Moonlight rig only), slime line (Swamp rig only), golden line and golden hook (Gold set only), golden bobber (Sunlight rig only), honey bobber (Honey set only); the Amethyst set became part of the Moonlight rig. New homes: the spider line joins the Cave rig (the Night rig keeps the phantom line), and the redstone line joins the Desert rig.
+- **Tier 1 and Tier 2**: every rig now says Tier 1 (2+) and Tier 2 (3+) on tooltips, the recipe book, the rod panel and the Angling Table.
+- **Every piece belongs to one rig at most.** Moved: moon bait (Moonlight rig only), slime line (Swamp rig only), golden line and golden hook (Gold rig only), golden bobber (Sunlight rig only), honey bobber (Honey rig only); the old Amethyst set became part of the Moonlight rig. New homes: the spider line joins the Cave rig (the Night rig keeps the phantom line), and the redstone line joins the Desert rig.
 - **A rod carries two rigs at most**: if it has pieces of three (bait counts too), the two with the most pieces count and the third says "not counted".
 - **Each rig has its own colour**, used for its name, its card at the table and its gem.
 - **Rods show their rigs on the icon**: a small gem in the corner of the rod, in the rig's colour, one for each rig it carries (bright for Tier 2, dimmer for Tier 1). A rod picks up its gems the next time you change anything on it.

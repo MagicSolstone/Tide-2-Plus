@@ -411,16 +411,16 @@ public final class GearCheck {
     }
 
     private static void oddsReport(MinecraftServer server, Collection<FishData> fish) {
-        // the amethyst set against a place's rig, at the baseline level: the rig should win in its place, and only there
+        // the amethyst pieces against a place's rig, at the baseline level: the rig should win in its place, and only there
         int base = Angler.baseline();
         ItemStack amethyst = kit("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber", "spinner_lure");
         ItemStack jungle = kit("bamboo_fishing_rod", "vine_line", "amethyst_hook", "apple_bobber", "spinner_lure");
         ItemStack river = kit("amethyst_fishing_rod", "silk_line", "wooden_hook", "feather_bobber", "fly_lure");
         var day = RodEffects.When.DAY;
-        notes.add("balance " + qualityLine("amethyst set, jungle by day", base, inPlace(amethyst, java.util.Set.of(RodEffects.When.JUNGLE, day))));
+        notes.add("balance " + qualityLine("amethyst kit, jungle by day", base, inPlace(amethyst, java.util.Set.of(RodEffects.When.JUNGLE, day))));
         notes.add("balance " + qualityLine("jungle rig + amethyst hook, jungle by day", base, inPlace(jungle, java.util.Set.of(RodEffects.When.JUNGLE, day))));
         notes.add("balance " + qualityLine("jungle rig + amethyst hook, plains by day", base, inPlace(jungle, java.util.Set.of(day))));
-        notes.add("balance " + qualityLine("amethyst set, river by day", base, inPlace(amethyst, java.util.Set.of(RodEffects.When.RIVER, day))));
+        notes.add("balance " + qualityLine("amethyst kit, river by day", base, inPlace(amethyst, java.util.Set.of(RodEffects.When.RIVER, day))));
         notes.add("balance " + qualityLine("river rig (amethyst rod), river by day", base, inPlace(river, java.util.Set.of(RodEffects.When.RIVER, day))));
 
         for (int lv : new int[]{1, Angler.baseline(), Angler.MAX_LEVEL})

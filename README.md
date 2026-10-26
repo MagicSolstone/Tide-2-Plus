@@ -76,7 +76,7 @@ the full one. Each piece belongs to one rig, and a rod carries at most **two rig
   Frost, Cave, Fire (lava) and Void.
 - **Sky rigs** that follow the sky: the **Sunlight rig** bites faster toward noon and brings up seeds; the **Moonlight
   rig** grows toward a full moon, finds rare fish and better quality, and brings up amethyst.
-- **Material sets** that work anywhere, each with a twist: **Stone** (the rod barely wears), **Iron** (the rod fights like
+- **Material rigs** that work anywhere, each with a twist: **Stone** (the rod barely wears), **Iron** (the rod fights like
   a sword), **Gold** (XP and gold nuggets), **Diamond** (catch quality), **Honey** (honeycombs and honey bottles) and
   **Lucky** (rare finds).
 - **Each rig has a colour**, and a rod wears a small gem in its rig's colour on its icon.

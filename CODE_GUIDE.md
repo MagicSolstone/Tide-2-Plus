@@ -86,7 +86,7 @@ Data you edit without touching Java lives in `src/main/resources/`:
 | Server record announcement and effects | `ServerRecords.announce` | sound, chat line, particles |
 | How much luck helps (Rare finds %) | `RodEffects.RARE_PER_LUCK` (display and rare fish, via `FishData.weight`), `CrateSelector.MAX_LUCK_BONUS` (crates) | Luck points are still whole numbers inside; the panel shows them as a percentage. |
 | How big fish are | `CatchQuality.sampleLength` | One bell curve per quality; edit the centre and spread numbers. |
-| Material sets (Stone, Gold, Diamond, Amethyst, Honey) and their drops | `RigSets.SETS` (the `When.ALWAYS` ones), `RigSets.SET_DROPS`, `RigSets.wear` (Stone) | |
+| Material rigs (Stone, Gold, Diamond, Honey, Iron) and the Lucky rig, and their drops | `RigSets.SETS` (the `When.ALWAYS` ones), `RigSets.SET_DROPS`, `RigSets.wear` (Stone) | |
 | Sun and Moon rigs (their strength follows the sky) | `RigSets.strength`, `RodEffects.noon`, `RodEffects.moonlight`; amethyst's own moonlight quality is `RodEffects.AMETHYST_QUALITY` | |
 | Rig colours, tier names and the gem on a rod's icon | `RigSets.COLOR`, `RigSets.tier`, `RigSets.refreshLook` (and the rods' `assets/tide/items/*.json`) | |
 | The Angling Table's look | `client/gui/BenchStyle.java` (frame, slot hints), `AnglingTableScreen.rigPanel` (rig cards) | |

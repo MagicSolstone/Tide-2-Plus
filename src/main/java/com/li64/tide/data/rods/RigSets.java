@@ -102,15 +102,15 @@ public final class RigSets {
             set("Void rig", When.END, BITE_2, LUCK_BITE_3, "void_hook", "chorus_bobber", "chorus_lure"),
             new RigSet("Iron rig", When.ALWAYS, new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0), new RodEffects(0, 0, 0.10, -0.10, 0, 0, 0, 0),
                     Set.of("iron_fishing_rod", "iron_line", "fishing_hook", "iron_bobber"), IRON_TWO_NOTE, IRON_NOTE),
-            // the material sets: always on, a little weaker than a place-and-time rig in its own place, each with its own twist
-            new RigSet("Stone set", When.ALWAYS, RodEffects.NONE, RodEffects.NONE,
+            // the material rigs: always on, a little weaker than a place-and-time rig in its own place, each with its own twist
+            new RigSet("Stone rig", When.ALWAYS, RodEffects.NONE, RodEffects.NONE,
                     Set.of("stone_fishing_rod", "stone_hook", "fishing_line"), "the rod wears half as fast", "the rod barely wears"),
-            new RigSet("Gold set", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.10), new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.20),
+            new RigSet("Gold rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.10), new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.20),
                     Set.of("golden_fishing_rod", "midas_fishing_rod", "golden_line", "golden_hook", "golden_spoon_lure"),
                     "", "25% chance of a gold nugget with each fish"),
-            new RigSet("Diamond set", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0.10, 0, 0), new RodEffects(0, 0, 0, 0, 0, 0.25, 0, 0),
+            new RigSet("Diamond rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0.10, 0, 0), new RodEffects(0, 0, 0, 0, 0, 0.25, 0, 0),
                     Set.of("diamond_fishing_rod", "diamond_line", "diamond_hook", "diamond_bobber"), "", ""),
-            new RigSet("Honey set", When.ALWAYS, RodEffects.NONE, new RodEffects(0, 0, 0, 0, 0, 0, 0.10, 0),
+            new RigSet("Honey rig", When.ALWAYS, RodEffects.NONE, new RodEffects(0, 0, 0, 0, 0, 0, 0.10, 0),
                     Set.of("honeycomb_fishing_rod", "honey_line", "honey_bobber"),
                     "15% chance of a honeycomb with each fish", "25% chance of a honey bottle with each fish"),
             new RigSet("Lucky rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 2, 0, 0, 0),
@@ -138,8 +138,8 @@ public final class RigSets {
             java.util.Map.entry("Twilight rig", 0xFF8FC7), java.util.Map.entry("Storm rig", 0xD9824A), java.util.Map.entry("Swamp rig", 0x7FA33A),
             java.util.Map.entry("Jungle rig", 0x3CC24A), java.util.Map.entry("Desert rig", 0xE8C26A), java.util.Map.entry("Frost rig", 0xBFEFFF),
             java.util.Map.entry("Cave rig", 0x9AA1AB), java.util.Map.entry("Fire rig", 0xFF5A1F), java.util.Map.entry("Void rig", 0xB070E0),
-            java.util.Map.entry("Iron rig", 0xE6E6E6), java.util.Map.entry("Stone set", 0x8C8C8C), java.util.Map.entry("Gold set", 0xFFD24A),
-            java.util.Map.entry("Diamond set", 0x4FE3E0), java.util.Map.entry("Honey set", 0xF2A93B),
+            java.util.Map.entry("Iron rig", 0xE6E6E6), java.util.Map.entry("Stone rig", 0x8C8C8C), java.util.Map.entry("Gold rig", 0xFFD24A),
+            java.util.Map.entry("Diamond rig", 0x4FE3E0), java.util.Map.entry("Honey rig", 0xF2A93B),
             java.util.Map.entry("Lucky rig", 0x55D16B), java.util.Map.entry("Sunlight rig", 0xFFE066), java.util.Map.entry("Moonlight rig", 0xB58CFF));
 
     public static int color(RigSet set) {
@@ -160,11 +160,11 @@ public final class RigSets {
                             new RodEffects.Drop("minecraft:beetroot_seeds", 0.10, 0, "Sunlight rig: beetroot seeds"),
                             new RodEffects.Drop("minecraft:pumpkin_seeds", 0.05, 0, "Sunlight rig: pumpkin seeds"),
                             new RodEffects.Drop("minecraft:melon_seeds", 0.05, 0, "Sunlight rig: melon seeds"))),
-            "Gold set", new SetDrops(List.of(), List.of(new RodEffects.Drop("minecraft:gold_nugget", 0.25, 0, "Gold set: 25% chance of a gold nugget"))),
+            "Gold rig", new SetDrops(List.of(), List.of(new RodEffects.Drop("minecraft:gold_nugget", 0.25, 0, "Gold rig: 25% chance of a gold nugget"))),
             "Moonlight rig", new SetDrops(List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.10, 0, "Moonlight rig: 10% chance of an amethyst shard")),
                     List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.20, 0, "Moonlight rig: 20% chance of an amethyst shard"))),
-            "Honey set", new SetDrops(List.of(new RodEffects.Drop("minecraft:honeycomb", 0.15, 0, "Honey set: 15% chance of a honeycomb")),
-                    List.of(new RodEffects.Drop("minecraft:honey_bottle", 0.25, 0, "Honey set: 25% chance of a honey bottle"))));
+            "Honey rig", new SetDrops(List.of(new RodEffects.Drop("minecraft:honeycomb", 0.15, 0, "Honey rig: 15% chance of a honeycomb")),
+                    List.of(new RodEffects.Drop("minecraft:honey_bottle", 0.25, 0, "Honey rig: 25% chance of a honey bottle"))));
 
     /** The extra things this rod's sets bring up with each fish (a rig's only where and when it works; with no player, all). */
     public static List<RodEffects.Drop> drops(Player player, ItemStack rod) {
@@ -178,9 +178,9 @@ public final class RigSets {
         return out;
     }
 
-    /** The share of normal wear a rod takes (the Stone set: half at two pieces, a tenth at three). */
+    /** The share of normal wear a rod takes (the Stone rig: half at two pieces, a tenth at three). */
     public static double wear(ItemStack rod) {
-        int n = SETS.stream().filter(s -> s.name().equals("Stone set")).mapToInt(s -> counted(s, rod)).max().orElse(0);
+        int n = SETS.stream().filter(s -> s.name().equals("Stone rig")).mapToInt(s -> counted(s, rod)).max().orElse(0);
         return n >= PIECES ? 0.1 : n >= HALF ? 0.5 : 1.0;
     }
 

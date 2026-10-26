@@ -84,18 +84,18 @@ public final class RigSets {
                     "feather_bobber", "duck_bobber", "fly_lure", "dough_ball"),
             set("Night rig", When.NIGHT, fx(0, 0, 0, 0.10), rig(0, 2, 0.42, 0.25), "bone_fishing_rod", "widow_fishing_rod",
                     "phantom_line", "spider_line", "glow_hook", "glow_berry_bobber", "pumpkin_bobber", "glow_lure", "ink_lure",
-                    "glow_worms", "moon_bait"),
+                    "glow_worms"),
             set("Twilight rig", When.DAWN_DUSK, fx(0, 0, 0, 0.10), rig(0, 1, 0.42, 0.30), "cherry_fishing_rod",
                     "feathered_hook", "twilight_hook", "cherry_bobber", "grassy_bobber", "popper_lure", "blossom_bait"),
             set("Storm rig", When.RAIN, QUALITY_2, LUCK_QUALITY_3, "copper_fishing_rod", "copper_line", "copper_hook", "copper_bobber", "storm_lure"),
             set("Swamp rig", When.SWAMP, BITE_2, LUCK_BITE_3, "mangrove_fishing_rod", "slime_line", "lily_pad_bobber", "slime_bobber",
                     "frog_lure", "swamp_bait"),
             set("Jungle rig", When.JUNGLE, QUALITY_2, LUCK_QUALITY_3, "bamboo_fishing_rod", "vine_line", "apple_bobber", "jungle_bait"),
-            set("Desert rig", When.DRY, BITE_2, LUCK_BITE_3, "cactus_fishing_rod", "golden_line", "golden_hook", "fish_bone_hook",
+            set("Desert rig", When.DRY, BITE_2, LUCK_BITE_3, "cactus_fishing_rod", "fish_bone_hook",
                     "cactus_bobber", "desert_bait"),
             set("Frost rig", When.COLD, BITE_2, rig(0.20, 1, 0.42, 0), "frost_fishing_rod", "permafrost_hook",
                     "snowball_bobber", "ice_jig_lure", "frost_bait"),
-            set("Cave rig", When.UNDERGROUND, QUALITY_2, LUCK_QUALITY_3, "echo_fishing_rod", "slime_line", "echo_bobber", "sculk_bobber", "lichen_bobber",
+            set("Cave rig", When.UNDERGROUND, QUALITY_2, LUCK_QUALITY_3, "echo_fishing_rod", "echo_bobber", "sculk_bobber", "lichen_bobber",
                     "jig_lure", "echo_lure", "cave_grubs", "dripstone_bait", "sculk_bait"),
             set("Fire rig", When.LAVA, QUALITY_2, LUCK_QUALITY_3, "blazing_fishing_rod", "netherite_fishing_rod", "netherite_line",
                     "lavaproof_hook", "fiery_hook", "netherite_bobber", "magma_lure"),
@@ -106,13 +106,10 @@ public final class RigSets {
             new RigSet("Stone set", When.ALWAYS, RodEffects.NONE, RodEffects.NONE,
                     Set.of("stone_fishing_rod", "stone_hook", "fishing_line"), "the rod wears half as fast", "the rod barely wears"),
             new RigSet("Gold set", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.10), new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.20),
-                    Set.of("golden_fishing_rod", "midas_fishing_rod", "golden_line", "golden_hook", "golden_bobber", "golden_spoon_lure"),
+                    Set.of("golden_fishing_rod", "midas_fishing_rod", "golden_line", "golden_hook", "golden_spoon_lure"),
                     "", "25% chance of a gold nugget with each fish"),
             new RigSet("Diamond set", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0.10, 0, 0), new RodEffects(0, 0, 0, 0, 0, 0.25, 0, 0),
                     Set.of("diamond_fishing_rod", "diamond_line", "diamond_hook", "diamond_bobber"), "", ""),
-            new RigSet("Amethyst set", When.ALWAYS, RodEffects.NONE, RodEffects.NONE,
-                    Set.of("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber"),
-                    "10% chance of an amethyst shard with each fish", "20% chance of an amethyst shard with each fish"),
             new RigSet("Honey set", When.ALWAYS, RodEffects.NONE, new RodEffects(0, 0, 0, 0, 0, 0, 0.10, 0),
                     Set.of("honeycomb_fishing_rod", "honey_line", "honey_bobber"),
                     "15% chance of a honeycomb with each fish", "25% chance of a honey bottle with each fish"),
@@ -120,12 +117,13 @@ public final class RigSets {
                     Set.of("golden_apple_bobber", "enchanted_golden_apple_bobber", "lucky_hook", "magnet_lure", "lucky_bait"), "", ""),
             // the sky rigs: their bonus follows the sun or the moon (see strength)
             new RigSet("Sunlight rig", When.DAY, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0), new RodEffects(0, 0.40, 0, 0, 0, 0, 0, 0),
-                    Set.of("sunflower_fishing_rod", "spinner_lure", "honey_bobber", "golden_bobber"),
+                    Set.of("sunflower_fishing_rod", "spinner_lure", "golden_bobber"),
                     "strongest at noon; seeds come up with fish", "strongest at noon; more seeds come up with fish"),
             new RigSet("Moonlight rig", When.NIGHT, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 2, 0.25, 0, 0),
                     Set.of("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber", "pearl_bobber",
                             "mushroom_bobber", "moon_bait"),
-                    "strongest on a full moon, weakest on a new moon", "strongest on a full moon, weakest on a new moon"));
+                    "strongest on a full moon, weakest on a new moon; 10% chance of an amethyst shard with each fish",
+                    "strongest on a full moon, weakest on a new moon; 20% chance of an amethyst shard with each fish"));
 
     /** How strong a rig is right now, 0..1: the Sunlight rig follows the sun to noon, the Moonlight rig the moon to full; the rest are always full. */
     public static double strength(RigSet set, Player player) {
@@ -141,8 +139,8 @@ public final class RigSets {
             java.util.Map.entry("Jungle rig", 0x3CC24A), java.util.Map.entry("Desert rig", 0xE8C26A), java.util.Map.entry("Frost rig", 0xBFEFFF),
             java.util.Map.entry("Cave rig", 0x9AA1AB), java.util.Map.entry("Fire rig", 0xFF5A1F), java.util.Map.entry("Void rig", 0xB070E0),
             java.util.Map.entry("Iron rig", 0xE6E6E6), java.util.Map.entry("Stone set", 0x8C8C8C), java.util.Map.entry("Gold set", 0xFFD24A),
-            java.util.Map.entry("Diamond set", 0x4FE3E0), java.util.Map.entry("Amethyst set", 0xB58CFF), java.util.Map.entry("Honey set", 0xF2A93B),
-            java.util.Map.entry("Lucky rig", 0x55D16B), java.util.Map.entry("Sunlight rig", 0xFFE066), java.util.Map.entry("Moonlight rig", 0xDDE6FF));
+            java.util.Map.entry("Diamond set", 0x4FE3E0), java.util.Map.entry("Honey set", 0xF2A93B),
+            java.util.Map.entry("Lucky rig", 0x55D16B), java.util.Map.entry("Sunlight rig", 0xFFE066), java.util.Map.entry("Moonlight rig", 0xB58CFF));
 
     public static int color(RigSet set) {
         return COLOR.getOrDefault(set.name(), 0xB070E0);
@@ -163,8 +161,8 @@ public final class RigSets {
                             new RodEffects.Drop("minecraft:pumpkin_seeds", 0.05, 0, "Sunlight rig: pumpkin seeds"),
                             new RodEffects.Drop("minecraft:melon_seeds", 0.05, 0, "Sunlight rig: melon seeds"))),
             "Gold set", new SetDrops(List.of(), List.of(new RodEffects.Drop("minecraft:gold_nugget", 0.25, 0, "Gold set: 25% chance of a gold nugget"))),
-            "Amethyst set", new SetDrops(List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.10, 0, "Amethyst set: 10% chance of an amethyst shard")),
-                    List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.20, 0, "Amethyst set: 20% chance of an amethyst shard"))),
+            "Moonlight rig", new SetDrops(List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.10, 0, "Moonlight rig: 10% chance of an amethyst shard")),
+                    List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.20, 0, "Moonlight rig: 20% chance of an amethyst shard"))),
             "Honey set", new SetDrops(List.of(new RodEffects.Drop("minecraft:honeycomb", 0.15, 0, "Honey set: 15% chance of a honeycomb")),
                     List.of(new RodEffects.Drop("minecraft:honey_bottle", 0.25, 0, "Honey set: 25% chance of a honey bottle"))));
 

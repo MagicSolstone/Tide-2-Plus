@@ -11,6 +11,9 @@ The pieces of a rig already have their own perks for its place or time, so the r
 - **Lucky rig at Tier 2**: +1 luck and +10% catch quality (was +2 luck).
 - **Storm rig in a thunderstorm** stacked the most: the copper line and copper bobber no longer add luck in a thunderstorm, and the storm lure adds +1 luck there (was +2).
 
+## Three rigs on a rod
+- **A rod now carries up to three rigs** (was two). With six slots, bait included, three rigs only fit as three Tier 1s (2 pieces each), a fair trade for having no Tier 2 rig.
+
 ## Every piece's place or time matches its rig
 Conditions only one or two pieces had (forest, new moon, mushroom fields, beach) are folded into the rig each piece belongs to:
 - **Grove rod**: +15% rare finds in jungles (was forests), and it joins the Jungle rig.
@@ -34,9 +37,10 @@ Conditions only one or two pieces had (forest, new moon, mushroom fields, beach)
 - **The panel is wood now**, not grey, on both tabs and on the tackle box's Assemble screen (the frame used to sit under the screen's dimmed background).
 - **Using the table always opens the 3x3 crafting grid**; the Assemble tab is one button away.
 - **A stats panel on the right of the Assemble screen** shows the rod being put together, rod, tackle and rigs added up, with every place, time and rig condition it cares about met. It updates as pieces go on.
-- **Rig cards show up to 6 rigs**: a full card for each rig that is working, and a one-line header for the rest (a rig with one piece, or one past the two a rod carries). Each header has two boxes, Tier 1 and Tier 2, that fill in as the rig reaches them. Hover any card or header to see both bonuses and what could still go on.
+- **Rig cards show up to 6 rigs**: a full card for each rig that is working, and a one-line header for the rest (a rig with one piece, or one past the three a rod carries). Each header has two boxes, Tier 1 and Tier 2, that fill in as the rig reaches them. Hover any card or header to see both bonuses and what could still go on.
 
 ## Rods
+- **Every rod tooltip says what it does in numbers**: the amethyst pieces show their catch quality on a full moon (rod +8%, hook +6%, bobber +5%, line +4%), the diamond rod "+1 to 4 experience with each catch", and the Midas and village rods name the bonus item they bring up with every catch. The echo and crystal rods say exactly what they show and play.
 - **A rod's tooltip shows its totals**: with tackle on it, the rod lists what it all adds up to, always-on and then each place or time (a bamboo rod, vine line and apple bobber: +50% bite speed in jungles). It used to list only the rod's own perks, though the pieces always counted.
 - **Rod icons are plain again**: the small rig gems are gone.
 - **The iron rig's attack shows like a sword's**: "When in Main Hand", then the attack damage and attack speed in green (4 and 1.6 at Tier 1, 6 and 1.6 at Tier 2).

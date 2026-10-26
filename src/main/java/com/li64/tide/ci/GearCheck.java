@@ -411,7 +411,46 @@ public final class GearCheck {
                 label, e.luck(), e.bite() * 100, e.quality() * 100, pct(good), pct(great), pct(p[4] + p[5]), Math.round(1 / p[5]));
     }
 
+    /**
+     * Every rig at its strongest: the best member for each slot (rod, line, hook, bobber, lure; a plain rotten rod when
+     * the rig has no rod), with every condition met. One line per rig, so the rigs can be compared side by side.
+     */
+    private static void rigKitReport() {
+        for (var set : com.li64.tide.data.rods.RigSets.SETS) {
+            java.util.Map<com.li64.tide.data.tackle.TackleLog.Category, String> best = new java.util.EnumMap<>(com.li64.tide.data.tackle.TackleLog.Category.class);
+            java.util.Map<com.li64.tide.data.tackle.TackleLog.Category, Double> score = new java.util.EnumMap<>(com.li64.tide.data.tackle.TackleLog.Category.class);
+            for (String m : set.members()) {
+                var item = BuiltInRegistries.ITEM.getOptional(Tide.resource(m));
+                if (item.isEmpty()) continue;
+                var cat = com.li64.tide.data.tackle.TackleLog.category(item.get());
+                if (cat == null || cat == com.li64.tide.data.tackle.TackleLog.Category.BAIT || cat == com.li64.tide.data.tackle.TackleLog.Category.GEAR) continue;
+                ItemStack st = new ItemStack(item.get());
+                RodEffects e = cat == com.li64.tide.data.tackle.TackleLog.Category.RODS ? RodEffects.everythingActive(st) : RodEffects.of(st);
+                if (cat != com.li64.tide.data.tackle.TackleLog.Category.RODS) for (var perk : RodEffects.situational(st)) e = e.plus(perk.fx());
+                double v = e.luck() * 15 + e.quality() * 100 + e.bite() * 50 + e.window() * 40 + e.xp() * 30 + e.land() * 30 - e.fight() * 40;
+                if (!score.containsKey(cat) || v > score.get(cat)) { score.put(cat, v); best.put(cat, m); }
+            }
+            String rodId = best.getOrDefault(com.li64.tide.data.tackle.TackleLog.Category.RODS, "rotten_fishing_rod");
+            ItemStack rod = new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource(rodId)));
+            best.forEach((cat, m) -> {
+                ItemStack st = new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource(m)));
+                switch (cat) {
+                    case LINES -> CustomRodManager.setLine(rod, st);
+                    case HOOKS -> CustomRodManager.setHook(rod, st);
+                    case BOBBERS -> CustomRodManager.setBobber(rod, st);
+                    case LURES -> CustomRodManager.setLure(rod, st);
+                    default -> {}
+                }
+            });
+            RodEffects e = RodEffects.everythingActive(rod);
+            notes.add(String.format("rig kit %s (%d pieces: %s): rare finds %+.0f%% (luck %+d), bite %+.0f%%, quality %+.0f%%, hook window %+.0f%%, xp %+.0f%%, land %+.0f%%, fight %+.0f%%",
+                    set.name(), com.li64.tide.data.rods.RigSets.pieces(set, rod), String.join(" ", new java.util.TreeSet<>(best.values())),
+                    RodEffects.rareFinds(e.luck()) * 100, e.luck(), e.biteSpeed(e.speed()) * 100, e.quality() * 100, e.window() * 100, e.xp() * 100, e.land() * 100, e.fight() * 100));
+        }
+    }
+
     private static void oddsReport(MinecraftServer server, Collection<FishData> fish) {
+        rigKitReport();
         // the amethyst pieces against a place's rig, at the baseline level: the rig should win in its place, and only there
         int base = Angler.baseline();
         ItemStack amethyst = kit("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber", "spinner_lure");

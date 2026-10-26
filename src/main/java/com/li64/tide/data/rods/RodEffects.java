@@ -414,7 +414,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             "hex_fishing_rod", List.of("20% chance each fish gives you a helpful potion effect"),
             "widow_fishing_rod", List.of("A night hunter: strong after dark, sluggish by day"),
             "wayfinder_fishing_rod", List.of("Stronger the farther you fish from world spawn: from 500 blocks out, up to +15% catch quality, +30% rare finds and +10% fishing XP at 5,000 blocks"),
-            "amethyst_fishing_rod", List.of("Amethyst catches moonlight: better catch quality at night, strongest on a full moon"),
+            "amethyst_fishing_rod", List.of("+8% catch quality at night on a full moon (amethyst catches moonlight: less as the moon wanes, none on a new moon)"),
             "village_fishing_rod", List.of("Players fishing within 16 blocks of you get +10% fishing XP"),
             "crystal_fishing_rod", List.of("Shows what bit, how good it is and how rare, the moment it bites"));
 
@@ -423,9 +423,9 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             "barbed_hook", List.of("Lands almost anything (Good and Bad hooks always, Terrible ones half the time), but it tears the fish: never better than Great, and half the time a tier worse"),
             "heart_bobber", List.of("Heals you three hearts with each fish"),
             "lichen_bobber", List.of("Glows, lighting the water around it"),
-            "amethyst_hook", List.of("Amethyst catches moonlight: better catch quality at night, strongest on a full moon"),
-            "amethyst_line", List.of("Amethyst catches moonlight: better catch quality at night, strongest on a full moon"),
-            "amethyst_bobber", List.of("Amethyst catches moonlight: better catch quality at night, strongest on a full moon"));
+            "amethyst_hook", List.of("+6% catch quality at night on a full moon (amethyst catches moonlight: less as the moon wanes, none on a new moon)"),
+            "amethyst_line", List.of("+4% catch quality at night on a full moon (amethyst catches moonlight: less as the moon wanes, none on a new moon)"),
+            "amethyst_bobber", List.of("+5% catch quality at night on a full moon (amethyst catches moonlight: less as the moon wanes, none on a new moon)"));
 
     /** Things a line, hook or bobber brings up with a fish. */
     private static final Map<String, List<Drop>> PART_DROPS = Map.of(
@@ -447,7 +447,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return out;
     }
 
-    /** Amethyst's catch quality on a full moon (rod, hook, line, bobber), scaled by {@link #moonlight}. */
+    /** Amethyst's catch quality on a full moon (rod, hook, line, bobber), scaled by {@link #moonlight}. The tooltips (SPECIAL_TEXT, PART_TEXT) say these numbers. */
     private static final Map<String, Double> AMETHYST_QUALITY = Map.of(
             "amethyst_fishing_rod", 0.08, "amethyst_hook", 0.06, "amethyst_line", 0.04, "amethyst_bobber", 0.05);
 
@@ -679,7 +679,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             if (carried.contains(set))
                 out.add(Component.literal(set.name() + " " + RigSets.tier(n) + ": " + (n >= RigSets.PIECES ? set.bonusText() : set.twoText()))
                         .withStyle(st -> st.withColor(c)));
-            else out.add(line(ChatFormatting.DARK_GRAY, set.name() + ": not counted (a rod carries two rigs)"));
+            else out.add(line(ChatFormatting.DARK_GRAY, set.name() + ": not counted (a rod carries three rigs)"));
         }
         if (isTide(rod)) for (String s : SPECIAL_TEXT.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, s));
         out.addAll(Unlocks.describe(rod));

@@ -274,7 +274,7 @@ public final class RigSets {
     }
 
     /** A rod carries at most this many rigs. */
-    public static final int MAX_RIGS = 2;
+    public static final int MAX_RIGS = 3;      // six slots with bait: three rigs only ever as three Tier 1s
 
     /**
      * The rigs a rod carries: every rig it has two or more pieces of, but at most {@link #MAX_RIGS}, the ones with the

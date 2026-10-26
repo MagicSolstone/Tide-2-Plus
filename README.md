@@ -71,7 +71,7 @@ a time or the weather.
 
 ### Rigs
 Pieces made for the same place or time form a **rig**. **Tier 1** (2 pieces) gives a small bonus, **Tier 2** (3 or more)
-the full one. Each piece belongs to one rig, and a rod carries at most **two rigs**.
+the full one. Each piece belongs to one rig, and a rod carries at most **three rigs** (three only ever as three Tier 1s: six slots, bait included).
 - **Place and time rigs**, strongest where they belong: Ocean, River, Night, Twilight, Storm, Swamp, Jungle, Desert,
   Frost, Cave, Fire (lava) and Void.
 - **Sky rigs** that follow the sky: the **Sunlight rig** bites faster toward noon and brings up seeds; the **Moonlight

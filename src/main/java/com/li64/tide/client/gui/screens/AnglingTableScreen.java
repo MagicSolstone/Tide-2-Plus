@@ -163,7 +163,7 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         for (var p : rigs.subList(0, Math.min(MAX_SHOWN, rigs.size()))) {
             var set = p.set();
             int n = p.have();
-            // the rod carries the two rigs with the most pieces (of those with two or more); the rest give nothing
+            // the rod carries the three rigs with the most pieces (of those with two or more); the rest give nothing
             boolean counts = n >= half && working < com.li64.tide.data.rods.RigSets.MAX_RIGS;
             if (counts) working++;
             index++;
@@ -224,7 +224,7 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         tip.add(Component.literal("Tier 1 (2+): " + set.twoText()).withStyle(counts && n >= half ? net.minecraft.ChatFormatting.WHITE : net.minecraft.ChatFormatting.GRAY));
         tip.add(Component.literal("Tier 2 (3+): " + set.bonusText()).withStyle(counts && n >= full ? net.minecraft.ChatFormatting.WHITE : net.minecraft.ChatFormatting.GRAY));
         if (n < full && !p.canAdd().isEmpty()) tip.add(Component.literal("Add a " + String.join(" or ", p.canAdd())).withStyle(st -> st.withColor(colour)));
-        if (!counts && n >= half) tip.add(Component.literal("Not counted: a rod carries two rigs, the two with the most pieces").withStyle(net.minecraft.ChatFormatting.RED));
+        if (!counts && n >= half) tip.add(Component.literal("Not counted: a rod carries three rigs, the three with the most pieces").withStyle(net.minecraft.ChatFormatting.RED));
         return tip;
     }
 

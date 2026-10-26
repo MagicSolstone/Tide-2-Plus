@@ -84,6 +84,7 @@ public class TideFishingRodItem extends FishingRodItem {
             ArrayList<ItemStack> fitted = new ArrayList<>();
             for (int i = 0; i < this.baitSlots; i++) fitted.add(contents.get(i));
             TideItemData.BAIT_CONTENTS.set(stack, new BaitContents(List.copyOf(fitted)));
+            com.li64.tide.data.rods.RigSets.refreshLook(stack);
         }
     }
 
@@ -165,6 +166,7 @@ public class TideFishingRodItem extends FishingRodItem {
         else return false;
 
         TideItemData.BAIT_CONTENTS.set(stack, mutable.toImmutable());
+        com.li64.tide.data.rods.RigSets.refreshLook(stack);
         return true;
     }
 
@@ -187,6 +189,7 @@ public class TideFishingRodItem extends FishingRodItem {
         else return false;
 
         TideItemData.BAIT_CONTENTS.set(stack, mutable.toImmutable());
+        com.li64.tide.data.rods.RigSets.refreshLook(stack);
         return true;
     }
 

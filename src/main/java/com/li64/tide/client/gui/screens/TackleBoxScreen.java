@@ -56,12 +56,26 @@ public class TackleBoxScreen extends AbstractContainerScreen<TackleBoxItem.Menu>
         int rx = x + TackleBoxItem.Menu.RACK_X - 4;
         g.fill(rx, y + 14, rx + 26, y + 18 + 3 * 18 + 2, OUTLINE);
         g.fill(rx + 1, y + 15, rx + 25, y + 18 + 3 * 18 + 1, SHADE);
+        // a carrying handle on the lid
+        int hx = x + w / 2 - 40;      // (left of centre: the Assemble rod button sits at the top right)
+        g.fill(hx, y - 7, hx + 48, y + 1, OUTLINE);
+        g.fill(hx + 1, y - 6, hx + 47, y, SHADE);
+        g.fill(hx + 6, y - 4, hx + 42, y, OUTLINE);
+        for (int lx : new int[]{hx - 3, hx + 46}) {
+            g.fill(lx, y - 3, lx + 5, y + 3, METAL_DARK);
+            g.fill(lx + 1, y - 2, lx + 4, y + 2, METAL);
+        }
         // a slot under every slot, sunk into the box
         for (Slot s : this.menu.slots) {
             int sx = x + s.x - 1, sy = y + s.y - 1;
             g.fill(sx, sy, sx + 18, sy + 18, SLOT_LIGHT);
             g.fill(sx, sy, sx + 17, sy + 17, SLOT_DARK);
             g.fill(sx + 1, sy + 1, sx + 17, sy + 17, SLOT_FILL);
+        }
+        // the tray's dividers, drawn over the slot edges: a trough every third column
+        for (int col = 3; col < 9; col += 3) {
+            int dx = x + 7 + col * 18;
+            g.fill(dx - 1, y + 16, dx + 1, y + 17 + 3 * 18, OUTLINE);
         }
     }
 

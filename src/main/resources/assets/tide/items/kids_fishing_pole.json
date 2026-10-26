@@ -1,14 +1,57 @@
 {
   "model": {
-    "type": "minecraft:condition",
-    "property": "minecraft:fishing_rod/cast",
-    "on_false": {
-      "type": "minecraft:model",
-      "model": "tide:item/kids_fishing_pole"
-    },
-    "on_true": {
-      "type": "minecraft:model",
-      "model": "tide:item/kids_fishing_pole_cast"
-    }
+    "type": "minecraft:composite",
+    "models": [
+      {
+        "type": "minecraft:condition",
+        "property": "minecraft:fishing_rod/cast",
+        "on_false": {
+          "type": "minecraft:model",
+          "model": "tide:item/kids_fishing_pole"
+        },
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "tide:item/kids_fishing_pole_cast"
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "property": "minecraft:custom_model_data",
+        "index": 0,
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "tide:item/rig_gem_a",
+          "tints": [
+            {
+              "type": "minecraft:custom_model_data",
+              "index": 0,
+              "default": 16777215
+            }
+          ]
+        },
+        "on_false": {
+          "type": "minecraft:empty"
+        }
+      },
+      {
+        "type": "minecraft:condition",
+        "property": "minecraft:custom_model_data",
+        "index": 1,
+        "on_true": {
+          "type": "minecraft:model",
+          "model": "tide:item/rig_gem_b",
+          "tints": [
+            {
+              "type": "minecraft:custom_model_data",
+              "index": 1,
+              "default": 16777215
+            }
+          ]
+        },
+        "on_false": {
+          "type": "minecraft:empty"
+        }
+      }
+    ]
   }
 }

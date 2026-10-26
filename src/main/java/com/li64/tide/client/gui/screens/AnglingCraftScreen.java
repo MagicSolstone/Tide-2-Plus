@@ -77,8 +77,8 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     protected void init() {
         super.init();
         com.li64.tide.client.MouseKeep.restore();
-        if (bookOpen && !narrow()) this.leftPos = (this.width - this.imageWidth) / 2 + 77;
-        this.bookX = bookOpen && narrow() ? (this.width - BOOK_W) / 2 : this.leftPos - BOOK_W - 2;
+        if (bookOpen && !narrow()) this.leftPos = (this.width - this.imageWidth) / 2 + 80;
+        this.bookX = bookOpen && narrow() ? (this.width - BOOK_W) / 2 : this.leftPos - BOOK_W - 8;      // (clear of the bench's wooden frame)
         this.addRenderableWidget(new ImageButton(this.leftPos + 5, this.topPos + 34, 20, 18, BOOK_BUTTON, b -> {
             bookOpen = !bookOpen;
             this.rebuildWidgets();
@@ -236,6 +236,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     @Override
     public void extractBackground(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
         super.extractBackground(g, mouseX, mouseY, a);
+        com.li64.tide.client.gui.BenchStyle.frame(g, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
         g.blit(RenderPipelines.GUI_TEXTURED, BG, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
         if (ghost != null) drawGhost(g);
         if (bookOpen) drawBook(g, mouseX, mouseY);
@@ -287,7 +288,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
             String name = rig().name();
             Gui26.text(g, this.font, "<", x + 10, hy + 4, 0xFFFFFFFF, true);
             Gui26.text(g, this.font, ">", x + 104, hy + 4, 0xFFFFFFFF, true);
-            Gui26.text(g, this.font, name, x + 10 + (98 - this.font.width(name)) / 2, hy + 4, 0xFFFFD27F, true);
+            Gui26.text(g, this.font, name, x + 10 + (98 - this.font.width(name)) / 2, hy + 4, 0xFF000000 | RigSets.color(rig()), true);
         } else {
             Gui26.text(g, this.font, FILTER_NAMES[filter], x + 10, hy + 4, 0xFFFFFFFF, true);
         }
@@ -356,9 +357,10 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
             int nameW = this.font.width(set.name()), nameX = x + 10 + (98 - nameW) / 2;
             if (mouseX >= nameX && mouseX < nameX + nameW && mouseY >= y + 28 && mouseY < y + 42) {
                 List<Component> tip = new ArrayList<>();
-                wrap(tip, set.name(), ChatFormatting.LIGHT_PURPLE);
-                wrap(tip, "2 pieces: " + set.twoText(), ChatFormatting.WHITE);
-                wrap(tip, "3 pieces: " + set.bonusText(), ChatFormatting.WHITE);
+                for (var part : this.font.getSplitter().splitLines(Component.literal(set.name()), 170, net.minecraft.network.chat.Style.EMPTY))
+                    tip.add(Component.literal(part.getString()).withStyle(st -> st.withColor(RigSets.color(set))));
+                wrap(tip, "Tier 1 (2 pieces): " + set.twoText(), ChatFormatting.WHITE);
+                wrap(tip, "Tier 2 (3 or more): " + set.bonusText(), ChatFormatting.WHITE);
                 wrap(tip, "Click the arrows for other rigs", ChatFormatting.GRAY);
                 int top = Math.max(16, mouseY - 8 - (tip.size() * 10 + 6));     // the tooltip draws from 12 above the y it is given
                 g.setTooltipForNextFrame(this.font, tip, Optional.empty(), mouseX, top + 12);

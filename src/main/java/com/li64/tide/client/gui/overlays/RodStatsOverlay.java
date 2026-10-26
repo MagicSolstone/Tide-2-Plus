@@ -79,7 +79,7 @@ public final class RodStatsOverlay {
         for (com.li64.tide.data.rods.RigSets.RigSet set : com.li64.tide.data.rods.RigSets.SETS) {
             int n = com.li64.tide.data.rods.RigSets.pieces(set, rod);
             if (n >= com.li64.tide.data.rods.RigSets.HALF)
-                (set.when().test(player) ? active : idle).add(set.name().toLowerCase() + (n >= com.li64.tide.data.rods.RigSets.PIECES ? "" : " (2 of 3)"));
+                (set.when().test(player) ? active : idle).add(set.name().toLowerCase() + " " + com.li64.tide.data.rods.RigSets.tier(n).toLowerCase());
         }
 
         Font font = mc.font;

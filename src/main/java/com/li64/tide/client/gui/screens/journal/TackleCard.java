@@ -175,9 +175,9 @@ final class TackleCard {
             g.pose().translate(x, ty);
             g.pose().scale(s, s);
             int ly = 0;
-            for (String[] line : new String[][]{{"2 pieces: ", set.twoText()}, {"3+ pieces: ", set.bonusText()}})
+            for (String[] line : new String[][]{{"Tier 1 (2 pieces): ", set.twoText()}, {"Tier 2 (3 or more): ", set.bonusText()}})
                 for (FormattedCharSequence part : font.split(Component.literal(line[0] + line[1]), (int) (150 / s))) {
-                    Gui26.text(g, font, part, 0, ly, line[0].startsWith("2") ? INK : 0xFF8A3FA8, false);
+                    Gui26.text(g, font, part, 0, ly, line[0].startsWith("Tier 1") ? INK : 0xFF8A3FA8, false);
                     ly += 10;
                 }
             g.pose().popMatrix();

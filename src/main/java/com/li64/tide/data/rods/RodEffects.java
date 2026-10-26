@@ -417,7 +417,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             "hex_fishing_rod", List.of("20% chance each fish gives you a helpful potion effect"),
             "widow_fishing_rod", List.of("A night hunter: strong after dark, sluggish by day"),
             "wayfinder_fishing_rod", List.of("Stronger the farther you fish from world spawn: from 500 blocks out, up to +15% catch quality, +30% rare finds and +10% fishing XP at 5,000 blocks"),
-            "amethyst_fishing_rod", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),
+            "amethyst_fishing_rod", List.of("Amethyst catches moonlight: better catch quality at night, strongest on a full moon"),
             "village_fishing_rod", List.of("Players fishing within 16 blocks of you get +10% fishing XP"),
             "crystal_fishing_rod", List.of("Shows what bit, how good it is and how rare, the moment it bites"));
 
@@ -426,9 +426,9 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             "barbed_hook", List.of("Lands almost anything (Good and Bad hooks always, Terrible ones half the time), but it tears the fish: never better than Great, and half the time a tier worse"),
             "heart_bobber", List.of("Heals you three hearts with each fish"),
             "lichen_bobber", List.of("Glows, lighting the water around it"),
-            "amethyst_hook", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),
-            "amethyst_line", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),
-            "amethyst_bobber", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"));
+            "amethyst_hook", List.of("Amethyst catches moonlight: better catch quality at night, strongest on a full moon"),
+            "amethyst_line", List.of("Amethyst catches moonlight: better catch quality at night, strongest on a full moon"),
+            "amethyst_bobber", List.of("Amethyst catches moonlight: better catch quality at night, strongest on a full moon"));
 
     /** Things a line, hook or bobber brings up with a fish. */
     private static final Map<String, List<Drop>> PART_DROPS = Map.of(
@@ -436,18 +436,31 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                     new Drop("minecraft:seagrass", 0.10, 0, "10% chance of seagrass with any fish")),
             "emerald_hook", List.of(new Drop("minecraft:emerald", 0.03, 0, "3% chance of an emerald with any fish")));
 
-    /** Bonus drops from a rod: its own, what's on it, and its sets. */
+    /** Bonus drops from a rod: its own, what's on it, and its sets (every rig's, wherever you are). */
     public static List<Drop> drops(ItemStack rod) {
+        return drops(null, rod);
+    }
+
+    /** Bonus drops from a rod where the player is now (a rig only gives its drops where and when it works). */
+    public static List<Drop> drops(net.minecraft.world.entity.player.Player player, ItemStack rod) {
         if (rod == null || rod.isEmpty()) return List.of();
         List<Drop> out = new ArrayList<>(DROPS.getOrDefault(path(rod), List.of()));
         for (ItemStack part : parts(rod)) if (isTide(part)) out.addAll(PART_DROPS.getOrDefault(path(part), List.of()));
-        out.addAll(RigSets.drops(rod));
+        out.addAll(RigSets.drops(player, rod));
         return out;
     }
 
-    /** Amethyst's bite speed at full sun (rod, hook, line, bobber), scaled by {@link #noon}. */
-    private static final Map<String, Double> AMETHYST_BITE = Map.of(
-            "amethyst_fishing_rod", 0.20, "amethyst_hook", 0.10, "amethyst_line", 0.10, "amethyst_bobber", 0.15);
+    /** Amethyst's catch quality on a full moon (rod, hook, line, bobber), scaled by {@link #moonlight}. */
+    private static final Map<String, Double> AMETHYST_QUALITY = Map.of(
+            "amethyst_fishing_rod", 0.08, "amethyst_hook", 0.06, "amethyst_line", 0.04, "amethyst_bobber", 0.05);
+
+    /** How bright the moon is tonight: 1 on a full moon down to 0 on a new moon; 0 by day (and where there is no sky). */
+    public static double moonlight(net.minecraft.world.entity.player.Player player) {
+        net.minecraft.world.level.Level level = player.level();
+        if (!level.dimensionType().hasSkyLight() || !level.isDarkOutside()) return 0;
+        int phase = com.li64.tide.util.Mc26.moonPhase(level, player.blockPosition());
+        return 1.0 - Math.min(phase, 8 - phase) / 4.0;      // 0 full, 4 new
+    }
 
     /** How high the sun is: 0 at sunrise, 1 at noon, 0 again at sunset, 0 all night (and where there is no sky). */
     public static double noon(net.minecraft.world.entity.player.Player player) {
@@ -457,13 +470,13 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return t < 12000 ? Math.sin(Math.PI * t / 12000.0) : 0;
     }
 
-    /** The amethyst pieces' bite speed where and when the player is. */
+    /** The amethyst pieces' catch quality where and when the player is (it follows the moon). */
     public static RodEffects amethyst(net.minecraft.world.entity.player.Player player, ItemStack rod) {
         double sum = 0;
         List<ItemStack> all = new ArrayList<>(List.of(rod));
         all.addAll(parts(rod));
-        for (ItemStack s : all) if (isTide(s)) sum += AMETHYST_BITE.getOrDefault(path(s), 0.0);
-        return sum == 0 ? NONE : bite(sum * noon(player));
+        for (ItemStack s : all) if (isTide(s)) sum += AMETHYST_QUALITY.getOrDefault(path(s), 0.0);
+        return sum == 0 ? NONE : quality(sum * moonlight(player));
     }
 
     // ------------------------------------------------------------------ gear
@@ -489,6 +502,13 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     private static RodEffects xp(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, v); }
     private static RodEffects speed(int v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v, 0); }
     private static RodEffects ease(double v) { return new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, v); }
+
+    /** These effects at a share of their strength (luck rounds to whole points). */
+    public RodEffects times(double k) {
+        if (k >= 1) return this;
+        return new RodEffects(cast * k, bite * k, window * k, fight * k, (int) Math.round(luck * k), quality * k, land * k, xp * k,
+                twin * k, cook * k, (int) Math.round(speed * k), ease * k);
+    }
 
     public RodEffects plus(RodEffects o) {
         return new RodEffects(cast + o.cast, bite + o.bite, window + o.window, fight + o.fight, luck + o.luck,
@@ -614,8 +634,11 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (member != null && isTide(rod)) out.add(member);
         for (RigSets.RigSet set : RigSets.SETS) {
             int n = RigSets.pieces(set, rod);
-            if (n >= RigSets.HALF) out.add(line(ChatFormatting.LIGHT_PURPLE, set.name() + " " + Math.min(n, RigSets.PIECES) + "/" + RigSets.PIECES + ": "
-                    + (n >= RigSets.PIECES ? set.bonusText() : set.twoText())));
+            if (n >= RigSets.HALF) {
+                int c = RigSets.color(set);
+                out.add(Component.literal(set.name() + " " + RigSets.tier(n) + ": " + (n >= RigSets.PIECES ? set.bonusText() : set.twoText()))
+                        .withStyle(st -> st.withColor(c)));
+            }
         }
         if (isTide(rod)) for (String s : SPECIAL_TEXT.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, s));
         out.addAll(Unlocks.describe(rod));

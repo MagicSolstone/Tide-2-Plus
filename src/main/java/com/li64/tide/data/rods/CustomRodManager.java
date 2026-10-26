@@ -46,10 +46,12 @@ public class CustomRodManager {
         if (accessory == null || accessory.isEmpty()) {
             dataKey.set(rod, new CompoundTag());
             RigSets.refreshMelee(rod);
+            RigSets.refreshLook(rod);
             return;
         }
         dataKey.set(rod, (CompoundTag) ItemStack.CODEC.encode(accessory, NbtOps.INSTANCE, new CompoundTag()).getOrThrow());
         RigSets.refreshMelee(rod);
+        RigSets.refreshLook(rod);
          /*dataKey.set(rod, accessory.save(new CompoundTag()));*/
     }
 

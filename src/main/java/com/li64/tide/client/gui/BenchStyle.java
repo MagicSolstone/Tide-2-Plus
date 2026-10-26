@@ -1,0 +1,52 @@
+package com.li64.tide.client.gui;
+
+import com.li64.tide.client.Gui26;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.world.item.ItemStack;
+
+/** The tackle bench look, shared by the Angling Table's tabs: a wooden frame with brass corners, and hints in empty slots. */
+public final class BenchStyle {
+    private BenchStyle() {}
+
+    private static final int EDGE = 0xFF2E1D10, WOOD = 0xFF6B4527, WOOD_LIGHT = 0xFF8A5E37, GRAIN = 0xFF5A3A20,
+            BRASS = 0xFFC9A44A, BRASS_DARK = 0xFF8C6E2A;
+
+    /** A wooden frame just outside the screen's own panel (x, y, w, h: the panel). */
+    public static void frame(GuiGraphicsExtractor g, int x, int y, int w, int h) {
+        int x0 = x - 5, y0 = y - 5, x1 = x + w + 5, y1 = y + h + 5;
+        g.fill(x0, y0, x1, y1, EDGE);
+        g.fill(x0 + 1, y0 + 1, x1 - 1, y1 - 1, WOOD);
+        g.fill(x0 + 1, y0 + 1, x1 - 1, y0 + 2, WOOD_LIGHT);
+        g.fill(x0 + 1, y0 + 1, x0 + 2, y1 - 1, WOOD_LIGHT);
+        // a little grain along the long sides
+        for (int i = x0 + 6; i < x1 - 6; i += 11) {
+            g.fill(i, y0 + 2, i + 5, y0 + 3, GRAIN);
+            g.fill(i + 3, y1 - 3, i + 8, y1 - 2, GRAIN);
+        }
+        for (int j = y0 + 8; j < y1 - 8; j += 13) {
+            g.fill(x0 + 2, j, x0 + 3, j + 5, GRAIN);
+            g.fill(x1 - 3, j + 4, x1 - 2, j + 9, GRAIN);
+        }
+        // brass corner plates
+        for (int[] c : new int[][]{{x0, y0}, {x1 - 7, y0}, {x0, y1 - 7}, {x1 - 7, y1 - 7}}) {
+            g.fill(c[0], c[1], c[0] + 7, c[1] + 7, BRASS_DARK);
+            g.fill(c[0] + 1, c[1] + 1, c[0] + 6, c[1] + 6, BRASS);
+            g.fill(c[0] + 3, c[1] + 3, c[0] + 4, c[1] + 4, BRASS_DARK);
+        }
+    }
+
+    /** In an empty slot: a faded picture of what goes there. Under it, a small label. (sx, sy: the slot's top-left on screen.) */
+    public static void hint(GuiGraphicsExtractor g, Font font, int sx, int sy, ItemStack ghost, String label, boolean empty) {
+        if (empty && !ghost.isEmpty()) {
+            g.item(ghost, sx, sy);
+            g.fill(sx, sy, sx + 16, sy + 16, 0xB08B8B8B);
+        }
+        if (label.isEmpty()) return;
+        g.pose().pushMatrix();
+        g.pose().translate(sx + 8 - font.width(label) * 0.25f, sy + 17.5f);
+        g.pose().scale(0.5f, 0.5f);
+        Gui26.text(g, font, label, 0, 0, 0xFF4A3A2A, false);
+        g.pose().popMatrix();
+    }
+}

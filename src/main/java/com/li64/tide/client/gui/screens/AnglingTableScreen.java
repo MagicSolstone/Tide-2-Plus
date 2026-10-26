@@ -37,8 +37,23 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
 
     @Override
     public void extractBackground(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
+        com.li64.tide.client.gui.BenchStyle.frame(g, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
         super.extractBackground(g, mouseX, mouseY, a);
+        slotHints(g);
         rigPanel(g);
+    }
+
+    /** What goes in each slot: a faded picture while it is empty, and a small label. */
+    private static final String[][] HINTS = {{"minecraft:fishing_rod", "Rod"}, {"tide:fishing_line", "Line"}, {"tide:red_bobber", "Bobber"},
+            {"tide:fishing_hook", "Hook"}, {"tide:spinner_lure", "Lure"}};
+
+    private void slotHints(GuiGraphicsExtractor g) {
+        for (int i = 0; i < HINTS.length; i++) {
+            var slot = this.menu.getSlot(i);
+            var item = net.minecraft.core.registries.BuiltInRegistries.ITEM.getOptional(net.minecraft.resources.Identifier.parse(HINTS[i][0]));
+            com.li64.tide.client.gui.BenchStyle.hint(g, this.font, this.leftPos + slot.x, this.topPos + slot.y,
+                    item.map(net.minecraft.world.item.ItemStack::new).orElse(net.minecraft.world.item.ItemStack.EMPTY), HINTS[i][1], !slot.hasItem());
+        }
     }
 
     /**
@@ -74,35 +89,44 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         }
         if (rigs.isEmpty() || w < 90) return;
         float s = 0.75f;
-        int wrap = (int) ((w - 8) / s);
-        // each rig: name and count, what it gives now, what the next piece adds, what kinds of piece could still go on
-        java.util.List<net.minecraft.util.FormattedCharSequence> text = new java.util.ArrayList<>();
-        java.util.List<Integer> colours = new java.util.ArrayList<>();
-        java.util.function.BiConsumer<String, Integer> add = (line, colour) -> {
-            for (var part : this.font.split(Component.literal(line), wrap)) { text.add(part); colours.add(colour); }
-        };
+        int wrap = (int) ((w - 10) / s);
+        // one card per rig: its colour down the side, its name and tier, what it gives now and what the next piece adds
+        int cy = y;
         for (var p : rigs.subList(0, Math.min(3, rigs.size()))) {
             var set = p.set();
             int n = p.have(), full = com.li64.tide.data.rods.RigSets.PIECES, half = com.li64.tide.data.rods.RigSets.HALF;
-            add.accept(set.name() + "  " + Math.min(n, full) + "/" + full + (n >= full ? "  complete" : ""), n >= full ? 0xFF7FE07F : n >= half ? 0xFFFFD27F : 0xFFC8B48A);
-            if (n >= full) add.accept(set.bonusText(), 0xFFE8E8E8);
+            int colour = 0xFF000000 | com.li64.tide.data.rods.RigSets.color(set);
+            java.util.List<net.minecraft.util.FormattedCharSequence> text = new java.util.ArrayList<>();
+            java.util.List<Integer> colours = new java.util.ArrayList<>();
+            java.util.function.BiConsumer<String, Integer> add = (line, c) -> {
+                for (var part : this.font.split(Component.literal(line), wrap)) { text.add(part); colours.add(c); }
+            };
+            String tier = n >= half ? com.li64.tide.data.rods.RigSets.tier(n) : Math.min(n, full) + " of " + full;
+            if (n >= full) add.accept("Tier 2: " + set.bonusText(), 0xFFE8E8E8);
             else {
-                if (n >= half) add.accept("Now: " + set.twoText(), 0xFFE8E8E8);
-                else add.accept("At 2: " + set.twoText(), 0xFFA8B4BC);
-                add.accept("At 3: " + set.bonusText(), 0xFFA8B4BC);
-                if (!p.canAdd().isEmpty()) add.accept("Add: " + String.join(", ", p.canAdd()), 0xFFB070E0);
+                if (n >= half) add.accept("Tier 1: " + set.twoText(), 0xFFE8E8E8);
+                else add.accept("Tier 1 at 2: " + set.twoText(), 0xFFA8B4BC);
+                add.accept("Tier 2 at 3: " + set.bonusText(), 0xFFA8B4BC);
+                if (!p.canAdd().isEmpty()) add.accept("Add a " + String.join(" or ", p.canAdd()), colour);
             }
-            text.add(null); colours.add(0);
+            int h = (int) ((12 + text.size() * 10) * s) + 5;
+            g.fill(x, cy, x + w, cy + h, 0xD0101820);
+            g.fill(x, cy, x + 2, cy + h, colour);
+            // the pieces it has, as dots
+            for (int d = 0; d < full; d++) {
+                int dx = x + w - 6 - (full - 1 - d) * 5;
+                g.fill(dx, cy + 3, dx + 3, cy + 6, d < n ? colour : 0xFF3A4450);
+            }
+            g.pose().pushMatrix();
+            g.pose().translate(x + 5, cy + 3);
+            g.pose().scale(s, s);
+            com.li64.tide.client.Gui26.text(g, this.font, set.name(), 0, 0, colour, true);
+            com.li64.tide.client.Gui26.text(g, this.font, tier, this.font.width(set.name()) + 6, 0, n >= half ? 0xFFFFE08A : 0xFF8C97A0, true);
+            for (int i = 0, ly = 12; i < text.size(); i++, ly += 10)
+                com.li64.tide.client.Gui26.text(g, this.font, text.get(i), 0, ly, colours.get(i), true);
+            g.pose().popMatrix();
+            cy += h + 3;
         }
-        int h = (int) (text.size() * 10 * s) + 2;
-        g.fill(x, y, x + w, y + h, 0xC0101820);
-        g.fill(x, y, x + 2, y + h, 0xFFB070E0);
-        g.pose().pushMatrix();
-        g.pose().translate(x + 5, y + 4);
-        g.pose().scale(s, s);
-        for (int i = 0, ly = 0; i < text.size(); i++, ly += 10)
-            if (text.get(i) != null) com.li64.tide.client.Gui26.text(g, this.font, text.get(i), 0, ly, colours.get(i), true);
-        g.pose().popMatrix();
     }
 
     @Override

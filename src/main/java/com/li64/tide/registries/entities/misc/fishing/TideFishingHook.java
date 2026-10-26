@@ -766,7 +766,7 @@ public class TideFishingHook extends Projectile {
                         // the rod's bonus drops (honeycomb rod's honey...)
                         if (catchType == CatchType.FISH) safely("the rod's bonus drops", () -> {
                             int q = TideItemData.FISH_QUALITY.getOrDefault(stack, 1);
-                            for (com.li64.tide.data.rods.RodEffects.Drop d : com.li64.tide.data.rods.RodEffects.drops(this.rod)) {
+                            for (com.li64.tide.data.rods.RodEffects.Drop d : com.li64.tide.data.rods.RodEffects.drops(player, this.rod)) {
                                 if (!Tide.CI && (q < d.minQuality() || this.random.nextDouble() >= d.chance())) continue;
                                 net.minecraft.world.item.Item extraItem = net.minecraft.core.registries.BuiltInRegistries.ITEM
                                         .getValue(net.minecraft.resources.Identifier.parse(d.item()));
@@ -807,6 +807,7 @@ public class TideFishingHook extends Projectile {
                                 BaitContents.Mutable contents = new BaitContents.Mutable(TideItemData.BAIT_CONTENTS.getOrDefault(rod, new BaitContents()));
                                 contents.shrinkAll();
                                 TideItemData.BAIT_CONTENTS.set(rod, contents.toImmutable());
+                                com.li64.tide.data.rods.RigSets.refreshLook(rod);
                             }
 
                             // fishing XP (before the journal, so first catches and records count), then the journal

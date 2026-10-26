@@ -90,8 +90,8 @@ public class TackleBoxItem extends AbstractTooltipItem {
         private final SimpleContainer tackle;
         /** Where the box's tackle, the hotbar, the rod rack and the player's own rows start in {@link #slots}. */
         private final int boxStart, hotbarStart, rackStart, ownStart;
-        /** The player's own inventory rows, under the hotbar (menu coordinates). */
-        public static final int OWN_Y = 174;
+        /** Top to bottom: the table, the box's rows, the player's own inventory rows, then the hotbar (menu y). */
+        public static final int OWN_Y = 152, HOTBAR_Y = OWN_Y + 3 * 18 + 4;
 
         public RigMenu(int id, Inventory inventory) {
             this(id, inventory, ItemStack.EMPTY);
@@ -110,6 +110,12 @@ public class TackleBoxItem extends AbstractTooltipItem {
             }
             this.boxStart = first;
             this.hotbarStart = first + SIZE;
+            for (int i = 0; i < 9; i++) {      // the hotbar moves to the bottom, under the player's own rows
+                Slot old = this.slots.get(hotbarStart + i);
+                Slot low = new Slot(inventory, old.getContainerSlot(), old.x, HOTBAR_Y);
+                low.index = hotbarStart + i;
+                this.slots.set(hotbarStart + i, low);
+            }
             this.rackStart = this.slots.size();
             for (int i = 0; i < MAX_RODS; i++) this.addSlot(rodSlot(tackle, SIZE + i, Menu.RACK_X, 84 + i * 18));
             this.ownStart = this.slots.size();

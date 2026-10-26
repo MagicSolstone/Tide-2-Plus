@@ -16,7 +16,7 @@ public class TackleRigScreen extends AnglingTableScreen {
     }
 
     /** The table, then your own inventory rows under it. */
-    private static final int TALL = TackleBoxItem.RigMenu.OWN_Y + 3 * 18 + 6;
+    private static final int TALL = TackleBoxItem.RigMenu.HOTBAR_Y + 18 + 6;
 
     @Override
     protected int panelHeight() {
@@ -25,7 +25,7 @@ public class TackleRigScreen extends AnglingTableScreen {
 
     @Override
     protected void subInit() {
-        this.topPos = Math.max(6, (this.height - TALL) / 2);      // centred for the taller bench (it has no buttons above it)
+        this.topPos = Math.max(5, (this.height - TALL) / 2);      // centred for the taller bench (it has no buttons above it)
         super.subInit();
     }
 
@@ -35,12 +35,13 @@ public class TackleRigScreen extends AnglingTableScreen {
         // tint the box's rows green so it's clear they're the box, not your inventory
         int x = this.leftPos + 7, y = this.topPos + 83;
         g.fill(x, y, x + 162, y + 54, 0x553B7440);
-        // below the table: more bench, with your own inventory rows
-        int py = this.topPos + TABLE_H - 4;
-        g.fill(this.leftPos + 3, py, this.leftPos + this.imageWidth - 3, this.topPos + TALL - 3, com.li64.tide.client.gui.BenchStyle.PANEL);
+        // under the box's rows: more bench, edged like the texture all the way down, with your inventory rows, then the hotbar
+        com.li64.tide.client.gui.BenchStyle.panelBelow(g, this.leftPos, this.topPos + 140, this.imageWidth, this.topPos + TALL);
         for (int row = 0; row < 3; row++)
             for (int col = 0; col < 9; col++)
                 com.li64.tide.client.gui.BenchStyle.slot(g, this.leftPos + 8 + col * 18, this.topPos + TackleBoxItem.RigMenu.OWN_Y + row * 18);
+        for (int col = 0; col < 9; col++)
+            com.li64.tide.client.gui.BenchStyle.slot(g, this.leftPos + 8 + col * 18, this.topPos + TackleBoxItem.RigMenu.HOTBAR_Y);
         // the box's rod rack, hung off the right edge
         int rx = this.leftPos + com.li64.tide.registries.items.TackleBoxItem.Menu.RACK_X - 4, ry = this.topPos + 70;
         int rh = 18 + TackleBoxItem.MAX_RODS * 18;

@@ -23,6 +23,26 @@ public final class BenchStyle {
     /** The panel's colours once tinted (the grey texture times WOOD_TINT), for drawing more panel by hand. */
     public static final int PANEL = 0xFFC6A06A, SLOT = 0xFF8B704A, SLOT_SHADOW = 0xFF372C1D, SLOT_LIGHT = 0xFFFFCE89;
 
+    /**
+     * More of the panel below its texture (x, w: the panel; from y0 down to y1, its bottom edge): the same edges as the
+     * texture, a dark outline, a light left side and a shaded right side and bottom, so the panel reads as one piece.
+     */
+    public static void panelBelow(GuiGraphicsExtractor g, int x, int y0, int w, int y1) {
+        int x1 = x + w;
+        g.fill(x, y0, x1, y1 - 1, PANEL);
+        g.fill(x, y0, x + 1, y1 - 2, EDGE_DARK);                 // outline: left, right, bottom (corners cut like the texture's)
+        g.fill(x1 - 1, y0, x1, y1 - 2, EDGE_DARK);
+        g.fill(x + 2, y1 - 1, x1 - 2, y1, EDGE_DARK);
+        g.fill(x + 1, y1 - 2, x + 2, y1 - 1, EDGE_DARK);
+        g.fill(x1 - 2, y1 - 2, x1 - 1, y1 - 1, EDGE_DARK);
+        g.fill(x + 1, y0, x + 3, y1 - 3, SLOT_LIGHT);            // the light left side
+        g.fill(x1 - 3, y0, x1 - 1, y1 - 2, EDGE_SHADE);          // the shaded right side and bottom
+        g.fill(x + 3, y1 - 3, x1 - 1, y1 - 1, EDGE_SHADE);
+        g.fill(x + 2, y1 - 2, x + 3, y1 - 1, EDGE_SHADE);
+    }
+
+    private static final int EDGE_DARK = 0xFF000000, EDGE_SHADE = 0xFF55452D;      // black and 555555 x WOOD_TINT
+
     /** A slot drawn like the texture's: shadow top-left, light bottom-right (sx, sy: the item's top-left). */
     public static void slot(GuiGraphicsExtractor g, int sx, int sy) {
         g.fill(sx - 1, sy - 1, sx + 17, sy + 17, SLOT_LIGHT);

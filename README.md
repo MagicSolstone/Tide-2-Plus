@@ -1,115 +1,147 @@
 # Tide+
 
-**Tide+** is a Fabric fork of [Tide 2](https://github.com/Lightning-64/Tide-2) by Lightning64 for
-**Minecraft 26.3**, made for a family server run alongside [Solstone](https://github.com/TJusczak/Solstone).
-It keeps everything Tide does and adds fishing levels, catch quality, and a full tackle system: rods,
-lines, hooks, bobbers, lures and bait that each matter, matched rigs, favorite lures, rare found rods,
-a tackle box and a better fish satchel. See the **[CHANGELOG](CHANGELOG.md)** for everything in each version,
-and the [releases](https://github.com/TJusczak/Tide-2-Plus/releases) for the jar.
+**Tide+** builds on **[Tide 2](https://github.com/Lightning-64/Tide-2) by Lightning64**, the fishing overhaul that
+adds over a hundred fish, lava and void fishing, the fishing minigame, the Angling Table, crates and the fishing
+journal. Tide was the launching point: everything it does is still here, and every fish, model and texture from Tide
+is Lightning64's work. On top of it, Tide+ adds fishing levels, catch quality, a full tackle system and a workbench to
+build it with, made for a family server. Licensed MPL-2.0, like Tide.
 
-**Install:** the jar in `mods/` on the server and every client, with Fabric Loader 0.19.5+ and Fabric API
-for 26.3. It uses Tide's mod ID, so it replaces Tide; don't install both.
-
-Porting to a new Minecraft version: see [PORTING.md](PORTING.md).
-
-- **Fabric only, 26.x only.** Forge, NeoForge, 1.20.1/1.21.1 and the Stonecutter multi-version setup
-  were removed (the sources were baked to their 1.21.1 Fabric form, then ported).
-- **No third-party compat** (Stardew Fishing, Starcatcher, seasons mods, Trinkets/Curios, Fishing Real,
-  Hybrid Aquatic). The hooks in `CompatHelper` remain as no-ops.
-- **No Cloth Config / Mod Menu:** settings are plain JSON in `config/tide.json`.
-- **Builds and tests on GitHub Actions** (`.github/workflows/build.yml`). Each push builds the jar, boots
-  a dedicated server with it, then the real client on a virtual screen (it loads a test world, casts the
-  rod and opens the journal). Logs and screenshots go to the `ci-results` branch; a jar that builds goes
-  to the [`dev` release](https://github.com/TJusczak/Tide-2-Plus/releases/tag/dev).
-
-**Install:** put the jar in `mods/` on the server and every client, with Fabric Loader 0.19.5+ and
-Fabric API for 26.3. Worlds/players that had Tide data from 1.21.1 aren't a goal of this fork.
-
-What changed for 26.3, roughly: renderers use render states, GUI drawing uses the new extractor API
-(journal silhouettes have their own render pipeline), item models are defined in `assets/tide/items/`,
-armor/swords/food/fuel/trades are components or data, and the data files use 26.3's formats.
-
-Licensed MPL-2.0, like upstream. Original README below.
+**Minecraft 26.3, Fabric.** Put the jar in `mods/` on the server and every client, with Fabric Loader 0.19.5+ and
+Fabric API. It uses Tide's mod ID and replaces Tide (worlds and items carry over), so don't install both.
+Downloads are on the [releases page](https://github.com/MagicSolstone/Tide-2-Plus/releases); what changed in each
+version is in the **[CHANGELOG](CHANGELOG.md)**.
 
 ---
 
-# Tide-2
-A Minecraft mod that expands the fishing experience, adding many new fish, mechanics, and rewards.
+## What Tide+ adds
 
-Join the discord server if you have a question, feedback, or want to see what's happening!
+### Fishing levels
+- **Levels 1 to 99** from fishing XP, with a new title every 10 levels (Novice Angler to Legendary Angler). A new title
+  gets a big on-screen announcement and a firework; level-ups are announced in chat.
+- **Your level is your skill**: longer casts, quicker bites, wider hook zones, a little more luck, and calmer fish.
+  Level 40 fishes exactly like original Tide.
+- **Rare fish stay hard.** A high level calms common fish, but rare, very rare and legendary fish always fight at least
+  as hard as in original Tide. To take on the hard ones, bring the right tackle.
+- **XP for every catch**, more for rarer fish, better quality, a new species, your own record or a perfect hook. The
+  catch card shows where it came from: `+13 Fishing XP (+3 perfect hook)`.
+- **Fair play** (`/fishinglevel fair`) puts a player at level 40 for contests.
 
-[![Discord](https://img.shields.io/discord/1306794817396805712?style=for-the-badge&logo=discord&logoSize=0&label=discord&labelColor=000000&color=3067bf)](https://discord.gg/773R6cruH6)
+### Catch quality and size
+- **Every fish has a quality**: Poor, Average, Good, Great, Trophy or Mythic, decided when it bites. Better fish are
+  bigger, heavier and fight harder. Trophy and Mythic catches are announced to the whole server (everyone hears a
+  Mythic).
+- **Weight is what counts.** Each quality is its own bell curve of sizes, and they overlap: a Mythic can be small and an
+  Average fish can, now and then, be a whopper. There is no hard top size, so no record is ever unbeatable.
+- **You can see quality at a glance**: a coloured dog-ear on the icon, a dull look for Poor fish, a shimmer for Trophy
+  (purple) and Mythic (gold), and the name in its colour.
+- **Cooked fish look like the fish they were**, for every species.
+- **Resource fish give more when they are better** (an iron tetra makes more raw iron as a Trophy than as a Poor fish).
+
+### The catch
+- **Hook zones**: the minigame bar has Perfect, Great, Good, Bad and miss zones, each with its own chance to land the fish.
+  A perfect hook earns extra XP and sometimes raises the fish a tier (never to Mythic).
+- **The catch card** above the hotbar: the fish in its quality colour, its weight, anything special (new species, your
+  record, a server record, two on the hook) and what came up with it. A short line in chat keeps it; hover it to see
+  how it compares with the server record.
+- **Caught fish arc down to your feet**, however far you cast.
+
+### Server records
+- The server keeps the **heaviest fish of each kind**: who caught it, the weight and the quality, shown in each fish's
+  journal page. Beating one is announced to everyone with a chime and a sparkle.
+
+### Rods and tackle
+A rod holds a **line, hook, bobber and lure**, plus **bait**. Every piece does something, and many are made for a place,
+a time or the weather.
+- **31 rods**, from the kid's rod to netherite and the wayfinder, including six rare **found rods** that drop from mobs,
+  wheat and leaves, each with its own trick (fishing up mob drops, sunken loot, saplings; growing crops; potion effects).
+- **18 lines, 23 hooks, 33 bobbers, 15 lures and 25 baits.** Hooks come in **Tier 1** (made from raw materials) and
+  **Tier 2** (made on a Tier 1 hook, keeping its perks). Any line can be dyed.
+- **Tackle with tricks**, for example: the stone hook drags up seaweed, the emerald hook the odd emerald, the barbed hook
+  lands almost anything but tears the fish, the heart bobber heals you, the lichen and glow pieces light the water,
+  the crystal rod tells you what bit and how good it is, the village rod gives nearby anglers extra XP, and the
+  wayfinder rod grows stronger the farther you are from spawn.
+- **Plain numbers you can compare.** Every stat is a percentage: cast range, bite speed, hook window, rare finds, catch
+  quality, fishing XP, landing, fish fight, catch difficulty, second fish, comes up cooked. **Bite speed** and
+  **rare finds** stack with diminishing returns, so a great rod is better than a good one but never instant.
+- **The rod panel** on the right while you hold a rod: your level and progress, every stat your rod, tackle, gear and
+  level add up to, and which perks are working where you stand.
+- **Rods never break**: a worn-out rod stops at broken until you repair it, keeping its tackle and enchantments.
+- **Angler's gear** (bucket hat, vest, waders, wading boots) with a full-set bonus.
+
+### Rigs
+Pieces made for the same place or time form a **rig**. **Tier 1** (2 pieces) gives a small bonus, **Tier 2** (3 or more)
+the full one. Each piece belongs to one rig, and a rod carries at most **two rigs**.
+- **Place and time rigs**, strongest where they belong: Ocean, River, Night, Twilight, Storm, Swamp, Jungle, Desert,
+  Frost, Cave, Fire (lava) and Void.
+- **Sky rigs** that follow the sky: the **Sunlight rig** bites faster toward noon and brings up seeds; the **Moonlight
+  rig** grows toward a full moon, finds rare fish and better quality, and brings up amethyst.
+- **Material sets** that work anywhere, each with a twist: **Stone** (the rod barely wears), **Iron** (the rod fights like
+  a sword), **Gold** (XP and gold nuggets), **Diamond** (catch quality), **Honey** (honeycombs and honey bottles) and
+  **Lucky** (rare finds).
+- **Each rig has a colour**, and a rod wears a small gem in its rig's colour on its icon.
+
+### Bait
+- **Region baits** let a region's fish bite anywhere; **session baits** boost XP, landing, quality or a second fish.
+- **Cut bait remembers the fish it was cut from**: the better the fish, the more of your bites are rare or rarer, up to
+  every bite with Mythic cut bait. Poor and Average fish finally have a use.
+- **Chum the water**: a hook with chum on the rod chums the water around it for two minutes, and everyone fishing there
+  bites faster.
+- **Favorite lures**: every fish has one and is twice as likely to bite on it. Each cast tells you how many fish there
+  favor your lure.
+
+### The Angling Table: a fishing workbench
+- **All fishing gear is made here**: a 3x3 grid like a crafting table, plus rod upgrades (rod, upgrade and extra in any
+  arrangement).
+- **A fishing recipe book** beside the grid, filtered by kind or by rig. Recipes are **discovered** from their materials.
+  Click one to fill the grid; if you are short, it shows what it takes.
+- **The Assemble tab** puts a line, hook, bobber and lure on a rod, with a card for each rig the rod has pieces of: its
+  colour, its tier, what it gives now and what the next piece adds.
+- Dressed as a proper tackle bench: a wooden frame, brass corners, and labels and outlines for each slot.
+
+### Storage
+- **Tackle box**: 27 slots of tackle and a rack for three rods, with an *Assemble rod* button to rig a rod straight from
+  the box.
+- **Fish satchel**: 64 slots of fish; open it to take out the one you want.
+
+### Finding tackle
+- **Fishing crates** hold tackle, string and bait now and then: basic pieces often, golden ones rarely, and a diamond or
+  netherite piece only once in a long while. Village fishermen, shipwrecks and Tide's fishing boats have a little too.
+- **Fishermen sell tackle** as they level up.
+
+### The journal and the wall
+- A **Tackle** section in the journal (everything you have found, what it does, its recipe and its rig), an **Angler**
+  page (level, title and stats), and each fish's best quality, heaviest catch and server record.
+- **Mounted fish** are sized by their weight; sneak and look at one to see its name, quality and weight.
+
+### For server admins
+- **Commands** (ops and RCON): `/fishinglevel get | set | addxp | reset [everything] | fair`, `/fishing describe <item>`,
+  `/fishing guide`.
+- A **`[Tide catch]` line in the server log** for every fish, a `[Tide record]` line for every record, and the
+  `tide_level` / `tide_xp` scoreboards. Solstone, the server's companion app, reads these for contests and its Fishing
+  page.
+- **Settings** are plain JSON in `config/tide.json` (levels, the XP curve, quality, crates and more). No Cloth Config or
+  Mod Menu needed.
 
 ---
-## The Mechanics
 
-To get started, craft a fishing rod. This can be either the regular fishing rod from the base game, or one of the new fishing rods added by Tide.
+## Differences from Tide
 
-<p align="center">
-<img src="https://cdn.modrinth.com/data/cached_images/0e488efb856acb81e451706532c90278634cc230.png" alt="fishing-rods"/>
-</p>
+- **Fabric only, Minecraft 26.x only.** Forge, NeoForge and older Minecraft versions were dropped.
+- **No third-party compatibility** (Stardew Fishing, Starcatcher, seasons mods, Hybrid Aquatic and others).
+- Fishing gear is crafted at the Angling Table instead of the crafting table.
 
-Cast your line by holding right-click and releasing, then wait patiently for a fish to arrive. Fish not biting? Try crafting some bait to increase your fishing speed or provide special bonuses.
+## Building and contributing
 
-Tide also adds a simple fishing minigame for each fish you catch. Right click when the bar is inside the colored region to reel in the fish, but be careful not to lose it! Each fish has its own unique movement behavior and strength, so stay alert.
+- **Every push is built and tested on GitHub Actions** (`.github/workflows/build.yml`): it compiles the jar, checks every
+  item has its art and name, starts a real server and a real client on a virtual screen, fishes, opens the journal and
+  the table, and checks every piece of tackle and many thousands of tackle combinations. A new version number on `main`
+  publishes a release.
+- **[CODE_GUIDE.md](CODE_GUIDE.md)**: where everything lives, and how to change numbers or add a hook, rig or setting.
+- **[PORTING.md](PORTING.md)**: moving to a new Minecraft version, and what Solstone relies on.
 
-<p align="center">
-  <img src="https://cdn.modrinth.com/data/cached_images/b2f81cc4bf8c0a9e96dfc15ddf25397e9b63c029.png" alt="Minigame 1" width="380"/>
-  <img src="https://cdn.modrinth.com/data/cached_images/9fe368bf906dabc716263867b3b3b5b847e3a0cf.png" alt="Minigame 2" width="380"/>
-</p>
+## Credits
 
-_Some fish are easy to catch, while others aren't..._
-
----
-## Fishing Rod Customization
-
-You can add hooks, lines, and cosmetic bobbers to any fishing rod using a new block, the **Angling Table**.
-
-A variety of accessories can be created with unique effects. Some of the bonuses include easier catches, extra luck, or even **lava and void fishing**!
-
-(or making your fishing rod look cool, in the case of the bobbers)
-
-<p align="center">
-  <img src="https://cdn.modrinth.com/data/cached_images/c4f1cde91876c4935727ae43e184b6a8320e6f56_0.webp" alt="Angling Table GUI" width="580"/>
-</p>
-
-_You can create any combination of hooks, lines, and bobbers at the Angling Table_
-
----
-## The Journal
-
-Keep track of all the fish you’ve caught via the **fishing journal**, a special book that gets updated every time you catch a fish. You can use it to track your completion progress, biggest catches, fish habitats, and much more.
-
-<p align="center">
-  <img src="https://cdn.modrinth.com/data/cached_images/de364f376cc0126704b46c0e8ca050340fdea33c.png" alt="Fishing Journal" width="380"/>
-  <img src="https://cdn.modrinth.com/data/cached_images/c0bd594fb53af8d08864ddcf0b56ae5774a9f19a.png" alt="Salmon Profile" width="380"/>
-</p>
-
-_Can you catch them all?_
-
-Want to know where you can catch a fish? You can find **fishy notes** in crates that hint at the locations of individual fish.
-
----
-## Customizability
-Many aspects of the mod can be changed to your liking.
-
-**Need to tweak something?**
-You might be able to find what you need in the config screen.
-
-**Looking to add a fish or modify existing ones?**
-Tide has a versatile **fish data** system, allowing mod or datapack developers to add their own fish to find in the world via JSON files.
-
-In addition to fish, you can also use datapacks to insert custom loot tables or crates to the fishing loot. Need help customizing something? Feel free to ask in the discord server.
-
----
-## Compatibility
-Tide is compatible with many amazing mods, including:
-- Hybrid Aquatic
-- Nether Depths Upgrade
-- Stardew Fishing
-- Fishing Real
-- Fish of Thieves
-- Serene Seasons
-- Fabric Seasons
-- Ecliptic Seasons
-- …and more!
+**Tide** and everything it brought (its fish, entities, art, the minigame, the Angling Table, crates and the journal) is
+by **Lightning64**: [Tide 2 on GitHub](https://github.com/Lightning-64/Tide-2) and its
+[Discord](https://discord.gg/773R6cruH6). Tide+ would not exist without it. Licensed under the
+[Mozilla Public License 2.0](LICENSE.txt).

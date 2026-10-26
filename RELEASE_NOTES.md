@@ -18,7 +18,7 @@ New always-on sets (2 pieces give the small bonus, 3 or more the full one), so t
 
 ## Rigs are easier to read
 - **Tier 1 and Tier 2**: every rig and set now says Tier 1 (2+) and Tier 2 (3+) on tooltips, the recipe book, the rod panel and the Angling Table.
-- **Every piece belongs to one rig at most.** Moved: moon bait (Moonlight rig only), slime line (Swamp rig only), golden line and golden hook (Gold set only), golden bobber (Sunlight rig only), honey bobber (Honey set only); the Amethyst set became part of the Moonlight rig.
+- **Every piece belongs to one rig at most.** Moved: moon bait (Moonlight rig only), slime line (Swamp rig only), golden line and golden hook (Gold set only), golden bobber (Sunlight rig only), honey bobber (Honey set only); the Amethyst set became part of the Moonlight rig. New homes: the spider line joins the Cave rig (the Night rig keeps the phantom line), and the redstone line joins the Desert rig.
 - **A rod carries two rigs at most**: if it has pieces of three (bait counts too), the two with the most pieces count and the third says "not counted".
 - **Each rig has its own colour**, used for its name, its card at the table and its gem.
 - **Rods show their rigs on the icon**: a small gem in the corner of the rod, in the rig's colour, one for each rig it carries (bright for Tier 2, dimmer for Tier 1). A rod picks up its gems the next time you change anything on it.

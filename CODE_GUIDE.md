@@ -75,7 +75,7 @@ Data you edit without touching Java lives in `src/main/resources/`:
 | What a hook/line/bobber/lure/rod gives always | `data/rods/RodEffects.java`: the `RODS`, `HOOKS`, `LINES`, `BOBBERS`, `LURES`, `BAITS` tables | One line per item. `bite(0.10)` is +10% bite speed. The helper names (`bite`, `window`, `luck`, `quality`, `xp`, `land`, `fight`, `cast`, `ease`, `upgrade`) are defined near the bottom of the file. |
 | What an item gives only in a place or time | same file, the `SITUATIONAL` table | `new Perk(When.NIGHT, bite(0.25))`. The places and times are the `When` list. |
 | What a rig gives | `data/rods/RigSets.java`: `SETS`, and the shapes (`QUALITY_2`, `LUCK_QUALITY_3`...) above it | Each rig lists its members by item name. 2 pieces give the small bonus, 3 the full one. |
-| How fast lure/bait speed shortens the wait | `RodEffects.lureWaitFactor` | One formula. 6 / (speed + 6), never below 25%. |
+| How fast bites come (lure, bait, gear, rigs) | `RodEffects.softenBite`, `SPEED_POINT`, `biteSpeed` | One number: gear bite speed plus 6% per point of lure/bait speed, all added, then softened (full value to +50%, half to +100%, a quarter beyond). There is no hard cap. |
 | The minimum time to a bite | `TideFishingHook.catchingFish` (`Math.max(..., 30)` ticks) | 20 ticks = 1 second. |
 | XP per rarity, new species, records | `Angler.rarityXp`, `Angler.NEW_SPECIES_XP`, `Angler.RECORD_XP`, bonuses in `Angler.onFishCaught` | |
 | The XP curve | `config/tide.json` (`leveling`), the maths in `Angler.xpToNext` | Solstone mirrors this: see PORTING.md section 4. |
@@ -85,7 +85,7 @@ Data you edit without touching Java lives in `src/main/resources/`:
 | How big the minigame zones are | `Angler.Zones.of` | |
 | Server record announcement and effects | `ServerRecords.announce` | sound, chat line, particles |
 | The text on the catch card | `Angler.banner` (what goes on it), `CatchBannerOverlay` (how it is drawn) | A line starting `*` is purple, `~` yellow, otherwise white. |
-| The rod stats panel on the right | `client/gui/overlays/RodStatsOverlay.java` | |
+| The rod stats panel on the right | `client/gui/overlays/RodStatsOverlay.java` | One row per stat, always shown (a dash when the gear gives nothing). |
 | Which hooks are Tier 1 / Tier 2 | `RodEffects.BASE_HOOKS` / `UPGRADED_HOOKS` | |
 | Iron rig sword damage | `RigSets.refreshMelee` | +3 at two pieces, +5 at three. |
 | Where fish land when reeled in | `TideFishingHook.pullToward` | |
@@ -124,7 +124,7 @@ Server settings are fields in `config/TideServerConfig.java`; the player edits t
 | Tab switching keeps the cursor | `client/MouseKeep.java`, used by the four screens' buttons |
 | Catch card (XP breakdown, bumps) | `Angler.onFishCaught`, `Angler.banner`, `Angler.markBump`, `CatchBannerOverlay` |
 | Perfect hook / tackle quality bumps | `FishCatchMinigame` (constructor and `onWin`), `Angler.markBump` |
-| Softer lure speed | `RodEffects.lureWaitFactor`, `TideFishingHook.catchingFish`, `RodStatsOverlay` |
+| Softer lure speed | `RodEffects.softenBite` / `biteWaitFactor`, `TideFishingHook.catchingFish`, `RodStatsOverlay` |
 | Iron rig, Circle and Treble hooks | `RigSets` (`SETS`, `refreshMelee`), `RodEffects.HOOKS`, `CustomRodManager.setAccessory` |
 | Fish landing arc | `TideFishingHook.pullToward` |
 | Mounted fish tip when sneaking | `client/gui/overlays/DisplayTipOverlay.java` |

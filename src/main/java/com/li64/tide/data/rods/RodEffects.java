@@ -45,13 +45,18 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         this(cast, bite, window, fight, luck, quality, land, xp, twin, cook, speed, ease, 0);
     }
 
+    /** Each point of "speed" (the Lure enchantment, bait, a rod's own) is worth this much bite speed. */
+    public static final double SPEED_POINT = 0.06;
+
     /**
-     * What's left of the wait for a bite after lure and bait speed (each point of speed used to be about 5 seconds
-     * off, which made 3-5 points nearly instant): the first points count most, and past about 18 it stops at a quarter.
+     * Stacked bite speed with diminishing returns instead of a hard cap: every point counts in full up to +50%,
+     * half as much from +50% to +100%, and a quarter as much past that. So the best possible rig still bites
+     * noticeably faster than a good one, but never anywhere near instantly.
      */
-    public static double lureWaitFactor(int speed) {
-        if (speed <= 0) return 1.0 + Math.min(-speed, 10) * 0.1;
-        return Math.max(0.25, 6.0 / (speed + 6.0));
+    public static double softenBite(double raw) {
+        if (raw <= 0.5) return raw;
+        if (raw <= 1.0) return 0.5 + (raw - 0.5) * 0.5;
+        return 0.75 + (raw - 1.0) * 0.25;
     }
 
     public static final RodEffects NONE = new RodEffects(0, 0, 0, 0, 0, 0, 0, 0);
@@ -593,14 +598,26 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return !stack.isEmpty() && GEAR.containsKey(path(stack)) && isTide(stack);
     }
 
-    /** Bite speed after stacking: full value up to +50%, half value past that. */
+    /** Bite speed after stacking (see {@link #softenBite}). */
     public double effectiveBite() {
-        return bite <= 0.5 ? bite : 0.5 + (bite - 0.5) * 0.5;
+        return softenBite(bite);
+    }
+
+    /**
+     * The one bite-speed number: the gear's bite speed plus {@code speedPoints} of lure/bait/rod speed, all added
+     * together, then softened. This is what the rod panel shows (as +%) and what the wait is divided by.
+     */
+    public double biteSpeed(int speedPoints) {
+        return softenBite(bite + speedPoints * SPEED_POINT);
     }
 
     /** Multiply the bite wait by this (bite speed +10% -> waits 1/1.1 as long). */
+    public double biteWaitFactor(int speedPoints) {
+        return 1.0 / Math.max(0.5, 1.0 + biteSpeed(speedPoints));
+    }
+
     public double biteWaitFactor() {
-        return 1.0 / Math.max(0.5, 1.0 + effectiveBite());
+        return biteWaitFactor(0);
     }
 
     /** Tooltip lines: "+10% casting range", "Fish fight 8% easier"... */

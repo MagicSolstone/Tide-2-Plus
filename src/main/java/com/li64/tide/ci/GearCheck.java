@@ -256,7 +256,8 @@ public final class GearCheck {
             if (!finite(e)) { problem("non-number in " + loadout(rod) + ": " + e); continue; }
 
             // bite time: the gear's factor, at both ends of the fishing level
-            double wait = e.biteWaitFactor() * top.biteWait();
+            // (with Lure V and the most bait speed a rod can use)
+            double wait = e.biteWaitFactor(5 + TideFishingRodItem.BAIT_SPEED_CAP + e.speed()) * top.biteWait();
             if (wait < minWait) { minWait = wait; worstWait = loadout(rod); }
             // how hard the fish fights: at max level, a common fish, the easiest it can get
             double fight = (1.0 + e.fight()) * Angler.fightSpeed(Angler.MAX_LEVEL, FishRarity.COMMON);

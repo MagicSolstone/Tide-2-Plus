@@ -517,12 +517,13 @@ public class TideFishingHook extends Projectile {
         }
         else {
             this.timeUntilLured = (int) (Mth.nextInt(this.random, 200, 600) * this.medium.biteTimeMultiplier());
-            this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.rods.RodEffects.lureWaitFactor(this.lureSpeed));
             double globalBiteTimeMultiplier = Tide.PLATFORM.isModLoaded("stardew_fishing") ? CompatHelper.stardewFishingBiteTimeMultiplier() : 1.0;
             // fishing level: patience (how long until a bite)
             if (this.getPlayerOwner() instanceof ServerPlayer angler)
+                // fishing level, then one bite-speed number: gear + lure/bait/rod speed points, softened (see RodEffects.softenBite)
                 this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.angler.Angler.stats(angler).biteWait()
-                        * com.li64.tide.data.rods.RodEffects.of(angler, this.rod).biteWaitFactor());
+                        * com.li64.tide.data.rods.RodEffects.of(angler, this.rod).biteWaitFactor(this.lureSpeed));
+            else this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.rods.RodEffects.NONE.biteWaitFactor(this.lureSpeed));
             this.timeUntilLured = Math.max((int) (this.timeUntilLured * globalBiteTimeMultiplier), 30);
         }
     }

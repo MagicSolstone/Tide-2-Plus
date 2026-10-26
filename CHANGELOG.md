@@ -51,6 +51,10 @@ New always-on sets (2 pieces give the small bonus, 3 or more the full one), so t
 - **Crates may hold string (2-5) or a fishing line** (35% of crates), to help with crafting.
 - **Basic tackle turns up more, the best tackle very rarely.** Fishing crates hold tackle a little more often (30%, was 15%), now including plain lines and hooks, stone and iron pieces; golden pieces are rare, and a diamond hook, line or bobber (or netherite in Nether crates) is about 1 crate in 200. The fishing boat chest has a few basics too.
 
+## Rod panel
+- **Shows only what your rod changes.** A stat the rod, its tackle, your gear and your level leave alone is not listed.
+- **Rigs and conditions at a glance.** Under the stats: the rigs the rod carries (with their tier), in the rig's colour when they are working here and now and grey when not; then every time, place and weather the rod's own pieces care about (night, rain, oceans...), bright when it applies and grey when it doesn't. The Sunlight and Moonlight rigs, amethyst and the wayfinder rod show how strong they are right now as a percentage.
+
 ## Tide+ 1.0.20 - 10/26/26
 
 Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.19).

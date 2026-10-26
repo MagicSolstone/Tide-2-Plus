@@ -63,8 +63,9 @@ a time or the weather.
 - **Plain numbers you can compare.** Every stat is a percentage: cast range, bite speed, hook window, rare finds, catch
   quality, fishing XP, landing, fish fight, catch difficulty, second fish, comes up cooked. **Bite speed** and
   **rare finds** stack with diminishing returns, so a great rod is better than a good one but never instant.
-- **The rod panel** on the right while you hold a rod: your level and progress, every stat your rod, tackle, gear and
-  level add up to, and which perks are working where you stand.
+- **The rod panel** on the right while you hold a rod: your level and progress, the stats your rod, tackle, gear and
+  level change, its rigs (in colour when they are working) and the times, places and weather its pieces care about
+  (bright when they apply, grey when they don't).
 - **Rods never break**: a worn-out rod stops at broken until you repair it, keeping its tackle and enchantments.
 - **Angler's gear** (bucket hat, vest, waders, wading boots) with a full-set bonus.
 

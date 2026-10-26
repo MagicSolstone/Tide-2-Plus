@@ -52,7 +52,7 @@ public final class RodStatsOverlay {
         int speed = lure + Math.min(BaitUtils.getCombinedSpeed(rod), TideFishingRodItem.BAIT_SPEED_CAP) + e.speed();
         int luck = e.luck() + BaitUtils.getCombinedLuck(rod) + st.luck() + sea;
 
-        // every stat, always, so two rods can be compared at a glance (a dash is "nothing from this")
+        // every stat the rod (with tackle, gear and level) changes
         List<Row> rows = new ArrayList<>();
         rows.add(pct("Cast range", (1 + e.cast()) * st.castDistance() - 1, false));
         // one bite-speed number: the rod and tackle, lure/bait/rod speed points, and your fishing level, all together
@@ -68,18 +68,36 @@ public final class RodStatsOverlay {
         rows.add(extra("Second fish", Math.min(e.twin(), RodEffects.TWIN_CAP), e.twin() > RodEffects.TWIN_CAP ? " (max)" : ""));
         rows.add(extra("Comes up cooked", e.cook(), ""));
 
-        Set<String> active = new LinkedHashSet<>(), idle = new LinkedHashSet<>();
+        // only what this rod actually changes: a row that would read "Normal" or "-" is left out
+        rows.removeIf(r -> r.value().equals("-") || r.value().equals("Normal"));
+
+        // the rigs it carries, then the times, places and weather its own pieces care about: each one bright when it
+        // applies here and now (a rig in its own colour), grey when it doesn't
+        List<Token> rigTokens = new ArrayList<>(), whenTokens = new ArrayList<>();
+        for (com.li64.tide.data.rods.RigSets.RigSet set : com.li64.tide.data.rods.RigSets.carried(rod)) {
+            int n = com.li64.tide.data.rods.RigSets.pieces(set, rod);
+            double k = set.when().test(player) ? com.li64.tide.data.rods.RigSets.strength(set, player) : 0;
+            String label = set.name() + " " + com.li64.tide.data.rods.RigSets.tier(n) + (k > 0 && k < 1 ? " " + Math.round(k * 100) + "%" : "");
+            rigTokens.add(new Token(label, k > 0 ? 0xFF000000 | com.li64.tide.data.rods.RigSets.color(set) : OFF_GREY));
+        }
+        Set<String> seen = new LinkedHashSet<>();
         List<ItemStack> all = new ArrayList<>(List.of(rod));
         all.addAll(RodEffects.parts(rod));
         for (ItemStack part : all)
-            for (RodEffects.Perk p : RodEffects.situational(part))
-                (p.when().test(player) ? active : idle).add(p.when().text.replaceFirst("^(in|on|at|by|when) (the |a )?", ""));
-        idle.removeAll(active);
-        // matched rigs: complete ones show as on or off like any perk; one piece short gets a hint
-        for (com.li64.tide.data.rods.RigSets.RigSet set : com.li64.tide.data.rods.RigSets.SETS) {
-            int n = com.li64.tide.data.rods.RigSets.counted(set, rod);     // (at most two rigs count)
-            if (n >= com.li64.tide.data.rods.RigSets.HALF)
-                (set.when().test(player) ? active : idle).add(set.name().toLowerCase() + " " + com.li64.tide.data.rods.RigSets.tier(n).toLowerCase());
+            for (RodEffects.Perk p : RodEffects.situational(part)) {
+                String label = p.when().text.replaceFirst("^(in|on|at|by|when) (the |a )?", "");
+                if (label.isEmpty() || !seen.add(label)) continue;
+                label = Character.toUpperCase(label.charAt(0)) + label.substring(1);
+                whenTokens.add(new Token(label, p.when().test(player) ? ON_WHITE : OFF_GREY));
+            }
+        // the rods and pieces whose strength slides with the sky or the distance
+        if (hasAmethyst(rod)) {
+            double k = RodEffects.moonlight(player);
+            whenTokens.add(new Token("Moonlight" + (k > 0 ? " " + Math.round(k * 100) + "%" : ""), k > 0 ? ON_WHITE : OFF_GREY));
+        }
+        if (rod.is(com.li64.tide.registries.TideItems.WAYFINDER_FISHING_ROD)) {
+            double k = RodEffects.wayfinderReach(player);
+            whenTokens.add(new Token("Far from spawn" + (k > 0 ? " " + Math.round(k * 100) + "%" : ""), k > 0 ? ON_WHITE : OFF_GREY));
         }
 
         Font font = mc.font;
@@ -87,11 +105,8 @@ public final class RodStatsOverlay {
         int labelW = rows.stream().mapToInt(r -> font.width(r.label())).max().orElse(0);
         int valueW = rows.stream().mapToInt(r -> font.width(r.value())).max().orElse(0);
         String title = "Fishing Lv " + level + (ClientAngler.fair && ClientAngler.enabled ? " (fair play)" : "");
-        String on = active.isEmpty() ? null : "Active: " + String.join(", ", active);
-        String off = idle.isEmpty() ? null : "Not now: " + String.join(", ", idle);
-        int w = Math.max(labelW + 10 + valueW, Math.max(font.width(title), Math.max(on == null ? 0 : Math.min(font.width(on), 170), off == null ? 0 : Math.min(font.width(off), 170))));
-        List<net.minecraft.util.FormattedCharSequence> onLines = on == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(on), Math.max(w, 120));
-        List<net.minecraft.util.FormattedCharSequence> offLines = off == null ? List.of() : font.split(net.minecraft.network.chat.Component.literal(off), Math.max(w, 120));
+        int w = Math.max(Math.max(labelW + 10 + valueW, font.width(title) + 30), 120);
+        List<List<Token>> rigLines = flow(rigTokens, font, w), whenLines = flow(whenTokens, font, w);
         // progress to the next level: a thin bar under the title that fills as you catch (and glides when XP lands)
         boolean maxed = own >= Angler.MAX_LEVEL;
         long lo = Angler.xpForLevel(own), hi = maxed ? lo : Angler.xpForLevel(own + 1);
@@ -100,7 +115,7 @@ public final class RodStatsOverlay {
         shownFill += (target - shownFill) * 0.12;
         if (Math.abs(target - shownFill) < 0.002) shownFill = target;
         String pctText = maxed ? "max" : Math.round(target * 100) + "%";
-        int h = 17 + rows.size() * 10 + (onLines.size() + offLines.size()) * 10 + (onLines.isEmpty() && offLines.isEmpty() ? 0 : 3);
+        int h = 17 + rows.size() * 10 + (rigLines.isEmpty() ? 0 : 3 + rigLines.size() * 10) + (whenLines.isEmpty() ? 0 : 3 + whenLines.size() * 10);
         int sw = g.guiWidth(), sh = g.guiHeight();
         float px = sw - (w + 10) * s - 4, py = (sh - (h + 8) * s) / 2f;
 
@@ -121,15 +136,46 @@ public final class RodStatsOverlay {
             Gui26.text(g, font, r.value(), 6 + w - font.width(r.value()), y, r.color(), true);
             y += 10;
         }
-        if (!onLines.isEmpty()) {
+        for (List<List<Token>> block : List.of(rigLines, whenLines)) {
+            if (block.isEmpty()) continue;
             y += 3;
-            for (var line : onLines) { Gui26.text(g, font, line, 6, y, DIM, true); y += 10; }
-        }
-        if (!offLines.isEmpty()) {
-            if (onLines.isEmpty()) y += 3;
-            for (var line : offLines) { Gui26.text(g, font, line, 6, y, OFF, true); y += 10; }
+            for (List<Token> line : block) {
+                int x = 6;
+                for (int i = 0; i < line.size(); i++) {
+                    if (i > 0) { Gui26.text(g, font, SEP, x, y, OFF_GREY, true); x += font.width(SEP); }
+                    Gui26.text(g, font, line.get(i).text(), x, y, line.get(i).color(), true);
+                    x += font.width(line.get(i).text());
+                }
+                y += 10;
+            }
         }
         g.pose().popMatrix();
+    }
+
+    private record Token(String text, int color) {}
+
+    private static final int ON_WHITE = 0xFFE8E8E8, OFF_GREY = 0xFF6E7880;
+    private static final String SEP = " · ";
+
+    /** Tokens laid out left to right, wrapping to the panel's width. */
+    private static List<List<Token>> flow(List<Token> tokens, Font font, int width) {
+        List<List<Token>> lines = new ArrayList<>();
+        List<Token> line = new ArrayList<>();
+        int x = 0;
+        for (Token t : tokens) {
+            int tw = font.width(t.text()) + (line.isEmpty() ? 0 : font.width(SEP));
+            if (!line.isEmpty() && x + tw > width) { lines.add(line); line = new ArrayList<>(); x = 0; tw = font.width(t.text()); }
+            line.add(t);
+            x += tw;
+        }
+        if (!line.isEmpty()) lines.add(line);
+        return lines;
+    }
+
+    private static boolean hasAmethyst(ItemStack rod) {
+        List<ItemStack> all = new ArrayList<>(List.of(rod));
+        all.addAll(RodEffects.parts(rod));
+        return all.stream().anyMatch(st -> net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(st.getItem()).getPath().startsWith("amethyst_"));
     }
 
     /** A row for an extra: a plus percentage when the gear gives it, a dim dash when it doesn't. */

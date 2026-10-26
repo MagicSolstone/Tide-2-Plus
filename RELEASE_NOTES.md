@@ -16,5 +16,15 @@ Install the same way: the jar in `mods/` on the server and every client (replace
 ## Amethyst is a daytime set
 - **The amethyst rod, hook, line and bobber are strongest by day** (crystals catch the light) and only a little useful at night. By day a full amethyst set gives more catch quality than before; at night about a fifth as much. Place-and-time rigs still beat it where they apply.
 
+## Luck is now "Rare finds"
+- **Luck shows as a percentage**: "Rare finds +15%" per point, on the rod panel, item tooltips and the angler page (the old "+1 luck" is the same thing). It makes the rare fish (the ones with a luck bonus) more likely by that share of their own chance, so every rare fish benefits the same.
+- **Crates are less luck-driven**: luck now adds +4% a point to the crate chance, up to +40% (it was +10% a point, up to +100%).
+- The journal's luck requirement (the Midas fish) is shown as a percentage too.
+
+## Fish sizes overlap
+- **Each quality is its own bell curve of sizes**, centred higher for better fish but overlapping: a Mythic can be a small fish, and an Average one can, rarely, be a big one. Sizes keep growing slowly past the old top instead of stopping at a hard cap, so there is no size that can never be beaten.
+- **The catch line in chat shows how your fish compares with the server record** when you hover it.
+
 ## Iron rig
-- **Hitting mobs wears the rod down** (1 durability per hit, like a sword). It still never breaks: a worn-out rod stops at broken until you repair it.
+- **Hitting mobs wears the rod down** (1 durability per hit, like a sword). A rod worn out by other things stops at broken until repaired, but:
+- **An iron-rig rod at its last point of durability breaks for real** when it hits something (its line, hook, bobber and lure drop).

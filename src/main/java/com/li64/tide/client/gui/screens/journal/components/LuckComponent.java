@@ -13,10 +13,12 @@ public class LuckComponent extends ProfileComponent {
     public LuckComponent(int min, int max) {
         boolean hasMin = min > 0;
         boolean hasMax = max < Integer.MAX_VALUE;
-        String range = Integer.toString(min);
+        // luck points are shown as rare-find percentages everywhere else
+        int per = (int) Math.round(com.li64.tide.data.rods.RodEffects.RARE_PER_LUCK * 100);
+        String range = "+" + min * per + "% or more";
         if (!hasMin && !hasMax) range = "any";
-        else if (hasMin && hasMax) range = min + "-" + max;
-        else if (hasMax) range = "<" + (max + 1);
+        else if (hasMin && hasMax) range = min * per + "% to " + max * per + "%";
+        else if (hasMax) range = "under " + (max + 1) * per + "%";
         this.text = Component.translatable("journal.info.luck.title").append(": ").append(range);
     }
 

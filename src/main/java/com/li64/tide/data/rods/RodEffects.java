@@ -55,6 +55,9 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return 0.75 + (raw - 1.0) * 0.25;
     }
 
+    /** Each point of luck makes rare fish this much more likely (the rod panel and tooltips show it as "rare finds"). */
+    public static final double RARE_PER_LUCK = 0.15;
+
     public static final RodEffects NONE = new RodEffects(0, 0, 0, 0, 0, 0, 0, 0);
 
     private static final RodEffects ANY_LINE = cast(0.10);
@@ -631,7 +634,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (bite != 0) out.add(line(color, pct(bite) + " bite speed"));
         if (window != 0) out.add(line(color, pct(window) + " hook window"));
         if (fight != 0) out.add(line(color, "Fish fight " + Math.round(Math.abs(fight) * 100) + "% " + (fight < 0 ? "easier" : "harder")));
-        if (luck != 0) out.add(line(color, luck > 0 ? String.format("%+d fishing luck (rarer fish)", luck) : String.format("%d fishing luck (more common fish)", luck)));
+        if (luck != 0) out.add(line(color, pct(luck * RARE_PER_LUCK) + " rare finds"));
         if (quality != 0) out.add(line(color, quality > 0 ? pct(quality) + " better catch quality" : "Mostly smaller, plainer fish"));
         if (land != 0) out.add(line(color, pct(land) + " to land Good and Bad hooks"));
         if (xp != 0) out.add(line(color, pct(xp) + " fishing XP"));

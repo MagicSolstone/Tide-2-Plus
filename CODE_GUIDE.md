@@ -84,6 +84,8 @@ Data you edit without touching Java lives in `src/main/resources/`:
 | The chance a perfect hook raises the quality (never to Mythic) | `FishCatchMinigame.PERFECT_BUMP` and `onWin` | |
 | How big the minigame zones are | `Angler.Zones.of` | |
 | Server record announcement and effects | `ServerRecords.announce` | sound, chat line, particles |
+| How much luck helps (Rare finds %) | `RodEffects.RARE_PER_LUCK` (display and rare fish, via `FishData.weight`), `CrateSelector.MAX_LUCK_BONUS` (crates) | Luck points are still whole numbers inside; the panel shows them as a percentage. |
+| How big fish are | `CatchQuality.sampleLength` | One bell curve per quality; edit the centre and spread numbers. |
 | The text on the catch card | `Angler.banner` (what goes on it), `CatchBannerOverlay` (how it is drawn) | A line starting `*` is purple, `~` yellow, otherwise white. |
 | The rod stats panel on the right | `client/gui/overlays/RodStatsOverlay.java` | One row per stat, always shown (a dash when the gear gives nothing). |
 | Which hooks are Tier 1 / Tier 2 | `RodEffects.BASE_HOOKS` / `UPGRADED_HOOKS` | |

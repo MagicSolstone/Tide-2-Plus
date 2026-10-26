@@ -400,6 +400,17 @@ public class TideFishingRodItem extends FishingRodItem {
         return ItemUseAnimation.BOW;
     }
 
+    /** An iron-rig rod (the one with the weapon property) at its last point of durability breaks for real when it hits something. */
+    @Override
+    public void postHurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity mob, @NotNull LivingEntity attacker) {
+        if (attacker instanceof ServerPlayer player && stack.has(net.minecraft.core.component.DataComponents.WEAPON) && stack.getMaxDamage() > 1
+                && stack.getDamageValue() >= stack.getMaxDamage() - 1) {
+            onItemBroken(stack, player);                                                                       // its tackle drops
+            player.onEquippedItemBroken(stack, net.minecraft.world.entity.EquipmentSlot.MAINHAND);             // the break sound and particles
+            stack.shrink(1);
+        }
+    }
+
     public void onItemBroken(ItemStack stack, ServerPlayer player) {
         // line, hook, bobber and lure, and whatever bait was still loaded
         List<ItemStack> accessories = CustomRodManager.getAccessoryList(stack);

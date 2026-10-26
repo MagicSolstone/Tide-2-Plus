@@ -137,23 +137,29 @@ public enum CatchQuality {
     private static final double Z10 = -1.2815515655446004;
 
     /**
-     * A length (cm) that fits the quality. Poor to Good come from the species' normal size curve
-     * (small, middling, upper end); Great starts at the top of the typical range, Trophy runs to about
-     * +25% over it and Mythic to about +45%.
+     * A length (cm) that fits the quality: a bell curve per quality on the species' own size scale, better
+     * qualities centred higher and overlapping with their neighbours.
      */
     public double sampleLength(SizeData size, RandomSource rng) {
         double lo = size.typicalLowCm(), hi = size.typicalHighCm();
         double sigma = (Math.log(hi) - Math.log(lo)) / (-2 * Z10);
         double mu = Math.log(lo) - Z10 * sigma;
-        double u = rng.nextDouble();
-        double length = switch (this) {
-            case POOR -> Math.exp(mu + sigma * (-2.0 + 1.45 * u));
-            case AVERAGE -> Math.exp(mu + sigma * (-0.55 + 1.2 * u));
-            case GOOD -> Math.exp(mu + sigma * (0.65 + 0.63 * u));
-            case GREAT -> hi * (1.0 + 0.1 * u);
-            case TROPHY -> hi * (1.1 + 0.15 * u);
-            case MYTHIC -> hi * (1.3 + 0.15 * u);
+        // Each quality is its own bell curve over the species' size scale (z: 0 is a middling fish, +1.28 the top of
+        // the typical range). Better fish centre higher, but the curves overlap: a Mythic can be a small fish and an
+        // Average one can, rarely, be a big one. Past 1.2x the typical top, sizes grow slowly.
+        double z = switch (this) {
+            case POOR -> -1.35 + 0.55 * rng.nextGaussian();
+            case AVERAGE -> 0.0 + 0.75 * rng.nextGaussian();
+            case GOOD -> 0.95 + 0.75 * rng.nextGaussian();
+            case GREAT -> 1.5 + 0.8 * rng.nextGaussian();
+            case TROPHY -> 1.95 + 0.85 * rng.nextGaussian();
+            case MYTHIC -> 2.5 + 0.95 * rng.nextGaussian();
         };
+        // past 1.2x the typical top, sizes grow ever more slowly (a hard stop would pile fish up at the same size and make
+        // the record impossible to beat; this way a bigger fish is always possible, just much rarer)
+        double x = Math.exp(mu + sigma * z) / hi;
+        if (x > 1.2) x = 1.2 + 0.5 * Math.log(1 + (x - 1.2) / 0.5);
+        double length = x * hi;
         double min = size.recordLowCm().orElse(0.6 * lo);
         return Math.max(length, min);
     }

@@ -14,13 +14,13 @@ import java.util.function.Predicate;
 
 public class CrateSelector implements FishingEntry {
     private static final double MAGNETIC_BAIT_BONUS = 5.0;
-    /** Luck adds up to this much again (at LUCK_CAP and above); crate gear can't push past MAX_FACTOR times the base. */
-    private static final double MAX_LUCK_BONUS = 1.0, MAX_FACTOR = 6.0;
+    /** Luck adds up to this much (+4% a point, +40% at LUCK_CAP and above); crate gear can't push past MAX_FACTOR times the base. */
+    private static final double MAX_LUCK_BONUS = 0.4, MAX_FACTOR = 6.0;
     private static final int LUCK_CAP = 10;
 
     @Override
     public double weight(FishingContext context) {
-        // Crates stay a treat: luck helps a little and stops helping at luck 10 (about 1 catch in 12 at most), and
+        // Crates stay a treat: luck helps a little and stops helping at luck 10, and
         // even with crate gear (magnet lure, magnetic bait) they're capped at about 1 catch in 5.
         boolean hasMagneticBait = context.rod() != null && BaitUtils.hasBait(TideItems.MAGNETIC_BAIT, context.rod());
         double base = Tide.SERVER_CONFIG.general.crateWeight;

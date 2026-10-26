@@ -82,8 +82,8 @@ final class AnglerCard {
         y = bonus(g, font, x, y, "Casting range", s.castDistance() - 1);
         y = bonus(g, font, x, y, "Bite speed", 1 / s.biteWait() - 1);
         y = bonus(g, font, x, y, "Hook window", s.hookZones() - 1);
-        String luck = s.luck() == 0 ? "None" : String.format("%+d", s.luck());
-        y = row(g, font, x, y, "Angler's luck", luck, s.luck() > 0 ? GOOD : s.luck() < 0 ? BAD : OK);
+        String luck = s.luck() == 0 ? "None" : String.format("%+d%%", Math.round(s.luck() * com.li64.tide.data.rods.RodEffects.RARE_PER_LUCK * 100));
+        y = row(g, font, x, y, "Rare finds", luck, s.luck() > 0 ? GOOD : s.luck() < 0 ? BAD : OK);
         y += 8;
 
         Gui26.text(g, font, "Fish fight difficulty", x, y, DARK, false);

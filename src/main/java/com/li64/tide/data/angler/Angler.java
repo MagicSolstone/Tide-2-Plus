@@ -406,7 +406,8 @@ public final class Angler {
         java.util.List<String> bits = new java.util.ArrayList<>();
         double grams = com.li64.tide.data.item.TideItemData.FISH_WEIGHT.getOrDefault(stack, 0.0);
         if (extra.contains("new species")) bits.add("New species!");
-        if (SERVER_RECORD.remove(player.getUUID())) bits.add("Server record!");
+        boolean setRecord = SERVER_RECORD.remove(player.getUUID());
+        if (setRecord) bits.add("Server record!");
         else if (extra.contains("new record")) bits.add("Your record!");
         if (TWIN.remove(player.getUUID())) bits.add("Two on the hook!");
         // (a perfect hook that also raised the quality is one purple line below, not two)
@@ -428,6 +429,12 @@ public final class Angler {
         if (extras != null) hover.add("Also caught: " + String.join(", ", extras));
         if (effects != null) hover.addAll(effects);       // (the bumps are in there too)
         hover.add(footer);
+        // how it compares with the server's record for the species (in the chat hover, to keep the card short)
+        net.minecraft.server.MinecraftServer srv = player.level().getServer();
+        var rec = srv == null || grams <= 0 || setRecord ? null
+                : ServerRecords.get(srv, net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).toString());
+        if (rec != null) hover.add("Server record: " + FishWeight.imperial(rec.grams()) + " by " + rec.player()
+                + (grams < rec.grams() ? " (this catch: " + Math.round(grams / rec.grams() * 100) + "% of it)" : ""));
         net.minecraft.network.chat.MutableComponent line = Component.literal(title).withStyle(s -> s.withColor(q == null ? 0xFFFFFF : q.color));
         if (grams > 0) line.append(Component.literal(" " + FishWeight.imperial(grams)).withStyle(ChatFormatting.GOLD));
         java.util.List<String> notes = new java.util.ArrayList<>(bits);

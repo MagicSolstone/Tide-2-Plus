@@ -536,7 +536,7 @@ public final class GearCheck {
         if (stringOnly.contains("redstone_line") || stringOnly.contains("bamboo_fishing_rod")) problem("string alone unlocks too much: " + stringOnly);
         List<String> hooks = by.apply(List.of(Items.DIAMOND));
         if (hooks.contains("diamond_hook")) problem("a diamond alone unlocks the diamond hook (it should need a Tier 1 hook too)");
-        if (!by.apply(List.of(Items.DIAMOND, BuiltInRegistries.ITEM.getValue(Tide.resource("bone_hook")))).contains("diamond_hook")) problem("a bone hook and a diamond don't unlock the diamond hook");
+        if (!by.apply(List.of(Items.DIAMOND, BuiltInRegistries.ITEM.getValue(Tide.resource("fish_bone_hook")))).contains("diamond_hook")) problem("a fish bone hook and a diamond don't unlock the diamond hook");
         for (var e : entries)
             if (List.of("redstone_line", "bamboo_fishing_rod", "diamond_hook", "iron_rod_smithing", "spinner_lure", "bait", "fishing_line").contains(e.id().getPath()))
                 notes.add("discovery: " + e.id().getPath() + " needs " + com.li64.tide.data.tackle.TackleUnlocks.needs(e));
@@ -547,10 +547,10 @@ public final class GearCheck {
         if (diamond != null && diamond.holder().value() instanceof ShapelessRecipe r) {
             List<ItemStack> in = new ArrayList<>();
             for (Ingredient i : diamond.ingredients())
-                in.add(i.test(new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("bone_hook")))) ? new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("bone_hook")))
+                in.add(i.test(new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("fish_bone_hook")))) ? new ItemStack(BuiltInRegistries.ITEM.getValue(Tide.resource("fish_bone_hook")))
                         : new ItemStack(i.items().findFirst().orElseThrow().value()));
             ItemStack out = r.assemble(CraftingInput.of(in.size(), 1, in));
-            if (!"bone_hook".equals(RodEffects.baseHook(out))) problem("diamond hook made on a bone hook at the table forgot it: " + RodEffects.baseHook(out));
+            if (!"fish_bone_hook".equals(RodEffects.baseHook(out))) problem("diamond hook made on a fish bone hook at the table forgot it: " + RodEffects.baseHook(out));
             else notes.add("angling table: diamond hook on a bone hook keeps it");
         }
     }

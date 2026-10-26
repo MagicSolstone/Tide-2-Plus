@@ -237,7 +237,7 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
     public void extractBackground(@NotNull GuiGraphicsExtractor g, int mouseX, int mouseY, float a) {
         super.extractBackground(g, mouseX, mouseY, a);
         com.li64.tide.client.gui.BenchStyle.frame(g, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
-        g.blit(RenderPipelines.GUI_TEXTURED, BG, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        com.li64.tide.client.gui.BenchStyle.panel(g, BG, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
         if (ghost != null) drawGhost(g);
         if (bookOpen) drawBook(g, mouseX, mouseY);
     }

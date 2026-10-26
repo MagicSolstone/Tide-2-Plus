@@ -12,6 +12,14 @@ public final class BenchStyle {
     private static final int EDGE = 0xFF2E1D10, WOOD = 0xFF6B4527, WOOD_LIGHT = 0xFF8A5E37, GRAIN = 0xFF5A3A20,
             BRASS = 0xFFC9A44A, BRASS_DARK = 0xFF8C6E2A;
 
+    /** Multiplied into the bench's grey panel texture as it is drawn: the grey turns to oiled wood, the slots to darker wood. */
+    public static final int WOOD_TINT = 0xFFFFCE89;
+
+    /** The panel texture, drawn in wood (draw it after the screen's own background, which dims everything under it). */
+    public static void panel(GuiGraphicsExtractor g, net.minecraft.resources.Identifier texture, int x, int y, int w, int h) {
+        g.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, texture, x, y, 0, 0, w, h, 256, 256, WOOD_TINT);
+    }
+
     /** A wooden frame just outside the screen's own panel (x, y, w, h: the panel). */
     public static void frame(GuiGraphicsExtractor g, int x, int y, int w, int h) {
         int x0 = x - 5, y0 = y - 5, x1 = x + w + 5, y1 = y + h + 5;

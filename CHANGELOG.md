@@ -10,6 +10,12 @@ The pieces of a rig already have their own perks for its place or time, so the r
 - **Moonlight rig at Tier 2**: +1 luck (was +2), still with +25% catch quality toward a full moon.
 - **Lucky rig at Tier 2**: +1 luck and +10% catch quality (was +2 luck).
 - **Storm rig in a thunderstorm** stacked the most: the copper line and copper bobber no longer add luck in a thunderstorm, and the storm lure adds +1 luck there (was +2).
+- **Outliers trimmed** (measured: every rig's strongest kit with everything active, side by side):
+  - **Ocean**: the conduit rod gives +15% rare finds in oceans (was +30%), and the turtle bobber only bite speed there. Its best kit drops from +70% to about +45% rare finds.
+  - **Storm**: the copper rod's thunder quality is gone, and the storm lure gives +10% quality in a thunderstorm (was +15%). Best kit quality about +50% (was +65%).
+  - **Fire**: the magma lure no longer eases the fight, and the lavaproof hook eases it 5% (was 10%). Best kit fight -35% (was -50%); still the strongest rig, fit for netherite.
+  - **Lucky rig** works anywhere, so it was the strongest of all for rare finds: Tier 1 is now +5% catch quality, Tier 2 +1 luck and +5% quality, and the lucky hook's full-moon luck is gone (it is a Lucky rig piece). Best kit about +45% rare finds (was +63%).
+  - **Diamond rig** works anywhere too: +5% catch quality at Tier 1, +10% at Tier 2 (was +10% and +25%). Best kit about +33% quality (was +48%).
 
 ## Three rigs on a rod
 - **A rod now carries up to three rigs** (was two). With six slots, bait included, three rigs only fit as three Tier 1s (2 pieces each), a fair trade for having no Tier 2 rig.
@@ -40,6 +46,7 @@ Conditions only one or two pieces had (forest, new moon, mushroom fields, beach)
 - **Rig cards show up to 6 rigs**: a full card for each rig that is working, and a one-line header for the rest (a rig with one piece, or one past the three a rod carries). Each header has two boxes, Tier 1 and Tier 2, that fill in as the rig reaches them. Hover any card or header to see both bonuses and what could still go on.
 
 ## Rods
+- **No blank tooltips**: the stone rod and the plain bobber say they have no perks of their own and what they add to the Stone rig, and the kid's rod shows its -30% catch quality as a number.
 - **Every rod tooltip says what it does in numbers**: the amethyst pieces show their catch quality on a full moon (rod +8%, hook +6%, bobber +5%, line +4%), the diamond rod "+1 to 4 experience with each catch", and the Midas and village rods name the bonus item they bring up with every catch. The echo and crystal rods say exactly what they show and play.
 - **A rod's tooltip shows its totals**: with tackle on it, the rod lists what it all adds up to, always-on and then each place or time (a bamboo rod, vine line and apple bobber: +50% bite speed in jungles). It used to list only the rod's own perks, though the pieces always counted.
 - **Rod icons are plain again**: the small rig gems are gone.

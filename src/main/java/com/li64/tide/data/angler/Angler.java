@@ -273,6 +273,16 @@ public final class Angler {
             sum += add;
             if (add > 0) parts.add("+" + add + " tackle");
         }
+        // the village rod teaches: a catch near another player holding one is worth 10% more XP
+        boolean taught = !player.level().getEntitiesOfClass(net.minecraft.world.entity.player.Player.class, player.getBoundingBox().inflate(16),
+                p -> p != player && (p.getMainHandItem().is(com.li64.tide.registries.TideItems.VILLAGE_FISHING_ROD)
+                        || p.getOffhandItem().is(com.li64.tide.registries.TideItems.VILLAGE_FISHING_ROD))).isEmpty();
+        if (taught) {
+            long add = Math.round(xp * 1.10) - sum;
+            xp *= 1.10;
+            sum += add;
+            if (add > 0) parts.add("+" + add + " fishing buddy");
+        }
         long total = sum;
         int levelBefore = levelForXp(Data.of(player).xp);
         addXp(player, total, extra, false);

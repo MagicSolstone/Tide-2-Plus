@@ -362,7 +362,11 @@ public class TideFishingRodItem extends FishingRodItem {
         if (activeHook != null) {
             if (!level.isClientSide()) {
                 int durabilityLoss = activeHook.retrieve(rod, (ServerLevel) level, player);
-                rod.hurtAndBreak(durabilityLoss, player, player.getUsedItemHand().asEquipmentSlot());
+                // the Stone set: each point of wear only lands some of the time
+                double wear = com.li64.tide.data.rods.RigSets.wear(rod);
+                int loss = 0;
+                for (int i = 0; i < durabilityLoss; i++) if (wear >= 1 || level.getRandom().nextDouble() < wear) loss++;
+                if (loss > 0) rod.hurtAndBreak(loss, player, player.getUsedItemHand().asEquipmentSlot());
             }
 
             level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_RETRIEVE,

@@ -81,6 +81,11 @@ public class BaitUtils {
             builder.add(Component.translatable("text.tide.bait_tooltip.crate",
                     (crateChance < 0 ? "" : "+") + crateChance + "%").withStyle(ChatFormatting.BLUE));
 
+        if (bait.is(com.li64.tide.registries.TideItems.CUT_BAIT)) {
+            var q = com.li64.tide.data.rods.CutBait.quality(bait);
+            builder.add(Component.literal(q.label + " cut bait: " + (q == com.li64.tide.data.angler.CatchQuality.MYTHIC ? "only rare or rarer fish bite"
+                    : "at least " + Math.round(com.li64.tide.data.rods.CutBait.rareShare(q) * 100) + "% of bites are rare or rarer")).withStyle(ChatFormatting.BLUE));
+        }
         if (!builder.isEmpty()) builder.add(0, Component.translatable("text.tide.bait_tooltip.prefix").withStyle(ChatFormatting.GRAY));
         else builder.add(0, Component.translatable("text.tide.bait_tooltip.unknown_effects").withStyle(ChatFormatting.GRAY));
 

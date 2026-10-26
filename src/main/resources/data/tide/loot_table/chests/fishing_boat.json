@@ -151,6 +151,36 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:fishing_line",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:fishing_hook",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:iron_bobber",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:stone_fishing_rod",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:iron_fishing_rod",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:golden_hook",
+          "weight": 1
         }
       ]
     }

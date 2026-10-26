@@ -128,89 +128,89 @@
       "conditions": [
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.15
+          "chance": 0.3
         }
       ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "tide:silk_line",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:vine_line",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:braided_line",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:honey_line",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:wooden_hook",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:copper_hook",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:barbed_hook",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:feathered_hook",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:feather_bobber",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:duck_bobber",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:lily_pad_bobber",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:grassy_bobber",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:fly_lure",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:popper_lure",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:spinner_lure",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:dough_ball",
-          "weight": 1,
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -225,7 +225,7 @@
         {
           "type": "minecraft:item",
           "name": "tide:glow_worms",
-          "weight": 1,
+          "weight": 3,
           "functions": [
             {
               "function": "minecraft:set_count",
@@ -236,6 +236,61 @@
               }
             }
           ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:fishing_line",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:fishing_hook",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:stone_hook",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:iron_line",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:iron_bobber",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:stone_fishing_rod",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:iron_fishing_rod",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:golden_line",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:golden_hook",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:golden_bobber",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "tide:diamond_hook",
+          "weight": 1
         }
       ]
     },

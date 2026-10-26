@@ -21,6 +21,7 @@ public final class FishingRandomSelector {
                 .map(entry -> new Pair<>(entry, entry.weight(context)))
                 .filter(pair -> pair.getSecond() > 0) // remove 0-weight pairs
                 .toList();
+        weightedValues = com.li64.tide.data.rods.CutBait.apply(weightedValues, context);     // cut bait leans the fish toward the rare ones
 
         if (weightedValues.isEmpty()) return CatchResult.empty();
         if (testResults != null) weightedValues.forEach(pair -> {

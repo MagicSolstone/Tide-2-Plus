@@ -77,7 +77,7 @@ public class TideFishingHookRenderer extends EntityRenderer<TideFishingHook, Tid
     @Override
     protected int getBlockLightLevel(TideFishingHook hook, net.minecraft.core.BlockPos pos) {
         // the glow hook (and its bobber) glow in the dark, like a glow squid
-        return hook.getHook().is(com.li64.tide.registries.TideItems.GLOW_HOOK) ? 15 : super.getBlockLightLevel(hook, pos);
+        return hook.getHook().is(com.li64.tide.registries.TideItems.GLOW_HOOK) || hook.getBobber().is(com.li64.tide.registries.TideItems.LICHEN_BOBBER) ? 15 : super.getBlockLightLevel(hook, pos);
     }
 
     @Override

@@ -88,7 +88,11 @@ public class FishCatchMinigame {
             hook.pendingQuality = q;
             speed *= (float) q.fightSpeed();
             zoneScale *= q.zoneScale();
-            if (q.ordinal() >= com.li64.tide.data.angler.CatchQuality.TROPHY.ordinal())
+            // the crystal rod sees into the water: it tells you how good the fish is as it bites
+            if (hook.getRod().is(com.li64.tide.registries.TideItems.CRYSTAL_FISHING_ROD))
+                player.sendOverlayMessage(net.minecraft.network.chat.Component.literal("Crystal rod: a " + q.label + " fish!")
+                        .withStyle(s -> s.withColor(q.color)));
+            else if (q.ordinal() >= com.li64.tide.data.angler.CatchQuality.TROPHY.ordinal())
                 player.sendOverlayMessage(net.minecraft.network.chat.Component.literal(
                         q == com.li64.tide.data.angler.CatchQuality.MYTHIC ? "This one feels enormous!" : "Something big is on the line!")
                         .withStyle(s -> s.withColor(q.color)));
@@ -175,6 +179,11 @@ public class FishCatchMinigame {
         if (cancelIfNecessary()) return;
         Angler.Hook hook = Angler.Hook.of(Math.abs(accuracy), zones);
         double chance = hook.landChance >= 1.0 || hook.landChance <= 0.0 ? hook.landChance : Math.min(1.0, hook.landChance + gear.land());
+        // the barbed hook: nothing shakes loose (Good and Bad always land), but a perfect hook is only a Great one
+        if (this.hook.getHook().is(com.li64.tide.registries.TideItems.BARBED_HOOK)) {
+            if (hook == Angler.Hook.PERFECT) hook = Angler.Hook.GREAT;
+            if (hook == Angler.Hook.GOOD || hook == Angler.Hook.BAD) chance = 1.0;
+        }
         // CI: the scripted click's timing varies, so always land the fish and test the whole catch every build
         boolean landed = Tide.CI || chance >= 1.0 || player.getRandom().nextDouble() < chance;
         if (!landed && hook != Angler.Hook.TERRIBLE)

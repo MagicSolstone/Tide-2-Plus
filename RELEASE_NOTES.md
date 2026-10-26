@@ -1,42 +1,29 @@
-# Tide+ 1.0.20
+# Tide+ 1.1.0
 
-Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.19).
+Install the same way: the jar in `mods/` on the server and every client (replaces 1.0.20).
 
-## Rod panel
-- **Every stat is always shown** (no more sneaking): cast range, bite speed, hook window, luck, catch quality, fishing XP, land Good/Bad, fish fight, catch difficulty, second fish and comes up cooked. A dash means the gear gives none of that, so two rods are easy to compare. Enchantments get no rows of their own.
-- **Lure folds into bite speed.** The Lure enchantment, bait and a rod's own speed count as bite speed, added to the bite speed from your tackle, rigs and level. One number, +% like everything else.
+## Material sets
+New always-on sets (2 pieces give the small bonus, 3 or more the full one), so the basic tackle has a role:
+- **Stone set** (stone rod, stone hook, plain line): the rod wears half as fast with two pieces, and barely at all with three.
+- **Gold set** (golden rod or Midas rod, golden line, hook, bobber, golden spoon lure): +10% fishing XP; with three, +20% XP and a 25% chance of a gold nugget with each fish.
+- **Diamond set** (diamond rod, line, hook, bobber): the catch-quality set. +10% catch quality, +25% with three. The diamond bobber now gives catch quality (+8%) instead of bite speed.
+- **Amethyst set** (amethyst rod, line, hook, bobber): amethyst now **bites faster in sunlight**, rising toward noon and gone by dusk (up to +55% bite speed for all four pieces at noon, nothing at night). It no longer gives catch quality. Two pieces bring up an amethyst shard 10% of the time, three 20%.
+- **Honey set** (honeycomb rod, honey line, honey bobber): a 15% chance of a honeycomb with each fish; with three, a 25% chance of a honey bottle and an easier landing.
+- Iron (the sword), Copper (Storm rig) and Netherite (Fire rig) are unchanged.
 
-## Bite speed
-- **One stacked number with diminishing returns** (no hard cap). Each point of Lure/bait speed is worth +6% (it used to cut the wait by a lot more). Bite speed counts in full up to +50%, half as much from +50% to +100%, and a quarter as much past that, so the fastest possible rod is still well short of instant and most of the speed comes from your tackle.
+## Cut bait and chum
+- **Cut bait remembers the fish it was cut from**, and better fish make better bait: with it on the rod, at least this share of bites are rare, very rare or legendary (where rare fish live at all): Poor 15%, Average 20%, Good 30%, Great 45%, Trophy 75%, Mythic every time. Cut it at the Angling Table from a fish and flint (4 per fish).
+- **Chum the water**: when a hook with chum on the rod settles, the water around it is chummed for 2 minutes, and **everyone** fishing within 12 blocks bites 25% faster.
 
-## Catch quality
-- **"Quality bump" is gone.** Gear that had a chance to raise the catch a tier (amethyst rod and bobber, barbed hook, golden bait, and every full rig) now gives more catch quality instead (about 60% of the old bump chance, added to its quality). Mythic stays as rare as it was meant to be.
-- **A perfect hook can still raise a fish a tier, but never to Mythic** (Trophy is the top).
+## Tackle with a trick
+- **Fish bone hook takes the bone hook's place** (its stats, its Desert rig spot, and it is a Tier 1 hook). The bone hook is no longer made; an old one still works on a rod and can be turned into a fish bone hook at the table.
+- **Stone hook** sinks to the bottom: a 15% chance of kelp and 10% of seagrass with each fish.
+- **Emerald hook**: +10% fishing XP and a 3% chance of an emerald with each fish.
+- **Barbed hook**: fish never shake loose (Good and Bad hooks always land), but there are no perfect hooks.
+- **Heart bobber** heals you a heart with each fish.
+- **Lichen bobber** glows (lights the water like the glow hook), bites 20% faster underground, and joins the Cave rig.
+- **Village rod** teaches: players fishing within 16 blocks of you get +10% fishing XP.
+- **Crystal rod** tells you how good a fish is the moment it bites.
 
-## Amethyst is a daytime set
-- **The amethyst rod, hook, line and bobber are strongest by day** (crystals catch the light) and only a little useful at night. By day a full amethyst set gives more catch quality than before; at night about a fifth as much. Place-and-time rigs still beat it where they apply.
-
-## Luck is now "Rare finds"
-- **Luck shows as a percentage**: "Rare finds +15%" per point, on the rod panel, item tooltips and the angler page (the old "+1 luck" is the same thing). It makes the rare fish (the ones with a luck bonus) more likely by that share of their own chance, so every rare fish benefits the same.
-- **Crates are less luck-driven**: luck now adds +4% a point to the crate chance, up to +40% (it was +10% a point, up to +100%).
-- The journal's luck requirement (the Midas fish) is shown as a percentage too.
-
-## Fish sizes overlap
-- **Each quality is its own bell curve of sizes**, centred higher for better fish but overlapping: a Mythic can be a small fish, and an Average one can, rarely, be a big one. Sizes keep growing slowly past the old top instead of stopping at a hard cap, so there is no size that can never be beaten. For a trout-shaped fish (typically 30-60 cm): an Average one is usually 0.7-4 lb, a Mythic usually 4.6-23 lb, about 13 lb at the median.
-- **The catch line in chat shows how your fish compares with the server record** when you hover it.
-
-## Iron rig
-- **Hitting mobs wears the rod down** (1 durability per hit, like a sword). A rod worn out by other things stops at broken until repaired, but:
-- **An iron-rig rod at its last point of durability breaks for real** when it hits something (its line, hook, bobber and lure drop).
-
-## Rare finds and bite speed both soften
-- **Rare finds use the same diminishing returns as bite speed**: full value up to +50%, half from +50% to +100%, a quarter past that. "+150%" never means a guaranteed rare fish: it means each rare fish is that much more likely than its own normal chance (a 2-in-100 fish at +100% is about 4-in-100).
-- **Every luck and speed number is a percentage now**: bait tooltips ("+30% rare finds", "+12% bite speed"), rod tooltips, `/fishinglevel` and the angler page. Nothing says "luck" or "fishing speed" points any more.
-
-## Balance
-- **Pearl bobber**: +10% catch quality (was +20%; it costs one ender pearl). Its full-moon quality and beach rare finds are unchanged.
-- **Diamond hook**: +15% hook window, +5% catch quality, +5% landing (was +12% window, +5% landing), so it is worth more than the circle hook for anything but landing.
-- **Circle hook**: +5% hook window (was +10%); still +40% to land Good and Bad hooks and an easier fight.
-- **Diamond bobber**: +15% bite speed (was +12%). **Lichen bobber**: +6% (was +10%; glow lichen is easy to find).
-- **Cherry rod**: +40% bite speed at dawn and dusk (was +60%).
-- **Wayfinder rod grows with distance**: within 500 blocks of world spawn it is a sturdy all-rounder (cast range, hook window, an easier fight, landing). From there out it gains catch quality, rare finds and fishing XP, reaching +15% quality, +30% rare finds and +10% XP at 5,000 blocks (a Nether block counts as 8). Close to home it is weaker than before; far away, a little stronger.
+## Crates
+- **Basic tackle turns up more, the best tackle very rarely.** Fishing crates hold tackle a little more often (30%, was 15%), now including plain lines and hooks, stone and iron pieces; golden pieces are rare, and a diamond hook, line or bobber (or netherite in Nether crates) is about 1 crate in 200. The fishing boat chest has a few basics too.

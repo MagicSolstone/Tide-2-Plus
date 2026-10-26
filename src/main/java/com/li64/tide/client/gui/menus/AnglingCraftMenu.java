@@ -82,6 +82,14 @@ public class AnglingCraftMenu extends AbstractContainerMenu {
         if (container != this.grid || this.player.level().isClientSide()) return;
         var m = TackleRecipes.match(this.grid.asPositionedCraftInput().input(), this.player.level());
         ItemStack out = m == null ? ItemStack.EMPTY : m.result().copy();
+        // cut bait keeps the quality of the fish it was cut from (the best fish in the grid)
+        if (out.is(com.li64.tide.registries.TideItems.CUT_BAIT)) {
+            int best = -1;
+            for (int i = 0; i < this.grid.getContainerSize(); i++)
+                best = Math.max(best, com.li64.tide.data.item.TideItemData.FISH_QUALITY.getOrDefault(this.grid.getItem(i), -1));
+            com.li64.tide.data.angler.CatchQuality.mark(out, best < 0 ? com.li64.tide.data.angler.CatchQuality.AVERAGE
+                    : com.li64.tide.data.angler.CatchQuality.byId(best));
+        }
         this.resultCount = out.getCount();
         this.lastResult = out.copy();
         this.result.setItem(0, out);

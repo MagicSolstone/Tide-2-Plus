@@ -86,24 +86,24 @@
       "conditions": [
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.15
+          "chance": 0.3
         }
       ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "tide:chorus_bobber",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:chorus_lure",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:void_hook",
-          "weight": 1
+          "weight": 3
         }
       ]
     },

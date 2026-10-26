@@ -86,6 +86,12 @@ Data you edit without touching Java lives in `src/main/resources/`:
 | Server record announcement and effects | `ServerRecords.announce` | sound, chat line, particles |
 | How much luck helps (Rare finds %) | `RodEffects.RARE_PER_LUCK` (display and rare fish, via `FishData.weight`), `CrateSelector.MAX_LUCK_BONUS` (crates) | Luck points are still whole numbers inside; the panel shows them as a percentage. |
 | How big fish are | `CatchQuality.sampleLength` | One bell curve per quality; edit the centre and spread numbers. |
+| Material sets (Stone, Gold, Diamond, Amethyst, Honey) and their drops | `RigSets.SETS` (the `When.ALWAYS` ones), `RigSets.SET_DROPS`, `RigSets.wear` (Stone) | |
+| Amethyst's sunlight bite speed | `RodEffects.AMETHYST_BITE`, `RodEffects.noon` | |
+| Things a hook or bobber brings up | `RodEffects.PART_DROPS` (stone hook seaweed, emerald hook emeralds) | |
+| Cut bait strength by fish quality | `data/rods/CutBait.java` (`rareShare`) | |
+| Chummed water (radius, time, bonus) | `data/rods/ChumZones.java` | |
+| Tackle in crates | `resources/data/tide/loot_table/chests/crates/*.json` (pool 3: weights and chance) | |
 | The text on the catch card | `Angler.banner` (what goes on it), `CatchBannerOverlay` (how it is drawn) | A line starting `*` is purple, `~` yellow, otherwise white. |
 | The rod stats panel on the right | `client/gui/overlays/RodStatsOverlay.java` | One row per stat, always shown (a dash when the gear gives nothing). |
 | Which hooks are Tier 1 / Tier 2 | `RodEffects.BASE_HOOKS` / `UPGRADED_HOOKS` | |

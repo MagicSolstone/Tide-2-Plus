@@ -32,17 +32,21 @@ public final class RigSets {
     public record RigSet(String name, When when, RodEffects two, RodEffects full, Set<String> members, String twoNote, String note) {
         /** The full (3-piece) bonus in words, with where it works. */
         public String bonusText() {
-            return text(full) + (note.isEmpty() ? "" : "; " + note);
+            return join(text(full), note);
         }
 
         /** The 2-piece bonus in words, with where it works. */
         public String twoText() {
-            return text(two) + (twoNote.isEmpty() ? "" : "; " + twoNote);
+            return join(text(two), twoNote);
+        }
+
+        private static String join(String numbers, String note) {
+            return numbers.isEmpty() ? note : note.isEmpty() ? numbers : numbers + "; " + note;
         }
 
         private String text(RodEffects fx) {
-            return String.join(", ", fx.describe(ChatFormatting.WHITE).stream().map(Component::getString).toList()).toLowerCase()
-                    + (when.text.isEmpty() ? "" : " " + when.text);
+            String numbers = String.join(", ", fx.describe(ChatFormatting.WHITE).stream().map(Component::getString).toList()).toLowerCase();
+            return numbers.isEmpty() ? "" : numbers + (when.text.isEmpty() ? "" : " " + when.text);
         }
 
         /** What this many pieces give (nothing below two). */
@@ -87,17 +91,58 @@ public final class RigSets {
             set("Swamp rig", When.SWAMP, BITE_2, LUCK_BITE_3, "mangrove_fishing_rod", "slime_line", "lily_pad_bobber", "slime_bobber",
                     "frog_lure", "swamp_bait"),
             set("Jungle rig", When.JUNGLE, QUALITY_2, LUCK_QUALITY_3, "bamboo_fishing_rod", "vine_line", "apple_bobber", "jungle_bait"),
-            set("Desert rig", When.DRY, BITE_2, LUCK_BITE_3, "cactus_fishing_rod", "golden_line", "golden_hook", "bone_hook",
+            set("Desert rig", When.DRY, BITE_2, LUCK_BITE_3, "cactus_fishing_rod", "golden_line", "golden_hook", "fish_bone_hook",
                     "cactus_bobber", "desert_bait"),
             set("Frost rig", When.COLD, BITE_2, rig(0.20, 1, 0.42, 0), "frost_fishing_rod", "permafrost_hook",
                     "snowball_bobber", "ice_jig_lure", "frost_bait"),
-            set("Cave rig", When.UNDERGROUND, QUALITY_2, LUCK_QUALITY_3, "echo_fishing_rod", "slime_line", "echo_bobber", "sculk_bobber",
+            set("Cave rig", When.UNDERGROUND, QUALITY_2, LUCK_QUALITY_3, "echo_fishing_rod", "slime_line", "echo_bobber", "sculk_bobber", "lichen_bobber",
                     "jig_lure", "echo_lure", "cave_grubs", "dripstone_bait", "sculk_bait"),
             set("Fire rig", When.LAVA, QUALITY_2, LUCK_QUALITY_3, "blazing_fishing_rod", "netherite_fishing_rod", "netherite_line",
                     "lavaproof_hook", "fiery_hook", "netherite_bobber", "magma_lure"),
             set("Void rig", When.END, BITE_2, LUCK_BITE_3, "void_hook", "chorus_bobber", "chorus_lure"),
             new RigSet("Iron rig", When.ALWAYS, new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0), new RodEffects(0, 0, 0.10, -0.10, 0, 0, 0, 0),
-                    Set.of("iron_fishing_rod", "iron_line", "fishing_hook", "iron_bobber"), IRON_TWO_NOTE, IRON_NOTE));
+                    Set.of("iron_fishing_rod", "iron_line", "fishing_hook", "iron_bobber"), IRON_TWO_NOTE, IRON_NOTE),
+            // the material sets: always on, a little weaker than a place-and-time rig in its own place, each with its own twist
+            new RigSet("Stone set", When.ALWAYS, RodEffects.NONE, RodEffects.NONE,
+                    Set.of("stone_fishing_rod", "stone_hook", "fishing_line"), "the rod wears half as fast", "the rod barely wears"),
+            new RigSet("Gold set", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.10), new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.20),
+                    Set.of("golden_fishing_rod", "midas_fishing_rod", "golden_line", "golden_hook", "golden_bobber", "golden_spoon_lure"),
+                    "", "25% chance of a gold nugget with each fish"),
+            new RigSet("Diamond set", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0.10, 0, 0), new RodEffects(0, 0, 0, 0, 0, 0.25, 0, 0),
+                    Set.of("diamond_fishing_rod", "diamond_line", "diamond_hook", "diamond_bobber"), "", ""),
+            new RigSet("Amethyst set", When.ALWAYS, RodEffects.NONE, RodEffects.NONE,
+                    Set.of("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber"),
+                    "10% chance of an amethyst shard with each fish", "20% chance of an amethyst shard with each fish"),
+            new RigSet("Honey set", When.ALWAYS, RodEffects.NONE, new RodEffects(0, 0, 0, 0, 0, 0, 0.10, 0),
+                    Set.of("honeycomb_fishing_rod", "honey_line", "honey_bobber"),
+                    "15% chance of a honeycomb with each fish", "25% chance of a honey bottle with each fish"));
+
+    /** What a set brings up with each fish: at two pieces, and at three or more (by set name). */
+    private record SetDrops(List<RodEffects.Drop> two, List<RodEffects.Drop> full) {}
+    private static final java.util.Map<String, SetDrops> SET_DROPS = java.util.Map.of(
+            "Gold set", new SetDrops(List.of(), List.of(new RodEffects.Drop("minecraft:gold_nugget", 0.25, 0, "Gold set: 25% chance of a gold nugget"))),
+            "Amethyst set", new SetDrops(List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.10, 0, "Amethyst set: 10% chance of an amethyst shard")),
+                    List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.20, 0, "Amethyst set: 20% chance of an amethyst shard"))),
+            "Honey set", new SetDrops(List.of(new RodEffects.Drop("minecraft:honeycomb", 0.15, 0, "Honey set: 15% chance of a honeycomb")),
+                    List.of(new RodEffects.Drop("minecraft:honey_bottle", 0.25, 0, "Honey set: 25% chance of a honey bottle"))));
+
+    /** The extra things this rod's sets bring up with each fish. */
+    public static List<RodEffects.Drop> drops(ItemStack rod) {
+        List<RodEffects.Drop> out = new ArrayList<>();
+        for (RigSet set : SETS) {
+            SetDrops d = SET_DROPS.get(set.name());
+            if (d == null) continue;
+            int n = pieces(set, rod);
+            out.addAll(n >= PIECES ? d.full() : n >= HALF ? d.two() : List.of());
+        }
+        return out;
+    }
+
+    /** The share of normal wear a rod takes (the Stone set: half at two pieces, a tenth at three). */
+    public static double wear(ItemStack rod) {
+        int n = SETS.stream().filter(s -> s.name().equals("Stone set")).mapToInt(s -> pieces(s, rod)).max().orElse(0);
+        return n >= PIECES ? 0.1 : n >= HALF ? 0.5 : 1.0;
+    }
 
     private static String path(ItemStack s) {
         return BuiltInRegistries.ITEM.getKey(s.getItem()).getPath();

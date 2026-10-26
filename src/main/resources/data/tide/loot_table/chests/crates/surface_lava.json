@@ -72,24 +72,24 @@
       "conditions": [
         {
           "condition": "minecraft:random_chance",
-          "chance": 0.15
+          "chance": 0.3
         }
       ],
       "entries": [
         {
           "type": "minecraft:item",
           "name": "tide:fiery_hook",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:magma_lure",
-          "weight": 1
+          "weight": 3
         },
         {
           "type": "minecraft:item",
           "name": "tide:lavaproof_hook",
-          "weight": 1
+          "weight": 3
         }
       ]
     },

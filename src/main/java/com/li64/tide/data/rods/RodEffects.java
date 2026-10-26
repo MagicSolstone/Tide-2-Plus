@@ -89,7 +89,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("midas_fishing_rod", new RodEffects(0, 0, 0, 0, 1, 0.10, 0, 0.10)),
             Map.entry("kids_fishing_pole", new RodEffects(0, 0.10, 0.15, -0.20, -1, -0.30, 0.10, 0)),
             Map.entry("bamboo_fishing_rod", cast(0.05)),
-            Map.entry("amethyst_fishing_rod", quality(0.02)),      // (its real strength is by day: see SITUATIONAL)
+            Map.entry("amethyst_fishing_rod", NONE),      // its bite speed follows the sun: see amethyst()
             Map.entry("cherry_fishing_rod", xp(0.15)),
             Map.entry("conduit_fishing_rod", new RodEffects(0, 0, 0.10, -0.05, 0, 0.05, 0, 0)),
             Map.entry("clockwork_fishing_rod", new RodEffects(0, 0, 0.05, 0, 0, 0, 0, 0.10)),
@@ -106,21 +106,21 @@ public record RodEffects(double cast, double bite, double window, double fight, 
 
     /** Hooks with their own perk, on top of every hook's wider window. */
     private static final Map<String, RodEffects> HOOKS = Map.ofEntries(
-            Map.entry("stone_hook", fight(-0.03)),
+            Map.entry("stone_hook", fight(-0.03)),      // sinks to the bottom: brings up seaweed (PART_DROPS)
             Map.entry("copper_hook", bite(0.05)),
             Map.entry("golden_hook", xp(0.10)),      // its luck is only in deserts and badlands (situational), so it isn't the default pick
             Map.entry("diamond_hook", new RodEffects(0, 0, 0.15, 0, 0, 0.05, 0.05, 0)),
-            Map.entry("emerald_hook", xp(0.15)),
-            Map.entry("amethyst_hook", quality(0.03)),
+            Map.entry("emerald_hook", xp(0.10)),      // and the odd emerald (PART_DROPS)
+            Map.entry("amethyst_hook", NONE),
             Map.entry("netherite_hook", new RodEffects(0, 0, 0.10, -0.10, 0, 0.05, 0, 0)),
             Map.entry("bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.05, 0)),
             Map.entry("prismarine_hook", bite(0.05)),
             Map.entry("glow_hook", bite(0.12)),
             Map.entry("feathered_hook", new RodEffects(0.05, 0.08, 0, 0, 0, 0, 0, 0)),
-            Map.entry("barbed_hook", quality(0.06)),      // holds on to the better fish (the circle hook is the landing one)
+            Map.entry("barbed_hook", NONE),      // its trick: fish never shake loose, but no perfect hooks (FishCatchMinigame.handleHook)
             Map.entry("treble_hook", new RodEffects(0, 0, 0, 0.05, 0, 0, 0, 0, 0.12, 0)),
             Map.entry("circle_hook", new RodEffects(0, 0, 0.05, -0.05, 0, 0, 0.40, 0)),      // the landing hook: sets deep, so Good and Bad hooks hold and the fish tires sooner
-            Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0, 0.08)),
+            Map.entry("fish_bone_hook", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.05, 0)),      // took over from the bone hook (still works if you have one)
             Map.entry("lucky_hook", new RodEffects(0, 0, 0, 0, 1, 0, 0, 0)));
 
     /** Hooks made from raw materials: an upgrade made on one of these keeps its perks (iron is the plain one). */
@@ -163,7 +163,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("honey_line", land(0.05)),
             Map.entry("silk_line", bite(0.08)),
             Map.entry("phantom_line", new RodEffects(0.10, 0, 0.05, 0, 0, 0, 0, 0)),
-            Map.entry("amethyst_line", quality(0.02)),
+            Map.entry("amethyst_line", NONE),
             Map.entry("netherite_line", new RodEffects(0, 0, 0, -0.08, 0, 0, 0.05, 0)),
             Map.entry("braided_line", new RodEffects(0, 0, 0, -0.05, 0, 0, 0.10, 0)),
             Map.entry("redstone_line", new RodEffects(0, 0, 0, 0, 0, 0, 0, 0, 0, 0.20)));
@@ -175,16 +175,16 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("enchanted_golden_apple_bobber", new RodEffects(0, 0, 0, 0, 1, 0.12, 0, 0)),
             Map.entry("iron_bobber", window(0.08)),
             Map.entry("golden_bobber", xp(0.10)),
-            Map.entry("diamond_bobber", bite(0.15)),
+            Map.entry("diamond_bobber", quality(0.08)),      // diamond is the catch-quality material
             Map.entry("netherite_bobber", new RodEffects(0, 0, 0.05, -0.10, 0, 0, 0, 0)),
-                        Map.entry("amethyst_bobber", quality(0.01)),   // (amethyst gear shines by day: see SITUATIONAL)
+                        Map.entry("amethyst_bobber", NONE),
             Map.entry("echo_bobber", xp(0.15)),
             Map.entry("chorus_bobber", cast(0.15)),
             Map.entry("feather_bobber", new RodEffects(0.10, 0.05, 0, 0, 0, 0, 0, 0)),
-            Map.entry("lichen_bobber", bite(0.06)),
+            Map.entry("lichen_bobber", bite(0.05)),      // glows like the glow hook; strong underground (Cave rig)
             Map.entry("nautilus_bobber", new RodEffects(0, 0, 0.05, -0.05, 0, 0, 0, 0)),
             Map.entry("pearl_bobber", quality(0.10)),      // one ender pearl: its big quality is on a full moon
-            Map.entry("heart_bobber", land(0.15)),
+            Map.entry("heart_bobber", land(0.10)),      // and heals a heart with each fish (TideFishingHook)
             Map.entry("grassy_bobber", bite(0.08)),
             Map.entry("duck_bobber", xp(0.05)),
             Map.entry("slime_bobber", land(0.10)),
@@ -307,6 +307,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("feathered_hook", List.of(new Perk(When.DAWN_DUSK, quality(0.10)))),
             Map.entry("golden_hook", List.of(new Perk(When.DRY, luck(1)))),
             Map.entry("bone_hook", List.of(new Perk(When.DRY, bite(0.15)))),
+            Map.entry("fish_bone_hook", List.of(new Perk(When.DRY, bite(0.15)))),
+            Map.entry("lichen_bobber", List.of(new Perk(When.UNDERGROUND, bite(0.20)))),
             // bobbers
             Map.entry("glow_berry_bobber", List.of(new Perk(When.NIGHT, bite(0.15)))),
             Map.entry("pumpkin_bobber", List.of(new Perk(When.NIGHT, xp(0.15)))),
@@ -349,11 +351,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             Map.entry("frog_lure", List.of(new Perk(When.SWAMP, bite(0.20)))),
             Map.entry("squid_lure", List.of(new Perk(When.OCEAN, new RodEffects(0, 0.10, 0.05, 0, 0, 0, 0, 0)), new Perk(When.BEACH, bite(0.15)))),
             Map.entry("ice_jig_lure", List.of(new Perk(When.COLD, new RodEffects(0, 0.20, 0, 0, 0, 0.10, 0, 0)))),
-            // amethyst: crystals catch the light, so the whole set is at its best by day and only a little useful at night
-            Map.entry("amethyst_fishing_rod", List.of(new Perk(When.DAY, quality(0.10)))),
-            Map.entry("amethyst_hook", List.of(new Perk(When.DAY, quality(0.12)))),
-            Map.entry("amethyst_line", List.of(new Perk(When.DAY, quality(0.09)))),
-            Map.entry("amethyst_bobber", List.of(new Perk(When.DAY, quality(0.05)))),
             // bait
             Map.entry("glow_worms", List.of(new Perk(When.NIGHT, bite(0.15)))),
             Map.entry("cave_grubs", List.of(new Perk(When.UNDERGROUND, bite(0.15)))),
@@ -419,11 +416,54 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             "sickle_fishing_rod", List.of("35% chance each fish makes nearby crops grow"),
             "hex_fishing_rod", List.of("20% chance each fish gives you a helpful potion effect"),
             "widow_fishing_rod", List.of("A night hunter: strong after dark, sluggish by day"),
-            "wayfinder_fishing_rod", List.of("Stronger the farther you fish from world spawn: from 500 blocks out, up to +15% catch quality, +30% rare finds and +10% fishing XP at 5,000 blocks"));
+            "wayfinder_fishing_rod", List.of("Stronger the farther you fish from world spawn: from 500 blocks out, up to +15% catch quality, +30% rare finds and +10% fishing XP at 5,000 blocks"),
+            "amethyst_fishing_rod", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),
+            "village_fishing_rod", List.of("Players fishing within 16 blocks of you get +10% fishing XP"),
+            "crystal_fishing_rod", List.of("Shows how good a fish is the moment it bites"));
 
-    /** Bonus drops from this rod. */
+    /** What a line, hook, bobber or lure does besides its numbers (tooltip lines). */
+    private static final Map<String, List<String>> PART_TEXT = Map.of(
+            "barbed_hook", List.of("Fish never shake loose (Good and Bad hooks always land), but there are no perfect hooks"),
+            "heart_bobber", List.of("Heals you a heart with each fish"),
+            "lichen_bobber", List.of("Glows, lighting the water around it"),
+            "amethyst_hook", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),
+            "amethyst_line", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"),
+            "amethyst_bobber", List.of("Amethyst bites faster in sunlight: rising toward noon, gone by dusk"));
+
+    /** Things a line, hook or bobber brings up with a fish. */
+    private static final Map<String, List<Drop>> PART_DROPS = Map.of(
+            "stone_hook", List.of(new Drop("minecraft:kelp", 0.15, 0, "15% chance of kelp with any fish (it sinks to the bottom)"),
+                    new Drop("minecraft:seagrass", 0.10, 0, "10% chance of seagrass with any fish")),
+            "emerald_hook", List.of(new Drop("minecraft:emerald", 0.03, 0, "3% chance of an emerald with any fish")));
+
+    /** Bonus drops from a rod: its own, what's on it, and its sets. */
     public static List<Drop> drops(ItemStack rod) {
-        return rod == null || rod.isEmpty() ? List.of() : DROPS.getOrDefault(path(rod), List.of());
+        if (rod == null || rod.isEmpty()) return List.of();
+        List<Drop> out = new ArrayList<>(DROPS.getOrDefault(path(rod), List.of()));
+        for (ItemStack part : parts(rod)) if (isTide(part)) out.addAll(PART_DROPS.getOrDefault(path(part), List.of()));
+        out.addAll(RigSets.drops(rod));
+        return out;
+    }
+
+    /** Amethyst's bite speed at full sun (rod, hook, line, bobber), scaled by {@link #noon}. */
+    private static final Map<String, Double> AMETHYST_BITE = Map.of(
+            "amethyst_fishing_rod", 0.20, "amethyst_hook", 0.10, "amethyst_line", 0.10, "amethyst_bobber", 0.15);
+
+    /** How high the sun is: 0 at sunrise, 1 at noon, 0 again at sunset, 0 all night (and where there is no sky). */
+    public static double noon(net.minecraft.world.entity.player.Player player) {
+        net.minecraft.world.level.Level level = player.level();
+        if (!level.dimensionType().hasSkyLight()) return 0;
+        long t = level.getOverworldClockTime() % 24000;
+        return t < 12000 ? Math.sin(Math.PI * t / 12000.0) : 0;
+    }
+
+    /** The amethyst pieces' bite speed where and when the player is. */
+    public static RodEffects amethyst(net.minecraft.world.entity.player.Player player, ItemStack rod) {
+        double sum = 0;
+        List<ItemStack> all = new ArrayList<>(List.of(rod));
+        all.addAll(parts(rod));
+        for (ItemStack s : all) if (isTide(s)) sum += AMETHYST_BITE.getOrDefault(path(s), 0.0);
+        return sum == 0 ? NONE : bite(sum * noon(player));
     }
 
     // ------------------------------------------------------------------ gear
@@ -534,6 +574,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             for (Perk perk : situational(part))
                 if (perk.when().test(player)) e = e.plus(perk.fx());
         if (isTide(rod) && path(rod).equals("wayfinder_fishing_rod")) e = e.plus(wayfinder(player));
+        e = e.plus(amethyst(player, rod));
         return e.plus(RigSets.active(player, rod));
     }
 
@@ -564,7 +605,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         List<Component> out = new ArrayList<>(Lures.describe(rod));
         out.addAll(RODS.getOrDefault(path(rod), NONE).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(rod)) out.addAll(perk.fx().describe(ChatFormatting.LIGHT_PURPLE, " " + perk.when().text));
-        for (Drop d : drops(rod)) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
+        for (Drop d : DROPS.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
         Pick p = pick(rod);
         if (p != null) out.add(line(ChatFormatting.DARK_AQUA, p.text()));
         // which rigs the rod itself belongs to, then any rig it (with what's on it) already counts toward:
@@ -593,6 +634,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(Lures.describe(stack));
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.LIGHT_PURPLE, " " + perk.when().text));
+        if (isTide(stack)) {
+            for (String t : PART_TEXT.getOrDefault(path(stack), List.of())) out.add(line(ChatFormatting.DARK_AQUA, t));
+            for (Drop d : PART_DROPS.getOrDefault(path(stack), List.of())) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
+        }
         out.addAll(Unlocks.describe(stack));
         Component rigs = RigSets.memberLine(stack);
         if (rigs != null && isTide(stack)) out.add(rigs);

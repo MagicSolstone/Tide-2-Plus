@@ -6,22 +6,12 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:bone_meal"
+            "items": "tide:bone_hook"
           }
         ]
       }
     },
     "has_1": {
-      "trigger": "minecraft:inventory_changed",
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:bone"
-          }
-        ]
-      }
-    },
-    "has_2": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [
@@ -34,7 +24,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipes": "tide:bone_hook"
+        "recipes": "tide:fish_bone_hook_from_bone_hook"
       }
     }
   },
@@ -42,13 +32,12 @@
     [
       "has_0",
       "has_1",
-      "has_2",
       "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
-      "tide:bone_hook"
+      "tide:fish_bone_hook_from_bone_hook"
     ]
   }
 }

@@ -299,6 +299,7 @@ public class TideFishingHook extends Projectile {
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.3D, 0.2D, 0.3D));
                     this.currentState = FishHookState.BOBBING;
                     lureHint();
+                    chum();
                     return;
                 }
 
@@ -524,6 +525,9 @@ public class TideFishingHook extends Projectile {
                 this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.angler.Angler.stats(angler).biteWait()
                         * com.li64.tide.data.rods.RodEffects.of(angler, this.rod).biteWaitFactor(this.lureSpeed));
             else this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.rods.RodEffects.NONE.biteWaitFactor(this.lureSpeed));
+            // chummed water (anyone's chum nearby) bites faster
+            if (this.level() instanceof ServerLevel server)
+                this.timeUntilLured = (int) (this.timeUntilLured * com.li64.tide.data.rods.ChumZones.waitFactor(server, this.blockPosition()));
             this.timeUntilLured = Math.max((int) (this.timeUntilLured * globalBiteTimeMultiplier), 30);
         }
     }
@@ -621,7 +625,7 @@ public class TideFishingHook extends Projectile {
     /** A faint light where a glow hook sits (an invisible light block, waterlogged in water), taken away when it moves or is reeled in. */
     private void glow() {
         if (!(this.level() instanceof ServerLevel server)) return;
-        boolean wants = this.getHook().is(TideItems.GLOW_HOOK) && !this.isRemoved()
+        boolean wants = (this.getHook().is(TideItems.GLOW_HOOK) || this.getBobber().is(TideItems.LICHEN_BOBBER)) && !this.isRemoved()
                 && (this.getCurrentMedium() == FishingMedium.WATER || this.onGround());
         net.minecraft.core.BlockPos at = wants ? this.blockPosition() : null;
         if (java.util.Objects.equals(at, glowPos)) return;
@@ -642,6 +646,14 @@ public class TideFishingHook extends Projectile {
         com.li64.tide.data.rods.GlowLights.restore(server, glowPos);
         com.li64.tide.data.rods.GlowLights.removed(server, glowPos);
         glowPos = null;
+    }
+
+    /** Once the hook settles with chum on the rod: the water around it is chummed for everyone fishing there. */
+    private void chum() {
+        if (!(this.level() instanceof ServerLevel server) || !BaitUtils.hasBait(TideItems.CHUM, rod)) return;
+        if (com.li64.tide.data.rods.ChumZones.add(server, this.blockPosition()) && this.getPlayerOwner() instanceof ServerPlayer p)
+            p.sendOverlayMessage(net.minecraft.network.chat.Component.literal("You chum the water: fish here bite faster for 2 minutes")
+                    .withStyle(net.minecraft.ChatFormatting.AQUA));
     }
 
     /** Once the hook settles: does anything that favors this lure live here? (A count, never names.) */
@@ -788,6 +800,8 @@ public class TideFishingHook extends Projectile {
 
                         if (catchType == CatchType.ITEM) com.li64.tide.data.angler.Angler.onItemCaught(serverPlayer);
                         if (catchType == CatchType.FISH) {
+                            // the heart bobber: a heart back with each fish
+                            if (this.getBobber().is(TideItems.HEART_BOBBER)) player.heal(2.0f);
                             if (!player.isCreative() && BaitUtils.hasBait(rod)) {
                                 // consume used bait
                                 BaitContents.Mutable contents = new BaitContents.Mutable(TideItemData.BAIT_CONTENTS.getOrDefault(rod, new BaitContents()));

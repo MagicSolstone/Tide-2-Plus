@@ -228,7 +228,7 @@ jobs:
           wc -c fa-probe.txt
 
       - name: Publish results to the ci-results branch
-        if: always() && github.event_name == 'push'
+        if: always() && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         shell: bash
         run: |
           set +e +o pipefail

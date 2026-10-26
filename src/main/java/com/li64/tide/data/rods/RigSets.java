@@ -116,21 +116,21 @@ public final class RigSets {
             new RigSet("Honey set", When.ALWAYS, RodEffects.NONE, new RodEffects(0, 0, 0, 0, 0, 0, 0.10, 0),
                     Set.of("honeycomb_fishing_rod", "honey_line", "honey_bobber"),
                     "15% chance of a honeycomb with each fish", "25% chance of a honey bottle with each fish"),
-            new RigSet("Lucky set", When.ALWAYS, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 2, 0, 0, 0),
+            new RigSet("Lucky rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 2, 0, 0, 0),
                     Set.of("golden_apple_bobber", "enchanted_golden_apple_bobber", "lucky_hook", "magnet_lure", "lucky_bait"), "", ""),
             // the sky rigs: their bonus follows the sun or the moon (see strength)
-            new RigSet("Sun rig", When.DAY, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0), new RodEffects(0, 0.40, 0, 0, 0, 0, 0, 0),
+            new RigSet("Sunlight rig", When.DAY, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0), new RodEffects(0, 0.40, 0, 0, 0, 0, 0, 0),
                     Set.of("sunflower_fishing_rod", "spinner_lure", "honey_bobber", "golden_bobber"),
                     "strongest at noon; seeds come up with fish", "strongest at noon; more seeds come up with fish"),
-            new RigSet("Moon rig", When.NIGHT, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 2, 0.25, 0, 0),
-                    Set.of("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber", "pearl_bobber", "lucky_hook",
+            new RigSet("Moonlight rig", When.NIGHT, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 2, 0.25, 0, 0),
+                    Set.of("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber", "pearl_bobber",
                             "mushroom_bobber", "moon_bait"),
                     "strongest on a full moon, weakest on a new moon", "strongest on a full moon, weakest on a new moon"));
 
-    /** How strong a rig is right now, 0..1: the Sun rig follows the sun to noon, the Moon rig the moon to full; the rest are always full. */
+    /** How strong a rig is right now, 0..1: the Sunlight rig follows the sun to noon, the Moonlight rig the moon to full; the rest are always full. */
     public static double strength(RigSet set, Player player) {
-        if (set.name().equals("Sun rig")) return RodEffects.noon(player);
-        if (set.name().equals("Moon rig")) return RodEffects.moonlight(player);
+        if (set.name().equals("Sunlight rig")) return RodEffects.noon(player);
+        if (set.name().equals("Moonlight rig")) return RodEffects.moonlight(player);
         return 1.0;
     }
 
@@ -142,7 +142,7 @@ public final class RigSets {
             java.util.Map.entry("Cave rig", 0x9AA1AB), java.util.Map.entry("Fire rig", 0xFF5A1F), java.util.Map.entry("Void rig", 0xB070E0),
             java.util.Map.entry("Iron rig", 0xE6E6E6), java.util.Map.entry("Stone set", 0x8C8C8C), java.util.Map.entry("Gold set", 0xFFD24A),
             java.util.Map.entry("Diamond set", 0x4FE3E0), java.util.Map.entry("Amethyst set", 0xB58CFF), java.util.Map.entry("Honey set", 0xF2A93B),
-            java.util.Map.entry("Lucky set", 0x55D16B), java.util.Map.entry("Sun rig", 0xFFE066), java.util.Map.entry("Moon rig", 0xDDE6FF));
+            java.util.Map.entry("Lucky rig", 0x55D16B), java.util.Map.entry("Sunlight rig", 0xFFE066), java.util.Map.entry("Moonlight rig", 0xDDE6FF));
 
     public static int color(RigSet set) {
         return COLOR.getOrDefault(set.name(), 0xB070E0);
@@ -156,12 +156,12 @@ public final class RigSets {
     /** What a set brings up with each fish: at two pieces, and at three or more (by set name). */
     private record SetDrops(List<RodEffects.Drop> two, List<RodEffects.Drop> full) {}
     private static final java.util.Map<String, SetDrops> SET_DROPS = java.util.Map.of(
-            "Sun rig", new SetDrops(List.of(new RodEffects.Drop("minecraft:wheat_seeds", 0.10, 0, "Sun rig: wheat seeds"),
-                    new RodEffects.Drop("minecraft:beetroot_seeds", 0.05, 0, "Sun rig: beetroot seeds")),
-                    List.of(new RodEffects.Drop("minecraft:wheat_seeds", 0.15, 0, "Sun rig: wheat seeds"),
-                            new RodEffects.Drop("minecraft:beetroot_seeds", 0.10, 0, "Sun rig: beetroot seeds"),
-                            new RodEffects.Drop("minecraft:pumpkin_seeds", 0.05, 0, "Sun rig: pumpkin seeds"),
-                            new RodEffects.Drop("minecraft:melon_seeds", 0.05, 0, "Sun rig: melon seeds"))),
+            "Sunlight rig", new SetDrops(List.of(new RodEffects.Drop("minecraft:wheat_seeds", 0.10, 0, "Sunlight rig: wheat seeds"),
+                    new RodEffects.Drop("minecraft:beetroot_seeds", 0.05, 0, "Sunlight rig: beetroot seeds")),
+                    List.of(new RodEffects.Drop("minecraft:wheat_seeds", 0.15, 0, "Sunlight rig: wheat seeds"),
+                            new RodEffects.Drop("minecraft:beetroot_seeds", 0.10, 0, "Sunlight rig: beetroot seeds"),
+                            new RodEffects.Drop("minecraft:pumpkin_seeds", 0.05, 0, "Sunlight rig: pumpkin seeds"),
+                            new RodEffects.Drop("minecraft:melon_seeds", 0.05, 0, "Sunlight rig: melon seeds"))),
             "Gold set", new SetDrops(List.of(), List.of(new RodEffects.Drop("minecraft:gold_nugget", 0.25, 0, "Gold set: 25% chance of a gold nugget"))),
             "Amethyst set", new SetDrops(List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.10, 0, "Amethyst set: 10% chance of an amethyst shard")),
                     List.of(new RodEffects.Drop("minecraft:amethyst_shard", 0.20, 0, "Amethyst set: 20% chance of an amethyst shard"))),
@@ -174,7 +174,7 @@ public final class RigSets {
         for (RigSet set : SETS) {
             SetDrops d = SET_DROPS.get(set.name());
             if (d == null || (player != null && !set.when().test(player))) continue;
-            int n = pieces(set, rod);
+            int n = counted(set, rod);
             out.addAll(n >= PIECES ? d.full() : n >= HALF ? d.two() : List.of());
         }
         return out;
@@ -182,7 +182,7 @@ public final class RigSets {
 
     /** The share of normal wear a rod takes (the Stone set: half at two pieces, a tenth at three). */
     public static double wear(ItemStack rod) {
-        int n = SETS.stream().filter(s -> s.name().equals("Stone set")).mapToInt(s -> pieces(s, rod)).max().orElse(0);
+        int n = SETS.stream().filter(s -> s.name().equals("Stone set")).mapToInt(s -> counted(s, rod)).max().orElse(0);
         return n >= PIECES ? 0.1 : n >= HALF ? 0.5 : 1.0;
     }
 
@@ -241,11 +241,7 @@ public final class RigSets {
     public static void refreshLook(ItemStack rod) {
         if (rod == null || rod.isEmpty() || !BuiltInRegistries.ITEM.getKey(rod.getItem()).getNamespace().equals("tide")) return;
         List<int[]> gems = new ArrayList<>();      // {pieces, colour}
-        for (RigSet set : SETS) {
-            int n = pieces(set, rod);
-            if (n >= HALF) gems.add(new int[]{n, color(set)});
-        }
-        gems.sort((a, b) -> b[0] - a[0]);
+        for (RigSet set : carried(rod)) gems.add(new int[]{pieces(set, rod), color(set)});
         if (gems.isEmpty()) {
             rod.remove(net.minecraft.core.component.DataComponents.CUSTOM_MODEL_DATA);
             return;
@@ -270,7 +266,7 @@ public final class RigSets {
      */
     public static void refreshMelee(ItemStack rod) {
         if (rod == null || rod.isEmpty() || !BuiltInRegistries.ITEM.getKey(rod.getItem()).getNamespace().equals("tide")) return;
-        int pieces = SETS.stream().filter(RigSets::isIronRig).mapToInt(s -> pieces(s, rod)).max().orElse(0);
+        int pieces = SETS.stream().filter(RigSets::isIronRig).mapToInt(s -> counted(s, rod)).max().orElse(0);
         double damage = pieces >= PIECES ? 5.0 : pieces >= HALF ? 3.0 : 0;
         var current = rod.get(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
         double has = current == null ? 0 : current.modifiers().stream().filter(m -> m.modifier().id().equals(IRON_RIG_ID))
@@ -291,11 +287,35 @@ public final class RigSets {
                 .build());
     }
 
+    /** A rod carries at most this many rigs. */
+    public static final int MAX_RIGS = 2;
+
+    /**
+     * The rigs a rod carries: every rig it has two or more pieces of, but at most {@link #MAX_RIGS}, the ones with the
+     * most pieces first (ties go to the one listed first in {@link #SETS}). Only these give bonuses, drops and a gem.
+     */
+    public static List<RigSet> carried(ItemStack rod) {
+        List<RigSet> out = new ArrayList<>();
+        List<int[]> found = new ArrayList<>();      // {pieces, index}
+        for (int i = 0; i < SETS.size(); i++) {
+            int n = pieces(SETS.get(i), rod);
+            if (n >= HALF) found.add(new int[]{n, i});
+        }
+        found.sort((a, b) -> a[0] != b[0] ? b[0] - a[0] : a[1] - b[1]);
+        for (int k = 0; k < Math.min(MAX_RIGS, found.size()); k++) out.add(SETS.get(found.get(k)[1]));
+        return out;
+    }
+
+    /** How many pieces of this rig count on the rod: none if it is not one of the rigs the rod carries. */
+    public static int counted(RigSet set, ItemStack rod) {
+        return carried(rod).contains(set) ? pieces(set, rod) : 0;
+    }
+
     /** The bonus from every complete rig that's working right now. */
     public static RodEffects active(Player player, ItemStack rod) {
         RodEffects e = RodEffects.NONE;
         for (RigSet set : SETS)
-            if (set.when().test(player)) e = e.plus(set.bonus(pieces(set, rod)).times(strength(set, player)));
+            if (set.when().test(player)) e = e.plus(set.bonus(counted(set, rod)).times(strength(set, player)));
         return e;
     }
 
@@ -311,7 +331,7 @@ public final class RigSets {
         List<Component> out = new ArrayList<>();
         for (RigSet set : SETS)
             if (set.members().contains(path(stack)))
-                out.add(Component.literal(set.name() + " piece. Tier 1 (2 pieces): " + set.twoText() + ". Tier 2 (3 or more): " + set.bonusText())
+                out.add(Component.literal(set.name() + " piece. Tier 1 (2+): " + set.twoText() + ". Tier 2 (3+): " + set.bonusText())
                         .withStyle(st -> st.withColor(color(set))));
         return out;
     }

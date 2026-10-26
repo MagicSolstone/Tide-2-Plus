@@ -77,7 +77,7 @@ public final class RodStatsOverlay {
         idle.removeAll(active);
         // matched rigs: complete ones show as on or off like any perk; one piece short gets a hint
         for (com.li64.tide.data.rods.RigSets.RigSet set : com.li64.tide.data.rods.RigSets.SETS) {
-            int n = com.li64.tide.data.rods.RigSets.pieces(set, rod);
+            int n = com.li64.tide.data.rods.RigSets.counted(set, rod);     // (at most two rigs count)
             if (n >= com.li64.tide.data.rods.RigSets.HALF)
                 (set.when().test(player) ? active : idle).add(set.name().toLowerCase() + " " + com.li64.tide.data.rods.RigSets.tier(n).toLowerCase());
         }

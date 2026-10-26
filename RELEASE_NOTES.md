@@ -7,20 +7,21 @@ New always-on sets (2 pieces give the small bonus, 3 or more the full one), so t
 - **Stone set** (stone rod, stone hook, plain line): the rod wears half as fast with two pieces, and barely at all with three.
 - **Gold set** (golden rod or Midas rod, golden line, hook, bobber, golden spoon lure): +10% fishing XP; with three, +20% XP and a 25% chance of a gold nugget with each fish.
 - **Diamond set** (diamond rod, line, hook, bobber): the catch-quality set. +10% catch quality, +25% with three. The diamond bobber now gives catch quality (+8%) instead of bite speed.
-- **Amethyst set** (amethyst rod, line, hook, bobber): two pieces bring up an amethyst shard 10% of the time, three 20% (see the Moon rig for what amethyst does now).
+- **Amethyst set** (amethyst rod, line, hook, bobber): two pieces bring up an amethyst shard 10% of the time, three 20% (see the Moonlight rig for what amethyst does now).
 - **Honey set** (honeycomb rod, honey line, honey bobber): a 15% chance of a honeycomb with each fish; with three, a 25% chance of a honey bottle and an easier landing.
 - Iron (the sword), Copper (Storm rig) and Netherite (Fire rig) are unchanged.
-- **Lucky set** (golden apple bobber, enchanted golden apple bobber, lucky hook, magnet lure, lucky bait): +15% rare finds, +30% with three.
+- **Lucky rig** (golden apple bobber, enchanted golden apple bobber, lucky hook, magnet lure, lucky bait): +15% rare finds, +30% with three.
 
-## Sun and Moon rigs
-- **Sun rig** (sunflower rod, spinner lure, honey bobber, golden bobber), by day: bite speed that follows the sun (up to +20% at Tier 1, +40% at Tier 2, strongest at noon, nothing at dawn and dusk), and **seeds** come up with fish: wheat and beetroot at Tier 1, plus pumpkin and melon at Tier 2.
-- **Moon rig** (amethyst rod, line, hook and bobber, pearl bobber, lucky hook, mushroom bobber, moon bait), at night: rare finds, and at Tier 2 catch quality too, strongest on a full moon and fading to nothing on a new moon.
-- **Amethyst moved to the moon**: amethyst catches moonlight now. Each piece gives catch quality at night that grows toward a full moon, and the pieces count toward the Moon rig. (Its sunlight bite speed went to the Sun rig.) The Amethyst set still brings up shards.
+## Sunlight and Moonlight rigs
+- **Sunlight rig** (sunflower rod, spinner lure, honey bobber, golden bobber), by day: bite speed that follows the sun (up to +20% at Tier 1, +40% at Tier 2, strongest at noon, nothing at dawn and dusk), and **seeds** come up with fish: wheat and beetroot at Tier 1, plus pumpkin and melon at Tier 2.
+- **Moonlight rig** (amethyst rod, line, hook and bobber, pearl bobber, mushroom bobber, moon bait), at night: rare finds, and at Tier 2 catch quality too, strongest on a full moon and fading to nothing on a new moon.
+- **Amethyst moved to the moon**: amethyst catches moonlight now. Each piece gives catch quality at night that grows toward a full moon, and the pieces count toward the Moonlight rig. (Its sunlight bite speed went to the Sunlight rig.) The Amethyst set still brings up shards.
 
 ## Rigs are easier to read
-- **Tier 1 and Tier 2**: every rig and set now says Tier 1 (2 pieces) and Tier 2 (3 or more) on tooltips, the recipe book, the rod panel and the Angling Table.
+- **Tier 1 and Tier 2**: every rig and set now says Tier 1 (2+) and Tier 2 (3+) on tooltips, the recipe book, the rod panel and the Angling Table.
+- **A rod carries two rigs at most**: if it has pieces of three (bait counts too), the two with the most pieces count and the third says "not counted".
 - **Each rig has its own colour**, used for its name, its card at the table and its gem.
-- **Rods show their rigs on the icon**: a small gem in the corner of the rod, in the rig's colour, one for each rig (up to two; bright for Tier 2, dimmer for Tier 1). A rod picks up its gems the next time you change anything on it.
+- **Rods show their rigs on the icon**: a small gem in the corner of the rod, in the rig's colour, one for each rig it carries (bright for Tier 2, dimmer for Tier 1). A rod picks up its gems the next time you change anything on it.
 
 ## The Angling Table and tackle box look the part
 - **The table has a wooden frame with brass corners** (both tabs), each empty slot shows a faded picture of what goes there with a small label (Rod, Line, Bobber, Hook, Lure), and the rig cards beside it are one card per rig: its colour, its tier, dots for the pieces it has, what it gives now and what the next piece adds.

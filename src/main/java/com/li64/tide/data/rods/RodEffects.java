@@ -632,13 +632,15 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         // "Jungle rig 2/3: +5% better catch quality in jungles"
         Component member = RigSets.memberLine(rod);
         if (member != null && isTide(rod)) out.add(member);
+        List<RigSets.RigSet> carried = RigSets.carried(rod);
         for (RigSets.RigSet set : RigSets.SETS) {
             int n = RigSets.pieces(set, rod);
-            if (n >= RigSets.HALF) {
-                int c = RigSets.color(set);
+            if (n < RigSets.HALF) continue;
+            int c = RigSets.color(set);
+            if (carried.contains(set))
                 out.add(Component.literal(set.name() + " " + RigSets.tier(n) + ": " + (n >= RigSets.PIECES ? set.bonusText() : set.twoText()))
                         .withStyle(st -> st.withColor(c)));
-            }
+            else out.add(line(ChatFormatting.DARK_GRAY, set.name() + ": not counted (a rod carries two rigs)"));
         }
         if (isTide(rod)) for (String s : SPECIAL_TEXT.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, s));
         out.addAll(Unlocks.describe(rod));

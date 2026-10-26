@@ -92,7 +92,9 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         int wrap = (int) ((w - 10) / s);
         // one card per rig: its colour down the side, its name and tier, what it gives now and what the next piece adds
         int cy = y;
+        int index = 0;
         for (var p : rigs.subList(0, Math.min(3, rigs.size()))) {
+            boolean counts = index++ < com.li64.tide.data.rods.RigSets.MAX_RIGS;      // (a rod carries two rigs: the two with the most pieces)
             var set = p.set();
             int n = p.have(), full = com.li64.tide.data.rods.RigSets.PIECES, half = com.li64.tide.data.rods.RigSets.HALF;
             int colour = 0xFF000000 | com.li64.tide.data.rods.RigSets.color(set);
@@ -102,11 +104,12 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
                 for (var part : this.font.split(Component.literal(line), wrap)) { text.add(part); colours.add(c); }
             };
             String tier = n >= half ? com.li64.tide.data.rods.RigSets.tier(n) : Math.min(n, full) + " of " + full;
-            if (n >= full) add.accept("Tier 2: " + set.bonusText(), 0xFFE8E8E8);
+            if (!counts && n >= half) add.accept("Not counted: a rod carries two rigs", 0xFFFF8A7A);
+            if (n >= full) add.accept("Tier 2 (3+): " + set.bonusText(), 0xFFE8E8E8);
             else {
-                if (n >= half) add.accept("Tier 1: " + set.twoText(), 0xFFE8E8E8);
-                else add.accept("Tier 1 at 2: " + set.twoText(), 0xFFA8B4BC);
-                add.accept("Tier 2 at 3: " + set.bonusText(), 0xFFA8B4BC);
+                if (n >= half) add.accept("Tier 1 (2+): " + set.twoText(), 0xFFE8E8E8);
+                else add.accept("Tier 1 (2+): " + set.twoText(), 0xFFA8B4BC);
+                add.accept("Tier 2 (3+): " + set.bonusText(), 0xFFA8B4BC);
                 if (!p.canAdd().isEmpty()) add.accept("Add a " + String.join(" or ", p.canAdd()), colour);
             }
             int h = (int) ((12 + text.size() * 10) * s) + 5;

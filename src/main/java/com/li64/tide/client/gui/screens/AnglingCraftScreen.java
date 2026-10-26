@@ -359,8 +359,8 @@ public class AnglingCraftScreen extends AbstractContainerScreen<AnglingCraftMenu
                 List<Component> tip = new ArrayList<>();
                 for (var part : this.font.getSplitter().splitLines(Component.literal(set.name()), 170, net.minecraft.network.chat.Style.EMPTY))
                     tip.add(Component.literal(part.getString()).withStyle(st -> st.withColor(RigSets.color(set))));
-                wrap(tip, "Tier 1 (2 pieces): " + set.twoText(), ChatFormatting.WHITE);
-                wrap(tip, "Tier 2 (3 or more): " + set.bonusText(), ChatFormatting.WHITE);
+                wrap(tip, "Tier 1 (2+): " + set.twoText(), ChatFormatting.WHITE);
+                wrap(tip, "Tier 2 (3+): " + set.bonusText(), ChatFormatting.WHITE);
                 wrap(tip, "Click the arrows for other rigs", ChatFormatting.GRAY);
                 int top = Math.max(16, mouseY - 8 - (tip.size() * 10 + 6));     // the tooltip draws from 12 above the y it is given
                 g.setTooltipForNextFrame(this.font, tip, Optional.empty(), mouseX, top + 12);

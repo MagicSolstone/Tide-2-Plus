@@ -389,7 +389,7 @@ public final class GearCheck {
             for (RodEffects.Perk perk : RodEffects.situational(part))
                 if (whens.contains(perk.when())) e = e.plus(perk.fx());
         for (var set : com.li64.tide.data.rods.RigSets.SETS)
-            if (whens.contains(set.when())) e = e.plus(set.bonus(com.li64.tide.data.rods.RigSets.pieces(set, rod)));
+            if (whens.contains(set.when())) e = e.plus(set.bonus(com.li64.tide.data.rods.RigSets.counted(set, rod)));
         return e;
     }
 

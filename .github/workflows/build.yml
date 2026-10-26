@@ -51,7 +51,13 @@ jobs:
           pid=$!
           for i in $(seq 1 84); do
             sleep 5
-            if grep -q "Done (" server.log; then sleep 30; break; fi
+            if grep -q "Done (" server.log; then break; fi
+            if ! kill -0 $pid 2>/dev/null; then break; fi
+          done
+          # the gear check logs everything at once when it finishes: wait for it (up to 3 minutes), not a fixed time
+          for i in $(seq 1 36); do
+            sleep 5
+            if grep -q "TIDE-CI gear" server.log; then sleep 5; break; fi
             if ! kill -0 $pid 2>/dev/null; then break; fi
           done
           pkill -f 'net.fabricmc' ; sleep 3; kill $pid 2>/dev/null

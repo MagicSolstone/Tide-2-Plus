@@ -15,3 +15,6 @@ Install the same way: the jar in `mods/` on the server and every client (replace
 
 ## Amethyst is a daytime set
 - **The amethyst rod, hook, line and bobber are strongest by day** (crystals catch the light) and only a little useful at night. By day a full amethyst set gives more catch quality than before; at night about a fifth as much. Place-and-time rigs still beat it where they apply.
+
+## Iron rig
+- **Hitting mobs wears the rod down** (1 durability per hit, like a sword). It still never breaks: a worn-out rod stops at broken until you repair it.

@@ -148,7 +148,8 @@ public final class RigSets {
 
     /**
      * Call after anything on a rod changes: gives the rod a sword's attack while it has two or three pieces of the iron
-     * rig, and takes it away again. (Rods have no "weapon" property, so hitting mobs never wears them down.)
+     * rig, and takes it away again. It also gives the rod the "weapon" property, so each hit on a mob wears it down by 1
+     * like a sword (a worn-out rod stops at broken, it never breaks: see ItemStackMixin).
      */
     public static void refreshMelee(ItemStack rod) {
         if (rod == null || rod.isEmpty() || !BuiltInRegistries.ITEM.getKey(rod.getItem()).getNamespace().equals("tide")) return;
@@ -158,8 +159,13 @@ public final class RigSets {
         double has = current == null ? 0 : current.modifiers().stream().filter(m -> m.modifier().id().equals(IRON_RIG_ID))
                 .filter(m -> m.attribute().equals(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE))
                 .mapToDouble(m -> m.modifier().amount()).findFirst().orElse(0);
-        if (damage == has) return;
-        if (damage == 0) { rod.remove(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS); return; }
+        if (damage == has && (damage == 0 || rod.has(net.minecraft.core.component.DataComponents.WEAPON))) return;
+        if (damage == 0) {
+            rod.remove(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS);
+            rod.remove(net.minecraft.core.component.DataComponents.WEAPON);
+            return;
+        }
+        rod.set(net.minecraft.core.component.DataComponents.WEAPON, new net.minecraft.world.item.component.Weapon(1));
         rod.set(net.minecraft.core.component.DataComponents.ATTRIBUTE_MODIFIERS, net.minecraft.world.item.component.ItemAttributeModifiers.builder()
                 .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_DAMAGE, new net.minecraft.world.entity.ai.attributes.AttributeModifier(
                         IRON_RIG_ID, damage, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)

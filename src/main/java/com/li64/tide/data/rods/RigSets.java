@@ -90,7 +90,7 @@ public final class RigSets {
             set("Storm rig", When.RAIN, QUALITY_2, LUCK_QUALITY_3, "copper_fishing_rod", "copper_line", "copper_hook", "copper_bobber", "storm_lure"),
             set("Swamp rig", When.SWAMP, BITE_2, LUCK_BITE_3, "mangrove_fishing_rod", "slime_line", "lily_pad_bobber", "slime_bobber",
                     "frog_lure", "swamp_bait"),
-            set("Jungle rig", When.JUNGLE, QUALITY_2, LUCK_QUALITY_3, "bamboo_fishing_rod", "vine_line", "apple_bobber", "jungle_bait"),
+            set("Jungle rig", When.JUNGLE, QUALITY_2, LUCK_QUALITY_3, "bamboo_fishing_rod", "grove_fishing_rod", "vine_line", "apple_bobber", "jungle_bait"),
             set("Desert rig", When.DRY, BITE_2, LUCK_BITE_3, "cactus_fishing_rod", "redstone_line", "fish_bone_hook",
                     "cactus_bobber", "desert_bait"),
             set("Frost rig", When.COLD, BITE_2, rig(0.20, 1, 0.25, 0), "frost_fishing_rod", "permafrost_hook",

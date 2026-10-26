@@ -42,7 +42,7 @@ public final class Lures {
             Map.entry("magma_lure", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.5, RodEffects.When.NETHER),
                     new Pull("Attracts big fish", Lures::big, 1.5, RodEffects.When.LAVA))),
             Map.entry("chorus_lure", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.5, RodEffects.When.END))),
-            Map.entry("ink_lure", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 2.0, RodEffects.When.NEW_MOON))),
+            Map.entry("ink_lure", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.5, RodEffects.When.NIGHT))),
             Map.entry("frog_lure", List.of(new Pull("Attracts big fish", Lures::big, 2.0, RodEffects.When.SWAMP))),
             Map.entry("squid_lure", List.of(new Pull("Attracts saltwater fish", d -> d.profile().group() == JournalGroup.SALTWATER, 2.0, null))),
             Map.entry("ice_jig_lure", List.of(new Pull("Attracts uncommon and rarer fish", d -> atLeast(d, FishRarity.UNCOMMON), 1.5, RodEffects.When.COLD))),
@@ -55,7 +55,7 @@ public final class Lures {
             Map.entry("prismarine_hook", List.of(new Pull("Attracts saltwater fish", d -> d.profile().group() == JournalGroup.SALTWATER, 1.5, null))),
             Map.entry("prismarine_line", List.of(new Pull("Attracts saltwater fish", d -> d.profile().group() == JournalGroup.SALTWATER, 1.3, null))),
             Map.entry("netherite_hook", List.of(new Pull("Attracts big fish", Lures::big, 1.3, null))),
-            Map.entry("echo_bobber", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.5, RodEffects.When.NEW_MOON))),
+            Map.entry("echo_bobber", List.of(new Pull("Attracts rare fish", d -> atLeast(d, FishRarity.RARE), 1.5, RodEffects.When.UNDERGROUND))),
             Map.entry("iron_bobber", List.of(new Pull("Attracts big fish", Lures::big, 1.2, null))),
             Map.entry("golden_bait", List.of(new Pull("Attracts uncommon and rarer fish", d -> atLeast(d, FishRarity.UNCOMMON), 1.5, null))),
             // bait

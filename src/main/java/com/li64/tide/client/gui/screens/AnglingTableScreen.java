@@ -44,6 +44,67 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         com.li64.tide.client.gui.BenchStyle.panel(g, GUI_LOCATION, this.leftPos, this.topPos, this.imageWidth, this.imageHeight);
         slotHints(g);
         rigPanel(g, mouseX, mouseY);
+        statsPanel(g);
+    }
+
+    /**
+     * To the right of the table: what the rod being put together gives, rod and tackle and rigs added up, with every
+     * place, time and rig condition it cares about met (the most each piece can add). Updates as pieces go on.
+     */
+    private void statsPanel(GuiGraphicsExtractor g) {
+        var result = this.menu.getSlot(5).getItem();
+        var rod = result.isEmpty() ? this.menu.getSlot(0).getItem() : result;
+        if (rod.isEmpty() || this.minecraft == null || this.minecraft.player == null) return;
+        int x = this.leftPos + this.imageWidth + rightReserve() + 4, w = Math.min(118, this.width - x - 4);
+        if (w < 90 || this.leftPos - 6 < 90) return;      // no room (the rig cards took the right side)
+        var e = com.li64.tide.data.rods.RodEffects.everythingActive(rod);
+        var enchants = this.minecraft.player.level().registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT);
+        int lure = net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.LURE), rod);
+        int sea = net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.LUCK_OF_THE_SEA), rod);
+        int speed = lure + Math.min(com.li64.tide.util.BaitUtils.getCombinedSpeed(rod), com.li64.tide.registries.items.TideFishingRodItem.BAIT_SPEED_CAP) + e.speed();
+        int luck = e.luck() + com.li64.tide.util.BaitUtils.getCombinedLuck(rod) + sea;
+        java.util.List<String[]> rows = new java.util.ArrayList<>();
+        java.util.function.BiConsumer<String, Double> row = (label, v) -> {
+            long n = Math.round(v * 100);
+            if (n != 0) rows.add(new String[]{label, String.format("%+d%%", n), n > 0 ? "g" : "b"});
+        };
+        row.accept("Cast range", e.cast());
+        row.accept("Bite speed", e.biteSpeed(speed));
+        row.accept("Hook window", e.window());
+        row.accept("Rare finds", com.li64.tide.data.rods.RodEffects.rareFinds(luck));
+        row.accept("Catch quality", e.quality());
+        row.accept("Fishing XP", e.xp());
+        row.accept("Land Good/Bad", e.land());
+        row.accept("Fish fight easier", -e.fight());
+        row.accept("Catch difficulty", -e.ease());
+        row.accept("Second fish", Math.min(e.twin(), com.li64.tide.data.rods.RodEffects.TWIN_CAP));
+        row.accept("Comes up cooked", e.cook());
+        // where all of that applies
+        java.util.LinkedHashSet<String> where = new java.util.LinkedHashSet<>();
+        for (var when : com.li64.tide.data.rods.RodEffects.situationalTotals(rod).keySet()) where.add(when.text);
+        for (var set : com.li64.tide.data.rods.RigSets.carried(rod)) if (!set.when().text.isEmpty()) where.add(set.when().text);
+        float s = 0.75f;
+        int inner = (int) ((w - 10) / s);
+        java.util.List<net.minecraft.util.FormattedCharSequence> note = new java.util.ArrayList<>(this.font.split(Component.literal(where.isEmpty()
+                ? "Works anywhere" : "With everything active: " + String.join(", ", where)), inner));
+        int h = (int) ((14 + Math.max(1, rows.size()) * 10 + 3 + note.size() * 9) * s) + 6;
+        int y = this.topPos;
+        g.fill(x, y, x + w, y + h, 0xD0101820);
+        g.fill(x, y, x + 2, y + h, 0xFFC9A44A);
+        g.pose().pushMatrix();
+        g.pose().translate(x + 5, y + 3);
+        g.pose().scale(s, s);
+        com.li64.tide.client.Gui26.text(g, this.font, "This rod, in all", 0, 0, 0xFFFFD27F, true);
+        int ly = 14;
+        if (rows.isEmpty()) { com.li64.tide.client.Gui26.text(g, this.font, "No bonuses yet", 0, ly, 0xFFA8B4BC, true); ly += 10; }
+        for (String[] r : rows) {
+            com.li64.tide.client.Gui26.text(g, this.font, r[0], 0, ly, 0xFFE8E8E8, true);
+            com.li64.tide.client.Gui26.text(g, this.font, r[1], inner - this.font.width(r[1]), ly, r[2].equals("g") ? 0xFF7FE07F : 0xFFFF8A7A, true);
+            ly += 10;
+        }
+        ly += 3;
+        for (var line : note) { com.li64.tide.client.Gui26.text(g, this.font, line, 0, ly, 0xFFA8B4BC, true); ly += 9; }
+        g.pose().popMatrix();
     }
 
     /** What goes in each slot: a faded picture while it is empty, and a small label. */

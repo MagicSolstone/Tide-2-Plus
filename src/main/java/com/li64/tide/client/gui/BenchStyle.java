@@ -48,7 +48,7 @@ public final class BenchStyle {
     public static void hint(GuiGraphicsExtractor g, Font font, int sx, int sy, ItemStack ghost, String label, boolean empty) {
         if (empty && !ghost.isEmpty()) {
             g.item(ghost, sx, sy);
-            g.fill(sx, sy, sx + 16, sy + 16, 0xB08B8B8B);
+            g.fill(sx, sy, sx + 16, sy + 16, 0xB08B704A);      // the slot's own colour once tinted to wood (8B8B8B x WOOD_TINT)
         }
         if (label.isEmpty()) return;
         g.pose().pushMatrix();

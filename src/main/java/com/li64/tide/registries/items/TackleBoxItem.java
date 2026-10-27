@@ -140,20 +140,13 @@ public class TackleBoxItem extends AbstractTooltipItem {
 
         @Override
         public void removed(@NotNull Player player) {
-            // whatever is left on the table goes back in the box if it fits, else to the player
-            for (int i = 0; i < this.inputSlots.getContainerSize(); i++) {
-                ItemStack left = this.inputSlots.getItem(i);
-                if (left.isEmpty()) continue;
-                for (int j = 0; j < tackle.getContainerSize() && !left.isEmpty(); j++)       // tackle to tackle slots, a rod to the rack
-                    if ((j < SIZE ? TackleLog.fitsTackleBox(left) : isRod(left)) && tackle.getItem(j).isEmpty()) { tackle.setItem(j, left); left = ItemStack.EMPTY; }
-                    else if (j < SIZE && ItemStack.isSameItemSameComponents(tackle.getItem(j), left) && tackle.getItem(j).getCount() < tackle.getItem(j).getMaxStackSize()) {
-                        int move = Math.min(left.getCount(), tackle.getItem(j).getMaxStackSize() - tackle.getItem(j).getCount());
-                        tackle.getItem(j).grow(move); left.shrink(move);
-                    }
-                this.inputSlots.setItem(i, left);
-            }
+            // Whatever is left on the table goes back to the player's inventory (and drops at their feet if it's full),
+            // the way a crafting table hands back its grid; the parent class does that. It used to go into the box,
+            // but that changed the box after the screen had closed, and in creative mode the inventory screen could
+            // then send back the client's older copy of the box, losing the rod and its tackle.
             super.removed(player);
             Menu.write(box, tackle);
+            HeldStorageMenu.syncHeld(player, box);     // and the client has the box exactly as it is now
         }
 
         @Override

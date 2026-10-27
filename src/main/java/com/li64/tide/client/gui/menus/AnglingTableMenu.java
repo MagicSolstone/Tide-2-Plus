@@ -89,7 +89,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                 ItemStack line = CustomRodManager.getLine(rod);
                 CustomRodManager.setLine(rod, null);
                 if (!inputSlots.getItem(1).isEmpty()) {
-                    if (!player.addItem(line.copy())) player.drop(line, true, net.minecraft.util.Prediction.SERVER_ONLY);
+                    if (!player.level().isClientSide() && !player.addItem(line.copy())) player.drop(line, true, net.minecraft.util.Prediction.SERVER_ONLY);
                 }
                 else inputSlots.setItem(1, line);
             }
@@ -97,7 +97,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                 ItemStack bobber = CustomRodManager.getBobber(rod);
                 CustomRodManager.setBobber(rod, null);
                 if (!inputSlots.getItem(2).isEmpty()) {
-                    if (!player.addItem(bobber.copy())) player.drop(bobber, true, net.minecraft.util.Prediction.SERVER_ONLY);
+                    if (!player.level().isClientSide() && !player.addItem(bobber.copy())) player.drop(bobber, true, net.minecraft.util.Prediction.SERVER_ONLY);
                 }
                 else inputSlots.setItem(2, bobber);
             }
@@ -105,7 +105,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                 ItemStack lure = CustomRodManager.getLure(rod);
                 CustomRodManager.setLure(rod, null);
                 if (!inputSlots.getItem(4).isEmpty()) {
-                    if (!player.addItem(lure.copy())) player.drop(lure, true, net.minecraft.util.Prediction.SERVER_ONLY);
+                    if (!player.level().isClientSide() && !player.addItem(lure.copy())) player.drop(lure, true, net.minecraft.util.Prediction.SERVER_ONLY);
                 }
                 else inputSlots.setItem(4, lure);
             }
@@ -113,7 +113,7 @@ public class AnglingTableMenu extends ItemCombinerMenu {
                 ItemStack hook = CustomRodManager.getHook(rod);
                 CustomRodManager.setHook(rod, null);
                 if (!inputSlots.getItem(3).isEmpty()) {
-                    if (!player.addItem(hook.copy())) player.drop(hook, true, net.minecraft.util.Prediction.SERVER_ONLY);
+                    if (!player.level().isClientSide() && !player.addItem(hook.copy())) player.drop(hook, true, net.minecraft.util.Prediction.SERVER_ONLY);
                 }
                 else inputSlots.setItem(3, hook);
             }

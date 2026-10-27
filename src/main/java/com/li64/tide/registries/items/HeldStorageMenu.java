@@ -73,5 +73,18 @@ public abstract class HeldStorageMenu extends AbstractContainerMenu {
     public void removed(@NotNull Player player) {
         super.removed(player);
         save(holder, storage);
+        syncHeld(player, holder);
+    }
+
+    /**
+     * Send the held item (a tackle box, say) to the client as it is now, when its screen closes. Otherwise the client
+     * could still have an older copy (always, if it's in the off hand, which these screens don't show), and in creative
+     * mode the inventory screen sends the client's copy back to the server, losing whatever had been put in it.
+     */
+    static void syncHeld(Player player, ItemStack held) {
+        if (!(player instanceof net.minecraft.server.level.ServerPlayer sp) || held.isEmpty()) return;
+        var inv = sp.getInventory();
+        for (int i = 0; i < inv.getContainerSize(); i++)
+            if (inv.getItem(i) == held) { sp.connection.send(inv.createInventoryUpdatePacket(i)); return; }
     }
 }

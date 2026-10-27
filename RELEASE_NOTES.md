@@ -19,3 +19,8 @@ In the Angling Table's stats panel (and the tackle box's rig screen), each stat 
 | **Double Catch** | A chance to reel in a second fish of the same kind with the first |
 
 Skills (Barbed, Hot Line, Green Gold, Fish Finder...) show the same text as at the bottom of their item's tooltip.
+
+## Tidier tooltips
+- **Each skill shows once**, at the bottom of the tooltip: its name in orange and what it does. (It used to be listed twice.)
+- **Skill names are just the name**: *Hot Line*, not *Hot Line 20%*. How likely it is is in what it does ("20% chance each fish comes up cooked").
+- **Favorite lures are one line**: *Favorite Lure: Bass, Shark, ???, ???*. The fish you've caught by name, a ??? for each one still to find.

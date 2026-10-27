@@ -11,18 +11,19 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * What a piece does besides the base stats ({@link Stat}), each with a one- or two-word name: "Hot Line 20%",
- * "Green Gold 3%", "Fish Finder". The tooltip shows the name (in the skill colour) with the stats, and what it does in
- * grey at the bottom; the rod panel and the Angling Table show just the names, so a rod's tricks are never forgotten.
+ * What a piece does besides the base stats ({@link Stat}), each with a one- or two-word name: "Hot Line",
+ * "Green Gold", "Fish Finder". The tooltip shows each once at the bottom, the name in the skill colour and what it does
+ * in grey; the rod panel and the Angling Table show just the names (hover them there for what they do).
  * The drops and tricks themselves live where they always did (RodEffects drops and picks, FoundRodTricks, the hook).
  */
 public final class Skills {
     private Skills() {}
 
-    /** A skill: its name, its chance with each fish (or -1 when it always works), and what it does. */
+    /** A skill: its name, its chance with each fish (or -1 when it always works), and what it does (which gives the chance). */
     public record Skill(String name, double chance, String explain) {
+        /** Just the name: "Hot Line". How likely it is is in what it does. */
         public String label() {
-            return chance < 0 ? name : name + " " + Math.round(chance * 100) + "%";
+            return name;
         }
     }
 
@@ -116,13 +117,6 @@ public final class Skills {
             if (k != null) out.putIfAbsent(k.name(), k);
         }
         return new ArrayList<>(out.values());
-    }
-
-    /** The skill names for a tooltip, in the skill colour ("Hot Line 20%"). */
-    public static List<Component> lines(List<Skill> skills) {
-        List<Component> out = new ArrayList<>();
-        for (Skill k : skills) out.add(Component.literal(k.label()).withStyle(st -> st.withColor(Stat.SKILL)));
-        return out;
     }
 
     /** What each skill does, in grey, for the bottom of a tooltip (and any plain note the item has). */

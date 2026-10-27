@@ -649,7 +649,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             for (var t : situationalTotals(rod).entrySet()) out.addAll(t.getValue().describe(ChatFormatting.LIGHT_PURPLE, " " + t.getKey().text));
         }
         List<Skills.Skill> skills = parts(rod).isEmpty() ? Skills.of(rod) : Skills.ofRod(rod);
-        out.addAll(Skills.lines(skills));
         // which rigs the rod itself belongs to, then any rig it (with what's on it) already counts toward:
         // "Jungle rig Tier 1: +8% Quality in jungles"
         Component member = RigSets.memberLine(rod);
@@ -682,7 +681,6 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.LIGHT_PURPLE, " " + perk.when().text));
         List<Skills.Skill> skills = Skills.of(stack);
-        out.addAll(Skills.lines(skills));
         out.addAll(Unlocks.describe(stack));
         Component rigs = RigSets.memberLine(stack);
         if (rigs != null && isTide(stack)) out.add(rigs);

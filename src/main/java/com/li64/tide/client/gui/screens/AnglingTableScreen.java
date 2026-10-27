@@ -51,14 +51,14 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         com.li64.tide.client.gui.BenchStyle.panel(g, GUI_LOCATION, this.leftPos, this.topPos, this.imageWidth, TABLE_H);
         slotHints(g);
         rigPanel(g, mouseX, mouseY);
-        statsPanel(g);
+        statsPanel(g, mouseX, mouseY);
     }
 
     /**
      * To the right of the table: what the rod being put together gives, rod and tackle and rigs added up, with every
      * place, time and rig condition it cares about met (the most each piece can add). Updates as pieces go on.
      */
-    private void statsPanel(GuiGraphicsExtractor g) {
+    private void statsPanel(GuiGraphicsExtractor g, int mouseX, int mouseY) {
         var result = this.menu.getSlot(5).getItem();
         var rod = result.isEmpty() ? this.menu.getSlot(0).getItem() : result;
         if (rod.isEmpty() || this.minecraft == null || this.minecraft.player == null) return;
@@ -85,18 +85,27 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         row.accept(com.li64.tide.data.rods.Stat.STABILITY, -e.fight());
         row.accept(com.li64.tide.data.rods.Stat.CONTROL, e.ease());
         row.accept(com.li64.tide.data.rods.Stat.DOUBLE_CATCH, Math.min(e.twin(), com.li64.tide.data.rods.RodEffects.TWIN_CAP));
-        java.util.List<String> skills = com.li64.tide.data.rods.Skills.ofRod(rod).stream().map(com.li64.tide.data.rods.Skills.Skill::label).toList();
-        java.util.List<net.minecraft.util.FormattedCharSequence> skillText = skills.isEmpty() ? java.util.List.of()
-                : this.font.split(Component.literal(String.join(" · ", skills)), (int) ((w - 10) / 0.75f));
+        // the skills as separate words, wrapped to the panel, so each can be hovered on its own
+        var skills = com.li64.tide.data.rods.Skills.ofRod(rod);
+        float s = 0.75f;
+        int inner = (int) ((w - 10) / s);
+        java.util.List<int[]> skillAt = new java.util.ArrayList<>();      // {line, x} of each skill, in panel units
+        int skillLines = 0, sx = 0, gap = this.font.width(" · ");
+        for (var k : skills) {
+            int kw = this.font.width(k.label());
+            if (sx > 0 && sx + gap + kw > inner) { skillLines++; sx = 0; }
+            if (sx > 0) sx += gap;
+            skillAt.add(new int[]{skillLines, sx});
+            sx += kw;
+        }
+        if (!skills.isEmpty()) skillLines++;
         // where all of that applies
         java.util.LinkedHashSet<String> where = new java.util.LinkedHashSet<>();
         for (var when : com.li64.tide.data.rods.RodEffects.situationalTotals(rod).keySet()) where.add(when.text);
         for (var set : com.li64.tide.data.rods.RigSets.carried(rod)) if (!set.when().text.isEmpty()) where.add(set.when().text);
-        float s = 0.75f;
-        int inner = (int) ((w - 10) / s);
         java.util.List<net.minecraft.util.FormattedCharSequence> note = new java.util.ArrayList<>(this.font.split(Component.literal(where.isEmpty()
                 ? "Works anywhere" : "With everything active: " + String.join(", ", where)), inner));
-        int h = (int) ((14 + Math.max(1, rows.size()) * 10 + (skillText.isEmpty() ? 0 : 3 + skillText.size() * 9) + 3 + note.size() * 9) * s) + 6;
+        int h = (int) ((14 + Math.max(1, rows.size()) * 10 + (skills.isEmpty() ? 0 : 3 + skillLines * 9) + 3 + note.size() * 9) * s) + 6;
         int y = this.topPos;
         g.fill(x, y, x + w, y + h, 0xD0101820);
         g.fill(x, y, x + 2, y + h, 0xFFC9A44A);
@@ -105,21 +114,51 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         g.pose().scale(s, s);
         com.li64.tide.client.Gui26.text(g, this.font, "This rod, in all", 0, 0, 0xFFFFD27F, true);
         int ly = 14;
+        // what's under the mouse, in panel units
+        float px = (mouseX - (x + 5)) / s, py = (mouseY - (y + 3)) / s;
+        java.util.List<Component> hover = null;
         if (rows.isEmpty()) { com.li64.tide.client.Gui26.text(g, this.font, "No bonuses yet", 0, ly, 0xFFA8B4BC, true); ly += 10; }
         for (Object[] r : rows) {
             var stat = (com.li64.tide.data.rods.Stat) r[0];
             String value = (String) r[1];
             com.li64.tide.client.Gui26.text(g, this.font, stat.label, 0, ly, 0xFF000000 | stat.color, true);
             com.li64.tide.client.Gui26.text(g, this.font, value, inner - this.font.width(value), ly, (Boolean) r[2] ? 0xFF7FE07F : 0xFFFF8A7A, true);
+            if (px >= 0 && px < inner && py >= ly - 1 && py < ly + 9) hover = explainTip(stat.label, stat.color, stat.explain);
             ly += 10;
         }
-        if (!skillText.isEmpty()) {
+        if (!skills.isEmpty()) {
             ly += 3;
-            for (var line : skillText) { com.li64.tide.client.Gui26.text(g, this.font, line, 0, ly, 0xFF000000 | com.li64.tide.data.rods.Stat.SKILL, true); ly += 9; }
+            for (int i = 0; i < skills.size(); i++) {
+                var k = skills.get(i);
+                int kx = skillAt.get(i)[1], ky = ly + skillAt.get(i)[0] * 9;
+                if (kx > 0) com.li64.tide.client.Gui26.text(g, this.font, " · ", kx - gap, ky, 0xFF000000 | com.li64.tide.data.rods.Stat.SKILL, true);
+                com.li64.tide.client.Gui26.text(g, this.font, k.label(), kx, ky, 0xFF000000 | com.li64.tide.data.rods.Stat.SKILL, true);
+                if (px >= kx && px < kx + this.font.width(k.label()) && py >= ky - 1 && py < ky + 9)
+                    hover = explainTip(k.label(), com.li64.tide.data.rods.Stat.SKILL, k.explain());
+            }
+            ly += skillLines * 9;
         }
         ly += 3;
         for (var line : note) { com.li64.tide.client.Gui26.text(g, this.font, line, 0, ly, 0xFFA8B4BC, true); ly += 9; }
         g.pose().popMatrix();
+        if (hover != null) g.setTooltipForNextFrame(this.font, hover, java.util.Optional.empty(), mouseX, mouseY);
+    }
+
+    /** A stat's or skill's name in its colour, and what it does in grey, wrapped to a readable width. */
+    private java.util.List<Component> explainTip(String name, int color, String explain) {
+        java.util.List<Component> tip = new java.util.ArrayList<>();
+        tip.add(Component.literal(name).withStyle(st -> st.withColor(color)));
+        StringBuilder line = new StringBuilder();
+        for (String word : explain.split(" ")) {
+            if (!line.isEmpty() && this.font.width(line + " " + word) > 170) {
+                tip.add(Component.literal(line.toString()).withStyle(net.minecraft.ChatFormatting.GRAY));
+                line.setLength(0);
+            }
+            if (!line.isEmpty()) line.append(' ');
+            line.append(word);
+        }
+        if (!line.isEmpty()) tip.add(Component.literal(line.toString()).withStyle(net.minecraft.ChatFormatting.GRAY));
+        return tip;
     }
 
     /** What goes in each slot: a faded picture while it is empty, and a small label. */

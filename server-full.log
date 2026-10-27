@@ -1,0 +1,203 @@
+To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/9.7.1/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Daemon will be stopped at the end of the build 
+
+> Configure project :
+Fabric Loom: 1.18.4
+
+> Task :compileJava UP-TO-DATE
+> Task :processResources UP-TO-DATE
+> Task :classes UP-TO-DATE
+> Task :generateLog4jConfig
+> Task :generateDLIConfig
+> Task :configureLaunch
+
+> Task :runServer
+[17:15:52] [main/INFO] (FabricLoader/GameProvider) Loading Minecraft 26.3 with Fabric Loader 0.19.5
+[17:15:52] [main/INFO] (FabricLoader/Mappings) Mappings not present!
+[17:15:52] [main/INFO] (FabricLoader) Loading 44 mods:
+	- fabric-advancement-api-v1 1.0.1+38c7a2d55d
+	- fabric-api 0.163.0+26.3
+	- fabric-api-base 2.0.6+fcdff87f5d
+	- fabric-api-lookup-api-v1 2.0.24+3434d6d95d
+	- fabric-biome-api-v1 20.1.0+c6aa69a85d
+	- fabric-block-api-v1 3.1.0+0ae6f9115d
+	- fabric-block-getter-api-v2 2.0.9+3434d6d95d
+	- fabric-command-api-v2 3.1.2+fcdff87f5d
+	- fabric-content-registries-v0 15.0.5+74ed1ea55d
+	- fabric-convention-tags-v2 4.10.3+6b5b47fd5d
+	- fabric-crash-report-info-v1 1.0.7+fcdff87f5d
+	- fabric-creative-tab-api-v1 5.0.22+fcdff87f5d
+	- fabric-data-attachment-api-v1 2.2.32+b9b88df45d
+	- fabric-data-generation-api-v1 27.4.0+e985c3605d
+	- fabric-debug-api-v1 1.0.5+5af7744b5d
+	- fabric-dimensions-v1 5.1.20+5af7744b5d
+	- fabric-entity-events-v1 6.0.4+3434d6d95d
+	- fabric-events-interaction-v0 5.3.8+b9b88df45d
+	- fabric-game-rule-api-v1 4.0.10+3434d6d95d
+	- fabric-gametest-api-v1 4.0.34+3434d6d95d
+	- fabric-item-api-v1 14.7.1+5af7744b5d
+	- fabric-lifecycle-events-v1 4.1.9+ffef5f675d
+	- fabric-loot-api-v3 4.0.9+4068fd645d
+	- fabric-menu-api-v1 2.0.29+ed66f0a35d
+	- fabric-message-api-v1 7.0.10+3434d6d95d
+	- fabric-networking-api-v1 6.3.10+5c1fee4d5d
+	- fabric-object-builder-api-v1 24.1.11+e2f63d3e5d
+	- fabric-particles-v1 5.0.26+3434d6d95d
+	- fabric-permission-api-v1 1.0.8+fcdff87f5d
+	- fabric-recipe-api-v1 10.0.10+b9b88df45d
+	- fabric-registry-sync-v0 8.0.3+1ca9f6365d
+	- fabric-rendering-fluids-v1 6.0.6+3434d6d95d
+	- fabric-resource-conditions-api-v1 6.2.0+0d124ae85d
+	- fabric-resource-loader-v0 3.3.27+4fc5413f5d
+	- fabric-resource-loader-v1 3.1.0+5af7744b5d
+	- fabric-serialization-api-v1 2.0.7+74ed1ea55d
+	- fabric-tag-api-v1 2.1.11+fcdff87f5d
+	- fabric-transfer-api-v1 8.0.25+fcdff87f5d
+	- fabric-transitive-access-wideners-v1 8.1.17+e2f63d3e5d
+	- fabricloader 0.19.5
+	- java 25
+	- minecraft 26.3
+	- mixinextras 0.5.5
+	- tide 1.1.5+26.3
+[17:15:52] [main/INFO] (FabricLoader/Mixin) SpongePowered MIXIN Subsystem Version=0.8.7 Source=file:/home/runner/.gradle/caches/modules-2/files-2.1/net.fabricmc/sponge-mixin/0.17.4+mixin.0.8.7/5f66cc9f59b8efaa942155a3d5a30599bf6640dd/sponge-mixin-0.17.4+mixin.0.8.7.jar Service=Knot/Fabric Env=SERVER
+[17:15:52] [main/INFO] (FabricLoader/MixinExtras|Service) Initializing MixinExtras via com.llamalad7.mixinextras.service.MixinExtrasServiceImpl(version=0.5.5).
+[17:15:57] [main/INFO] (Tide) Initialized Tide on Fabric 26.3
+[17:15:57] [main/INFO] (Tide) Registering fishing conditions
+[17:15:57] [main/INFO] (Tide) Registering fishing modifiers
+[17:15:58] [main/INFO] (Minecraft) Environment: Environment[discoveryUrl=https://discovery.minecraftservices.com/minecraft/client, name=PROD]
+[17:15:58] [Worker-Main-3/INFO] (Minecraft) No existing world data, creating new world
+[17:15:59] [Worker-Main-2/INFO] (Minecraft) Loaded 2073 advancements
+[17:15:59] [main/INFO] (Tide) Loaded 30 entries from 'tide:bait'
+[17:15:59] [main/INFO] (Tide) Loaded 9 entries from 'tide:fishing/crates'
+[17:15:59] [main/INFO] (Tide) Loaded 106 entries from 'tide:fishing/fish'
+[17:15:59] [main/INFO] (Tide) Loaded 10 entries from 'tide:fishing/loot'
+[17:15:59] [main/INFO] (Tide) Loaded 17 entries from 'tide:rod_accessories'
+[17:15:59] [main/INFO] (Tide) Tide: 148 recipes moved to the angling table
+[17:15:59] [main/INFO] (BiomeModificationImpl) Applied 1064 biome modifications to 66 of 67 new biomes in 11.97 ms
+[17:15:59] [Server thread/INFO] (Minecraft) Starting minecraft server version 26.3
+[17:15:59] [Server thread/INFO] (Minecraft) Loading properties
+[17:15:59] [Server thread/INFO] (Minecraft) Default game type: SURVIVAL
+[17:15:59] [Server thread/INFO] (Minecraft) Generating keypair
+[17:15:59] [Server thread/INFO] (Minecraft) Starting Minecraft server on *:25565
+[17:15:59] [Server thread/WARN] (Minecraft) **** SERVER IS RUNNING IN OFFLINE/INSECURE MODE!
+[17:15:59] [Server thread/WARN] (Minecraft) The server will make no attempt to authenticate usernames. Beware.
+[17:15:59] [Server thread/WARN] (Minecraft) While this makes the game possible to play without internet access, it also opens up the ability for hackers to connect with any username they choose.
+[17:15:59] [Server thread/WARN] (Minecraft) To change this, set "online-mode" to "true" in the server.properties file.
+[17:15:59] [Server thread/INFO] (Minecraft) Preparing level "world"
+[17:16:00] [Server thread/INFO] (Minecraft) Selecting global world spawn...
+[17:16:01] [Server thread/INFO] (Minecraft) Loading 0 persistent chunks...
+[17:16:02] [Server thread/INFO] (Minecraft) Preparing spawn area: 100%
+[17:16:02] [Server thread/INFO] (Minecraft) Time elapsed: 1942 ms
+[17:16:02] [Server thread/INFO] (Minecraft) Done (2.104s)! For help, type "help"
+[17:16:02] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[world]'/minecraft:overworld
+[17:16:02] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[world]'/minecraft:the_end
+[17:16:02] [Server thread/INFO] (Minecraft) Saving chunks for level 'ServerLevel[world]'/minecraft:the_nether
+[17:16:02] [Server thread/WARN] (TranslationConventionLogWarnings) 
+	Dev warning - Untranslated Item Tags detected. Please translate your item tags so other mods such as recipe viewers can properly display your tag's name.
+	The format desired is tag.item.<namespace>.<path> for the translation key with slashes in path turned into periods.
+	To disable this message, set this system property in your runs: `-Dfabric-tag-conventions-v2.missingTagTranslationWarning=SILENCED`.
+	To see individual untranslated item tags found, set the system property to `-Dfabric-tag-conventions-v2.missingTagTranslationWarning=VERBOSE`.
+	Default is `SHORT`.
+
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: 31 rods, 17 lines, 22 hooks, 33 bobbers, 15 lures, 25 bait
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: angling table: 148 recipes {ROD=19, LINE=17, BOBBER=33, HOOK=22, LURE=15, BAIT=26, GEAR=16}, 10 of them rod upgrades
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: angling table: 33 tide recipes left at the crafting/smithing table
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: string alone unlocks [kids_fishing_pole, fishing_line]
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: iron_rod_smithing needs fishing_rod (or 1 more) + iron_ingot
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: bamboo_fishing_rod needs bamboo
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: fishing_line needs any ingredient
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: redstone_line needs redstone + fishing_line
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: diamond_hook needs fishing_hook (or 5 more) + diamond
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: spinner_lure needs fishing_hook + iron_ingot + red_dye
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: bait needs beetroot (or 29 more) + rotten_flesh + beetroot_seeds (or 5 more) + bone_meal
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: discovery: everything unlocked with all materials: 148/148
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: angling table: diamond hook on a bone hook keeps it
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rods: 31 Tide rods repair with string and stop at broken instead of breaking
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: weights: 4.4 g = 0.16 oz, 4.6 g = 0.16 oz, 300 g = 10.6 oz, 2 kg = 4.4 lb
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: guide: 149 items, 20 rigs, 83238 characters; first item {"id":"tide:stone_fishing_rod","name":"Stone Fishing Rod","category":"Rods","lines":[["#FF55FF","Part of: Stone rig"],["#AAAAAA","No perks of its own: the start of the Stone rig (+10% Attraction with 2 pieces, +20% and +10% Experience with 3)"]],"when":[],"rig":"Stone rig","recipe":{"kind":"crafting","width":3,"height":3,"slots":[[],[],["minecraft:cobblestone","minecraft:mossy_cobblestone","minecraft:infested_cobblestone","minecraft:cobbled_deepslate"],[],["minecraft:cobblestone","minecraft:mossy_cobblestone","minecraft:infested_cobblestone","minecraft:cobbled_deepslate"],["minecraft:string"],["minecraft:cobblestone","minecraft:mossy_cobblestone","minecraft:infested_cobblestone","minecraft:cobbled_deepslate"],[],["minecraft:string"]],"note":"Made at the Angling Table."}}
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: killed minecraft:cod: graded, best of 400 at level 99 = Great
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: killed tide:bluegill: graded, best of 400 at level 99 = Great
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: iron tetra -> raw iron: Poor 1, Average 2, Good 3, Great 4, Trophy 6, Mythic 8
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: describe: tooltip tide:golden_hook | FFAA00	Tier 1 hook | 00AAAA	Attracts uncommon and rarer fish (x1.2) | 00AAAA	+5% Precision | 00AAAA	+10% Experience | FF55FF	Part of: Gold rig | AAAAAA	Used to make Tier 2 hooks, which keep these perks
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: describe: tooltip tide:bamboo_fishing_rod | 00AAAA	+5% Casting | FF55FF	+25% Attraction in jungles | FF55FF	+15% Fortune in jungles | FF55FF	Part of: Jungle rig
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: describe: tooltip tide:golden_bait | AAAAAA	When used as bait: | 5555FF	+30% Fortune | 00AAAA	Attracts uncommon and rarer fish (x1.5) | 00AAAA	+23% Quality
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: describe: tooltip minecraft:diamond_sword | AAAAAA	When in Main Hand: | 5555FF	+6 Attack Damage | FF5555	-2.4 Attack Speed
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: 167 accessories each counted once on a rod
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: 60,000 random loadouts, every place-and-time perk on at once
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: fastest bites: waits x0.37 of normal (cherry_fishing_rod + copper_line + permafrost_hook on fish_bone_hook + lichen_bobber + popper_lure + cut_bait)
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: easiest fight: fish move at x0.55 (kids_fishing_pole + kelp_line + netherite_hook on fish_bone_hook + netherite_bobber + fly_lure + dripstone_bait)
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: catch quality boost -30.0% to 83.0%: Mythic 0.220% at level 99 best, 0.041% at level 1 worst; Poor 51.2% at level 1 worst
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: most fishing speed points 4; luck -3 to 15 (sunflower_fishing_rod + copper_line + prismarine_hook on stone_hook + nautilus_bobber + storm_lure + golden_bait + coastal_bait + dripstone_bait); cast range up to x2.00
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: most: land 90.0%, second fish 37.0%, cooked 35.0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: strongest pull on one fish: x12.48 (iron_fishing_rod + echo_lure on tide:alpha_fish)
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: luck 0 at spawn: 85.9% fish, 4.0% crates, 10.1% junk and treasure
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: luck 5 at spawn: 94.3% fish, 5.7% crates, 0.0% junk and treasure
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: luck 10 at spawn: 93.1% fish, 6.9% crates, 0.0% junk and treasure
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: luck 17 at spawn: 92.4% fish, 7.6% crates, 0.0% junk and treasure
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Ocean rig (5 pieces: conduit_fishing_rod kelp_line prismarine_bobber prismarine_hook squid_lure): rare finds +55% (luck +4), bite +55%, quality +35%, hook window +20%, xp +0%, land +0%, fight -5%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit River rig (4 pieces: feather_bobber fly_lure silk_line wooden_hook): rare finds +15% (luck +1), bite +69%, quality +20%, hook window +5%, xp +20%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Night rig (5 pieces: bone_fishing_rod glow_berry_bobber glow_hook ink_lure phantom_line): rare finds +15% (luck +1), bite +64%, quality +25%, hook window +20%, xp +25%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Twilight rig (4 pieces: cherry_fishing_rod feathered_hook grassy_bobber popper_lure): rare finds +15% (luck +1), bite +80%, quality +50%, hook window +5%, xp +55%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Storm rig (5 pieces: copper_bobber copper_fishing_rod copper_hook copper_line storm_lure): rare finds +45% (luck +3), bite +68%, quality +50%, hook window +5%, xp +0%, land +0%, fight -5%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Swamp rig (4 pieces: frog_lure mangrove_fishing_rod slime_bobber slime_line): rare finds +45% (luck +3), bite +75%, quality +20%, hook window +5%, xp +0%, land +10%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Jungle rig (3 pieces: apple_bobber bamboo_fishing_rod vine_line): rare finds +30% (luck +2), bite +53%, quality +30%, hook window +5%, xp +0%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Desert rig (4 pieces: cactus_bobber cactus_fishing_rod fish_bone_hook redstone_line): rare finds +30% (luck +2), bite +68%, quality +20%, hook window +10%, xp +0%, land +5%, fight -5%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Frost rig (4 pieces: frost_fishing_rod ice_jig_lure permafrost_hook snowball_bobber): rare finds +15% (luck +1), bite +73%, quality +35%, hook window +5%, xp +0%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Cave rig (4 pieces: echo_fishing_rod jig_lure sculk_bobber spider_line): rare finds +15% (luck +1), bite +25%, quality +60%, hook window +15%, xp +10%, land +8%, fight -5%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Fire rig (5 pieces: lavaproof_hook magma_lure netherite_bobber netherite_fishing_rod netherite_line): rare finds +45% (luck +3), bite +70%, quality +55%, hook window +32%, xp +15%, land +15%, fight -35%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Void rig (3 pieces: chorus_bobber chorus_lure void_hook): rare finds +45% (luck +3), bite +60%, quality +20%, hook window +5%, xp +5%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Iron rig (4 pieces: fishing_hook iron_bobber iron_fishing_rod iron_line): rare finds +0% (luck +0), bite +0%, quality +0%, hook window +28%, xp +0%, land +0%, fight -10%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Stone rig (4 pieces: fishing_line red_bobber stone_fishing_rod stone_hook): rare finds +0% (luck +0), bite +20%, quality +0%, hook window +5%, xp +10%, land +0%, fight -3%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Gold rig (4 pieces: golden_hook golden_line golden_spoon_lure midas_fishing_rod): rare finds +15% (luck +1), bite +0%, quality +10%, hook window +5%, xp +60%, land +0%, fight -5%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Diamond rig (4 pieces: diamond_bobber diamond_fishing_rod diamond_hook diamond_line): rare finds +0% (luck +0), bite +0%, quality +33%, hook window +30%, xp +0%, land +5%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Honey rig (3 pieces: honey_bobber honey_line honeycomb_fishing_rod): rare finds +0% (luck +0), bite +15%, quality +0%, hook window +0%, xp +10%, land +30%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Lucky rig (3 pieces: enchanted_golden_apple_bobber lucky_hook magnet_lure): rare finds +55% (luck +4), bite +0%, quality +17%, hook window +5%, xp +5%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Sunlight rig (3 pieces: golden_bobber spinner_lure sunflower_fishing_rod): rare finds +15% (luck +1), bite +57%, quality +0%, hook window +0%, xp +20%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: rig kit Moonlight rig (4 pieces: amethyst_fishing_rod amethyst_hook amethyst_line pearl_bobber): rare finds +30% (luck +2), bite +0%, quality +68%, hook window +5%, xp +0%, land +0%, fight +0%
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: balance amethyst kit, jungle by day: luck +0, bite +10%, quality +0% -> Good+ 22.0%, Great+ 5.0%, Trophy+ 1.0%, Mythic 1 in 1,000
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: balance jungle rig + amethyst hook, jungle by day: luck +2, bite +65%, quality +30% -> Good+ 29.1%, Great+ 7.1%, Trophy+ 1.5%, Mythic 1 in 771
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: balance jungle rig + amethyst hook, plains by day: luck +0, bite +15%, quality +0% -> Good+ 22.0%, Great+ 5.0%, Trophy+ 1.0%, Mythic 1 in 1,000
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: balance amethyst kit, river by day: luck +0, bite +10%, quality +0% -> Good+ 22.0%, Great+ 5.0%, Trophy+ 1.0%, Mythic 1 in 1,000
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: balance river rig (amethyst rod), river by day: luck +1, bite +88%, quality +20% -> Good+ 26.8%, Great+ 6.4%, Trophy+ 1.3%, Mythic 1 in 831
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: quality at level 1: Poor 40.5%, Average 45.3%, Good 11.2%, Great 2.4%, Trophy 0.498%, Mythic 1 in 1,512
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: quality at level 1 with the best quality gear: Poor 21.8%, Average 47.6%, Good 23.0%, Great 5.9%, Trophy 1.4%, Mythic 1 in 738
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: quality at level 40: Poor 30.0%, Average 48.0%, Good 17.0%, Great 4.0%, Trophy 0.900%, Mythic 1 in 1,000
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: quality at level 40 with the best quality gear: Poor 14.2%, Average 44.2%, Good 30.5%, Great 8.8%, Trophy 2.3%, Mythic 1 in 557
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: quality at level 99: Poor 19.6%, Average 47.0%, Good 25.0%, Great 6.6%, Trophy 1.6%, Mythic 1 in 681
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: quality at level 99 with the best quality gear: Poor 8.0%, Average 37.2%, Good 38.6%, Great 12.5%, Trophy 3.5%, Mythic 1 in 441
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:dragon_fish, luck 0: 1 in 385 bites at best (void in badlands at y -64); a Mythic one at level 99: 1 in 262,220
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:dragon_fish, luck 10: 1 in 211 bites at best (void in badlands at y -64); a Mythic one at level 99: 1 in 143,880
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:alpha_fish, luck 0: can't be caught in any spot tried
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:alpha_fish, luck 10: can't be caught in any spot tried
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:coelacanth, luck 0: 1 in 789,194,326 bites at best (water in deep_cold_ocean at y 64); a Mythic one at level 99: 1 in 537,070,347,426
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:coelacanth, luck 10: 1 in 449,787,009 bites at best (water in deep_cold_ocean at y 64); a Mythic one at level 99: 1 in 306,093,514,581
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:shooting_starfish, luck 0: 1 in 125 bites at best (water in deep_cold_ocean at y 64); a Mythic one at level 99: 1 in 85,365
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:shooting_starfish, luck 10: 1 in 71 bites at best (water in deep_cold_ocean at y 64); a Mythic one at level 99: 1 in 48,652
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:midas_fish, luck 0: can't be caught in any spot tried
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:midas_fish, luck 10: 1 in 54 bites at best (water in badlands at y 20); a Mythic one at level 99: 1 in 36,796
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:devils_hole_pupfish, luck 0: 1 in 217 bites at best (water in badlands at y 20); a Mythic one at level 99: 1 in 147,384
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:devils_hole_pupfish, luck 10: 1 in 135 bites at best (water in badlands at y 20); a Mythic one at level 99: 1 in 91,581
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:voidseeker, luck 0: 1 in 128 bites at best (void in badlands at y -64); a Mythic one at level 99: 1 in 87,407
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: legendary tide:voidseeker, luck 10: 1 in 132 bites at best (void in badlands at y -64); a Mythic one at level 99: 1 in 89,925
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: 1360 recipe inputs tried against every crafting recipe, 0 clashes
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear: 89 fish cook on the line, 17 stay raw (no furnace recipe)
+[17:16:14] [Server thread/INFO] (Tide) TIDE-CI gear check done in 12713 ms: 0 problem(s)
+[17:16:14] [Server thread/WARN] (Minecraft) Can't keep up! Is the server overloaded? Running 12725ms or 254 ticks behind
+
+> Task :runServer FAILED
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/smoke-1793121348233.json
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':runServer' (registered by plugin 'fabric-loom').
+> Process 'command '/usr/lib/jvm/temurin-25-jdk-amd64/bin/java'' finished with non-zero exit value 143 (this value may indicate that the process was terminated with the SIGTERM signal)
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights from a Build Scan (powered by Develocity).
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 35s
+5 actionable tasks: 3 executed, 2 up-to-date

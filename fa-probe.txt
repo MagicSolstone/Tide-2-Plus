@@ -1,0 +1,199 @@
+version: 1.11.1 for ["26.1.2","26.2","26.3"]
+--- fish files
+./assets/minecraft/optifine/cem/cod.jem
+./assets/minecraft/optifine/cem/cod_animations.jpm
+./assets/minecraft/optifine/cem/puffer_fish_big.jem
+./assets/minecraft/optifine/cem/puffer_fish_big_animations.jpm
+./assets/minecraft/optifine/cem/puffer_fish_medium.jem
+./assets/minecraft/optifine/cem/puffer_fish_small.jem
+./assets/minecraft/optifine/cem/puffer_fish_small_animations.jpm
+./assets/minecraft/optifine/cem/salmon.jem
+./assets/minecraft/optifine/cem/salmon_animations.jpm
+./assets/minecraft/optifine/cem/silverfish.jem
+./assets/minecraft/optifine/cem/silverfish_animations.jpm
+./assets/minecraft/optifine/cem/tropical_fish_a.jem
+./assets/minecraft/optifine/cem/tropical_fish_a_animations.jpm
+./assets/minecraft/optifine/cem/tropical_fish_b.jem
+./assets/minecraft/optifine/cem/tropical_fish_b_animations.jpm
+./assets/minecraft/optifine/cem/tropical_fish_pattern_a.jem
+./assets/minecraft/optifine/cem/tropical_fish_pattern_a_animations.jpm
+./assets/minecraft/optifine/cem/tropical_fish_pattern_b.jem
+./assets/minecraft/optifine/cem/tropical_fish_pattern_b_animations.jpm
+=== ./assets/minecraft/optifine/cem/tropical_fish_a.jem
+{"credit":"Created by FreshLX for Fresh Animations","textureSize":[32,32],"models":[{"part":"root","id":"root","invertAxis":"xy","translate":[0,0,0],"model":"tropical_fish_a_animations.jpm"},{"part":"tail","id":"tail","invertAxis":"xy","translate":[0,0,0],"submodels":[{"id":"Created_by_FreshLX_for_Fresh_Animations","invertAxis":"xy","translate":[0,0,0]}]},{"part":"body","id":"body","invertAxis":"xy","translate":[0,-1.5,0],"submodels":[{"id":"body2","invertAxis":"xy","translate":[0,1.5,0],"boxes":[{"coordinates":[-1,-1.5,-3,2,3,6],"textureOffset":[0,0]}],"submodels":[{"id":"right_fin","invertAxis":"xy","translate":[1,-0.5,-0.25],"rotate":[0,-45,0],"boxes":[{"coordinates":[0,-1,0,2,2,0],"uvNorth":[2,16,4,18],"uvSouth":[4,16,6,18],"sizeAdd":0.005}]},{"id":"left_fin","invertAxis":"xy","translate":[-1,-0.5,-0.25],"rotate":[0,45,0],"boxes":[{"coordinates":[-2,-1,0,2,2,0],"uvNorth":[2,12,4,14],"uvSouth":[4,12,6,14],"sizeAdd":0.005}]},{"id":"fin_top2","invertAxis":"xy","translate":[0,1.5,0],"boxes":[{"coordinates":[0,0,-3,0,4,6],"uvEast":[10,0,16,4],"uvWest":[16,0,22,4],"sizeAdd":0.005}]},{"id":"tail2","invertAxis":"xy","translate":[0,0,3],"boxes":[{"coordinates":[0,-1.5,-0.1,0,3,4],"uvEast":[24,0,28,3],"uvWest":[28,0,32,3],"sizeAdd":0.005}]}]}]},{"part":"fin_top","id":"fin_top","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_left","id":"fin_left","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_right","id":"fin_right","invertAxis":"xy","translate":[0,0,0]}]}
+=== ./assets/minecraft/optifine/cem/tropical_fish_a_animations.jpm
+{
+	"credit": "Created by FreshLX for Fresh Animations",
+	"animations": [
+		{
+			"varb.pfc": "frame_counter == var.pre_frame_counter",
+			"var.hy": "clamp(head_yaw,-90,90) * clamp( 1-abs( var.position-pos_y )*2, 0, 1 )",
+			"var.r": "random(id)*pi*4",
+			"var.up": "var.up +abs( var.pre_posy-pos_y )",
+			"var.ls": "var.r +limb_swing*2 +age/7 +var.up*4",
+			"var.ft": "limb_swing/3 +age/3",
+			"var.m": "clamp( limb_speed*3 +abs( var.position-pos_y ), 0, 1 )",
+			"var.waves": "pos_x*1.5 +pos_y*2 +pos_z*1.5 +age/17",
+			"var.inair": "clamp( if( varb.pfc, var.inair, !is_in_water, var.inair +1 *frame_time, var.inair -2 *frame_time ), 0, 1 )",
+			"var.position": "if( varb.pfc, var.position, !equals(pos_y,var.pre_posy,1), pos_y, pos_y*min(1,frame_time*6) +var.position*max(0,1-frame_time*6) )",
+			"var.Created_by_FreshLX_for_Fresh_Animations": "1"
+		},
+		{
+			"body.ry": "-tail.ry/6  +sin( var.ft/3 +sin( var.ft/5 )/2 )*var.inair",
+			"body.rz": "if( is_in_water, 0, -pi/2 )",
+			"body.rx": "( clamp( ( var.position-pos_y )*3, -1.5, 1.5 ) -sin( var.waves )/16*(1-var.m) )*(1-var.inair)",
+			"body2.rz": " ( -cos( var.ls )/10*var.m -cos( var.waves )/8*(1-var.m) )*(1-var.inair) +( sin( var.ft/6 +sin( var.ft/3 )*1.2 )*pi/2 )*var.inair",
+			"body2.ty": "if( is_in_water, -2,-2.4 ) +cos( var.waves )  *(1-var.inair) +( clamp( ( var.position-pos_y )*4,-1,1)*4 +3 )*clamp(1-(1-var.inair)*4,0,1)",
+			"body2.ry": " (  sin( var.ls )/13*(0.5+var.m*1.5) +torad(var.hy)/2  )*(1-var.inair) +( -cos( var.ft )/4 +clamp( ( var.position-pos_y )*2,-1,1)*body2.rz )*var.inair",
+			"tail2.tx": " (  sin( var.ls )/6 *(0.5+var.m*1.5) +torad(var.hy)/4  )*(1-var.inair) +( -sin( var.ft )/6 -clamp( ( var.position-pos_y )*2,-1,1)*body2.rz/2 )*var.inair",
+			"tail2.ry": " ( -cos( var.ls )/3 *(0.5+var.m*1.5) +torad(var.hy)/1.5)*(1-var.inair) +( -sin( var.ft )/1.5 -clamp( ( var.position-pos_y )*5,-1,1)*body2.rz )*var.inair",
+			"tail2.rz": " (  cos( 0.8 +var.ls )/6 *(1 -var.m) )*(1-var.inair)  -sin( var.ft )/3  *var.inair",
+			"fin_top2.rz": "(  cos( var.ls )/8 *(1  -var.m*0.5) )*(1-var.inair) +(  sin( var.ft )/1.5 -clamp( ( var.position-pos_y )*5,-1,1)*body2.rz )*var.inair",
+			"body2.tx": " (  cos( var.ls )/5 *(0.5+var.m*1.5) )*(1-var.inair)  -cos( var.ft ) *var.inair +if( is_in_water, 0, 1.2 )",
+			"tail2.rx": " ( -sin( var.waves )/10*(1-var.m) -max(0,1-var.m*2)/20 )*(1-var.inair)  -sin( var.ft )/6 *var.inair",
+			"body2.sx": "1 +( 0.5-random(id) )/3",
+			"body2.sy": "body2.sx",
+			"body2.sz": "body2.sx"
+		},
+		{
+			"left_fin.rx": " torad(-20)",
+			"right_fin.rx": "torad(-20)",
+			"left_fin.ry": " torad(-35  ) +(  cos(  var.r +limb_swing/2 +age/4 +sin( var.r +limb_swing/2 +age/8 ) )/2 *max(0,1-var.m*2) +( -0.5 -sin( var.r +limb_swing*1.5 +age/6 )/3 ) *min(1,var.m*2) )*(1-var.inair) +sin(age/1.5)/2*var.inair",
+			"right_fin.ry": "torad( 35  ) +( -sin(  var.r +limb_swing/2 +age/4 +cos( var.r +limb_swing/2 +age/8 ) )/2 *max(0,1-var.m*2) +(  0.5 -sin( var.r +limb_swing*1.5 +age/6 )/3 ) *min(1,var.m*2) )*(1-var.inair) -sin(age/1.5)/2*var.inair",
+			"left_fin.rz": " torad( 10 +9*var.m ) +( -cos( 0.5 +var.r +limb_swing/2 +age/4 +sin( var.r +limb_swing/2 +age/8 )/2 )/4 *max(0,1-var.m*2) )*(1-var.inair)",
+			"right_fin.rz": "torad(-10 -9*var.m ) +(  sin( 0.5 +var.r +limb_swing/2 +age/4 +cos( var.r +limb_swing/2 +age/8 )/2 )/4 *max(0,1-var.m*2) )*(1-var.inair)"
+		},
+		{
+			"var.pre_posy": "pos_y",
+			"var.pre_frame_counter": "frame_counter"
+		}
+	]
+}
+=== ./assets/minecraft/optifine/cem/tropical_fish_b.jem
+{"credit":"Created by FreshLX for Fresh Animations","textureSize":[32,32],"models":[{"part":"root","id":"root","invertAxis":"xy","translate":[0,0,0],"model":"tropical_fish_b_animations.jpm"},{"part":"tail","id":"tail","invertAxis":"xy","translate":[0,0,0],"submodels":[{"id":"Created_by_FreshLX_for_Fresh_Animations","invertAxis":"xy","translate":[0,0,0]}]},{"part":"body","id":"body","invertAxis":"xy","translate":[0,-3,-3],"submodels":[{"id":"body2","invertAxis":"xy","translate":[0,2.5,0],"boxes":[{"coordinates":[-1,-2.5,-3,2,6,6],"textureOffset":[0,20]}],"submodels":[{"id":"right_fin","invertAxis":"xy","translate":[1,-1.5,-0.25],"rotate":[0,-45,0],"boxes":[{"coordinates":[0,-1,0,2,2,0],"uvNorth":[2,16,4,18],"uvSouth":[4,16,6,18],"sizeAdd":0.005}]},{"id":"left_fin","invertAxis":"xy","translate":[-1,-1.5,-0.25],"rotate":[0,45,0],"boxes":[{"coordinates":[-2,-1,0,2,2,0],"uvNorth":[2,12,4,14],"uvSouth":[4,12,6,14],"sizeAdd":0.005}]},{"id":"fin_top2","invertAxis":"xy","translate":[0,3.5,0],"boxes":[{"coordinates":[0,0,-3,0,4,6],"uvEast":[20,17,26,21],"uvWest":[26,17,32,21],"sizeAdd":0.005}]},{"id":"fin_bottom2","invertAxis":"xy","translate":[0,-2.5,0],"boxes":[{"coordinates":[0,-4,-3,0,4,6],"uvEast":[20,27,26,31],"uvWest":[26,27,32,31],"sizeAdd":0.005}]},{"id":"tail2","invertAxis":"xy","translate":[0,0.5,2],"boxes":[{"coordinates":[0,-3,0.8,0,6,5],"uvEast":[21,21,26,27],"uvWest":[26,21,31,27],"sizeAdd":0.005}]}]}]},{"part":"fin_top","id":"fin_top","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_bottom","id":"fin_bottom","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_left","id":"fin_left","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_right","id":"fin_right","invertAxis":"xy","translate":[0,0,0]}]}
+=== ./assets/minecraft/optifine/cem/tropical_fish_b_animations.jpm
+{
+	"credit": "Created by FreshLX for Fresh Animations",
+	"animations": [
+		{
+			"varb.pfc": "frame_counter == var.pre_frame_counter",
+			"var.hy": "clamp(head_yaw,-90,90) * clamp( 1-abs( var.position-pos_y )*2, 0, 1 )",
+			"var.r": "random(id)*pi*4",
+			"var.up": "var.up +abs( var.pre_posy-pos_y )",
+			"var.ls": "var.r +limb_swing*2 +age/7 +var.up*4",
+			"var.ft": "limb_swing/3 +age/3",
+			"var.m": "clamp( limb_speed*3 +abs( var.position-pos_y ), 0, 1 )",
+			"var.waves": "pos_x*1.5 +pos_y*2 +pos_z*1.5 +age/17",
+			"var.inair": "clamp( if( varb.pfc, var.inair, !is_in_water, var.inair +1 *frame_time, var.inair -2 *frame_time ), 0, 1 )",
+			"var.position": "if( varb.pfc, var.position, !equals(pos_y,var.pre_posy,1), pos_y, pos_y*min(1,frame_time*6) +var.position*max(0,1-frame_time*6) )",
+			"var.Created_by_FreshLX_for_Fresh_Animations": "1"
+		},
+		{
+			"body.ry": "-tail.ry/6  +sin( var.ft/3 +sin( var.ft/5 )/2 )*var.inair",
+			"body.rz": "if( is_in_water, 0, -pi/2 )",
+			"body.rx": "( clamp( ( var.position-pos_y )*3, -1.5, 1.5 ) -sin( var.waves )/24*(1-var.m) )*(1-var.inair)",
+			"body2.rz": "( -cos( var.ls )/10*var.m -cos( var.waves )/20*(1-var.m) )*(1-var.inair) +( sin( var.ft/6 +sin( var.ft/3 )*1.2 )*pi/2 )*var.inair",
+			"body2.ty": "if( is_in_water, -1.5,-5) +cos( var.waves ) *(1-var.inair) +( clamp( ( var.position-pos_y )*4,-1,1)*4 +3 )*clamp(1-(1-var.inair)*4,0,1)",
+			"body2.ry": " (  sin( var.ls )/13*(0.5+var.m*1.5) +torad(var.hy)/2  )*(1-var.inair) +( -cos( var.ft )/4 +clamp( ( var.position-pos_y )*2,-1,1)*body2.rz )*var.inair",
+			"tail2.tx": " (  sin( var.ls )/6 *(0.5+var.m*1.5) +torad(var.hy)/4  )*(1-var.inair) +( -sin( var.ft )/6 -clamp( ( var.position-pos_y )*2,-1,1)*body2.rz/2 )*var.inair",
+			"tail2.ry": " ( -cos( var.ls )/3 *(0.5+var.m*1.5) +torad(var.hy)/1.5)*(1-var.inair) +( -sin( var.ft )/1.5 -clamp( ( var.position-pos_y )*5,-1,1)*body2.rz )*var.inair",
+			"tail2.rz": " (  cos( 0.8 +var.ls )/6 *(1 -var.m) )*(1-var.inair)  -sin( var.ft )/3  *var.inair",
+			"fin_top2.rz": "(  cos( var.ls )/8 *(1  -var.m*0.5) )*(1-var.inair) +(  sin( var.ft )/1.5 -clamp( ( var.position-pos_y )*5,-1,1)*body2.rz )*var.inair",
+			"body2.tx": " (  cos( var.ls )/5 *(0.5+var.m*1.5) )*(1-var.inair)  -cos( var.ft ) *var.inair +if( is_in_water, 0, -1.82 )",
+			"tail2.rx": " ( -sin( var.waves )/10*(1-var.m) -max(0,1-var.m*2)/20 )*(1-var.inair)  -sin( var.ft )/6 *var.inair",
+			"body2.tz": "3",
+			"fin_bottom2.rz": "-fin_top2.rz/1.5",
+			"body2.sx": "1 +( 0.5-random(id) )/3",
+			"body2.sy": "body2.sx",
+			"body2.sz": "body2.sx"
+		},
+		{
+			"left_fin.rx": " torad(-20)",
+			"right_fin.rx": "torad(-20)",
+			"left_fin.ry": " torad(-35  ) +(  cos(  var.r +limb_swing/2 +age/4 +sin( var.r +limb_swing/2 +age/8 ) )/2 *max(0,1-var.m*2) +( -0.5 -sin( var.r +limb_swing*1.5 +age/6 )/3 ) *min(1,var.m*2) )*(1-var.inair) +sin(age/1.5)/2*var.inair",
+			"right_fin.ry": "torad( 35  ) +( -sin(  var.r +limb_swing/2 +age/4 +cos( var.r +limb_swing/2 +age/8 ) )/2 *max(0,1-var.m*2) +(  0.5 -sin( var.r +limb_swing*1.5 +age/6 )/3 ) *min(1,var.m*2) )*(1-var.inair) -sin(age/1.5)/2*var.inair",
+			"left_fin.rz": " torad( 10 +9*var.m ) +( -cos( 0.5 +var.r +limb_swing/2 +age/4 +sin( var.r +limb_swing/2 +age/8 )/2 )/4 *max(0,1-var.m*2) )*(1-var.inair)",
+			"right_fin.rz": "torad(-10 -9*var.m ) +(  sin( 0.5 +var.r +limb_swing/2 +age/4 +cos( var.r +limb_swing/2 +age/8 )/2 )/4 *max(0,1-var.m*2) )*(1-var.inair)"
+		},
+		{
+			"var.pre_posy": "pos_y",
+			"var.pre_frame_counter": "frame_counter"
+		}
+	]
+}
+=== ./assets/minecraft/optifine/cem/tropical_fish_pattern_a.jem
+{"credit":"Created by FreshLX for Fresh Animations","textureSize":[32,32],"models":[{"part":"root","id":"root","invertAxis":"xy","translate":[0,0,0],"model":"tropical_fish_pattern_a_animations.jpm"},{"part":"tail","id":"tail","invertAxis":"xy","translate":[0,0,0],"submodels":[{"id":"Created_by_FreshLX_for_Fresh_Animations","invertAxis":"xy","translate":[0,0,0]}]},{"part":"body","id":"body","invertAxis":"xy","translate":[0,-1.5,0],"submodels":[{"id":"body2","invertAxis":"xy","translate":[0,1.5,0],"boxes":[{"coordinates":[-1,-1.5,-3,2,3,6],"textureOffset":[0,0]}],"submodels":[{"id":"right_fin","invertAxis":"xy","translate":[1,-0.5,-0.25],"rotate":[0,-45,0],"boxes":[{"coordinates":[0,-1,0,2,2,0],"uvNorth":[2,16,4,18],"uvSouth":[4,16,6,18],"sizeAdd":0.005}]},{"id":"left_fin","invertAxis":"xy","translate":[-1,-0.5,-0.25],"rotate":[0,45,0],"boxes":[{"coordinates":[-2,-1,0,2,2,0],"uvNorth":[2,12,4,14],"uvSouth":[4,12,6,14],"sizeAdd":0.005}]},{"id":"fin_top2","invertAxis":"xy","translate":[0,1.5,0],"boxes":[{"coordinates":[0,0,-3,0,4,6],"uvEast":[10,0,16,4],"uvWest":[16,0,22,4],"sizeAdd":0.005}]},{"id":"tail2","invertAxis":"xy","translate":[0,0,3],"boxes":[{"coordinates":[0,-1.5,-0.1,0,3,4],"uvEast":[24,0,28,3],"uvWest":[28,0,32,3],"sizeAdd":0.005}]}]}]},{"part":"fin_top","id":"fin_top","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_left","id":"fin_left","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_right","id":"fin_right","invertAxis":"xy","translate":[0,0,0]}]}
+=== ./assets/minecraft/optifine/cem/tropical_fish_pattern_a_animations.jpm
+{
+	"credit": "Created by FreshLX for Fresh Animations",
+	"animations": [
+		{
+			"var.Created_by_FreshLX_for_Fresh_Animations": "1"
+		},
+		{
+			"body.ry": "-tail.ry/6  +sin( var.ft/3 +sin( var.ft/5 )/2 )*var.inair",
+			"body.rz": "if( is_in_water, 0, -pi/2 )",
+			"body.rx": "( clamp( ( var.position-pos_y )*3, -1.5, 1.5 ) -sin( var.waves )/16*(1-var.m) )*(1-var.inair)",
+			"body2.rz": " ( -cos( var.ls )/10*var.m -cos( var.waves )/8*(1-var.m) )*(1-var.inair) +( sin( var.ft/6 +sin( var.ft/3 )*1.2 )*pi/2 )*var.inair",
+			"body2.ty": "if( is_in_water, -2,-2.4 ) +cos( var.waves )  *(1-var.inair) +( clamp( ( var.position-pos_y )*4,-1,1)*4 +3 )*clamp(1-(1-var.inair)*4,0,1)",
+			"body2.ry": " (  sin( var.ls )/13*(0.5+var.m*1.5) +torad(var.hy)/2  )*(1-var.inair) +( -cos( var.ft )/4 +clamp( ( var.position-pos_y )*2,-1,1)*body2.rz )*var.inair",
+			"tail2.tx": " (  sin( var.ls )/6 *(0.5+var.m*1.5) +torad(var.hy)/4  )*(1-var.inair) +( -sin( var.ft )/6 -clamp( ( var.position-pos_y )*2,-1,1)*body2.rz/2 )*var.inair",
+			"tail2.ry": " ( -cos( var.ls )/3 *(0.5+var.m*1.5) +torad(var.hy)/1.5)*(1-var.inair) +( -sin( var.ft )/1.5 -clamp( ( var.position-pos_y )*5,-1,1)*body2.rz )*var.inair",
+			"tail2.rz": " (  cos( 0.8 +var.ls )/6 *(1 -var.m) )*(1-var.inair)  -sin( var.ft )/3  *var.inair",
+			"fin_top2.rz": "(  cos( var.ls )/8 *(1  -var.m*0.5) )*(1-var.inair) +(  sin( var.ft )/1.5 -clamp( ( var.position-pos_y )*5,-1,1)*body2.rz )*var.inair",
+			"body2.tx": " (  cos( var.ls )/5 *(0.5+var.m*1.5) )*(1-var.inair)  -cos( var.ft ) *var.inair +if( is_in_water, 0, 1.2 )",
+			"tail2.rx": " ( -sin( var.waves )/10*(1-var.m) -max(0,1-var.m*2)/20 )*(1-var.inair)  -sin( var.ft )/6 *var.inair",
+			"body2.sx": "1 +( 0.5-random(id) )/3",
+			"body2.sy": "body2.sx",
+			"body2.sz": "body2.sx"
+		},
+		{
+			"left_fin.rx": " torad(-20)",
+			"right_fin.rx": "torad(-20)",
+			"left_fin.ry": " torad(-35  ) +(  cos(  var.r +limb_swing/2 +age/4 +sin( var.r +limb_swing/2 +age/8 ) )/2 *max(0,1-var.m*2) +( -0.5 -sin( var.r +limb_swing*1.5 +age/6 )/3 ) *min(1,var.m*2) )*(1-var.inair) +sin(age/1.5)/2*var.inair",
+			"right_fin.ry": "torad( 35  ) +( -sin(  var.r +limb_swing/2 +age/4 +cos( var.r +limb_swing/2 +age/8 ) )/2 *max(0,1-var.m*2) +(  0.5 -sin( var.r +limb_swing*1.5 +age/6 )/3 ) *min(1,var.m*2) )*(1-var.inair) -sin(age/1.5)/2*var.inair",
+			"left_fin.rz": " torad( 10 +9*var.m ) +( -cos( 0.5 +var.r +limb_swing/2 +age/4 +sin( var.r +limb_swing/2 +age/8 )/2 )/4 *max(0,1-var.m*2) )*(1-var.inair)",
+			"right_fin.rz": "torad(-10 -9*var.m ) +(  sin( 0.5 +var.r +limb_swing/2 +age/4 +cos( var.r +limb_swing/2 +age/8 )/2 )/4 *max(0,1-var.m*2) )*(1-var.inair)"
+		}
+	]
+}
+=== ./assets/minecraft/optifine/cem/tropical_fish_pattern_b.jem
+{"credit":"Created by FreshLX for Fresh Animations","textureSize":[32,32],"models":[{"part":"root","id":"root","invertAxis":"xy","translate":[0,0,0],"model":"tropical_fish_pattern_b_animations.jpm"},{"part":"tail","id":"tail","invertAxis":"xy","translate":[0,0,0],"submodels":[{"id":"Created_by_FreshLX_for_Fresh_Animations","invertAxis":"xy","translate":[0,0,0]}]},{"part":"body","id":"body","invertAxis":"xy","translate":[0,-3,-3],"submodels":[{"id":"body2","invertAxis":"xy","translate":[0,2.5,0],"boxes":[{"coordinates":[-1,-2.5,-3,2,6,6],"textureOffset":[0,20]}],"submodels":[{"id":"right_fin","invertAxis":"xy","translate":[1,-1.5,-0.25],"rotate":[0,-45,0],"boxes":[{"coordinates":[0,-1,0,2,2,0],"uvNorth":[2,16,4,18],"uvSouth":[4,16,6,18],"sizeAdd":0.005}]},{"id":"left_fin","invertAxis":"xy","translate":[-1,-1.5,-0.25],"rotate":[0,45,0],"boxes":[{"coordinates":[-2,-1,0,2,2,0],"uvNorth":[2,12,4,14],"uvSouth":[4,12,6,14],"sizeAdd":0.005}]},{"id":"fin_top2","invertAxis":"xy","translate":[0,3.5,0],"boxes":[{"coordinates":[0,0,-3,0,4,6],"uvEast":[20,17,26,21],"uvWest":[26,17,32,21],"sizeAdd":0.005}]},{"id":"fin_bottom2","invertAxis":"xy","translate":[0,-2.5,0],"boxes":[{"coordinates":[0,-4,-3,0,4,6],"uvEast":[20,27,26,31],"uvWest":[26,27,32,31],"sizeAdd":0.005}]},{"id":"tail2","invertAxis":"xy","translate":[0,0.5,2],"boxes":[{"coordinates":[0,-3,0.8,0,6,5],"uvEast":[21,21,26,27],"uvWest":[26,21,31,27],"sizeAdd":0.005}]}]}]},{"part":"fin_top","id":"fin_top","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_bottom","id":"fin_bottom","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_left","id":"fin_left","invertAxis":"xy","translate":[0,0,0]},{"part":"fin_right","id":"fin_right","invertAxis":"xy","translate":[0,0,0]}]}
+=== ./assets/minecraft/optifine/cem/tropical_fish_pattern_b_animations.jpm
+{
+	"credit": "Created by FreshLX for Fresh Animations",
+	"animations": [
+		{
+			"var.Created_by_FreshLX_for_Fresh_Animations": "1"
+		},
+		{
+			"body.ry": "-tail.ry/6  +sin( var.ft/3 +sin( var.ft/5 )/2 )*var.inair",
+			"body.rz": "if( is_in_water, 0, -pi/2 )",
+			"body.rx": "( clamp( ( var.position-pos_y )*3, -1.5, 1.5 ) -sin( var.waves )/24*(1-var.m) )*(1-var.inair)",
+			"body2.rz": "( -cos( var.ls )/10*var.m -cos( var.waves )/20*(1-var.m) )*(1-var.inair) +( sin( var.ft/6 +sin( var.ft/3 )*1.2 )*pi/2 )*var.inair",
+			"body2.ty": "if( is_in_water, -1.5,-5) +cos( var.waves ) *(1-var.inair) +( clamp( ( var.position-pos_y )*4,-1,1)*4 +3 )*clamp(1-(1-var.inair)*4,0,1)",
+			"body2.ry": " (  sin( var.ls )/13*(0.5+var.m*1.5) +torad(var.hy)/2  )*(1-var.inair) +( -cos( var.ft )/4 +clamp( ( var.position-pos_y )*2,-1,1)*body2.rz )*var.inair",
+			"tail2.tx": " (  sin( var.ls )/6 *(0.5+var.m*1.5) +torad(var.hy)/4  )*(1-var.inair) +( -sin( var.ft )/6 -clamp( ( var.position-pos_y )*2,-1,1)*body2.rz/2 )*var.inair",
+			"tail2.ry": " ( -cos( var.ls )/3 *(0.5+var.m*1.5) +torad(var.hy)/1.5)*(1-var.inair) +( -sin( var.ft )/1.5 -clamp( ( var.position-pos_y )*5,-1,1)*body2.rz )*var.inair",
+			"tail2.rz": " (  cos( 0.8 +var.ls )/6 *(1 -var.m) )*(1-var.inair)  -sin( var.ft )/3  *var.inair",
+			"fin_top2.rz": "(  cos( var.ls )/8 *(1  -var.m*0.5) )*(1-var.inair) +(  sin( var.ft )/1.5 -clamp( ( var.position-pos_y )*5,-1,1)*body2.rz )*var.inair",
+			"body2.tx": " (  cos( var.ls )/5 *(0.5+var.m*1.5) )*(1-var.inair)  -cos( var.ft ) *var.inair +if( is_in_water, 0, -1.82 )",
+			"tail2.rx": " ( -sin( var.waves )/10*(1-var.m) -max(0,1-var.m*2)/20 )*(1-var.inair)  -sin( var.ft )/6 *var.inair",
+			"body2.tz": "3",
+			"fin_bottom2.rz": "-fin_top2.rz/1.5",
+			"body2.sx": "1 +( 0.5-random(id) )/3",
+			"body2.sy": "body2.sx",
+			"body2.sz": "body2.sx"
+		},
+		{
+			"left_fin.rx": " torad(-20)",
+			"right_fin.rx": "torad(-20)",
+			"left_fin.ry": " torad(-35  ) +(  cos(  var.r +limb_swing/2 +age/4 +sin( var.r +limb_swing/2 +age/8 ) )/2 *max(0,1-var.m*2) +( -0.5 -sin( var.r +limb_swing*1.5 +age/6 )/3 ) *min(1,var.m*2) )*(1-var.inair) +sin(age/1.5)/2*var.inair",
+			"right_fin.ry": "torad( 35  ) +( -sin(  var.r +limb_swing/2 +age/4 +cos( var.r +limb_swing/2 +age/8 ) )/2 *max(0,1-var.m*2) +(  0.5 -sin( var.r +limb_swing*1.5 +age/6 )/3 ) *min(1,var.m*2) )*(1-var.inair) -sin(age/1.5)/2*var.inair",
+			"left_fin.rz": " torad( 10 +9*var.m ) +( -cos( 0.5 +var.r +limb_swing/2 +age/4 +sin( var.r +limb_swing/2 +age/8 )/2 )/4 *max(0,1-var.m*2) )*(1-var.inair)",
+			"right_fin.rz": "torad(-10 -9*var.m ) +(  sin( 0.5 +var.r +limb_swing/2 +age/4 +cos( var.r +limb_swing/2 +age/8 )/2 )/4 *max(0,1-var.m*2) )*(1-var.inair)"
+		}
+	]
+}
+--- entity-model-features for 26.3: 3.3.12-fabric-26.3
+--- entitytexturefeatures for 26.3: 7.2.6-fabric-26.3

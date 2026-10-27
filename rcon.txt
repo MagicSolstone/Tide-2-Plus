@@ -1,0 +1,5 @@
+describe: tooltip tide:golden_hook | FFAA00	Tier 1 hook | 00AAAA	Attracts uncommon and rarer fish (x1.2) | 00AAAA	+5% Precision | 00AAAA	+10% Experience | FF55FF	Part of: Gold rig | AAAAAA	Used to make Tier 2 hooks, which keep these perks
+guide took 0.41s
+guide over rcon: 83250 characters, 149 items, 20 rigs
+Pos: 
+Dimension: 

@@ -5,6 +5,7 @@ import com.li64.tide.client.ClientAngler;
 import com.li64.tide.client.Gui26;
 import com.li64.tide.data.angler.Angler;
 import com.li64.tide.data.rods.RodEffects;
+import com.li64.tide.data.rods.Stat;
 import com.li64.tide.registries.items.TideFishingRodItem;
 import com.li64.tide.util.BaitUtils;
 import net.minecraft.client.Minecraft;
@@ -31,7 +32,7 @@ public final class RodStatsOverlay {
 
     private static final int GOOD = 0xFF7FE07F, BAD = 0xFFFF8A7A, TEXT = 0xFFE8E8E8, DIM = 0xFFA8B4BC, HEAD = 0xFFFFD27F, OFF = 0xFFA87070;
 
-    private record Row(String label, String value, int color) {}
+    private record Row(String label, String value, int color, int labelColor) {}
 
 
     public static void render(GuiGraphicsExtractor g, float dt) {
@@ -54,26 +55,27 @@ public final class RodStatsOverlay {
 
         // every stat the rod (with tackle, gear and level) changes
         List<Row> rows = new ArrayList<>();
-        rows.add(pct("Cast range", (1 + e.cast()) * st.castDistance() - 1, false));
+        rows.add(pct(Stat.CASTING, (1 + e.cast()) * st.castDistance() - 1, false));
         // one bite-speed number: the rod and tackle, lure/bait/rod speed points, and your fishing level, all together
         // (+% = faster, like every other row). Lure enchantments are in here; luck from Luck of the Sea is in Luck.
-        rows.add(pct("Bite speed", 1 / (e.biteWaitFactor(speed) * st.biteWait()) - 1, false));
-        rows.add(pct("Hook window", (1 + e.window()) * st.hookZones() - 1, false));
-        rows.add(pct("Rare finds", RodEffects.rareFinds(luck), false));      // luck: rarer fish, a few more crates
-        rows.add(extra("Catch quality", e.quality(), ""));
-        rows.add(extra("Fishing XP", e.xp(), ""));
-        rows.add(extra("Land Good/Bad", e.land(), ""));
-        rows.add(extra("Fish fight", -e.fight(), " easier"));
-        rows.add(extra("Catch difficulty", -e.ease(), ""));
-        rows.add(extra("Second fish", Math.min(e.twin(), RodEffects.TWIN_CAP), e.twin() > RodEffects.TWIN_CAP ? " (max)" : ""));
-        rows.add(extra("Comes up cooked", e.cook(), ""));
+        rows.add(pct(Stat.ATTRACTION, 1 / (e.biteWaitFactor(speed) * st.biteWait()) - 1, false));
+        rows.add(pct(Stat.PRECISION, (1 + e.window()) * st.hookZones() - 1, false));
+        rows.add(pct(Stat.FORTUNE, RodEffects.rareFinds(luck), false));      // luck: rarer fish, a few more crates
+        rows.add(extra(Stat.QUALITY, e.quality(), ""));
+        rows.add(extra(Stat.EXPERIENCE, e.xp(), ""));
+        rows.add(extra(Stat.FINESSE, e.land(), ""));
+        rows.add(extra(Stat.STABILITY, -e.fight(), ""));
+        rows.add(extra(Stat.CONTROL, e.ease(), ""));
+        rows.add(extra(Stat.DOUBLE_CATCH, Math.min(e.twin(), RodEffects.TWIN_CAP), e.twin() > RodEffects.TWIN_CAP ? " (max)" : ""));
 
         // only what this rod actually changes: a row that would read "Normal" or "-" is left out
         rows.removeIf(r -> r.value().equals("-") || r.value().equals("Normal"));
 
         // the rigs it carries, then the times, places and weather its own pieces care about: each one bright when it
         // applies here and now (a rig in its own colour), grey when it doesn't
-        List<Token> rigTokens = new ArrayList<>(), whenTokens = new ArrayList<>();
+        List<Token> rigTokens = new ArrayList<>(), whenTokens = new ArrayList<>(), skillTokens = new ArrayList<>();
+        // what the rod's pieces and rigs do besides the stats, by name: Hot Line 20%, Green Gold 3%, Fish Finder...
+        for (var k : com.li64.tide.data.rods.Skills.ofRod(rod)) skillTokens.add(new Token(k.label(), 0xFF000000 | Stat.SKILL));
         for (com.li64.tide.data.rods.RigSets.RigSet set : com.li64.tide.data.rods.RigSets.carried(rod)) {
             int n = com.li64.tide.data.rods.RigSets.pieces(set, rod);
             double k = set.when().test(player) ? com.li64.tide.data.rods.RigSets.strength(set, player) : 0;
@@ -106,7 +108,7 @@ public final class RodStatsOverlay {
         int valueW = rows.stream().mapToInt(r -> font.width(r.value())).max().orElse(0);
         String title = "Fishing Lv " + level + (ClientAngler.fair && ClientAngler.enabled ? " (fair play)" : "");
         int w = Math.max(Math.max(labelW + 10 + valueW, font.width(title) + 30), 120);
-        List<List<Token>> rigLines = flow(rigTokens, font, w), whenLines = flow(whenTokens, font, w);
+        List<List<Token>> rigLines = flow(rigTokens, font, w), whenLines = flow(whenTokens, font, w), skillLines = flow(skillTokens, font, w);
         // progress to the next level: a thin bar under the title that fills as you catch (and glides when XP lands)
         boolean maxed = own >= Angler.MAX_LEVEL;
         long lo = Angler.xpForLevel(own), hi = maxed ? lo : Angler.xpForLevel(own + 1);
@@ -115,7 +117,7 @@ public final class RodStatsOverlay {
         shownFill += (target - shownFill) * 0.12;
         if (Math.abs(target - shownFill) < 0.002) shownFill = target;
         String pctText = maxed ? "max" : Math.round(target * 100) + "%";
-        int h = 17 + rows.size() * 10 + (rigLines.isEmpty() ? 0 : 3 + rigLines.size() * 10) + (whenLines.isEmpty() ? 0 : 3 + whenLines.size() * 10);
+        int h = 17 + rows.size() * 10 + (skillLines.isEmpty() ? 0 : 3 + skillLines.size() * 10) + (rigLines.isEmpty() ? 0 : 3 + rigLines.size() * 10) + (whenLines.isEmpty() ? 0 : 3 + whenLines.size() * 10);
         int sw = g.guiWidth(), sh = g.guiHeight();
         float px = sw - (w + 10) * s - 4, py = (sh - (h + 8) * s) / 2f;
 
@@ -132,11 +134,11 @@ public final class RodStatsOverlay {
         g.fill(6, y, 6 + (int) Math.round(w * shownFill), y + 3, 0xFFFFC83A);
         y += 6;
         for (Row r : rows) {
-            Gui26.text(g, font, r.label(), 6, y, TEXT, true);
+            Gui26.text(g, font, r.label(), 6, y, r.labelColor(), true);
             Gui26.text(g, font, r.value(), 6 + w - font.width(r.value()), y, r.color(), true);
             y += 10;
         }
-        for (List<List<Token>> block : List.of(rigLines, whenLines)) {
+        for (List<List<Token>> block : List.of(skillLines, rigLines, whenLines)) {
             if (block.isEmpty()) continue;
             y += 3;
             for (List<Token> line : block) {
@@ -179,19 +181,21 @@ public final class RodStatsOverlay {
     }
 
     /** A row for an extra: a plus percentage when the gear gives it, a dim dash when it doesn't. */
-    private static Row extra(String label, double v, String suffix) {
+    private static Row extra(Stat stat, double v, String suffix) {
         long n = Math.round(v * 100);
-        if (n == 0) return new Row(label, "-", DIM);
-        return new Row(label, String.format("%+d%%", n) + suffix, n > 0 ? GOOD : BAD);
+        int c = 0xFF000000 | stat.color;
+        if (n == 0) return new Row(stat.label, "-", DIM, c);
+        return new Row(stat.label, String.format("%+d%%", n) + suffix, n > 0 ? GOOD : BAD, c);
     }
 
     private static int shownLevel = -1;
     private static double shownFill = 0;
 
-    private static Row pct(String label, double v, boolean lowerIsBetter) {
+    private static Row pct(Stat stat, double v, boolean lowerIsBetter) {
         long n = Math.round(v * 100);
-        if (n == 0) return new Row(label, "Normal", DIM);
+        int c = 0xFF000000 | stat.color;
+        if (n == 0) return new Row(stat.label, "Normal", DIM, c);
         boolean good = lowerIsBetter ? n < 0 : n > 0;
-        return new Row(label, String.format("%+d%%", n), good ? GOOD : BAD);
+        return new Row(stat.label, String.format("%+d%%", n), good ? GOOD : BAD, c);
     }
 }

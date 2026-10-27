@@ -117,21 +117,10 @@ public class TideFishingRodItem extends FishingRodItem {
         if (!builder.isEmpty()) {
             builder.add(0, Component.translatable("text.tide.rod_tooltip.accessories_prefix").withStyle(ChatFormatting.GRAY));
             builder.add(0, Component.empty());
-            List<Component> perks = com.li64.tide.data.rods.RodEffects.accessories(stack).describe(ChatFormatting.DARK_AQUA);
-            if (!perks.isEmpty()) {
-                builder.add(Component.literal("Gear bonuses:").withStyle(ChatFormatting.GRAY));
-                builder.addAll(perks);
-            }
             builder.add(Component.empty());
         }
 
-        if (stack.is(TideTags.Items.LAVA_FISHING_RODS)) builder.add(Component.translatable("text.tide.rod_tooltip.netherite_bonus").withStyle(ChatFormatting.GOLD));
-        if (stack.is(TideItems.CRYSTAL_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.crystal_bonus").withStyle(ChatFormatting.GOLD));
-        if (stack.is(TideItems.DIAMOND_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.diamond_bonus").withStyle(ChatFormatting.GOLD));
-        if (stack.is(TideItems.MIDAS_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.midas_bonus").withStyle(ChatFormatting.GOLD));
-        if (stack.is(TideItems.ECHO_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.echo_bonus").withStyle(ChatFormatting.GOLD));
-        if (stack.is(TideItems.VILLAGE_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.village_bonus").withStyle(ChatFormatting.GOLD));
-        if (stack.is(TideItems.BLAZING_FISHING_ROD)) builder.add(Component.translatable("text.tide.rod_tooltip.blazing_bonus").withStyle(ChatFormatting.GOLD));
+        // what the rod does besides its stats (lava fishing, Fish Finder, Midas Touch...) is in its skills: see Skills
 
         return ImmutableList.copyOf(builder);
     }

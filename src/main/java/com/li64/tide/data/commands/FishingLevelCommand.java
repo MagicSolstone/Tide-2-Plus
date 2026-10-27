@@ -104,7 +104,7 @@ public class FishingLevelCommand {
                 .append(Component.literal("\n  " + d.xp + " XP, " + next
                         + (d.fair ? "\n  Fair play: fishing at level " + Angler.baseline() : "")
                         + (Angler.enabled() ? "" : "\n  (levels are switched off on this server)")
-                        + String.format("\n  vs a normal rod: casting %+d%% · bite speed %+d%% · hook window %+d%% · rare finds %+d%%",
+                        + String.format("\n  vs a normal rod: Casting %+d%% · Attraction %+d%% · Precision %+d%% · Fortune %+d%%",
                         Math.round((s.castDistance() - 1) * 100), Math.round((1 / s.biteWait() - 1) * 100),
                         Math.round((s.hookZones() - 1) * 100), Math.round(com.li64.tide.data.rods.RodEffects.rareFinds(s.luck()) * 100))).withStyle(ChatFormatting.GRAY));
     }

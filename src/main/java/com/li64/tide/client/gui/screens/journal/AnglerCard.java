@@ -60,7 +60,7 @@ final class AnglerCard {
             y += 16;
         }
 
-        Gui26.text(g, font, "Catch quality odds", x, y, DARK, false);
+        Gui26.text(g, font, "Quality odds", x, y, DARK, false);
         y += 11;
         double[] odds = CatchQuality.odds(effective);
         for (CatchQuality q : CatchQuality.values()) {
@@ -79,11 +79,11 @@ final class AnglerCard {
         y += 10;
         Gui26.text(g, font, "compared to a normal rod", x, y, OK, false);
         y += 14;
-        y = bonus(g, font, x, y, "Casting range", s.castDistance() - 1);
-        y = bonus(g, font, x, y, "Bite speed", 1 / s.biteWait() - 1);
-        y = bonus(g, font, x, y, "Hook window", s.hookZones() - 1);
+        y = bonus(g, font, x, y, "Casting", s.castDistance() - 1);
+        y = bonus(g, font, x, y, "Attraction", 1 / s.biteWait() - 1);
+        y = bonus(g, font, x, y, "Precision", s.hookZones() - 1);
         String luck = s.luck() == 0 ? "None" : String.format("%+d%%", Math.round(com.li64.tide.data.rods.RodEffects.rareFinds(s.luck()) * 100));
-        y = row(g, font, x, y, "Rare finds", luck, s.luck() > 0 ? GOOD : s.luck() < 0 ? BAD : OK);
+        y = row(g, font, x, y, "Fortune", luck, s.luck() > 0 ? GOOD : s.luck() < 0 ? BAD : OK);
         y += 8;
 
         Gui26.text(g, font, "Fish fight difficulty", x, y, DARK, false);

@@ -45,7 +45,7 @@ public final class RigSets {
         }
 
         private String text(RodEffects fx) {
-            String numbers = String.join(", ", fx.describe(ChatFormatting.WHITE).stream().map(Component::getString).toList()).toLowerCase();
+            String numbers = String.join(", ", fx.describe(ChatFormatting.WHITE).stream().map(Component::getString).toList());
             return numbers.isEmpty() ? "" : numbers + (when.text.isEmpty() ? "" : " " + when.text);
         }
 
@@ -60,7 +60,7 @@ public final class RigSets {
     }
 
     /** Iron: works anywhere. Two pieces make the rod hit like a wooden sword, three like an iron sword (see {@link #refreshMelee}). */
-    private static final String IRON_TWO_NOTE = "hits like a wooden sword", IRON_NOTE = "hits like an iron sword";
+    private static final String IRON_TWO_NOTE = "Swordfish: hits like a wooden sword", IRON_NOTE = "Swordfish: hits like an iron sword";
 
     private static RodEffects fx(double bite, int luck, double quality, double xp) {
         return new RodEffects(0, bite, 0, 0, luck, quality, 0, xp);
@@ -105,26 +105,26 @@ public final class RigSets {
             // the material rigs: always on, a little weaker than a place-and-time rig in its own place, each with its own twist
             // the starter rig: the first rod, the plain line, bobber and bait, and the stone hook
             new RigSet("Stone rig", When.ALWAYS, fx(0.10, 0, 0, 0), fx(0.20, 0, 0, 0.10),
-                    Set.of("stone_fishing_rod", "stone_hook", "fishing_line", "red_bobber", "bait"), "the rod wears half as fast", "the rod barely wears"),
+                    Set.of("stone_fishing_rod", "stone_hook", "fishing_line", "red_bobber", "bait"), "Sturdy: the rod wears half as fast", "Sturdy: the rod barely wears"),
             new RigSet("Gold rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.10), new RodEffects(0, 0, 0, 0, 0, 0, 0, 0.20),
                     Set.of("golden_fishing_rod", "midas_fishing_rod", "golden_line", "golden_hook", "golden_spoon_lure"),
-                    "", "25% chance of a gold nugget with each fish"),
+                    "", "Gold Rush: 25% chance of a gold nugget with each fish"),
             new RigSet("Diamond rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0.05, 0, 0), new RodEffects(0, 0, 0, 0, 0, 0.10, 0, 0),
                     Set.of("diamond_fishing_rod", "diamond_line", "diamond_hook", "diamond_bobber"), "", ""),
             new RigSet("Honey rig", When.ALWAYS, RodEffects.NONE, new RodEffects(0, 0, 0, 0, 0, 0, 0.10, 0),
                     Set.of("honeycomb_fishing_rod", "honey_line", "honey_bobber"),
-                    "15% chance of a honeycomb with each fish", "25% chance of a honey bottle with each fish"),
+                    "Honey Pot: 15% chance of a honeycomb with each fish", "Honey Pot: 25% chance of a honey bottle with each fish"),
             new RigSet("Lucky rig", When.ALWAYS, new RodEffects(0, 0, 0, 0, 0, 0.05, 0, 0), new RodEffects(0, 0, 0, 0, 1, 0.05, 0, 0),
                     Set.of("golden_apple_bobber", "enchanted_golden_apple_bobber", "lucky_hook", "magnet_lure", "lucky_bait"), "", ""),
             // the sky rigs: their bonus follows the sun or the moon (see strength)
             new RigSet("Sunlight rig", When.DAY, new RodEffects(0, 0.20, 0, 0, 0, 0, 0, 0), new RodEffects(0, 0.40, 0, 0, 0, 0, 0, 0),
                     Set.of("sunflower_fishing_rod", "spinner_lure", "golden_bobber"),
-                    "strongest at noon; seeds come up with fish", "strongest at noon; more seeds come up with fish"),
+                    "strongest at noon; Sun Seeds: seeds come up with fish", "strongest at noon; Sun Seeds: more seeds come up with fish"),
             new RigSet("Moonlight rig", When.NIGHT, new RodEffects(0, 0, 0, 0, 1, 0, 0, 0), new RodEffects(0, 0, 0, 0, 1, 0.25, 0, 0),
                     Set.of("amethyst_fishing_rod", "amethyst_line", "amethyst_hook", "amethyst_bobber", "pearl_bobber",
                             "mushroom_bobber", "moon_bait"),
-                    "strongest on a full moon, weakest on a new moon; 10% chance of an amethyst shard with each fish",
-                    "strongest on a full moon, weakest on a new moon; 20% chance of an amethyst shard with each fish"));
+                    "strongest on a full moon, weakest on a new moon; Moonshard: 10% chance of an amethyst shard with each fish",
+                    "strongest on a full moon, weakest on a new moon; Moonshard: 20% chance of an amethyst shard with each fish"));
 
     /** How strong a rig is right now, 0..1: the Sunlight rig follows the sun to noon, the Moonlight rig the moon to full; the rest are always full. */
     public static double strength(RigSet set, Player player) {
@@ -271,6 +271,22 @@ public final class RigSets {
                 .add(net.minecraft.world.entity.ai.attributes.Attributes.ATTACK_SPEED, new net.minecraft.world.entity.ai.attributes.AttributeModifier(
                         net.minecraft.world.item.Item.BASE_ATTACK_SPEED_ID, -2.4, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE), net.minecraft.world.entity.EquipmentSlotGroup.MAINHAND)
                 .build());
+    }
+
+    /** A rig's skill at this many pieces (Sturdy, Swordfish, Gold Rush, Honey Pot, Sun Seeds, Moonshard), or null. */
+    public static Skills.Skill skill(RigSet set, int pieces) {
+        boolean full = pieces >= PIECES;
+        if (pieces < HALF) return null;
+        return switch (set.name()) {
+            case "Stone rig" -> new Skills.Skill("Sturdy", -1, full ? "The rod barely wears" : "The rod wears half as fast");
+            case "Iron rig" -> new Skills.Skill("Swordfish", -1, full ? "The rod hits like an iron sword" : "The rod hits like a wooden sword");
+            case "Gold rig" -> full ? new Skills.Skill("Gold Rush", 0.25, "25% chance of a gold nugget with each fish") : null;
+            case "Honey rig" -> full ? new Skills.Skill("Honey Pot", 0.25, "25% chance of a honey bottle with each fish")
+                    : new Skills.Skill("Honey Pot", 0.15, "15% chance of a honeycomb with each fish");
+            case "Sunlight rig" -> new Skills.Skill("Sun Seeds", -1, full ? "Seeds come up with fish by day: wheat, beetroot, pumpkin and melon" : "Seeds come up with fish by day: wheat and beetroot");
+            case "Moonlight rig" -> new Skills.Skill("Moonshard", full ? 0.20 : 0.10, (full ? "20%" : "10%") + " chance of an amethyst shard with each fish at night");
+            default -> null;
+        };
     }
 
     /** A rod carries at most this many rigs. */

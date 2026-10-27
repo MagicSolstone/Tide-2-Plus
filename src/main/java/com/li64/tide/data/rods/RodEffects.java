@@ -404,28 +404,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return rod == null || rod.isEmpty() || !isTide(rod) ? null : PICKS.get(path(rod));
     }
 
-    /** What the sickle and hex rods do besides their numbers. */
+    /** What the sickle and hex rods do besides their numbers (their skills, Green Thumb and Hex). */
     public static final double SICKLE_GROW = 0.35, HEX_EFFECT = 0.20, TWIN_CAP = 0.35;
-    private static final Map<String, List<String>> SPECIAL_TEXT = Map.of(
-            "sickle_fishing_rod", List.of("35% chance each fish makes nearby crops grow"),
-            "hex_fishing_rod", List.of("20% chance each fish gives you a helpful potion effect"),
-            "widow_fishing_rod", List.of("A night hunter: strong after dark, sluggish by day"),
-            "wayfinder_fishing_rod", List.of("Stronger the farther you fish from world spawn: from 500 blocks out, up to +15% catch quality, +30% rare finds and +10% fishing XP at 5,000 blocks"),
-            "amethyst_fishing_rod", List.of("+8% catch quality at night on a full moon (amethyst catches moonlight: less as the moon wanes, none on a new moon)"),
-            "village_fishing_rod", List.of("Players fishing within 16 blocks of you get +10% fishing XP"),
-            "crystal_fishing_rod", List.of("Shows what bit, how good it is and how rare, the moment it bites"),
-            "stone_fishing_rod", List.of("No perks of its own: the start of the Stone rig (+10% bite speed with 2 pieces, +20% and +10% fishing XP with 3)"));
-
-    /** What a line, hook, bobber or lure does besides its numbers (tooltip lines). */
-    private static final Map<String, List<String>> PART_TEXT = Map.of(
-            "barbed_hook", List.of("Lands almost anything (Good and Bad hooks always, Terrible ones half the time), but it tears the fish: never better than Great, and half the time a tier worse"),
-            "heart_bobber", List.of("Heals you three hearts with each fish"),
-            "red_bobber", List.of("No perks of its own: dye it any colour. Part of the Stone rig (+10% bite speed with 2 pieces)"),
-            "lichen_bobber", List.of("Glows, lighting the water around it"),
-            "amethyst_hook", List.of("+6% catch quality at night on a full moon (amethyst catches moonlight: less as the moon wanes, none on a new moon)"),
-            "amethyst_line", List.of("+4% catch quality at night on a full moon (amethyst catches moonlight: less as the moon wanes, none on a new moon)"),
-            "amethyst_bobber", List.of("+5% catch quality at night on a full moon (amethyst catches moonlight: less as the moon wanes, none on a new moon)"));
-
     /** Things a line, hook or bobber brings up with a fish. */
     private static final Map<String, List<Drop>> PART_DROPS = Map.of(
             "stone_hook", List.of(new Drop("minecraft:kelp", 0.15, 0, "15% chance of kelp with any fish (it sinks to the bottom)"),
@@ -446,7 +426,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return out;
     }
 
-    /** Amethyst's catch quality on a full moon (rod, hook, line, bobber), scaled by {@link #moonlight}. The tooltips (SPECIAL_TEXT, PART_TEXT) say these numbers. */
+    /** Amethyst's catch quality on a full moon (rod, hook, line, bobber), scaled by {@link #moonlight}. Skills (Moonlit) says these numbers. */
     private static final Map<String, Double> AMETHYST_QUALITY = Map.of(
             "amethyst_fishing_rod", 0.08, "amethyst_hook", 0.06, "amethyst_line", 0.04, "amethyst_bobber", 0.05);
 
@@ -564,6 +544,11 @@ public record RodEffects(double cast, double bite, double window, double fight, 
     }
 
     /** The rod's own perk plus its accessories (always-on ones). */
+    /** A rod item's own perks (not what's attached). */
+    public static RodEffects ownRod(ItemStack rod) {
+        return rod == null || rod.isEmpty() ? NONE : RODS.getOrDefault(path(rod), NONE);
+    }
+
     public static RodEffects ofRod(ItemStack rod) {
         if (rod == null || rod.isEmpty()) return NONE;
         return RODS.getOrDefault(path(rod), NONE).plus(accessories(rod));
@@ -663,11 +648,10 @@ public record RodEffects(double cast, double bite, double window, double fight, 
             out.addAll(ofRod(rod).describe(ChatFormatting.DARK_AQUA));
             for (var t : situationalTotals(rod).entrySet()) out.addAll(t.getValue().describe(ChatFormatting.LIGHT_PURPLE, " " + t.getKey().text));
         }
-        for (Drop d : DROPS.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
-        Pick p = pick(rod);
-        if (p != null) out.add(line(ChatFormatting.DARK_AQUA, p.text()));
+        List<Skills.Skill> skills = parts(rod).isEmpty() ? Skills.of(rod) : Skills.ofRod(rod);
+        out.addAll(Skills.lines(skills));
         // which rigs the rod itself belongs to, then any rig it (with what's on it) already counts toward:
-        // "Jungle rig 2/3: +5% better catch quality in jungles"
+        // "Jungle rig Tier 1: +8% Quality in jungles"
         Component member = RigSets.memberLine(rod);
         if (member != null && isTide(rod)) out.add(member);
         List<RigSets.RigSet> carried = RigSets.carried(rod);
@@ -680,8 +664,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
                         .withStyle(st -> st.withColor(c)));
             else out.add(line(ChatFormatting.DARK_GRAY, set.name() + ": not counted (a rod carries three rigs)"));
         }
-        if (isTide(rod)) for (String s : SPECIAL_TEXT.getOrDefault(path(rod), List.of())) out.add(line(ChatFormatting.DARK_AQUA, s));
         out.addAll(Unlocks.describe(rod));
+        out.addAll(Skills.explanations(skills, rod));
         return out;
     }
 
@@ -697,10 +681,8 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         out.addAll(Lures.describe(stack));
         out.addAll(of(stack).describe(ChatFormatting.DARK_AQUA));
         for (Perk perk : situational(stack)) out.addAll(perk.fx().describe(ChatFormatting.LIGHT_PURPLE, " " + perk.when().text));
-        if (isTide(stack)) {
-            for (String t : PART_TEXT.getOrDefault(path(stack), List.of())) out.add(line(ChatFormatting.DARK_AQUA, t));
-            for (Drop d : PART_DROPS.getOrDefault(path(stack), List.of())) out.add(line(ChatFormatting.DARK_AQUA, d.text()));
-        }
+        List<Skills.Skill> skills = Skills.of(stack);
+        out.addAll(Skills.lines(skills));
         out.addAll(Unlocks.describe(stack));
         Component rigs = RigSets.memberLine(stack);
         if (rigs != null && isTide(stack)) out.add(rigs);
@@ -710,11 +692,7 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         if (tier == 2 && base == null)
             out.add(line(ChatFormatting.GRAY, path(stack).equals("treble_hook") ? "Made from three plain hooks"
                     : "Made from a Tier 1 hook, and keeps that hook's perks"));
-        if (path(stack).equals("lavaproof_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in lava"));
-        if (path(stack).equals("void_hook") && isTide(stack)) out.add(0, line(ChatFormatting.GOLD, "Lets you fish in the void"));
-        if (path(stack).equals("glow_hook") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Glows, lighting the water around it"));
-        if (path(stack).equals("bell_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Rings when a fish bites"));
-        if (path(stack).equals("ender_eye_bobber") && isTide(stack)) out.add(line(ChatFormatting.DARK_AQUA, "Shows what's on the hook when it bites"));
+        out.addAll(Skills.explanations(skills, stack));
         return out;
     }
 
@@ -764,27 +742,34 @@ public record RodEffects(double cast, double bite, double window, double fight, 
         return biteWaitFactor(0);
     }
 
-    /** Tooltip lines: "+10% casting range", "Fish fight 8% easier"... */
+    /** Tooltip lines: "+10% Casting", "+8% Stability"... (each stat in its own colour) */
     public List<Component> describe(ChatFormatting color) {
         return describe(color, "");
     }
 
     public List<Component> describe(ChatFormatting color, String when) {
         List<Component> out = new ArrayList<>();
-        if (cast != 0) out.add(line(color, pct(cast) + " casting range"));
-        if (bite != 0) out.add(line(color, pct(bite) + " bite speed"));
-        if (window != 0) out.add(line(color, pct(window) + " hook window"));
-        if (fight != 0) out.add(line(color, "Fish fight " + Math.round(Math.abs(fight) * 100) + "% " + (fight < 0 ? "easier" : "harder")));
-        if (luck != 0) out.add(line(color, pct(luck * RARE_PER_LUCK) + " rare finds"));
-        if (quality != 0) out.add(line(color, quality > 0 ? pct(quality) + " better catch quality" : pct(quality) + " catch quality (smaller, plainer fish)"));
-        if (land != 0) out.add(line(color, pct(land) + " to land Good and Bad hooks"));
-        if (xp != 0) out.add(line(color, pct(xp) + " fishing XP"));
-        if (twin != 0) out.add(line(color, Math.round(twin * 100) + "% chance of a second fish"));
-        if (cook != 0) out.add(line(color, Math.round(cook * 100) + "% chance the fish comes up cooked"));
-        if (speed != 0) out.add(line(color, pct(speed * SPEED_POINT) + " bite speed"));
-        if (ease != 0) out.add(line(color, "-" + Math.round(ease * 100) + "% catch difficulty"));
-        if (!when.isEmpty()) out.replaceAll(c -> line(color, c.getString() + when));
+        if (cast != 0) out.add(stat(color, pct(cast), Stat.CASTING, when));
+        if (bite != 0) out.add(stat(color, pct(bite), Stat.ATTRACTION, when));
+        if (window != 0) out.add(stat(color, pct(window), Stat.PRECISION, when));
+        if (fight != 0) out.add(stat(color, pct(-fight), Stat.STABILITY, when));      // an easier fight is more Stability
+        if (ease != 0) out.add(stat(color, pct(ease), Stat.CONTROL, when));
+        if (luck != 0) out.add(stat(color, pct(luck * RARE_PER_LUCK), Stat.FORTUNE, when));
+        if (quality != 0) out.add(stat(color, pct(quality), Stat.QUALITY, when + (quality < 0 ? " (smaller, plainer fish)" : "")));
+        if (land != 0) out.add(stat(color, pct(land), Stat.FINESSE, when));
+        if (xp != 0) out.add(stat(color, pct(xp), Stat.EXPERIENCE, when));
+        if (twin != 0) out.add(stat(color, pct(twin), Stat.DOUBLE_CATCH, when));
+        if (speed != 0) out.add(stat(color, pct(speed * SPEED_POINT), Stat.ATTRACTION, when));
+        // a chance to come up cooked is a skill (Hot Line): see Skills
         return out;
+    }
+
+    /** "+25% Attraction in jungles": the value in the line's colour, the stat in its own, where it works in purple. */
+    private static Component stat(ChatFormatting color, String value, Stat stat, String when) {
+        var line = Component.literal(value + " ").withStyle(color)
+                .append(Component.literal(stat.label).withStyle(st -> st.withColor(stat.color)));
+        if (!when.isEmpty()) line.append(Component.literal(when).withStyle(ChatFormatting.LIGHT_PURPLE));
+        return line;
     }
 
     private static Component line(ChatFormatting color, String text) {

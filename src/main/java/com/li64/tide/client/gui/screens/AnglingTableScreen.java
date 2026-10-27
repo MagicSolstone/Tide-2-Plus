@@ -70,22 +70,24 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         int sea = net.minecraft.world.item.enchantment.EnchantmentHelper.getItemEnchantmentLevel(enchants.getOrThrow(net.minecraft.world.item.enchantment.Enchantments.LUCK_OF_THE_SEA), rod);
         int speed = lure + Math.min(com.li64.tide.util.BaitUtils.getCombinedSpeed(rod), com.li64.tide.registries.items.TideFishingRodItem.BAIT_SPEED_CAP) + e.speed();
         int luck = e.luck() + com.li64.tide.util.BaitUtils.getCombinedLuck(rod) + sea;
-        java.util.List<String[]> rows = new java.util.ArrayList<>();
-        java.util.function.BiConsumer<String, Double> row = (label, v) -> {
+        java.util.List<Object[]> rows = new java.util.ArrayList<>();      // {stat, value, good}
+        java.util.function.BiConsumer<com.li64.tide.data.rods.Stat, Double> row = (stat, v) -> {
             long n = Math.round(v * 100);
-            if (n != 0) rows.add(new String[]{label, String.format("%+d%%", n), n > 0 ? "g" : "b"});
+            if (n != 0) rows.add(new Object[]{stat, String.format("%+d%%", n), n > 0});
         };
-        row.accept("Cast range", e.cast());
-        row.accept("Bite speed", e.biteSpeed(speed));
-        row.accept("Hook window", e.window());
-        row.accept("Rare finds", com.li64.tide.data.rods.RodEffects.rareFinds(luck));
-        row.accept("Catch quality", e.quality());
-        row.accept("Fishing XP", e.xp());
-        row.accept("Land Good/Bad", e.land());
-        row.accept("Fish fight easier", -e.fight());
-        row.accept("Catch difficulty", -e.ease());
-        row.accept("Second fish", Math.min(e.twin(), com.li64.tide.data.rods.RodEffects.TWIN_CAP));
-        row.accept("Comes up cooked", e.cook());
+        row.accept(com.li64.tide.data.rods.Stat.CASTING, e.cast());
+        row.accept(com.li64.tide.data.rods.Stat.ATTRACTION, e.biteSpeed(speed));
+        row.accept(com.li64.tide.data.rods.Stat.PRECISION, e.window());
+        row.accept(com.li64.tide.data.rods.Stat.FORTUNE, com.li64.tide.data.rods.RodEffects.rareFinds(luck));
+        row.accept(com.li64.tide.data.rods.Stat.QUALITY, e.quality());
+        row.accept(com.li64.tide.data.rods.Stat.EXPERIENCE, e.xp());
+        row.accept(com.li64.tide.data.rods.Stat.FINESSE, e.land());
+        row.accept(com.li64.tide.data.rods.Stat.STABILITY, -e.fight());
+        row.accept(com.li64.tide.data.rods.Stat.CONTROL, e.ease());
+        row.accept(com.li64.tide.data.rods.Stat.DOUBLE_CATCH, Math.min(e.twin(), com.li64.tide.data.rods.RodEffects.TWIN_CAP));
+        java.util.List<String> skills = com.li64.tide.data.rods.Skills.ofRod(rod).stream().map(com.li64.tide.data.rods.Skills.Skill::label).toList();
+        java.util.List<net.minecraft.util.FormattedCharSequence> skillText = skills.isEmpty() ? java.util.List.of()
+                : this.font.split(Component.literal(String.join(" · ", skills)), (int) ((w - 10) / 0.75f));
         // where all of that applies
         java.util.LinkedHashSet<String> where = new java.util.LinkedHashSet<>();
         for (var when : com.li64.tide.data.rods.RodEffects.situationalTotals(rod).keySet()) where.add(when.text);
@@ -94,7 +96,7 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         int inner = (int) ((w - 10) / s);
         java.util.List<net.minecraft.util.FormattedCharSequence> note = new java.util.ArrayList<>(this.font.split(Component.literal(where.isEmpty()
                 ? "Works anywhere" : "With everything active: " + String.join(", ", where)), inner));
-        int h = (int) ((14 + Math.max(1, rows.size()) * 10 + 3 + note.size() * 9) * s) + 6;
+        int h = (int) ((14 + Math.max(1, rows.size()) * 10 + (skillText.isEmpty() ? 0 : 3 + skillText.size() * 9) + 3 + note.size() * 9) * s) + 6;
         int y = this.topPos;
         g.fill(x, y, x + w, y + h, 0xD0101820);
         g.fill(x, y, x + 2, y + h, 0xFFC9A44A);
@@ -104,10 +106,16 @@ public class AnglingTableScreen extends ItemCombinerScreen<AnglingTableMenu> {
         com.li64.tide.client.Gui26.text(g, this.font, "This rod, in all", 0, 0, 0xFFFFD27F, true);
         int ly = 14;
         if (rows.isEmpty()) { com.li64.tide.client.Gui26.text(g, this.font, "No bonuses yet", 0, ly, 0xFFA8B4BC, true); ly += 10; }
-        for (String[] r : rows) {
-            com.li64.tide.client.Gui26.text(g, this.font, r[0], 0, ly, 0xFFE8E8E8, true);
-            com.li64.tide.client.Gui26.text(g, this.font, r[1], inner - this.font.width(r[1]), ly, r[2].equals("g") ? 0xFF7FE07F : 0xFFFF8A7A, true);
+        for (Object[] r : rows) {
+            var stat = (com.li64.tide.data.rods.Stat) r[0];
+            String value = (String) r[1];
+            com.li64.tide.client.Gui26.text(g, this.font, stat.label, 0, ly, 0xFF000000 | stat.color, true);
+            com.li64.tide.client.Gui26.text(g, this.font, value, inner - this.font.width(value), ly, (Boolean) r[2] ? 0xFF7FE07F : 0xFFFF8A7A, true);
             ly += 10;
+        }
+        if (!skillText.isEmpty()) {
+            ly += 3;
+            for (var line : skillText) { com.li64.tide.client.Gui26.text(g, this.font, line, 0, ly, 0xFF000000 | com.li64.tide.data.rods.Stat.SKILL, true); ly += 9; }
         }
         ly += 3;
         for (var line : note) { com.li64.tide.client.Gui26.text(g, this.font, line, 0, ly, 0xFFA8B4BC, true); ly += 9; }

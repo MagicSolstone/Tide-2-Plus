@@ -89,6 +89,8 @@ Data you edit without touching Java lives in `src/main/resources/`:
 | Material rigs (Stone, Gold, Diamond, Honey, Iron) and the Lucky rig, and their drops | `RigSets.SETS` (the `When.ALWAYS` ones), `RigSets.SET_DROPS`, `RigSets.wear` (Stone) | |
 | Sun and Moon rigs (their strength follows the sky) | `RigSets.strength`, `RodEffects.noon`, `RodEffects.moonlight`; amethyst's own moonlight quality is `RodEffects.AMETHYST_QUALITY` | |
 | Rig colours and tier names | `RigSets.COLOR`, `RigSets.tier` | |
+| Stat names and colours (Casting, Attraction, Precision...) | `Stat` | |
+| Skills (Hot Line, Green Gold, Fish Finder...): names and explanations | `Skills.ITEMS`, `RigSets.skill` (the drops themselves: `RodEffects` drops and picks) | |
 | The Angling Table's look | `client/gui/BenchStyle.java` (frame, slot hints), `AnglingTableScreen.rigPanel` (rig cards) | |
 | Things a hook or bobber brings up | `RodEffects.PART_DROPS` (stone hook seaweed, emerald hook emeralds) | |
 | Cut bait strength by fish quality | `data/rods/CutBait.java` (`rareShare`) | |

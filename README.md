@@ -60,12 +60,16 @@ a time or the weather.
   lands almost anything but tears the fish, the heart bobber heals you, the lichen and glow pieces light the water,
   the crystal rod tells you what bit and how good it is, the village rod gives nearby anglers extra XP, and the
   wayfinder rod grows stronger the farther you are from spawn.
-- **Plain numbers you can compare.** Every stat is a percentage: cast range, bite speed, hook window, rare finds, catch
-  quality, fishing XP, landing, fish fight, catch difficulty, second fish, comes up cooked. **Bite speed** and
-  **rare finds** stack with diminishing returns, so a great rod is better than a good one but never instant.
+- **One word per stat, each in its own colour**, as a percentage: **Casting**, **Attraction** (how soon fish bite),
+  **Precision** (hook window), **Finesse** (landing a Good or Bad hook), **Stability** (a calmer fight), **Control**
+  (an easier catch bar), **Fortune** (rare fish), **Quality**, **Experience** and **Double Catch**. Attraction and
+  Fortune stack with diminishing returns, so a great rod is better than a good one but never instant.
+- **Skills**: what a piece does besides the stats has a short name, like **Hot Line 20%** (the redstone line cooks
+  fish), **Green Gold 3%** (the emerald hook's emeralds) or **Fish Finder** (the crystal rod). The item's tooltip
+  explains each one at the bottom.
 - **The rod panel** on the right while you hold a rod: your level and progress, the stats your rod, tackle, gear and
-  level change, its rigs (in colour when they are working) and the times, places and weather its pieces care about
-  (bright when they apply, grey when they don't).
+  level change, its skills, its rigs (in colour when they are working) and the times, places and weather its pieces
+  care about (bright when they apply, grey when they don't).
 - **Rods never break**: a worn-out rod stops at broken until you repair it, keeping its tackle and enchantments.
 - **Angler's gear** (bucket hat, vest, waders, wading boots) with a full-set bonus.
 
